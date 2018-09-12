@@ -9,7 +9,8 @@ const data = {
 		user: 'm@unabase.cl',
 		port: 8080,
 		secure: false
-	}
+	},
+	secret: 'vn4b4c3n3w5y5t3m'
 
 }
 module.exports = data;

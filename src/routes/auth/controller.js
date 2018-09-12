@@ -1,5 +1,8 @@
 
 const User = require('../../models/user');
+const jwt = require('jsonwebtoken');
+const mConfig = require('../../config/main');
+
 module.exports = {
   login(req, res){		
     User.findOne({ 'username' :  req.body.username }, function(err, user) {
@@ -36,8 +39,13 @@ module.exports = {
         if(user.activeScope == '' || !user.activeScope || user.activeScope == null){
           user.activeScope = user._id;
         }
-        user.save();
-        res.send(user)
+        user.save((err, user)=>{
+          const token = jwt.sign({ user: user.getUser() }, mConfig.secret )
+          res.json({
+            message: 'User Authenticated',
+            token
+          })
+        });
 
       }
 

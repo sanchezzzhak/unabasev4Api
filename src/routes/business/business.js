@@ -1,5 +1,7 @@
 const business = require('express').Router();
 const ctl = require('./controller');
+const vToken = require('../../config/lib/auth').vToken;
+business.use(vToken)
 
 business.get('/', ctl.get);
 business.post('/', ctl.gets);

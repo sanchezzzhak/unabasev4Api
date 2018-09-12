@@ -107,7 +107,12 @@ module.exports = {
     })
   },
   get(req, res){
-
+    Business.find({}, (err, businesses)=>{
+      if(err) throw err
+      else{
+        res.send(businesses);
+      }
+    })
   },
   gets(req, res){
 

@@ -17,7 +17,10 @@ let userSchema = Schema({
 	username: {type: String},
 	password: String,
 	rut: {type: String},
+	idnumber: {type: String},
 	phone:String,
+  phones: Array({type: String}),
+  emails: Array({type: String}),
 	cellphone:String,
 	email: {type: String},
 	accountType: { type: String, default: 'personal'},
@@ -33,7 +36,8 @@ let userSchema = Schema({
 		town: String, // deprecated
 		district: String,
 		city: String,
-		region: String
+		region: String,
+		country: String
 	},
 	last_login: Date,
 	lastLogin: Date,
@@ -82,6 +86,34 @@ userSchema.plugin(mongoosePaginate);
 userSchema.methods.generateHash = function(password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
 };
+
+userSchema.methods.getUser = function(){
+	let user = {
+		isActive: this.isActive,
+		name: this.name,
+		username: this.username,
+		idnumber: this.idnumber,
+		phones: this.phones,
+		emails: this.emails,
+		scope: this.scope,
+		address:{
+			street: this.street,
+			number: this.number,
+			town:  this.town,
+			district: this.district,
+			city: this.city,
+			region: this.region,
+			country: this.country,
+		},
+		lastLogin: this.lastLogin,
+		google: {
+			name: this.name,
+			email: this.email,
+			imgUrl: this.imgUrl,
+		}
+	}
+	return user;
+}
 
 // checking if password is valid
 userSchema.methods.validPassword = function(password) {
