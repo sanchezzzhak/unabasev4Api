@@ -1,0 +1,33 @@
+{
+  "name": "apiv4",
+  "version": "1.0.0",
+  "main": "app.js",
+  "repository": "git@github.com:simongc/apiUnabase.git",
+  "author": "Simon Gomes <xtgomes@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "",
+    "start": "nodemon src/app"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "circular-json": "^0.5.5",
+    "connect-flash": "^0.1.1",
+    "connect-mongo": "^2.0.1",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "express-xml-bodyparser": "^0.3.0",
+    "mongoose": "^5.2.12",
+    "mongoose-paginate": "^5.0.3",
+    "mongoose-sequence": "^4.0.1",
+    "nodemailer": "^4.6.8",
+    "normalize-bool": "^1.0.0",
+    "passport": "^0.4.0",
+    "passport-google-oauth": "^1.0.0",
+    "passport-local": "^1.0.0",
+    "pug": "^2.0.3",
+    "serve-favicon": "^2.5.0"
+  }
+}
