@@ -47,5 +47,28 @@ module.exports = {
     });
   },
   updateUser(req, res) {},
-  createUser(req, res) {}
+  createUser(req, res) {},
+  findOne(req, res) {
+    let query = {
+      $and: []
+    };
+    Object.keys(req.query).forEach(q => {
+      if (q === "email" || q === "name") {
+        query.$and.push({
+          [`google.${q}`]: { $regex: req.query[q], $options: "i" }
+        });
+      }
+      query.$and.push({ [q]: { $regex: req.query[q], $options: "i" } });
+    });
+
+    User.findOne(query, (err, user) => {
+      if (err) {
+        res.status(500).end();
+      } else if (user) {
+        res.send(user);
+      } else {
+        res.status(404).end();
+      }
+    });
+  }
 };

@@ -10,5 +10,6 @@ incomes.get("/", ctl.get);
 incomes.get("/:id", ctl.getOne);
 incomes.post("/", ctl.create);
 incomes.patch("/:id", ctl.updateOne);
+incomes.get("/find", ctl.findOne);
 
 module.exports = incomes;

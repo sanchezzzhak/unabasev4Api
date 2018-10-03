@@ -63,7 +63,7 @@ app.use(express.static(path.join(__dirname, "./public")));
 app.use(flash());
 app.use(
   session({
-    secret: "vn4v4c3",
+    secret: mainConfig.secret,
     resave: false,
     saveUninitialized: true,
     store: new MongoStore({ mongooseConnection: mongoose.connection })

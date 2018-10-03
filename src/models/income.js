@@ -11,9 +11,9 @@ const incomeSchema = new Schema(
     dates: {
       expiration: Date
     },
-    client: { type: Schema.Types.ObjectId, ref: "Users" },
-    creator: { type: Schema.Types.ObjectId, ref: "Users" },
-    items: Array(Object),
+    client: { type: Schema.Types.ObjectId, ref: "User" },
+    creator: { type: Schema.Types.ObjectId, ref: "User" },
+    items: { type: Schema.Types.ObjectId, ref: "Item" },
     total: {
       net: Number,
       tax: Number
@@ -21,7 +21,7 @@ const incomeSchema = new Schema(
     state: String,
     isActive: { type: Boolean, default: true },
     currency: {
-      type: { type: Schema.Types.ObjectId, ref: "Currencies" }
+      type: { type: Schema.Types.ObjectId, ref: "Currency" }
     }
   },
   { timestamps: true }

@@ -17,6 +17,7 @@ users.use(isAuth);
 users.get("/", ctl.getUsers);
 users.post("/", ctl.postUsers);
 users.get("/logout", ctl.logout);
+users.get("/find", ctl.findOne);
 users.get("/:id", ctl.getUser);
 // users.post('/', ctl.createUser)
 users.put("/", ctl.updateUser);
