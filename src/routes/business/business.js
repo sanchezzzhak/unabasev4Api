@@ -1,18 +1,14 @@
-const business = require('express').Router();
-const ctl = require('./controller');
-const cToken = require('../../config/lib/auth').cToken;
-business.use(cToken)
+import { Router } from 'express';
+const business = Router();
+import ctl from './controller';
+import auth from '../../config/lib/auth';
+business.use(auth.sToken);
 
 business.get('/', ctl.get);
 business.post('/', ctl.gets);
 business.post('/create', ctl.create);
 business.get('/:_id', ctl.getOne);
-business.put('/:_id', ctl.update)
+business.put('/:_id', ctl.update);
 // business
 
-
-
-module.exports = business;
-
-
-
+export default business;

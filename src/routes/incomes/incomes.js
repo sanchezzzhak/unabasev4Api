@@ -1,15 +1,14 @@
-const express = require("express");
-const incomes = express.Router();
-const ctl = require("./controller");
-// const cToken = require("../../config/lib/auth").cToken;
-// const isAuth = require("../../config/lib/auth").isAuth;
-// incomes.use(isAuth);
+import { Router } from 'express';
+const incomes = Router();
+import ctl from './controller';
+import auth from '../../config/lib/auth';
+incomes.use(auth.sToken);
 
-incomes.get("/", ctl.get);
+incomes.get('/', ctl.get);
 // incomes.get('/', ctl.filter)
-incomes.get("/:id", ctl.getOne);
-incomes.post("/", ctl.create);
-incomes.patch("/:id", ctl.updateOne);
-incomes.get("/find", ctl.findOne);
+incomes.get('/:id', ctl.getOne);
+incomes.post('/', ctl.create);
+incomes.put('/:id', ctl.updateOne);
+incomes.get('/find', ctl.findOne);
 
-module.exports = incomes;
+export default incomes;

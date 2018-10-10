@@ -1,26 +1,33 @@
-const routes = require("express").Router();
-const isAuth = require("../config/lib/auth").isAuth;
-const cors = require("cors");
+import express from 'express';
+const routes = express.Router();
+import authConfig from '../config/lib/auth';
 
-routes.options("http://localhost:8080", cors());
-routes.get("/", (req, res) => {
-  res.send("Unabase api");
+routes.get('/', authConfig.sToken, (req, res) => {
+  res.send({ msg: 'Unabase api' });
 });
 
-routes.get("/isAuth", isAuth, (req, res) => {
-  res.statusMessage = "authenticated";
-  res.send("auth");
+routes.get('/isAuth', authConfig.isAuth, (req, res) => {
+  res.statusMessage = 'authenticated';
+  res.send(req.user.getUser());
 });
 
-const auth = require("./auth/auth");
-routes.use("/auth", auth);
+import auth from './auth/auth';
+routes.use('/auth', auth);
 
-const users = require("./users/users");
-routes.use("/users", users);
+import users from './users/users';
+routes.use('/users', users);
 
-const business = require("./business/business");
-routes.use("/business", business);
-const incomes = require("./incomes/incomes");
-routes.use("/incomes", incomes);
+import business from './business/business';
+routes.use('/business', business);
 
-module.exports = routes;
+import incomes from './incomes/incomes';
+routes.use('/incomes', incomes);
+
+import taxs from './taxs/taxs';
+routes.use('/taxs', taxs);
+
+import items from './items/items';
+import { from } from 'apollo-link';
+routes.use('/items', items);
+
+export default routes;

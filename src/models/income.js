@@ -1,9 +1,13 @@
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
+// const Schema = mongoose.Schema;
+
+// const mongoosePaginate = require("mongoose-paginate");
+// const User = require('./user');
+import User from './user';
+import mongoose from 'mongoose';
+// const mongoosePaginate = require("mongoose-paginate");
+import mongoosePaginate from 'mongoose-paginate';
 const Schema = mongoose.Schema;
-
-const mongoosePaginate = require("mongoose-paginate");
-const User = require("./user");
-
 const incomeSchema = new Schema(
   {
     name: String,
@@ -11,9 +15,9 @@ const incomeSchema = new Schema(
     dates: {
       expiration: Date
     },
-    client: { type: Schema.Types.ObjectId, ref: "User" },
-    creator: { type: Schema.Types.ObjectId, ref: "User" },
-    items: { type: Schema.Types.ObjectId, ref: "Item" },
+    client: { type: Schema.Types.ObjectId, ref: 'User' },
+    creator: { type: Schema.Types.ObjectId, ref: 'User' },
+    items: { type: Schema.Types.ObjectId, ref: 'ItemLine' },
     total: {
       net: Number,
       tax: Number
@@ -21,11 +25,13 @@ const incomeSchema = new Schema(
     state: String,
     isActive: { type: Boolean, default: true },
     currency: {
-      type: { type: Schema.Types.ObjectId, ref: "Currency" }
+      type: { type: Schema.Types.ObjectId, ref: 'Currency' }
     }
   },
   { timestamps: true }
 );
 
 incomeSchema.plugin(mongoosePaginate);
-module.exports = mongoose.model("Outcome", incomeSchema);
+
+const Income = mongoose.model('Outcome', incomeSchema);
+export default Income;

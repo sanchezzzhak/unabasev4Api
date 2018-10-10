@@ -1,8 +1,11 @@
-let mongoose = require("mongoose");
-let bcrypt = require("bcryptjs");
-let Schema = mongoose.Schema;
+// let mongoose = require("mongoose");
+// let bcrypt = require("bcryptjs");
+// let Schema = mongoose.Schema;
+import mongoose from 'mongoose';
 
-let mongoosePaginate = require("mongoose-paginate");
+import mongoosePaginate from 'mongoose-paginate';
+import bcrypt from 'bcryptjs';
+const Schema = mongoose.Schema;
 // let taskModel = require("../models/task");
 // let Task = taskModel["task"];
 // let Subtask = taskModel["subtask"];
@@ -24,11 +27,11 @@ let userSchema = Schema(
     emails: Array({ type: String }),
     cellphone: String,
     email: { type: String },
-    accountType: { type: String, default: "personal" },
-    activeScope: { type: Schema.Types.ObjectId, ref: "User" },
+    accountType: { type: String, default: 'personal' },
+    activeScope: { type: Schema.Types.ObjectId, ref: 'User' },
     relations: {
       // invites: Array({ type: Schema.Types.ObjectId, ref: 'User'}),
-      related: Array({ type: Schema.Types.ObjectId, ref: "User" }),
+      related: Array({ type: Schema.Types.ObjectId, ref: 'User' }),
       invites: Array({ type: String })
     },
     address: {
@@ -71,12 +74,12 @@ let userSchema = Schema(
     config: {
       tasks: {
         timing: { type: Boolean, default: false },
-        timingTask: { type: Schema.Types.ObjectId, ref: "Task" }
+        timingTask: { type: Schema.Types.ObjectId, ref: 'Task' }
       }
     },
     timer: {
       timing: { type: Boolean, default: false },
-      task: { type: Schema.Types.ObjectId, ref: "Task" }
+      task: { type: Schema.Types.ObjectId, ref: 'Task' }
     }
   },
   { timestamps: true }
@@ -125,7 +128,9 @@ userSchema.methods.validPassword = function(password) {
   return bcrypt.compareSync(password, this.password);
 };
 
-let User = (module.exports = mongoose.model("User", userSchema));
+const User = mongoose.model('User', userSchema);
+
+export default User;
 
 User.addUser = (user, callback) => {
   // User.create(user, callback);
@@ -199,15 +204,15 @@ User.updateEmpresa = (username, nuevaEmpresa, options, callback) => {
     var results = user.empresa.find(function(item) {
       return item.empresaId == nuevaEmpresa.empresaId;
     });
-    if (typeof results == "undefined") {
+    if (typeof results == 'undefined') {
       User.findOneAndUpdate(query, update, { upsert: true }, callback);
     }
   });
 };
 
 User.removeEmpresa = (id, empresaId, options, callback) => {
-  console.log("user3: " + id);
-  console.log("empresa3: " + empresaId);
+  console.log('user3: ' + id);
+  console.log('empresa3: ' + empresaId);
   var query = { _id: id };
   var update = {
     $pull: {
@@ -240,7 +245,7 @@ User.getUserById = function(id, callback) {
 };
 
 User.passwordChange = function(id, oldPassword, password, callback) {
-  console.log("dentro de passwordChange");
+  console.log('dentro de passwordChange');
   console.log(id);
   console.log(oldPassword);
   console.log(password);
@@ -259,7 +264,7 @@ User.passwordChange = function(id, oldPassword, password, callback) {
         });
         return callback(null, user);
       } else {
-        return callback(null, false, { message: "password incorrecta" });
+        return callback(null, false, { message: 'password incorrecta' });
       }
     });
   });

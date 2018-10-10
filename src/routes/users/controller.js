@@ -1,29 +1,34 @@
-const User = require("../../models/user");
+import User from '../../models/user';
 
-module.exports = {
-  logout(req, res) {
-    console.log("out");
+import ntype from 'normalize-type';
+export default {
+  logout: (req, res) => {
+    console.log('out');
     req.logout();
     req.session = null;
-    res.status(200).send("Log out");
+    res.status(200).send('Log out');
   },
-  getUsers(req, res) {
-    console.log("req.query");
-    console.log(req.query);
-    User.paginate({}, { page: 1, limit: 1000 }, (err, users) => {
+  get: (req, res) => {
+    let rquery = ntype(req.query);
+    let options = {};
+    options.page = rquery.page || 1;
+    options.limit = rquery.limit || 20;
+    delete rquery.page;
+    delete rquery.limit;
+    let query = { ...rquery };
+    // query.name = req.query.name || null;
+    // query.isActive = bool(req.query.active) || null;
+
+    User.paginate(query, options, (err, item) => {
       if (err) {
+        res.status(500).end();
       } else {
-        const token = req.cookies.access_token;
-        // eslint-disable-next-line
-        // console.log("token");
-        // console.log(token);
-        console.log(users);
-        res.send(users);
+        res.send(item);
       }
     });
   },
-  postUsers(req, res) {
-    console.log("req.body post");
+  postUsers: (req, res) => {
+    console.log('req.body post');
     console.log(req.body);
     User.paginate(
       {},
@@ -37,7 +42,7 @@ module.exports = {
       }
     );
   },
-  getUser(req, res) {
+  getUser: (req, res) => {
     User.findOne({ id: req.params.id }, (err, user) => {
       if (err) {
         console.log(err);
@@ -46,19 +51,21 @@ module.exports = {
       }
     });
   },
-  updateUser(req, res) {},
-  createUser(req, res) {},
-  findOne(req, res) {
+  updateUser: (req, res) => {
+    Array({ type: Object }), Array({ type: Object });
+  },
+  createUser: (req, res) => {},
+  findOne: (req, res) => {
     let query = {
       $and: []
     };
     Object.keys(req.query).forEach(q => {
-      if (q === "email" || q === "name") {
+      if (q === 'email' || q === 'name') {
         query.$and.push({
-          [`google.${q}`]: { $regex: req.query[q], $options: "i" }
+          [`google.${q}`]: { $regex: req.query[q], $options: 'i' }
         });
       }
-      query.$and.push({ [q]: { $regex: req.query[q], $options: "i" } });
+      query.$and.push({ [q]: { $regex: req.query[q], $options: 'i' } });
     });
 
     User.findOne(query, (err, user) => {

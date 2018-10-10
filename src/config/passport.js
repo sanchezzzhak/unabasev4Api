@@ -1,21 +1,22 @@
 // config/passport.js
 
 // load all the things we need
-const LocalStrategy = require("passport-local").Strategy;
+const LocalStrategy = require('passport-local').Strategy;
 // const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 // load up the user model
-const User = require("../models/user");
+// const User = require('../models/user');
+import User from '../models/user';
 // const mainConfig = require('./main.js');
 
-const jwt = require("jsonwebtoken");
-const mConfig = require("./main");
+const jwt = require('jsonwebtoken');
+const mConfig = require('./main');
 // load the auth variables
-const configAuth = require("./auth");
+const configAuth = require('./auth');
 
 let setGoogle = (google, newUser) => {
   let email = google.emails[0].value;
-  (newUser.username = email.slice(0, email.indexOf("@"))),
+  (newUser.username = email.slice(0, email.indexOf('@'))),
     (newUser.name = google.displayName),
     (newUser.google.id = google.id),
     (newUser.google.name = google.displayName),
@@ -58,12 +59,12 @@ module.exports = function(passport) {
   // by default, if there was no name, it would just be called 'local'
 
   passport.use(
-    "local-signup",
+    'local-signup',
     new LocalStrategy(
       {
         // by default, local strategy uses username and password, we will override with email
-        usernameField: "username",
-        passwordField: "password",
+        usernameField: 'username',
+        passwordField: 'password',
         passReqToCallback: true // allows us to pass back the entire request to the callback
       },
       function(req, username, password, done) {
@@ -82,8 +83,8 @@ module.exports = function(passport) {
                 null,
                 false,
                 req.flash(
-                  "signupMessage",
-                  "El nombre de usuario ya fue elegido."
+                  'signupMessage',
+                  'El nombre de usuario ya fue elegido.'
                 )
               );
             } else {
@@ -108,7 +109,7 @@ module.exports = function(passport) {
 
                 user.activeScope = user._id;
                 user.save();
-                req.flash("success_msg", "Usuario creado");
+                req.flash('success_msg', 'Usuario creado');
                 return done(null, newUser);
               });
             }
@@ -125,12 +126,12 @@ module.exports = function(passport) {
   // by default, if there was no name, it would just be called 'local'
 
   passport.use(
-    "local-login",
+    'local-login',
     new LocalStrategy(
       {
         // by default, local strategy uses username and password, we will override with username
-        usernameField: "username",
-        passwordField: "password",
+        usernameField: 'username',
+        passwordField: 'password',
         passReqToCallback: true // allows us to pass back the entire request to the callback
       },
       function(req, username, password, done) {
@@ -145,39 +146,39 @@ module.exports = function(passport) {
 
           // if no user is found, return the message
           if (!user) {
-            console.log("no user");
+            console.log('no user');
             return done(null, false, {
               code: 404,
-              msg: "User does not exist",
-              url: "nouser"
+              msg: 'User does not exist',
+              url: 'nouser'
             }); // req.flash is the way to set flashdata using connect-flash
           }
           // if the user is found but the password is wrong
           if (!user.validPassword(password)) {
-            console.log("Current password does not match");
+            console.log('Current password does not match');
 
             return done(null, false, {
               code: 403,
-              msg: "Current password does not match",
-              url: "wrong"
+              msg: 'Current password does not match',
+              url: 'wrong'
             }); // create the loginMessage and save it to session as flashdata
           }
           if (!user.isActive) {
-            console.log("innactive");
+            console.log('innactive');
             return done(null, false, {
               code: 401,
-              msg: "User is not active",
-              url: "inactive"
+              msg: 'User is not active',
+              url: 'inactive'
             }); //
           }
 
           // all is well, return successful user
           user.last_login = Date.now();
-          console.log("desde passport login------------");
+          console.log('desde passport login------------');
           console.log(typeof user.activeScope);
           console.log(user.activeScope);
           if (
-            user.activeScope == "" ||
+            user.activeScope == '' ||
             !user.activeScope ||
             user.activeScope == null
           ) {
@@ -203,35 +204,35 @@ module.exports = function(passport) {
       },
       function(req, accessToken, refreshToken, profile, done) {
         process.nextTick(function() {
-          console.log("//////////////////////////////");
+          console.log('//////////////////////////////');
           console.log(configAuth.googleAuth.callbackURL);
           console.log(req.user);
           if (!req.user) {
-            console.log("no hay usuario activo");
-            User.findOne({ "google.id": profile.id }, function(err, user) {
+            console.log('no hay usuario activo');
+            User.findOne({ 'google.id': profile.id }, function(err, user) {
               if (err) {
                 console.log(err);
                 return done(err);
               }
 
               if (user) {
-                if (user.username == "") {
+                if (user.username == '') {
                   user.username = user.google.email.slice(
                     0,
-                    user.google.email.indexOf("@")
+                    user.google.email.indexOf('@')
                   );
-                  if (user.name == "") {
+                  if (user.name == '') {
                     user.name = user.google.name;
                   }
                   user.save();
                 }
-                console.log("consiguio un usuario google en db");
+                console.log('consiguio un usuario google en db');
                 // return done(null, user);
 
                 const token = jwt.sign(
                   { user: user.getUser() },
-                  mConfig.secret,
-                  { expiresIn: "3d" }
+                  mConfig.mSecret,
+                  { expiresIn: '3d' }
                 );
                 return done(null, user);
                 // res.json({
@@ -239,7 +240,7 @@ module.exports = function(passport) {
                 //   token
                 // });
               } else {
-                console.log("no consiguio un usuario google en db");
+                console.log('no consiguio un usuario google en db');
                 User.findOne(
                   { email: profile.emails[0].value },
                   (err, user) => {
@@ -250,7 +251,7 @@ module.exports = function(passport) {
 
                     if (user) {
                       let email = profile.emails[0].value;
-                      (user.username = email.slice(0, email.indexOf("@"))),
+                      (user.username = email.slice(0, email.indexOf('@'))),
                         (user.name = profile.displayName),
                         (user.google.id = profile.id),
                         (user.google.name = profile.displayName),
@@ -264,8 +265,8 @@ module.exports = function(passport) {
                         user.save((err, userFound) => {
                           const token = jwt.sign(
                             { user: userFound.getUser() },
-                            mConfig.secret,
-                            { expiresIn: "3d" }
+                            mConfig.mSecret,
+                            { expiresIn: '3d' }
                           );
 
                           // res.json({
@@ -278,7 +279,7 @@ module.exports = function(passport) {
                     } else {
                       let newUser = new User();
                       let email = profile.emails[0].value;
-                      (newUser.username = email.slice(0, email.indexOf("@"))),
+                      (newUser.username = email.slice(0, email.indexOf('@'))),
                         (newUser.name = profile.displayName),
                         (newUser.google.id = profile.id),
                         (newUser.google.name = profile.displayName),
@@ -292,8 +293,8 @@ module.exports = function(passport) {
                         user.save((err, userFound) => {
                           const token = jwt.sign(
                             { user: userFound.getUser() },
-                            mConfig.secret,
-                            { expiresIn: "3d" }
+                            mConfig.mSecret,
+                            { expiresIn: '3d' }
                           );
 
                           // res.json({
@@ -309,14 +310,14 @@ module.exports = function(passport) {
               }
             });
           } else {
-            User.findOne({ "google.id": profile.id }, function(err, user) {
+            User.findOne({ 'google.id': profile.id }, function(err, user) {
               if (err) {
                 console.log(err);
                 return done(err);
               }
 
               if (user) {
-                console.log("consiguio un usuario google en db ya asociada");
+                console.log('consiguio un usuario google en db ya asociada');
                 return done(null, user);
 
                 // res.json({
@@ -325,7 +326,7 @@ module.exports = function(passport) {
                 // return done(null, null, {info: 'cuenta google ya asociada'});
               } else {
                 var user = req.user; // pull the user out of the session
-                if (user.name == "") {
+                if (user.name == '') {
                   user.name = profile.displayName;
                 }
 
@@ -340,8 +341,8 @@ module.exports = function(passport) {
 
                   const token = jwt.sign(
                     { user: userFound.getUser() },
-                    mConfig.secret,
-                    { expiresIn: "3d" }
+                    mConfig.mSecret,
+                    { expiresIn: '3d' }
                   );
 
                   // res.json({

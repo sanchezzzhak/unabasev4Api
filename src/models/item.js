@@ -1,16 +1,15 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+import mongoose, { Schema, mongo } from 'mongoose';
 
-// const mongoosePaginate = require("mongoose-paginate");
-
+import mongoosePaginate from 'mongoose-paginate';
 const itemSchema = new Schema(
   {
     name: String,
-    tax: { type: Schema.Types.ObjectId, ref: "Tax" }
+    tax: { type: Schema.Types.ObjectId, ref: 'Tax' }
   },
   { timestamps: true }
 );
 
 // itemSchema.plugin(mongoosePaginate);
-
-module.exports = mongoose.model("Item", itemSchema);
+itemSchema.plugin(mongoosePaginate);
+const Item = mongoose.model('Item', itemSchema);
+export default Item;

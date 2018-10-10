@@ -62,3 +62,5 @@ typings/
 .vscode
 src/config/auth.js
 src/config/main.js
+.prettierrc.json
+build/

@@ -7,9 +7,16 @@
   "license": "MIT",
   "scripts": {
     "test": "",
-    "start": "nodemon app"
+    "start3": "nodemon ./src/app",
+    "st": "nodemon ./src/app --exec babel-node",
+    "clean": "rm -rf build && mkdir build",
+    "build-babel": "babel -d ./build ./src -s",
+    "build": "npm run clean && npm run build-babel",
+    "start": "npm run build && node ./build/app.js"
   },
   "dependencies": {
+    "apollo-server-express": "^2.1.0",
+    "axios": "^0.18.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "circular-json": "^0.5.5",
@@ -18,22 +25,35 @@
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
     "express": "^4.16.3",
+    "express-graphql": "^0.6.12",
     "express-session": "^1.15.6",
     "express-validator": "^5.3.0",
     "express-xml-bodyparser": "^0.3.0",
+    "google-auth-library": "^2.0.0",
+    "graphql": "^14.0.2",
+    "graphql-tools": "^4.0.0",
     "jsonwebtoken": "^8.3.0",
     "mongoose": "^5.3.1",
     "mongoose-paginate": "^5.0.3",
     "mongoose-sequence": "^4.0.1",
     "nodemailer": "^4.6.8",
     "normalize-bool": "^1.0.0",
+    "normalize-type": "^1.5.1",
     "passport": "^0.4.0",
     "passport-google-oauth": "^1.0.0",
     "passport-local": "^1.0.0",
     "pug": "^2.0.3",
+    "restler": "^3.4.0",
     "serve-favicon": "^2.5.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.1.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-plugin-transform-es2015-destructuring": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-preset-stage-3": "^6.24.1",
     "typescript": "^3.0.3"
   }
 }

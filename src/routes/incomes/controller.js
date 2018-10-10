@@ -1,7 +1,10 @@
-const Incomes = require("../../models/income");
-const bool = require("normalize-bool");
+import bool from 'normalize-bool';
+import Income from '../../models/income';
+
+import itemLine from '../../models/itemLine';
 const routes = {
   get(req, res) {
+    console.log('enter get incomes');
     let query = {};
     let options = {};
     options.page = parseInt(req.query.page) || 1;
@@ -9,7 +12,7 @@ const routes = {
     query.name = req.query.name || null;
     query.active = bool(req.query.active) || null;
 
-    Incomes.paginate(query, options, (err, incomes) => {
+    Income.paginate(query, options, (err, incomes) => {
       if (err) {
         res.status(500).end();
       } else {
@@ -18,18 +21,32 @@ const routes = {
     });
   },
   create(req, res) {
-    const { name, description, client, state, items } = req.body;
-    let newIncome = new Incomes();
+    const { name, description, client, state, items, newItems } = req.body;
+    let newIncome = new Income();
     newIncome.name = name || null;
     newIncome.description = description || null;
     newIncome.client = client || null;
     // newIncome.creator = req.user._id || null;
     newIncome.state = state || null;
-    newIncome.items = new Array();
+    newIncome.items = [];
+    // console.log(newIncome);
     items.forEach(i => {
       newIncome.items.push(i);
     });
-
+    let errorOnItem = { state: false };
+    newItems.forEach(i => {
+      let line = new itemLine();
+      line.name = i.name;
+      line.tax = i.tax;
+      line.quantity = i.quantity;
+      line.save((err, lineSaved) => {
+        if (err) {
+          (errorOnItem.state = true), (errorOnItem.msg = err);
+        } else {
+          newIncome.items.push(lineSaved._id);
+        }
+      });
+    });
     newIncome.save((err, income) => {
       if (err) {
         console.log(err);
@@ -40,7 +57,7 @@ const routes = {
     });
   },
   getOne(req, res) {
-    Incomes.findOne({ _id: req.params.id }, (err, income) => {
+    Income.findOne({ _id: req.params.id }, (err, income) => {
       if (err) {
         res.status(500).end();
       } else {
@@ -52,7 +69,7 @@ const routes = {
     let query = {
       $or: [{ name: req.query.name || null }]
     };
-    Incomes.findOne({ _id: req.params.id }, (err, income) => {
+    Income.findOne({ _id: req.params.id }, (err, income) => {
       if (err) {
         res.status(500).end();
       } else {
@@ -61,7 +78,7 @@ const routes = {
     });
   },
   updateOne(req, res) {
-    Incomes.findOneAndUpdate({}, {}, { new: true }, (err, income) => {});
+    Income.findOneAndUpdate({}, {}, { new: true }, (err, income) => {});
   }
 };
 
