@@ -26,6 +26,7 @@ export default {
   },
   sToken: (req, res, next) => {
     req.token = req.headers.authorization;
+    // console.log(req.headers['authorization'].toString());
     if (
       typeof req.token !== 'undefined' &&
       req.headers.authorization !== 'postmanvn4b4s3'
