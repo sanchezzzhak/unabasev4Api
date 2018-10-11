@@ -33,6 +33,7 @@ let db = mongoose.connection;
 //check connection
 db.once('open', () => {
   console.log('Connnected to mongodb');
+  console.log(dbConfig.url);
 });
 
 //check for DB erros
@@ -75,7 +76,7 @@ app.use(express.static(path.join(__dirname, './public')));
 // );
 app.use(passport.initialize());
 app.use(passport.session());
-const allowedOrigins = ['http://localhost:8080', mainConfig.web];
+
 //global var
 app.use(function(req, res, next) {
   res.locals.activeUser = req.user || null;

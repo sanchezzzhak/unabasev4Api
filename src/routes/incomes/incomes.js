@@ -2,6 +2,7 @@ import { Router } from 'express';
 const incomes = Router();
 import ctl from './controller';
 import auth from '../../config/lib/auth';
+
 incomes.use(auth.sToken);
 
 incomes.get('/', ctl.get);
