@@ -3,6 +3,30 @@ import jwt from 'jsonwebtoken';
 import mConfig from '../../config/main';
 
 export default {
+  // if (err) {
+  //   return next(err);
+  // }
+  // if (!user) {
+  //   res.statusMessage = info.msg;
+  //   res.status(info.code).end();
+  //   // return res.redirect(info.code, "/");
+  // } else {
+  //   req.logIn(user, function(err) {
+  //     if (err) {
+  //       return next(err);
+  //     } else {
+  //       const token = jwt.sign({ user: user.getUser() }, mainConfig.mSecret, {
+  //         // expiresIn: 60 * 60 * 24 * 7
+  //         expiresIn: 60 * 60 * 24 * 7
+  //       });
+  //       // res.cookie('access_token', token);
+  //       res.statusMessage = 'authenticated';
+  //       res.json({ token, user: user.getUser() });
+  //     }
+  //     // return res.redirect("/isAuth");
+  //   });
+  // }
+
   login(req, res) {
     User.findOne({ username: req.body.username }, function(err, user) {
       // if there are any errors, return the error before anything else
@@ -66,7 +90,7 @@ export default {
       if (user) {
         // return done(null, false, req.flash('signupMessage', 'El nombre de usuario ya fue elegido.'));
         res.statusMessage = 'Username already exist';
-        res.status(202).end();
+        res.status(404);
         res.send({
           msg: 'Username already exist'
         });
@@ -76,8 +100,10 @@ export default {
         var newUser = new User();
 
         // set the user's local credentials
-        newUser.username = req.body.username;
-        // newUser.password = newUser.generateHash(req.body.password);
+        newUser.username =
+          req.body.username ||
+          req.body.email.slice(0, req.body.email.indexOf('@'));
+        newUser.password = newUser.generateHash(req.body.password);
         // newUser.isActive = true;
         newUser.name = req.body.name;
         // newUser.rut = req.body.rut;
@@ -90,11 +116,12 @@ export default {
         newUser.save(function(err, user) {
           if (err) throw err;
 
+          const token = jwt.sign({ user: user.getUser() }, mConfig.mSecret, {
+            expiresIn: '3d'
+          });
           user.activeScope = user._id;
           user.save();
-          res.send({
-            user
-          });
+          res.json({ token, user: user.getUser() });
         });
       }
     });

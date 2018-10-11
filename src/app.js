@@ -26,13 +26,16 @@ mongoose.connect(
 mongoose.set('useCreateIndex', true);
 const MongoStore = require('connect-mongo')(session);
 
-require('./config/passport')(passport); // pass passport for configuration
+// require('./config/passport')(passport); // pass passport for configuration
+// import configPassport from './config/passport';
+// configPassport(passport);
 
 let db = mongoose.connection;
 
 //check connection
 db.once('open', () => {
   console.log('Connnected to mongodb');
+  console.log(dbConfig.url);
 });
 
 //check for DB erros
@@ -75,7 +78,7 @@ app.use(express.static(path.join(__dirname, './public')));
 // );
 app.use(passport.initialize());
 app.use(passport.session());
-const allowedOrigins = ['http://localhost:8080', mainConfig.web];
+
 //global var
 app.use(function(req, res, next) {
   res.locals.activeUser = req.user || null;

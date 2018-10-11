@@ -31,33 +31,34 @@ auth.get('/errUser', ctl.errUser);
 //     failureFlash: true
 //   })
 // );
-auth.post('/login', (req, res, next) => {
-  passport.authenticate('local-login', function(err, user, info) {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      res.statusMessage = info.msg;
-      res.status(info.code).end();
-      // return res.redirect(info.code, "/");
-    } else {
-      req.logIn(user, function(err) {
-        if (err) {
-          return next(err);
-        } else {
-          const token = jwt.sign({ user: user.getUser() }, mainConfig.mSecret, {
-            // expiresIn: 60 * 60 * 24 * 7
-            expiresIn: 60 * 60 * 24 * 7
-          });
-          // res.cookie('access_token', token);
-          res.statusMessage = 'authenticated';
-          res.json({ token, user: user.getUser() });
-        }
-        // return res.redirect("/isAuth");
-      });
-    }
-  })(req, res, next);
-});
+// auth.post('/login', (req, res, next) => {
+//   passport.authenticate('local-login', function(err, user, info) {
+//     if (err) {
+//       return next(err);
+//     }
+//     if (!user) {
+//       res.statusMessage = info.msg;
+//       res.status(info.code).end();
+//       // return res.redirect(info.code, "/");
+//     } else {
+//       req.logIn(user, function(err) {
+//         if (err) {
+//           return next(err);
+//         } else {
+//           const token = jwt.sign({ user: user.getUser() }, mainConfig.mSecret, {
+//             // expiresIn: 60 * 60 * 24 * 7
+//             expiresIn: 60 * 60 * 24 * 7
+//           });
+//           // res.cookie('access_token', token);
+//           res.statusMessage = 'authenticated';
+//           res.json({ token, user: user.getUser() });
+//         }
+//         // return res.redirect("/isAuth");
+//       });
+//     }
+//   })(req, res, next);
+// });
+auth.post('/login', ctl.login);
 
 // auth.get('/login', (req, res,next)=>{
 //   console.log(req.msg)
@@ -67,16 +68,17 @@ auth.post('/login', (req, res, next) => {
 // })
 auth.post('/google/create', ctl.google.new);
 auth.post('/gauth', (req, res) => {
-  let url = gauth.endpoint + req.body.token;
-  console.log(req.body);
+  let url = gauth.googleAuth.endpoint + req.body.token;
+
+  // console.log(req.body);
 
   axios(url)
     .then(data => {
-      console.log('data from gauth');
-      console.log(data['sub']);
-      console.log({
-        'google.id': data.data.sub
-      });
+      // console.log('data from gauth');
+      // console.log(data['sub']);
+      // console.log({
+      //   'google.id': data.data.sub
+      // });
       User.findOne(
         {
           'google.id': data.data.sub
@@ -85,8 +87,8 @@ auth.post('/gauth', (req, res) => {
           if (err || user === null) {
             res.status(404).end();
           } else {
-            console.log('user.google');
-            console.log(user);
+            // console.log('user.google');
+            // console.log(user);
             const token = jwt.sign(
               { user: user.getUser() },
               mainConfig.mSecret
@@ -98,44 +100,44 @@ auth.post('/gauth', (req, res) => {
       );
     })
     .catch(err => {
-      console.log(err);
+      // console.log(err);
       res.status(503).end();
     });
 });
-auth.get(
-  '/google',
-  passport.authenticate('google', {
-    scope: [
-      'profile',
-      'email',
-      'https://www.googleapis.com/auth/calendar',
-      'openid'
-    ]
-  })
-);
-auth.get('/google/callback', (req, res, next) => {
-  passport.authenticate('google', function(err, user, info) {
-    console.log(err);
-    console.log(user);
-    console.log(info);
+// auth.get(
+//   '/google',
+//   passport.authenticate('google', {
+//     scope: [
+//       'profile',
+//       'email',
+//       'https://www.googleapis.com/auth/calendar',
+//       'openid'
+//     ]
+//   })
+// );
+// auth.get('/google/callback', (req, res, next) => {
+//   passport.authenticate('google', function(err, user, info) {
+//     console.log(err);
+//     console.log(user);
+//     console.log(info);
 
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      res.statusMessage = info.msg;
-      res.status(info.code).end();
-      // return res.redirect(info.code, "/");
-    } else {
-      req.logIn(user, function(err) {
-        if (err) {
-          return next(err);
-        }
-        return res.redirect('/isAuth');
-      });
-    }
-  })(req, res, next);
-});
+//     if (err) {
+//       return next(err);
+//     }
+//     if (!user) {
+//       res.statusMessage = info.msg;
+//       res.status(info.code).end();
+//       // return res.redirect(info.code, "/");
+//     } else {
+//       req.logIn(user, function(err) {
+//         if (err) {
+//           return next(err);
+//         }
+//         return res.redirect('/isAuth');
+//       });
+//     }
+//   })(req, res, next);
+// });
 // auth.get(
 //   "/google/callback",
 //   passport.authenticate("google", {}),

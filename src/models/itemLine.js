@@ -13,5 +13,14 @@ const itemLineSchema = new Schema(
   { timestamps: true }
 );
 
+itemLineSchema.methods.saveAsync = function() {
+  return new Promise((resolve, reject) => {
+    this.save((err, line) => {
+      if (err) return reject(err);
+      else resolve(line);
+    });
+  });
+};
+
 const ItemLine = mongoose.model('ItemLine', itemLineSchema);
 export default ItemLine;

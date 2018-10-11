@@ -2,6 +2,24 @@ import User from '../../models/user';
 
 import ntype from 'normalize-type';
 export default {
+  password: (req, res) => {
+    const { password, newPassword } = req.body;
+
+    User.findById(req.params.id, function(err, user) {
+      if (typeof user.password === 'undefined') {
+        res.status(200).send({ msg: 'password changed' });
+
+        user.password = user.generateHash(newPassword);
+        user.save();
+      } else if (user.validPassword(password)) {
+        user.password = user.generateHash(newPassword);
+        user.save();
+        res.status(200).send({ msg: 'password changed' });
+      } else {
+        res.status(500).send({ msg: 'password change failed' });
+      }
+    });
+  },
   logout: (req, res) => {
     console.log('out');
     req.logout();

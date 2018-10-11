@@ -1,18 +1,24 @@
 // config/passport.js
 
 // load all the things we need
-const LocalStrategy = require('passport-local').Strategy;
+// const LocalStrategy = require('passport-local').Strategy;
+import { LocalStrategy } from 'passport-local';
 // const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+// const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+import { GoogleStrategy } from 'passport-google-oauth';
+
 // load up the user model
 // const User = require('../models/user');
 import User from '../models/user';
 // const mainConfig = require('./main.js');
 
-const jwt = require('jsonwebtoken');
-const mConfig = require('./main');
+// const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
+// const mConfig = require('./main');
+import mConfig from './main';
 // load the auth variables
-const configAuth = require('./auth');
+// const configAuth = require('./auth');
+import configAuth from './auth';
 
 let setGoogle = (google, newUser) => {
   let email = google.emails[0].value;

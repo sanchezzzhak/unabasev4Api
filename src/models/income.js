@@ -17,7 +17,7 @@ const incomeSchema = new Schema(
     },
     client: { type: Schema.Types.ObjectId, ref: 'User' },
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
-    items: { type: Schema.Types.ObjectId, ref: 'ItemLine' },
+    items: Array({ type: Schema.Types.ObjectId, ref: 'ItemLine' }),
     total: {
       net: Number,
       tax: Number
@@ -33,5 +33,5 @@ const incomeSchema = new Schema(
 
 incomeSchema.plugin(mongoosePaginate);
 
-const Income = mongoose.model('Outcome', incomeSchema);
+const Income = mongoose.model('Income', incomeSchema);
 export default Income;
