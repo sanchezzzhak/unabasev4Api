@@ -6,9 +6,13 @@
   "author": "Simon Gomes <xtgomes@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "",
+    "test": "NODE_ENV=test mocha --timeout 10000",
+    "btest": "npm run build && NODE_ENV=test mocha --timeout 10000",
+    "test6": "NODE_ENV=test mocha --timeout 10000 --require  babel-core/register",
     "start3": "nodemon ./src/app",
-    "st": "nodemon ./src/app --exec babel-node",
+    "dev": "NODE_ENV=dev nodemon   ./src/app  --exec babel-node",
+    "una": "NODE_ENV=una nodemon   ./src/app  --exec babel-node",
+    "rtest": "NODE_ENV=test nodemon   ./src/app  --exec babel-node",
     "clean": "rm -rf build && mkdir build",
     "build-babel": "babel -d ./build ./src -s",
     "build": "npm run clean && npm run build-babel",
@@ -50,10 +54,15 @@
     "@babel/preset-env": "^7.1.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
+    "babel-plugin-add-module-exports": "^1.0.0",
     "babel-plugin-transform-es2015-destructuring": "^6.23.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-2": "^6.24.1",
     "babel-preset-stage-3": "^6.24.1",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.0",
+    "mocha": "^5.2.0",
+    "request": "^2.88.0",
     "typescript": "^3.0.3"
   }
 }

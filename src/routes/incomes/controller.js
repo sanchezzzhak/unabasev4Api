@@ -4,35 +4,36 @@ import Income from '../../models/income';
 import itemLine from '../../models/itemLine';
 import database from '../../config/database';
 import { totalmem } from 'os';
+import logger from '../../config/lib/logger';
 const routes = {
   get(req, res) {
-    console.log('enter get incomes');
     let query = {};
     let options = {};
     options.page = parseInt(req.query.page) || 1;
     options.limit = parseInt(req.query.limit) || 20;
     // query.name = req.query.name || null;
     // query.active = bool(req.query.active) || null;
-    console.log(query);
+    logger(query);
     Income.paginate(query, options, (err, incomes) => {
       if (err) {
         res.status(500).end();
       } else {
-        res.send(incomes);
+        res.json(incomes);
       }
     });
   },
   create: (req, res) => {
-    const { name, description, client, state, items } = req.body;
+    const { name, dates, client, state, items, description } = req.body;
     let errorOnItem = { state: false };
     let newIncome = new Income();
     newIncome.name = name || null;
     newIncome.description = description || null;
-    newIncome.client = client || null;
+    // newIncome.client = client || null;
+    newIncome.creator = req.user._id || null;
     newIncome.state = state || null;
     newIncome.items = new Array();
     newIncome.dates = {
-      expiration: req.body.expiration
+      expiration: req.body.dates.expiration
     };
     items.forEach(i => {
       let newLine = new itemLine();
@@ -46,7 +47,7 @@ const routes = {
           errorOnItem.state = true;
           errorOnItem.msg = err;
         } else {
-          console.log(line._id);
+          logger(line._id);
           newIncome.items.push(line._id);
         }
       });
@@ -55,34 +56,41 @@ const routes = {
       newIncome.save((err, income) => {
         if (err) {
           console.log(err);
-          res.status(500).end();
+          res.status(500).send(err);
         } else {
-          console.log('sssssn');
+          logger('sssssn');
           res.send(income);
         }
       });
     }, 500);
   },
   getOne(req, res) {
-    Income.findOne({ _id: req.params.id }, (err, income) => {
-      if (err) {
-        res.status(500).end();
-      } else {
-        res.send(income);
-      }
-    });
+    Income.findOne({ _id: req.params.id })
+
+      .populate('items')
+      .populate('creator', 'name')
+      .exec((err, income) => {
+        if (err) {
+          res.status(500).end();
+        } else {
+          res.send(income);
+        }
+      });
   },
-  findOne(req, res) {
+  findOne: (req, res) => {
     let query = {
       $or: [{ name: req.query.name || null }]
     };
-    Income.findOne({ _id: req.params.id }, (err, income) => {
-      if (err) {
-        res.status(500).end();
-      } else {
-        res.send(income);
-      }
-    });
+    Income.findOne({ _id: req.params.id })
+      .populate('items')
+      .populate('creator', 'name')
+      .exec((err, income) => {
+        if (err) {
+          res.status(500).end();
+        } else {
+          res.send(income);
+        }
+      });
   },
   updateOne(req, res) {
     let update = {
@@ -110,7 +118,7 @@ const routes = {
       { new: true },
       (err, income) => {
         if (err) {
-          console.log(err);
+          logger(err);
           res.status(500).send(err);
         } else {
           res.send(income);
@@ -120,4 +128,4 @@ const routes = {
   }
 };
 
-module.exports = routes;
+export default routes;

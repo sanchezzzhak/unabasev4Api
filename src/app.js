@@ -5,6 +5,7 @@ import bodyParser, { urlencoded, json } from 'body-parser';
 import xmlparser from 'express-xml-bodyparser';
 import flash from 'connect-flash';
 
+import logger from './config/lib/logger.js';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import dbConfig from './config/database.js';
@@ -13,34 +14,32 @@ import mainConfig from './config/main.js';
 const port = process.env.PORT || 3000;
 import favicon from 'serve-favicon';
 import session from 'express-session';
-// const cors = require("cors");
+
 import cors from 'cors';
-
+const env = process.env.NODE_ENV || '';
 /// database
+logger('db con');
 
+logger(env);
+logger(dbConfig[env]);
 mongoose.connect(
-  dbConfig.url,
+  dbConfig[env],
   { useNewUrlParser: true }
 );
 
 mongoose.set('useCreateIndex', true);
 const MongoStore = require('connect-mongo')(session);
 
-// require('./config/passport')(passport); // pass passport for configuration
-// import configPassport from './config/passport';
-// configPassport(passport);
-
 let db = mongoose.connection;
 
 //check connection
 db.once('open', () => {
-  console.log('Connnected to mongodb');
-  console.log(dbConfig.url);
+  logger('Connnected to mongodb');
 });
 
 //check for DB erros
 db.on('error', err => {
-  console.log(err);
+  logger(err);
 });
 
 //init app
@@ -122,5 +121,7 @@ app.use('/', routes);
 
 //start server
 app.listen(port, () => {
-  console.log('Server started on port ' + port);
+  logger('Server started on port ' + port);
 });
+
+export default app;

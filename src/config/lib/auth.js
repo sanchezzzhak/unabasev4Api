@@ -1,6 +1,7 @@
-// const jwt = require('jsonwebtoken');
 import jwt from 'jsonwebtoken';
 import mainConfig from '../main';
+import User from '../../models/user';
+import logger from './logger';
 export default {
   isAuth: (req, res, next) => {
     if (
@@ -39,11 +40,21 @@ export default {
         }
       });
       // next();
-    } else if (
-      req.method === 'OPTIONS' ||
-      req.headers.authorization === 'postmanvn4b4s3'
-    ) {
+    } else if (req.method === 'OPTIONS') {
       next();
+    } else if (
+      req.headers.authorization === 'postmanvn4b4s3' ||
+      process.env.NODE_ENV === 'test'
+    ) {
+      User.findOne({ email: 'text@mail.com' }).exec((err, user) => {
+        if (err) {
+          console.log(err);
+        } else if (user) {
+          logger('user set to ' + user.username);
+          req.user = user;
+          next();
+        }
+      });
     } else {
       res.status(403);
     }

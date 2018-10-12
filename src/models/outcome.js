@@ -1,8 +1,7 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
-
-const mongoosePaginate = require("mongoose-paginate");
-const User = require("./user");
+import mongoosePaginate from 'mongoose-paginate';
+import User from './user';
 
 const outcomeSchema = new Schema(
   {
@@ -11,8 +10,8 @@ const outcomeSchema = new Schema(
     dates: {
       expiration: Date
     },
-    client: { type: Schema.Types.ObjectId, ref: "Users" },
-    creator: { type: Schema.Types.ObjectId, ref: "Users" },
+    client: { type: Schema.Types.ObjectId, ref: 'Users' },
+    creator: { type: Schema.Types.ObjectId, ref: 'Users' },
     items: Array(Object),
     total: {
       net: Number,
@@ -21,11 +20,11 @@ const outcomeSchema = new Schema(
     state: String,
     isActive: { type: Boolean, default: true },
     currency: {
-      type: { type: Schema.Types.ObjectId, ref: "Currencies" }
+      type: { type: Schema.Types.ObjectId, ref: 'Currencies' }
     }
   },
   { timestamps: true }
 );
 
 outcomeSchema.plugin(mongoosePaginate);
-module.exports = mongoose.model("Outcome", outcomeSchema);
+export default mongoose.model('Outcome', outcomeSchema);

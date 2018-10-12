@@ -1,6 +1,7 @@
 import User from '../../models/user';
 import jwt from 'jsonwebtoken';
 import mConfig from '../../config/main';
+import logger from '../../config/lib/logger';
 
 export default {
   // if (err) {
@@ -36,13 +37,13 @@ export default {
 
       // if no user is found, return the message
       if (!user) {
-        console.log('User does not exist');
+        logger('User does not exist');
         res.statusMessage = 'User does not exist';
         res.status(404).end();
 
         // res.send('User does not exist');
       } else if (!user.validPassword(req.body.password)) {
-        console.log('Current password does not match');
+        logger('Current password does not match');
 
         res.statusMessage = 'Current password does not match';
         res.status(403).end();
@@ -50,7 +51,7 @@ export default {
         // res.send('Current password does not match');
         // return done(null, false, 'wrong pass123sg'); // create the loginMessage and save it to session as flashdata
       } else if (!user.isActive) {
-        console.log('User is not active');
+        logger('User is not active');
         res.statusMessage = 'User is not active';
         res.status(401).end();
 
@@ -74,7 +75,7 @@ export default {
           //   httpOnly: true
           // });
           // req.session.user = user;
-
+          req.user = user;
           res.statusMessage = 'authenticated';
           res.json({ token, user: user.getUser() });
         });
@@ -82,6 +83,7 @@ export default {
     });
   },
   register(req, res) {
+    logger('reg');
     User.findOne({ username: req.body.username }, function(err, user) {
       // if there are any errors, return the error
       if (err) throw err;
@@ -121,6 +123,7 @@ export default {
           });
           user.activeScope = user._id;
           user.save();
+          req.user = user;
           res.json({ token, user: user.getUser() });
         });
       }
@@ -130,7 +133,7 @@ export default {
     // Successful authentication, redirect home.
     // req.session.access_token = req.user.accessToken;
     // req.session.access_token = req.user.google.accessToken;
-    console.log('callbackg');
+    logger('callbackg');
     if (typeof req.user.history.emailUrl != 'undefined') {
       let url = req.user.history.emailUrl;
       let update = {
@@ -163,7 +166,7 @@ export default {
     }
   },
   errUser(req, res) {
-    console.log(req);
+    logger(req);
   },
   google: {
     new(req, res) {
@@ -195,6 +198,7 @@ export default {
                       expiresIn: '3d'
                     }
                   );
+                  req.user = user;
                   res.send({
                     token,
                     user: userFound.getUser()

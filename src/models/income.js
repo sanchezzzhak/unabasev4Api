@@ -1,11 +1,5 @@
-// const mongoose = require("mongoose");
-// const Schema = mongoose.Schema;
-
-// const mongoosePaginate = require("mongoose-paginate");
-// const User = require('./user');
 import User from './user';
 import mongoose from 'mongoose';
-// const mongoosePaginate = require("mongoose-paginate");
 import mongoosePaginate from 'mongoose-paginate';
 const Schema = mongoose.Schema;
 const incomeSchema = new Schema(

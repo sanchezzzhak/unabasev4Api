@@ -1,19 +1,9 @@
-// let mongoose = require("mongoose");
-// let bcrypt = require("bcryptjs");
-// let Schema = mongoose.Schema;
 import mongoose from 'mongoose';
 
 import mongoosePaginate from 'mongoose-paginate';
 import bcrypt from 'bcryptjs';
 const Schema = mongoose.Schema;
-// let taskModel = require("../models/task");
-// let Task = taskModel["task"];
-// let Subtask = taskModel["subtask"];
-// let Tag = taskModel["tag"];
-// var uniqueValidator = require('mongoose-unique-validator');
-// user schema
-//   id, active, login, clave, nombre, apellidos, cargo, rut, telefono fijo, celular, empresa, grupo, email, direccion, perfil
-// @ts-ignore
+
 let userSchema = Schema(
   {
     isActive: { type: Boolean, default: true },

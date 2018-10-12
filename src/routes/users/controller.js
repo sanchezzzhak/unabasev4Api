@@ -1,6 +1,8 @@
 import User from '../../models/user';
 
 import ntype from 'normalize-type';
+import logger from '../../config/lib/logger';
+
 export default {
   password: (req, res) => {
     const { password, newPassword } = req.body;
@@ -21,7 +23,7 @@ export default {
     });
   },
   logout: (req, res) => {
-    console.log('out');
+    logger('out');
     req.logout();
     req.session = null;
     res.status(200).send('Log out');
@@ -46,14 +48,14 @@ export default {
     });
   },
   postUsers: (req, res) => {
-    console.log('req.body post');
-    console.log(req.body);
+    logger('req.body post');
+    logger(req.body);
     User.paginate(
       {},
       { page: req.body.page || 1, limit: req.body.limit || 20 },
       (err, users) => {
         if (err) {
-          console.log(err);
+          logger(err);
         } else {
           res.send(users);
         }
@@ -63,7 +65,7 @@ export default {
   getUser: (req, res) => {
     User.findOne({ id: req.params.id }, (err, user) => {
       if (err) {
-        console.log(err);
+        logger(err);
       } else {
         res.send(user.getUser());
       }

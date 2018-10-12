@@ -61,22 +61,22 @@ auth.get('/errUser', ctl.errUser);
 auth.post('/login', ctl.login);
 
 // auth.get('/login', (req, res,next)=>{
-//   console.log(req.msg)
-//   // console.log(data)
-//   console.log(next)
+//   logger(req.msg)
+//   // logger(data)
+//   logger(next)
 //   res.send(req.msg)
 // })
 auth.post('/google/create', ctl.google.new);
 auth.post('/gauth', (req, res) => {
   let url = gauth.googleAuth.endpoint + req.body.token;
 
-  // console.log(req.body);
+  // logger(req.body);
 
   axios(url)
     .then(data => {
-      // console.log('data from gauth');
-      // console.log(data['sub']);
-      // console.log({
+      // logger('data from gauth');
+      // logger(data['sub']);
+      // logger({
       //   'google.id': data.data.sub
       // });
       User.findOne(
@@ -87,8 +87,8 @@ auth.post('/gauth', (req, res) => {
           if (err || user === null) {
             res.status(404).end();
           } else {
-            // console.log('user.google');
-            // console.log(user);
+            // logger('user.google');
+            // logger(user);
             const token = jwt.sign(
               { user: user.getUser() },
               mainConfig.mSecret
@@ -100,7 +100,7 @@ auth.post('/gauth', (req, res) => {
       );
     })
     .catch(err => {
-      // console.log(err);
+      // logger(err);
       res.status(503).end();
     });
 });
@@ -117,9 +117,9 @@ auth.post('/gauth', (req, res) => {
 // );
 // auth.get('/google/callback', (req, res, next) => {
 //   passport.authenticate('google', function(err, user, info) {
-//     console.log(err);
-//     console.log(user);
-//     console.log(info);
+//     logger(err);
+//     logger(user);
+//     logger(info);
 
 //     if (err) {
 //       return next(err);

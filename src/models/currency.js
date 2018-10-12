@@ -1,11 +1,11 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const currencySchema = new Schema(
   {
     name: String,
-    decimal: { type: String, enum: [",", "."] },
-    thousands: { type: String, enum: [",", "."] },
+    decimal: { type: String, enum: [',', '.'] },
+    thousands: { type: String, enum: [',', '.'] },
     prefix: String,
     suffix: String,
     precision: { type: Number, min: 0, max: 10 }
@@ -13,5 +13,5 @@ const currencySchema = new Schema(
   { timestamps: true }
 );
 
-const Currency = mongoose.model("Currency", currencySchema);
-module.exports = Currency;
+const Currency = mongoose.model('Currency', currencySchema);
+export default Currency;

@@ -28,6 +28,9 @@ routes.use('/taxs', taxs);
 
 import items from './items/items';
 import { from } from 'apollo-link';
+import logger from '../config/lib/logger';
 routes.use('/items', items);
+
+logger('not is test');
 
 export default routes;
