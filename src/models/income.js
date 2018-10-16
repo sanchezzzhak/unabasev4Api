@@ -18,9 +18,7 @@ const incomeSchema = new Schema(
     },
     state: String,
     isActive: { type: Boolean, default: true },
-    currency: {
-      type: { type: Schema.Types.ObjectId, ref: 'Currency' }
-    }
+    currency: { type: Schema.Types.ObjectId, ref: 'Currency' }
   },
   { timestamps: true }
 );
