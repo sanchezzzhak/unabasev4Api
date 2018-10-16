@@ -11,7 +11,7 @@ const incomeSchema = new Schema(
     },
     client: { type: Schema.Types.ObjectId, ref: 'User' },
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
-    items: Array({ type: Schema.Types.ObjectId, ref: 'ItemLine' }),
+    lines: Array({ type: Schema.Types.ObjectId, ref: 'ItemLine' }),
     total: {
       net: Number,
       tax: Number

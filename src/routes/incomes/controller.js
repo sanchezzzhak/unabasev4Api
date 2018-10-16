@@ -12,6 +12,7 @@ const routes = {
     let options = {};
     options.page = parseInt(req.query.page) || 1;
     options.limit = parseInt(req.query.limit) || 20;
+    options.populate = 'lines';
     // query.name = req.query.name || null;
     // query.active = bool(req.query.active) || null;
     logger(query);
@@ -24,7 +25,7 @@ const routes = {
     });
   },
   create: (req, res) => {
-    const { name, dates, client, state, items, description } = req.body;
+    const { name, dates, client, state, lines, description } = req.body;
     let errorOnItem = { state: false };
     let newIncome = new Income();
     newIncome.name = name || null;
@@ -32,11 +33,11 @@ const routes = {
     // newIncome.client = client || null;
     newIncome.creator = req.user._id || null;
     newIncome.state = state || null;
-    newIncome.items = new Array();
+    newIncome.lines = new Array();
     newIncome.dates = {
       expiration: req.body.dates.expiration
     };
-    items.forEach(i => {
+    lines.forEach(i => {
       let newLine = new itemLine();
       newLine.name = i.name;
       newLine.tax = i.tax;
@@ -107,11 +108,11 @@ const routes = {
       },
       state: req.body.state,
       currency: req.body.currency,
-      items: []
+      lines: []
     };
 
-    req.body.items.forEach(i => {
-      update.items.push(i);
+    req.body.lines.forEach(i => {
+      update.lines.push(i);
     });
     Income.findOneAndUpdate(
       { _id: req.params.id },
