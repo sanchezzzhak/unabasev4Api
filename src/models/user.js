@@ -15,11 +15,6 @@ let userSchema = Schema(
     emails: { type: Object },
     accountType: { type: String, default: 'personal' },
     activeScope: { type: Schema.Types.ObjectId, ref: 'User' },
-    relations: {
-      // invites: Array({ type: Schema.Types.ObjectId, ref: 'User'}),
-      related: Array({ type: Schema.Types.ObjectId, ref: 'User' }),
-      invites: Array({ type: String })
-    },
     address: {
       street: String,
       number: Number,
@@ -29,7 +24,6 @@ let userSchema = Schema(
       region: String,
       country: String
     },
-    last_login: Date,
     lastLogin: Date,
     companies: Array({ type: String }),
     access: Array({ type: Object }),
