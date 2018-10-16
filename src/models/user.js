@@ -14,7 +14,7 @@ let userSchema = Schema(
     idnumber: { type: String },
     phone: String,
     phones: Array({ type: String }),
-    emails: Array({ type: String }),
+    emails: { type: Object },
     cellphone: String,
     email: { type: String },
     accountType: { type: String, default: 'personal' },

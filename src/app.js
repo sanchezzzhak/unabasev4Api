@@ -34,7 +34,7 @@ let db = mongoose.connection;
 
 //check connection
 db.once('open', () => {
-  logger('Connnected to mongodb');
+  logger('Connnected to mongodb ' + process.env.NODE_ENV);
 });
 
 //check for DB erros
@@ -79,17 +79,22 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //global var
+let allowedOrigins = [
+  'https://unabase1.firebaseapp.com',
+  'http://localhost:8080',
+  'http://localhost:8081'
+];
 app.use(function(req, res, next) {
   res.locals.activeUser = req.user || null;
   res.locals.user = req.user || null;
   res.locals.host = mainConfig.host;
-  // let origin = req.headers.origin;
-  // if (allowedOrigins.indexOf(origin) > -1) {
-  //   res.header('Access-Control-Allow-Origin', origin);
-  // }
+  let origin = req.headers.origin;
+  if (allowedOrigins.indexOf(origin) > -1) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
   // res.header('Access-Control-Allow-Origin', true);
   // res.header("Access-Control-Allow-Origin", "http://localhost:8081");
-  res.header('Access-Control-Allow-Origin', mainConfig.web);
+  // res.header('Access-Control-Allow-Origin', mainConfig.web);
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Methods', [
     'POST',

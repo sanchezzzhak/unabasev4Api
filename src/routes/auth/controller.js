@@ -111,7 +111,8 @@ export default {
         // newUser.rut = req.body.rut;
         // newUser.phone = req.body.phone;
         // newUser.cellphone = req.body.cellphone;
-        newUser.email = req.body.email;
+        newUser.emails = {};
+        newUser.emails.default = req.body.email;
         // newUser.address = req.body.address;
 
         // save the user

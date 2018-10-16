@@ -12,14 +12,14 @@ export default {
       // if (req.isAuthenticated()) {
       next();
     } else {
-      res.sendStatus(403);
+      res.status(403).send({ msg: 'Not authorized' });
     }
   },
   cToken: (req, res, next) => {
     req.token = req.cookies.access_token;
     jwt.verify(req.token, mainConfig.mSecret, (err, decoded) => {
       if (err) {
-        res.sendStatus(403);
+        res.status(403).send({ msg: 'Not authorized' });
       } else {
         next();
       }
@@ -34,7 +34,7 @@ export default {
     ) {
       jwt.verify(req.token, mainConfig.mSecret, (err, decoded) => {
         if (err) {
-          res.status(403);
+          res.status(403).send({ msg: 'Not authorized' });
         } else {
           next();
         }
@@ -46,17 +46,21 @@ export default {
       req.headers.authorization === 'postmanvn4b4s3' ||
       process.env.NODE_ENV === 'test'
     ) {
-      User.findOne({ email: 'text@mail.com' }).exec((err, user) => {
-        if (err) {
-          console.log(err);
-        } else if (user) {
-          logger('user set to ' + user.username);
-          req.user = user;
-          next();
+      User.findOne({ email: { $regex: 'mail.com', $options: 'i' } }).exec(
+        (err, user) => {
+          if (err) {
+            console.log(err);
+          } else if (user) {
+            logger('user set to ' + user.username);
+            req.user = user;
+            next();
+          } else {
+            res.status(404).send({ msg: 'Not user found' });
+          }
         }
-      });
+      );
     } else {
-      res.status(403);
+      res.status(403).send({ msg: 'Not authorized' });
     }
   }
 };

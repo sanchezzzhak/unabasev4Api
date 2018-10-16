@@ -7,6 +7,7 @@ import { totalmem } from 'os';
 import logger from '../../config/lib/logger';
 const routes = {
   get(req, res) {
+    logger('list incomes');
     let query = {};
     let options = {};
     options.page = parseInt(req.query.page) || 1;

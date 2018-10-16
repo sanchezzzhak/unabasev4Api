@@ -39,10 +39,12 @@ describe('Incomes***************************************', () => {
       axios
         .post(api.income.main, {
           name: 'test inc',
-          dates: {
-            expiration: '2018-10-10 18:07:42.803'
-          },
           description: 'test desc incm',
+          dates: {
+            expiration: new Date()
+          },
+          // client: '',
+          // creator: '',
           items: [
             {
               name: 'tomate',
@@ -66,7 +68,12 @@ describe('Incomes***************************************', () => {
               item: '5bbe5c8b2edaed42baf2b6c1'
             }
           ],
-          state: 'draft'
+          total: {
+            net: 5000,
+            tax: 5950
+          },
+          state: 'draft',
+          currency: 
         })
         .then(res => {
           res.should.have.status(200);
