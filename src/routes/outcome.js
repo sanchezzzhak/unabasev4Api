@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const outcomes = Router();
-import { gets, getFilter, get, update } from './controller';
+import { gets, getFilter, get, update } from '../../controllers/outcome';
 import { cToken } from '../../config/lib/auth';
 users.use(cToken);
 

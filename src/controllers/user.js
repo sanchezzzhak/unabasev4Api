@@ -1,7 +1,7 @@
-import User from '../../models/user';
+import User from '../models/user';
 
 import ntype from 'normalize-type';
-import logger from '../../config/lib/logger';
+import logger from '../config/lib/logger';
 
 export default {
   password: (req, res) => {
@@ -47,21 +47,7 @@ export default {
       }
     });
   },
-  postUsers: (req, res) => {
-    logger('req.body post');
-    logger(req.body);
-    User.paginate(
-      {},
-      { page: req.body.page || 1, limit: req.body.limit || 20 },
-      (err, users) => {
-        if (err) {
-          logger(err);
-        } else {
-          res.send(users);
-        }
-      }
-    );
-  },
+  postUsers: (req, res) => {},
   getUser: (req, res) => {
     User.findOne({ id: req.params.id }, (err, user) => {
       if (err) {

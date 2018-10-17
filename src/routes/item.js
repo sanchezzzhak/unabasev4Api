@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const items = Router();
-import { get, create, updateOne, findOne, getOne } from './controller';
+import { get, create, updateOne, findOne, getOne } from '../controllers/item';
 
 items.get('/', get);
 items.post('/', create);

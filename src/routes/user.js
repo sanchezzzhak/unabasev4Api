@@ -1,8 +1,8 @@
 import { Router } from 'express';
 const users = Router();
-import ctl from './controller';
+import ctl from '../controllers/user';
 
-import auth from '../../config/lib/auth';
+import auth from '../config/lib/auth';
 users.use(auth.sToken);
 
 /*

@@ -1,4 +1,4 @@
-import Item from '../../models/item';
+import Item from '../models/item';
 import ntype from 'normalize-type';
 const routes = {
   get(req, res) {

@@ -14,7 +14,6 @@ import mainConfig from './config/main.js';
 const port = process.env.PORT || 3000;
 import favicon from 'serve-favicon';
 import session from 'express-session';
-
 import cors from 'cors';
 const env = process.env.NODE_ENV || '';
 /// database
@@ -82,6 +81,8 @@ app.use(passport.session());
 let allowedOrigins = [
   'https://unabase1.firebaseapp.com',
   'http://localhost:8080',
+  'https://unabase.net',
+  'https://www.unabase.net',
   'http://localhost:8081'
 ];
 app.use(function(req, res, next) {

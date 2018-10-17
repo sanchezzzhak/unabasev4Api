@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import Business from '../../models/business';
+import Business from '../models/business';
 export default {
   create: (req, res) => {
     Business.findOne({ idnumber: req.body.idnumber }, (err, business) => {

@@ -1,10 +1,9 @@
 import bool from 'normalize-bool';
-import Income from '../../models/income';
+import Income from '../models/income';
 
-import itemLine from '../../models/itemLine';
-import database from '../../config/database';
-import { totalmem } from 'os';
-import logger from '../../config/lib/logger';
+import itemLine from '../models/itemLine';
+
+import logger from '../config/lib/logger';
 const routes = {
   get(req, res) {
     logger('list incomes');
@@ -12,7 +11,8 @@ const routes = {
     let options = {};
     options.page = parseInt(req.query.page) || 1;
     options.limit = parseInt(req.query.limit) || 20;
-    options.populate = 'lines';
+    options.select = 'name client.name createdAt total state';
+    options.populate = [{ path: 'client', select: 'name' }];
     // query.name = req.query.name || null;
     // query.active = bool(req.query.active) || null;
     logger(query);
@@ -30,13 +30,16 @@ const routes = {
     let newIncome = new Income();
     newIncome.name = name || null;
     newIncome.description = description || null;
-    // newIncome.client = client || null;
+    newIncome.client = client || null;
     newIncome.creator = req.user._id || null;
     newIncome.state = state || null;
     newIncome.lines = new Array();
     newIncome.dates = {
       expiration: req.body.dates.expiration
     };
+    newIncome.total = {};
+    newIncome.total.net = req.body.total.net;
+    newIncome.total.tax = req.body.total.tax;
     lines.forEach(i => {
       let newLine = new itemLine();
       newLine.name = i.name;
@@ -50,7 +53,7 @@ const routes = {
           errorOnItem.msg = err;
         } else {
           logger(line._id);
-          newIncome.items.push(line._id);
+          newIncome.lines.push(line._id);
         }
       });
     });
@@ -69,11 +72,19 @@ const routes = {
   getOne(req, res) {
     Income.findOne({ _id: req.params.id })
 
-      .populate('items')
-      .populate('creator', 'name')
+      // .populate('lines creator', 'creator.name')
+      // .populate('creator', 'name')
+      // .populate('creator', 'google.email')
+      // .populate('client', 'google.email')
+      // .populate('client', 'name')
+      .populate([
+        { path: 'lines' },
+        { path: 'creator', select: 'name google.email emails.default' },
+        { path: 'client', select: 'name google.email emails.default' }
+      ])
       .exec((err, income) => {
         if (err) {
-          res.status(500).end();
+          res.status(500).send(err);
         } else {
           res.send(income);
         }
@@ -94,7 +105,7 @@ const routes = {
         }
       });
   },
-  updateOne(req, res) {
+  updateOne: (req, res) => {
     let update = {
       name: req.body.name,
       description: req.body.description,
@@ -112,7 +123,30 @@ const routes = {
     };
 
     req.body.lines.forEach(i => {
-      update.lines.push(i);
+      if (i._id) {
+        itemLine.findByIdAndUpdate(i._id, i, { new: true }, (err, line) => {
+          if (err) console.log(err);
+          else {
+            update.lines.push(i._id);
+          }
+        });
+      } else {
+        let newLine = new itemLine();
+        newLine.name = i.name;
+        newLine.tax = i.tax;
+        newLine.quantity = i.quantity;
+        newLine.price = i.price;
+        newLine.item = i.item;
+        newLine.save((err, line) => {
+          if (err) {
+            errorOnItem.state = true;
+            errorOnItem.msg = err;
+          } else {
+            logger(line._id);
+            update.lines.push(line._id);
+          }
+        });
+      }
     });
     Income.findOneAndUpdate(
       { _id: req.params.id },
@@ -120,7 +154,7 @@ const routes = {
       { new: true },
       (err, income) => {
         if (err) {
-          logger(err);
+          console.log(err);
           res.status(500).send(err);
         } else {
           res.send(income);

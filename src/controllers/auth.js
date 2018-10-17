@@ -1,7 +1,7 @@
-import User from '../../models/user';
+import User from '../models/user';
 import jwt from 'jsonwebtoken';
-import mConfig from '../../config/main';
-import logger from '../../config/lib/logger';
+import mConfig from '../config/main';
+import logger from '../config/lib/logger';
 
 export default {
   // if (err) {

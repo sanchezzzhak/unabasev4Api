@@ -46,19 +46,19 @@ export default {
       req.headers.authorization === 'postmanvn4b4s3' ||
       process.env.NODE_ENV === 'test'
     ) {
-      User.findOne({ email: { $regex: 'mail.com', $options: 'i' } }).exec(
-        (err, user) => {
-          if (err) {
-            console.log(err);
-          } else if (user) {
-            logger('user set to ' + user.username);
-            req.user = user;
-            next();
-          } else {
-            res.status(404).send({ msg: 'Not user found' });
-          }
+      User.findOne({
+        'emails.default': { $regex: 'mail.com', $options: 'i' }
+      }).exec((err, user) => {
+        if (err) {
+          console.log(err);
+        } else if (user) {
+          logger('user set to ' + user.username);
+          req.user = user;
+          next();
+        } else {
+          res.status(404).send({ msg: 'Not user found' });
         }
-      );
+      });
     } else {
       res.status(403).send({ msg: 'Not authorized' });
     }

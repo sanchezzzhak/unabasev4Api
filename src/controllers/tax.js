@@ -1,4 +1,4 @@
-import Tax from '../../models/tax';
+import Tax from '../models/tax';
 import ntype from 'normalize-type';
 
 export default {
@@ -40,7 +40,20 @@ export default {
       }
     });
   },
-  updateOne() {},
+  updateOne: (req, res) => {
+    Tax.findOneAndUpdate(
+      { _id: req.params.id },
+      req.body,
+      { new: true },
+      (err, item) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          res.send(item);
+        }
+      }
+    );
+  },
   findOne(req, res) {
     let query = {
       $and: []

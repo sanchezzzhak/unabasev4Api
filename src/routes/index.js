@@ -11,23 +11,25 @@ routes.get('/isAuth', authConfig.sToken, (req, res) => {
   res.send(req.user.getUser());
 });
 
-import auth from './auth/auth';
+import auth from './auth';
 routes.use('/auth', auth);
 
-import users from './users/users';
-routes.use('/users', users);
+import user from './user';
+routes.use('/users', user);
 
-import business from './business/business';
+import business from './business';
 routes.use('/business', business);
 
-import incomes from './incomes/incomes';
-routes.use('/incomes', incomes);
+import income from './income';
+routes.use('/incomes', income);
 
-import taxs from './taxs/taxs';
-routes.use('/taxs', taxs);
+import tax from './tax';
+routes.use('/taxs', tax);
 
-import items from './items/items';
+import item from './item';
+routes.use('/items', item);
 
-routes.use('/items', items);
+import currency from './currency';
+routes.use('/currencies', currency);
 
 export default routes;

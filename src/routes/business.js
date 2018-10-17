@@ -1,7 +1,7 @@
 import { Router } from 'express';
 const business = Router();
-import ctl from './controller';
-import auth from '../../config/lib/auth';
+import ctl from '../controllers/business';
+import auth from '../config/lib/auth';
 business.use(auth.sToken);
 
 business.get('/', ctl.get);
