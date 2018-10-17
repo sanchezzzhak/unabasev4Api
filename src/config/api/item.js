@@ -5,7 +5,7 @@ export default api => {
      * GET/:id    get doc info params [id(ObjectId)]
      * POST/  create item
      */
-    get: `${api}items/`,
+    main: `${api}items/`,
     /**
      * PATCH/
      * name: string

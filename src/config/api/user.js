@@ -37,6 +37,7 @@ export default api => {
      *  PUT/ change password
      *   params: [ :id]
      */
-    password: `${api}users/password/`
+    password: `${api}users/password/`,
+    business: `${api}users/business/`
   };
 };

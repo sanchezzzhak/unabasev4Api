@@ -1,6 +1,7 @@
 // @ts-nocheck
 
 import Business from '../models/business';
+import User from '../models/user';
 export default {
   create: (req, res) => {
     Business.findOne({ idnumber: req.body.idnumber }, (err, business) => {
@@ -115,5 +116,23 @@ export default {
       }
     });
   },
-  gets: (req, res) => {}
+  gets: (req, res) => {},
+
+  user: (req, res) => {
+    let update = {
+      $addToSet: { users: req.body.user }
+    };
+    User.findByIdAndUpdate(
+      req.params.id,
+      update,
+      { new: true },
+      (err, item) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          res.send(item);
+        }
+      }
+    );
+  }
 };

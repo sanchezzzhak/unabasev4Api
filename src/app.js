@@ -33,7 +33,7 @@ let db = mongoose.connection;
 
 //check connection
 db.once('open', () => {
-  logger('Connnected to mongodb ' + process.env.NODE_ENV);
+  console.log('Connnected to mongodb ' + process.env.NODE_ENV);
 });
 
 //check for DB erros

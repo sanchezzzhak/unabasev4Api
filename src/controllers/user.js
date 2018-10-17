@@ -86,7 +86,7 @@ export default {
       }
     );
   },
-  scope: (req, res) => {
+  business: (req, res) => {
     let update = {
       $addToSet: { business: req.body.business }
     };
@@ -94,7 +94,27 @@ export default {
       req.params.id,
       update,
       { new: true },
-      (err, item) => {}
+      (err, item) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          res.send(item);
+        }
+      }
+    );
+  },
+  scope: (req, res) => {
+    User.findByIdAndUpdate(
+      req.params.id,
+      { scope: req.body.business },
+      { new: true },
+      (err, item) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          res.send(item);
+        }
+      }
     );
   },
   findOne: (req, res) => {

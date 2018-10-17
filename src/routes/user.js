@@ -8,7 +8,9 @@ import {
   findOne,
   getOne,
   password,
-  update
+  update,
+  business,
+  scope
 } from '../controllers/user';
 
 import auth from '../config/lib/auth';
@@ -30,5 +32,7 @@ users.get('/find', findOne);
 users.get('/:id', getOne);
 users.put('/password/:id', password);
 users.put('/:id', update);
+users.put('/business/:id', business);
+users.put('/scope/:id', scope);
 
 export default users;

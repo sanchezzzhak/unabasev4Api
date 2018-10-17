@@ -1,14 +1,23 @@
 import { Router } from 'express';
 const business = Router();
-import ctl from '../controllers/business';
+import {
+  get,
+  gets,
+  create,
+  getOne,
+  update,
+  user
+} from '../controllers/business';
 import auth from '../config/lib/auth';
 business.use(auth.sToken);
 
-business.get('/', ctl.get);
-business.post('/', ctl.gets);
-business.post('/create', ctl.create);
-business.get('/:_id', ctl.getOne);
-business.put('/:_id', ctl.update);
+business.get('/', get);
+business.post('/', gets);
+business.post('/create', create);
+business.get('/:_id', getOne);
+business.put('/:_id', update);
+
+business.put('/user/:id', user);
 // business
 
 export default business;
