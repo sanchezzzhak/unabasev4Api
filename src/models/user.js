@@ -13,8 +13,18 @@ let userSchema = Schema(
     idnumber: { type: String },
     phones: { type: Object },
     emails: { type: Object },
-    accountType: { type: String, default: 'personal' },
-    activeScope: { type: Schema.Types.ObjectId, ref: 'User' },
+    /**
+     *     enum: ['personal', 'business']
+     */
+    type: {
+      type: String,
+      default: 'personal',
+      enum: ['personal', 'business']
+    },
+    /**
+     *  active scope, personal or one of the business asociated
+     */
+    scope: { type: Schema.Types.ObjectId, ref: 'User' },
     address: {
       street: String,
       number: Number,
@@ -33,33 +43,34 @@ let userSchema = Schema(
       accessToken: String,
       imgUrl: String
     },
-    notifications: {
-      internal: {
-        task: {
-          changeResponsable: { type: Boolean, default: true }
-        }
-      },
-      email: {
-        task: {
-          newTask: { type: Boolean, default: true }
-        }
-      }
-    },
-    history: {
-      emailUrl: { type: String },
-      inviteUrl: { type: String }
-    },
-    guests: Array({ type: String }),
-    config: {
-      tasks: {
-        timing: { type: Boolean, default: false },
-        timingTask: { type: Schema.Types.ObjectId, ref: 'Task' }
-      }
-    },
-    timer: {
-      timing: { type: Boolean, default: false },
-      task: { type: Schema.Types.ObjectId, ref: 'Task' }
-    }
+    business: Array({ type: Schema.Types.ObjectId, ref: 'User' })
+    // notifications: {
+    //   internal: {
+    //     task: {
+    //       changeResponsable: { type: Boolean, default: true }
+    //     }
+    //   },
+    //   email: {
+    //     task: {
+    //       newTask: { type: Boolean, default: true }
+    //     }
+    //   }
+    // },
+    // history: {
+    //   emailUrl: { type: String },
+    //   inviteUrl: { type: String }
+    // },
+    // guests: Array({ type: String }),
+    // config: {
+    //   tasks: {
+    //     timing: { type: Boolean, default: false },
+    //     timingTask: { type: Schema.Types.ObjectId, ref: 'Task' }
+    //   }
+    // },
+    // timer: {
+    //   timing: { type: Boolean, default: false },
+    //   task: { type: Schema.Types.ObjectId, ref: 'Task' }
+    // }
   },
   { timestamps: true }
 );

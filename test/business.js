@@ -1,28 +1,27 @@
 import { should as _should, use } from 'chai';
 import chaiHttp from 'chai-http';
-import { assert } from 'chai';
-const should = _should();
 import axios from 'axios';
 use(chaiHttp);
-import api from '../src/config/api/index';
+import api from '../src/config/api';
 
-let userId;
+let businessId;
 let data = {
   password: 'test123'
 };
-describe('User***************************************', () => {
-  it('it should create a user', done => {
+describe('Business***************************************', () => {
+  it('it should create a business', done => {
     axios
       .post(api.user.main, {
-        name: 'test user',
-        username: 'test username',
+        name: 'test business',
+        username: 'businessusername',
         password: data.password,
         idnumber: '255456562',
+        type: 'business',
         phones: {
           default: '+56909909909'
         },
         emails: {
-          default: 'test@mail.com'
+          default: 'business@mail.com'
         },
         address: {
           street: 'carmen covarrubias',
@@ -36,8 +35,8 @@ describe('User***************************************', () => {
       .then(res => {
         res.should.have.status(200);
         res.data.should.be.a('object');
-        res.data.type.should.equal('personal');
-        userId = res.data._id;
+        res.data.type.should.equal('business');
+        businessId = res.data._id;
         done();
       })
       .catch(err => {
@@ -49,9 +48,9 @@ describe('User***************************************', () => {
       });
   });
 
-  it('it should list all users', done => {
+  it('it should list all business', done => {
     axios
-      .get(api.user.main + `?accountType=personal`)
+      .get(api.user.main + `?accountType=business`)
       .then(res => {
         res.should.have.status(200);
         res.data.should.be.a('object');
@@ -70,11 +69,12 @@ describe('User***************************************', () => {
         } else console.log(err);
       });
   });
-  it('it should update a user', done => {
+
+  it('it should update a business', done => {
     axios
-      .put(api.user.main + userId, {
-        name: 'test user updated',
-        username: 'test username updated',
+      .put(api.user.main + businessId, {
+        name: 'test business updated',
+        username: 'businessUsernameUpdated',
         idnumber: '9999999991',
         phones: {
           default: '+56707707707'
@@ -94,7 +94,8 @@ describe('User***************************************', () => {
       .then(res => {
         res.should.have.status(200);
         res.data.should.be.a('object');
-        res.data.type.should.equal('personal');
+        res.data.type.should.be.a('string');
+        res.data.type.should.equal('business');
         done();
       })
       .catch(err => {
@@ -105,9 +106,10 @@ describe('User***************************************', () => {
         } else console.log(err);
       });
   });
-  it('it should change a user password', done => {
+
+  it('it should change a business password', done => {
     axios
-      .put(api.user.password + userId, {
+      .put(api.user.password + businessId, {
         password: data.password,
         newPassword: 'changedpassword123'
       })

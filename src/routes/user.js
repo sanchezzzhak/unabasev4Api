@@ -6,7 +6,7 @@ import {
   get,
   logout,
   findOne,
-  getUser,
+  getOne,
   password,
   update
 } from '../controllers/user';
@@ -27,7 +27,7 @@ users.post('/', create);
 users.get('/', get);
 users.get('/logout', logout);
 users.get('/find', findOne);
-users.get('/:id', getUser);
+users.get('/:id', getOne);
 users.put('/password/:id', password);
 users.put('/:id', update);
 

@@ -63,7 +63,7 @@ export default {
       }
     });
   },
-  getUser: (req, res) => {
+  getOne: (req, res) => {
     User.findOne({ id: req.params.id }, (err, user) => {
       if (err) {
         logger(err);
@@ -86,7 +86,17 @@ export default {
       }
     );
   },
-  createUser: (req, res) => {},
+  scope: (req, res) => {
+    let update = {
+      $addToSet: { business: req.body.business }
+    };
+    User.findByIdAndUpdate(
+      req.params.id,
+      update,
+      { new: true },
+      (err, item) => {}
+    );
+  },
   findOne: (req, res) => {
     let query = {
       $and: []
