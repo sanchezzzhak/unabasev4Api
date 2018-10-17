@@ -43,6 +43,9 @@ let userSchema = Schema(
       accessToken: String,
       imgUrl: String
     },
+    /**
+     *  array of ObjectIds from business asociated
+     */
     business: Array({ type: Schema.Types.ObjectId, ref: 'User' })
     // notifications: {
     //   internal: {
