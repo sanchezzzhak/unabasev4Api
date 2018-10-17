@@ -1,6 +1,15 @@
 import { Router } from 'express';
 const users = Router();
 import ctl from '../controllers/user';
+import {
+  create,
+  get,
+  logout,
+  findOne,
+  getUser,
+  password,
+  update
+} from '../controllers/user';
 
 import auth from '../config/lib/auth';
 users.use(auth.sToken);
@@ -14,13 +23,12 @@ users.use(auth.sToken);
 }
 
 */
-users.post('/', ctl.postUsers);
-users.get('/', ctl.get);
-users.get('/logout', ctl.logout);
-users.get('/find', ctl.findOne);
-users.get('/:id', ctl.getUser);
-users.put('/password/:id', ctl.password);
-// users.post('/', ctl.createUser)
-users.put('/', ctl.updateUser);
+users.post('/', create);
+users.get('/', get);
+users.get('/logout', logout);
+users.get('/find', findOne);
+users.get('/:id', getUser);
+users.put('/password/:id', password);
+users.put('/:id', update);
 
 export default users;

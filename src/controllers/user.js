@@ -6,19 +6,23 @@ import logger from '../config/lib/logger';
 export default {
   password: (req, res) => {
     const { password, newPassword } = req.body;
-
+    console.log(req.body);
     User.findById(req.params.id, function(err, user) {
-      if (typeof user.password === 'undefined') {
-        res.status(200).send({ msg: 'password changed' });
-
-        user.password = user.generateHash(newPassword);
-        user.save();
-      } else if (user.validPassword(password)) {
-        user.password = user.generateHash(newPassword);
-        user.save();
-        res.status(200).send({ msg: 'password changed' });
+      if (err) {
+        res.status(500).send(err);
       } else {
-        res.status(500).send({ msg: 'password change failed' });
+        if (typeof user.password === 'undefined') {
+          res.status(200).send({ msg: 'password created' });
+
+          user.password = user.generateHash(newPassword);
+          user.save();
+        } else if (user.validPassword(password)) {
+          user.password = user.generateHash(newPassword);
+          user.save();
+          res.status(200).send({ msg: 'password changed' });
+        } else {
+          res.status(500).send({ msg: 'password change failed' });
+        }
       }
     });
   },
@@ -47,7 +51,18 @@ export default {
       }
     });
   },
-  postUsers: (req, res) => {},
+  create: (req, res) => {
+    let user = new User();
+    req.body.password = User.hash(req.body.password);
+    Object.assign(user, req.body);
+    user.save((err, item) => {
+      if (err) {
+        res.status(500).end();
+      } else {
+        res.send(item);
+      }
+    });
+  },
   getUser: (req, res) => {
     User.findOne({ id: req.params.id }, (err, user) => {
       if (err) {
@@ -57,8 +72,19 @@ export default {
       }
     });
   },
-  updateUser: (req, res) => {
-    Array({ type: Object }), Array({ type: Object });
+  update: (req, res) => {
+    User.findOneAndUpdate(
+      { _id: req.params.id },
+      req.body,
+      { new: true },
+      (err, item) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          res.send(item);
+        }
+      }
+    );
   },
   createUser: (req, res) => {},
   findOne: (req, res) => {

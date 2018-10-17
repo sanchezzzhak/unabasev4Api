@@ -87,7 +87,6 @@ describe('Incomes***************************************', () => {
   });
 
   it('it should update an income', function(done) {
-    console.log(api.income.main + incomeId);
     axios
       .put(api.income.main + incomeId, {
         name: 'test inc updated',

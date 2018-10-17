@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate';
 import bcrypt from 'bcryptjs';
 const Schema = mongoose.Schema;
-
+const salt = bcrypt.genSaltSync(10);
 let userSchema = Schema(
   {
     isActive: { type: Boolean, default: true },
@@ -18,7 +18,6 @@ let userSchema = Schema(
     address: {
       street: String,
       number: Number,
-      town: String, // deprecated
       district: String,
       city: String,
       region: String,
@@ -69,7 +68,7 @@ userSchema.plugin(mongoosePaginate);
 
 // generating a hash
 userSchema.methods.generateHash = function(password) {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
+  return bcrypt.hashSync(password, salt, null);
 };
 
 userSchema.methods.getUser = function() {
@@ -112,6 +111,9 @@ const User = mongoose.model('User', userSchema);
 
 export default User;
 
+User.hash = password => {
+  return bcrypt.hashSync(password, salt, null);
+};
 User.addUser = (user, callback) => {
   // User.create(user, callback);
   user.nopassword = user.password;

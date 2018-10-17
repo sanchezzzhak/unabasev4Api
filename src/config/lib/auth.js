@@ -12,14 +12,14 @@ export default {
       // if (req.isAuthenticated()) {
       next();
     } else {
-      res.status(403).send({ msg: 'Not authorized' });
+      res.status(403).send({ msg: 'Not authorized.' });
     }
   },
   cToken: (req, res, next) => {
     req.token = req.cookies.access_token;
     jwt.verify(req.token, mainConfig.mSecret, (err, decoded) => {
       if (err) {
-        res.status(403).send({ msg: 'Not authorized' });
+        res.status(403).send({ msg: 'Not authorized..' });
       } else {
         next();
       }
@@ -34,7 +34,7 @@ export default {
     ) {
       jwt.verify(req.token, mainConfig.mSecret, (err, decoded) => {
         if (err) {
-          res.status(403).send({ msg: 'Not authorized' });
+          res.status(403).send({ msg: 'Not authorized1' });
         } else {
           next();
         }
@@ -60,7 +60,7 @@ export default {
         }
       });
     } else {
-      res.status(403).send({ msg: 'Not authorized' });
+      res.status(403).send({ msg: 'Not authorized2' });
     }
   }
 };

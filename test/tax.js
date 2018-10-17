@@ -1,8 +1,6 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-// const server = require('../build/app');
 const assert = require('chai').assert;
-// const request = require('request');
 const should = chai.should();
 const axios = require('axios');
 chai.use(chaiHttp);
