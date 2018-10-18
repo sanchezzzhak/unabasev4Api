@@ -15,7 +15,7 @@
     "rtest": "NODE_ENV=test nodemon   ./src/app  --exec babel-node",
     "clean": "rm -rf build && mkdir build",
     "build-babel": "babel -d ./build ./src -s",
-    "build": "npm run clean && npm run build-babel",
+    "build": "npm run clean && npm run build-babel & scp -r /home/simon/sys/apiv4/build  devs@m.unabase.cl:/home/devs/api/",
     "start": "npm run build && node ./build/app.js"
   },
   "dependencies": {
@@ -40,6 +40,7 @@
     "mongoose": "^5.3.1",
     "mongoose-paginate": "^5.0.3",
     "mongoose-sequence": "^4.0.1",
+    "morgan": "^1.9.1",
     "nodemailer": "^4.6.8",
     "normalize-bool": "^1.0.0",
     "normalize-type": "^1.5.1",

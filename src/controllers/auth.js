@@ -2,7 +2,8 @@ import User from '../models/user';
 import jwt from 'jsonwebtoken';
 import mConfig from '../config/main';
 import logger from '../config/lib/logger';
-
+import gauth from '../config/auth';
+import axios from 'axios';
 export default {
   // if (err) {
   //   return next(err);
@@ -169,52 +170,207 @@ export default {
   errUser(req, res) {
     logger(req);
   },
-  google: {
-    new(req, res) {
-      User.findOne({ 'google.id': req.body.id }, (err, user) => {
-        if (err) {
-          res.status(500).end();
-        } else {
-          if (user) {
-            res.send(user);
-          } else {
-            let newUser = new User();
+  google: (req, res) => {
+    let url = gauth.googleAuth.endpoint + req.body.token;
 
-            (newUser.username = req.body.email.slice(
-              0,
-              req.body.email.indexOf('@')
-            )),
-              (newUser.google = req.body);
-            newUser.name = req.body.name;
-            newUser.save((err, user) => {
-              if (err) {
-                res.status(500).end();
-              } else {
-                user.activeScope = user._id;
-                user.save((err, userFound) => {
-                  const token = jwt.sign(
-                    { user: user.getUser() },
-                    mConfig.mSecret,
-                    {
-                      expiresIn: '3d'
-                    }
-                  );
-                  req.user = user;
-                  res.send({
-                    token,
-                    user: userFound.getUser()
+    console.log(req.body);
+    console.log(url);
+
+    axios(url)
+      .then(data => {
+        // logger('data from gauth');
+        // logger(data['sub']);
+        // logger({
+        //   'google.id': data.data.sub
+        // });
+        User.findOne(
+          {
+            'google.id': data.data.sub
+          },
+          (err, user) => {
+            if (err) {
+              res.status(404).end();
+            } else if (!user) {
+              let newUser = new User();
+
+              (newUser.username = req.body.google.email.slice(
+                0,
+                req.body.google.email.indexOf('@')
+              )),
+                (newUser.google = req.body.google);
+              newUser.emails = {
+                google: req.body.google.email
+              };
+              newUser.name = req.body.google.name;
+              newUser.save((err, user) => {
+                if (err) {
+                  res.status(500).end();
+                } else {
+                  user.activeScope = user._id;
+                  user.save((err, userFound) => {
+                    const token = jwt.sign(
+                      { user: user.getUser() },
+                      mConfig.mSecret,
+                      {
+                        expiresIn: '3d'
+                      }
+                    );
+                    req.user = user;
+                    res.send({
+                      token,
+                      user: userFound.getUser()
+                    });
+
+                    // res.json({
+                    //   message: "User Authenticated",
+                    //   token
+                    // });
                   });
-
-                  // res.json({
-                  //   message: "User Authenticated",
-                  //   token
-                  // });
-                });
-              }
-            });
+                }
+              });
+            } else {
+              // logger('user.google');
+              // logger(user);
+              const token = jwt.sign(
+                { user: user.getUser() },
+                mainConfig.mSecret
+              );
+              // res.cookie('access_token', token);
+              res.json({ token, user: user.getUser() });
+            }
           }
-        }
+        );
+      })
+      .catch(err => {
+        // logger(err);
+        res.status(503).end();
       });
-    }
   }
+
+  // {
+  //   register: (req, res) => {
+  //     User.findOne({ 'google.id': req.body.id }, (err, user) => {
+  //       if (err) {
+  //         res.status(500).end();
+  //       } else {
+  //         if (user) {
+  //           res.send(user);
+  //         } else {
+  //           let newUser = new User();
+
+  //           (newUser.username = req.body.email.slice(
+  //             0,
+  //             req.body.email.indexOf('@')
+  //           )),
+  //             (newUser.google = req.body);
+  //           newUser.emails = {
+  //             google: req.body.email
+  //           };
+  //           newUser.name = req.body.name;
+  //           newUser.save((err, user) => {
+  //             if (err) {
+  //               res.status(500).end();
+  //             } else {
+  //               user.activeScope = user._id;
+  //               user.save((err, userFound) => {
+  //                 const token = jwt.sign(
+  //                   { user: user.getUser() },
+  //                   mConfig.mSecret,
+  //                   {
+  //                     expiresIn: '3d'
+  //                   }
+  //                 );
+  //                 req.user = user;
+  //                 res.send({
+  //                   token,
+  //                   user: userFound.getUser()
+  //                 });
+
+  //                 // res.json({
+  //                 //   message: "User Authenticated",
+  //                 //   token
+  //                 // });
+  //               });
+  //             }
+  //           });
+  //         }
+  //       }
+  //     });
+  //   },
+  //   login: (req, res) => {
+  //     let url = gauth.googleAuth.endpoint + req.body.google.token;
+
+  //     console.log(req.body);
+
+  //     axios(url)
+  //       .then(data => {
+  //         // logger('data from gauth');
+  //         // logger(data['sub']);
+  //         // logger({
+  //         //   'google.id': data.data.sub
+  //         // });
+  //         User.findOne(
+  //           {
+  //             'google.id': data.data.sub
+  //           },
+  //           (err, user) => {
+  //             if (err) {
+  //               res.status(404).end();
+  //             } else if (!user) {
+  //               let newUser = new User();
+
+  //               (newUser.username = req.body.google.email.slice(
+  //                 0,
+  //                 req.body.google.email.indexOf('@')
+  //               )),
+  //                 (newUser.google = req.body.google);
+  //               newUser.emails = {
+  //                 google: req.body.google.email
+  //               };
+  //               newUser.name = req.body.google.name;
+  //               newUser.save((err, user) => {
+  //                 if (err) {
+  //                   res.status(500).end();
+  //                 } else {
+  //                   user.activeScope = user._id;
+  //                   user.save((err, userFound) => {
+  //                     const token = jwt.sign(
+  //                       { user: user.getUser() },
+  //                       mConfig.mSecret,
+  //                       {
+  //                         expiresIn: '3d'
+  //                       }
+  //                     );
+  //                     req.user = user;
+  //                     res.send({
+  //                       token,
+  //                       user: userFound.getUser()
+  //                     });
+
+  //                     // res.json({
+  //                     //   message: "User Authenticated",
+  //                     //   token
+  //                     // });
+  //                   });
+  //                 }
+  //               });
+  //             } else {
+  //               // logger('user.google');
+  //               // logger(user);
+  //               const token = jwt.sign(
+  //                 { user: user.getUser() },
+  //                 mainConfig.mSecret
+  //               );
+  //               // res.cookie('access_token', token);
+  //               res.json({ token, user: user.getUser() });
+  //             }
+  //           }
+  //         );
+  //       })
+  //       .catch(err => {
+  //         // logger(err);
+  //         res.status(503).end();
+  //       });
+  //   }
+  // }
 };

@@ -30,8 +30,8 @@ users.get('/', get);
 users.get('/logout', logout);
 users.get('/find', findOne);
 users.get('/:id', getOne);
-users.put('/password/:id', password);
 users.put('/:id', update);
+users.put('/password/:id', password);
 users.put('/business/:id', business);
 users.put('/scope/:id', scope);
 

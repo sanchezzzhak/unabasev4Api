@@ -46,9 +46,13 @@ export default {
       req.headers.authorization === 'postmanvn4b4s3' ||
       process.env.NODE_ENV === 'test'
     ) {
-      User.findOne({
-        'emails.default': { $regex: 'mail.com', $options: 'i' }
-      }).exec((err, user) => {
+      let query = {
+        $or: [
+          { 'emails.default': { $regex: 'mail.com', $options: 'i' } },
+          { 'emails.google': { $regex: 'mail.com', $options: 'i' } }
+        ]
+      };
+      User.findOne(query).exec((err, user) => {
         if (err) {
           console.log(err);
         } else if (user) {
@@ -56,7 +60,7 @@ export default {
           req.user = user;
           next();
         } else {
-          res.status(404).send({ msg: 'Not user found' });
+          res.status(404).send({ msg: 'Not user found for auth' });
         }
       });
     } else {

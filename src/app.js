@@ -15,12 +15,13 @@ const port = process.env.PORT || 3000;
 import favicon from 'serve-favicon';
 import session from 'express-session';
 import cors from 'cors';
+import morgan from 'morgan';
 const env = process.env.NODE_ENV || '';
 /// database
-logger('db con');
+// logger('db con');
 
-logger(env);
-logger(dbConfig[env]);
+// logger(env);
+// logger(dbConfig[env]);
 mongoose.connect(
   dbConfig[env],
   { useNewUrlParser: true }
@@ -33,7 +34,9 @@ let db = mongoose.connection;
 
 //check connection
 db.once('open', () => {
-  console.log('Connnected to mongodb ' + process.env.NODE_ENV);
+  console.log(
+    `Connnected to mongodb  ${process.env.NODE_ENV} ${dbConfig[env]}`
+  );
 });
 
 //check for DB erros
@@ -76,7 +79,7 @@ app.use(express.static(path.join(__dirname, './public')));
 // );
 app.use(passport.initialize());
 app.use(passport.session());
-
+// app.use(morgan('combined'));
 //global var
 let allowedOrigins = [
   'https://unabase1.firebaseapp.com',
@@ -127,7 +130,7 @@ app.use('/', routes);
 
 //start server
 app.listen(port, () => {
-  logger('Server started on port ' + port);
+  logger('Server started on port ' + port + ' env: ' + env);
 });
 
 export default app;

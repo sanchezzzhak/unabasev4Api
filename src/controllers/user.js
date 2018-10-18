@@ -33,6 +33,7 @@ export default {
     res.status(200).send('Log out');
   },
   get: (req, res) => {
+    console.log('list users');
     let rquery = ntype(req.query);
     let options = {};
     options.page = rquery.page || 1;
@@ -64,11 +65,15 @@ export default {
     });
   },
   getOne: (req, res) => {
-    User.findOne({ id: req.params.id }, (err, user) => {
+    console.log(req.params.id);
+    User.findById(req.params.id, (err, user) => {
       if (err) {
-        logger(err);
-      } else {
+        console.log(err);
+        res.status(500).send(err);
+      } else if (user) {
         res.send(user.getUser());
+      } else {
+        res.status(404).send({ msg: 'user not found' });
       }
     });
   },

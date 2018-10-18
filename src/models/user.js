@@ -34,7 +34,6 @@ let userSchema = Schema(
       country: String
     },
     lastLogin: Date,
-    companies: Array({ type: String }),
     access: Array({ type: Object }),
     google: {
       id: String,
