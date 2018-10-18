@@ -6,6 +6,10 @@ routes.get('/', (req, res) => {
   res.send({ msg: `Unabase api. ${process.env.NODE_ENV}` });
 });
 
+routes.get('/tes', (req, res) => {
+  res.send({ msg: `Unabase api. ${process.env.NODE_ENV}` });
+});
+
 routes.get('/isAuth', authConfig.sToken, (req, res) => {
   res.statusMessage = 'authenticated';
   res.send(req.user.getUser());
