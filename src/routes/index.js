@@ -6,7 +6,7 @@ routes.get('/', (req, res) => {
   res.send({ msg: `Unabase api. ${process.env.NODE_ENV}` });
 });
 
-routes.get('/tz', (req, res) => {
+routes.get('/tzx', (req, res) => {
   res.send({ msg: `Unabase api. ${process.env.NODE_ENV}` });
 });
 
