@@ -38,6 +38,7 @@ describe('Movement***************************************', () => {
   movement.create();
   movement.list();
   movement.update();
+  movement.null();
 });
 
 describe('Tax***************************************', () => {

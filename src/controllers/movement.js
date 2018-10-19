@@ -108,6 +108,7 @@ const routes = {
   updateOne: (req, res) => {
     let update = {
       name: req.body.name,
+      isActive: req.body.isActive,
       description: req.body.description,
       dates: {
         expiration: req.body.expiration
@@ -121,33 +122,33 @@ const routes = {
       currency: req.body.currency,
       lines: []
     };
-
-    req.body.lines.forEach(i => {
-      if (i._id) {
-        Line.findByIdAndUpdate(i._id, i, { new: true }, (err, line) => {
-          if (err) console.log(err);
-          else {
-            update.lines.push(i._id);
-          }
-        });
-      } else {
-        let newLine = new Line();
-        newLine.name = i.name;
-        newLine.tax = i.tax;
-        newLine.quantity = i.quantity;
-        newLine.price = i.price;
-        newLine.item = i.item;
-        newLine.save((err, line) => {
-          if (err) {
-            errorOnItem.state = true;
-            errorOnItem.msg = err;
-          } else {
-            logger(line._id);
-            update.lines.push(line._id);
-          }
-        });
-      }
-    });
+    if (typeof req.body.lines !== 'undefined')
+      req.body.lines.forEach(i => {
+        if (i._id) {
+          Line.findByIdAndUpdate(i._id, i, { new: true }, (err, line) => {
+            if (err) console.log(err);
+            else {
+              update.lines.push(i._id);
+            }
+          });
+        } else {
+          let newLine = new Line();
+          newLine.name = i.name;
+          newLine.tax = i.tax;
+          newLine.quantity = i.quantity;
+          newLine.price = i.price;
+          newLine.item = i.item;
+          newLine.save((err, line) => {
+            if (err) {
+              errorOnItem.state = true;
+              errorOnItem.msg = err;
+            } else {
+              logger(line._id);
+              update.lines.push(line._id);
+            }
+          });
+        }
+      });
     Movement.findOneAndUpdate(
       { _id: req.params.id },
       update,

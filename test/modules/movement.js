@@ -66,6 +66,7 @@ export default {
           // console.log(res.data);
           res.should.have.status(200);
           res.data.should.be.a('object');
+          res.data.docs.should.be.a('array');
           done();
         })
         .catch(err => {
@@ -120,6 +121,25 @@ export default {
         .then(res => {
           res.should.have.status(200);
           res.data.should.be.a('object');
+          done();
+        })
+        .catch(err => {
+          if (err.response) {
+            console.log(err.response.status);
+            console.log(err.response.statusText);
+          } else console.log(err);
+        });
+    }),
+  null: () =>
+    it('it should set movement to null', done => {
+      axios
+        .put(api.movement.main + movementId, {
+          isActive: false
+        })
+        .then(res => {
+          res.should.have.status(200);
+          res.data.should.be.a('object');
+          res.data.isActive.should.be.a('boolean');
           done();
         })
         .catch(err => {
