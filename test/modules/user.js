@@ -12,7 +12,7 @@ let data = {
 
 export default {
   create: () =>
-    it('it should create a user', done => {
+    it('CREATE a user', done => {
       axios
         .post(api.user.main, {
           name: 'test user',
@@ -51,7 +51,7 @@ export default {
         });
     }),
   list: () =>
-    it('it should list all users', done => {
+    it('LIST ALL users', done => {
       axios
         .get(api.user.main + `?accountType=personal`)
         .then(res => {
@@ -73,7 +73,7 @@ export default {
         });
     }),
   update: () =>
-    it('it should update a user', done => {
+    it('UPDATE a user', done => {
       axios
         .put(api.user.main + global.userId, {
           name: 'test user updated',
@@ -109,7 +109,7 @@ export default {
         });
     }),
   password: () =>
-    it('it should change a user password', done => {
+    it('CHANGE PASSWORD of a user', done => {
       axios
         .put(api.user.password + global.userId, {
           password: data.password,
@@ -125,6 +125,21 @@ export default {
             console.log(err.response.status);
             console.log(err.response.statusText);
             console.log(err.response.data);
+          } else console.log(err);
+        });
+    }),
+  getOne: () =>
+    it('GET ONE user by id', done => {
+      axios(api.user.main + global.userId)
+        .then(res => {
+          res.should.have.status(200);
+          res.data.should.be.a('object');
+          done();
+        })
+        .catch(err => {
+          if (err.response) {
+            console.log(err.response.status);
+            console.log(err.response.statusText);
           } else console.log(err);
         });
     })

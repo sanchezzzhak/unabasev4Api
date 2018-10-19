@@ -21,6 +21,7 @@ describe('User***************************************', () => {
   user.list();
   user.update();
   user.password();
+  user.getOne();
 });
 describe('Business***************************************', () => {
   business.create();
@@ -41,6 +42,7 @@ describe('Movement***************************************', () => {
   movement.update();
   movement.null();
   movement.find();
+  movement.getOne();
 });
 
 describe('Tax***************************************', () => {
@@ -54,4 +56,5 @@ describe('Item***************************************', () => {
   item.list();
   item.update();
   item.find();
+  item.getOne();
 });

@@ -11,7 +11,7 @@ let data = {
 
 export default {
   create: () =>
-    it('it should create an item', function(done) {
+    it('CREATE an item', function(done) {
       axios
         .post(api.item.main, {
           name: data.name,
@@ -31,7 +31,7 @@ export default {
         });
     }),
   list: () =>
-    it('it should find all items', function(done) {
+    it('LIST ALL items', function(done) {
       axios(api.item.main)
         .then(res => {
           // console.log(res.data);
@@ -49,7 +49,7 @@ export default {
     }),
 
   update: () =>
-    it('it should update an item', function(done) {
+    it('UPDATE an item', function(done) {
       axios
         .put(api.item.main + itemId, {
           name: 'test item updated',
@@ -68,12 +68,27 @@ export default {
         });
     }),
   find: () =>
-    it('it should find item', done => {
+    it('FIND BY QUERY items ', done => {
       axios(api.item.find + `?query=${data.name.slice(3, 7)}`)
         .then(res => {
           res.should.have.status(200);
           res.data.should.be.a('object');
           res.data.docs.should.be.a('array');
+          done();
+        })
+        .catch(err => {
+          if (err.response) {
+            console.log(err.response.status);
+            console.log(err.response.statusText);
+          } else console.log(err);
+        });
+    }),
+  getOne: () =>
+    it('GET ONE item by id', done => {
+      axios(api.item.main + itemId)
+        .then(res => {
+          res.should.have.status(200);
+          res.data.should.be.a('object');
           done();
         })
         .catch(err => {

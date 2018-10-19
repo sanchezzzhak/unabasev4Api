@@ -13,6 +13,6 @@ items.get('/', get);
 items.post('/', create);
 items.put('/:id', updateOne);
 items.get('/find', find);
-items.get(':id', getOne);
+items.get('/:id', getOne);
 
 export default items;

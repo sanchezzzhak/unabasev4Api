@@ -11,7 +11,7 @@ let data = {
 
 export default {
   create: () =>
-    it('it should create a business', done => {
+    it('CREATE business', done => {
       axios
         .post(api.user.main, {
           name: 'test business',
@@ -51,7 +51,7 @@ export default {
     }),
 
   list: () =>
-    it('it should list all business', done => {
+    it('LIST ALL business', done => {
       axios
         .get(api.user.main + `?accountType=business`)
         .then(res => {
@@ -74,7 +74,7 @@ export default {
     }),
 
   update: () =>
-    it('it should update a business', done => {
+    it('UPDATE a business', done => {
       axios
         .put(api.user.main + global.businessId, {
           name: 'test business updated',
@@ -112,7 +112,7 @@ export default {
     }),
 
   password: () =>
-    it('it should change a business password', done => {
+    it('CHANGE PASSWORD of a business', done => {
       axios
         .put(api.user.password + global.businessId, {
           password: data.password,
@@ -133,7 +133,7 @@ export default {
     }),
 
   user: () =>
-    it('it should asociate a user to a business', done => {
+    it('ASOCIATE A USER TO A BUSINESS', done => {
       axios
         .put(api.business.user + global.businessId, {
           user: global.userId

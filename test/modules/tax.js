@@ -7,7 +7,7 @@ import api from '../../src/config/api';
 let taxId;
 export default {
   create: () =>
-    it('it should create a tax', done => {
+    it('CREATE tax', done => {
       axios
         .post(api.tax.main, {
           name: 'test tax',
@@ -27,7 +27,7 @@ export default {
         });
     }),
   list: () =>
-    it('it should list all taxs', done => {
+    it('LIST ALL taxs', done => {
       axios(api.tax.main)
         .then(res => {
           res.should.have.status(200);
@@ -41,7 +41,7 @@ export default {
         });
     }),
   update: () =>
-    it('it should update a tax', done => {
+    it('UPDATE a tax', done => {
       axios
         .put(api.tax.main + taxId, {
           name: 'test tax updated',

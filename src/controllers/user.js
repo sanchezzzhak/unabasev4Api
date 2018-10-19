@@ -2,6 +2,7 @@ import User from '../models/user';
 
 import ntype from 'normalize-type';
 import logger from '../config/lib/logger';
+import findByValue from '../lib/findObjectByValue';
 
 export default {
   password: (req, res) => {
@@ -68,7 +69,6 @@ export default {
     console.log(req.params.id);
     User.findById(req.params.id, (err, user) => {
       if (err) {
-        console.log(err);
         res.status(500).send(err);
       } else if (user) {
         res.send(user.getUser());
@@ -126,15 +126,17 @@ export default {
     let query = {
       $and: []
     };
+    console.log('find one!!');
     Object.keys(req.query).forEach(q => {
-      if (q === 'email' || q === 'name') {
+      if (q === 'email') {
         query.$and.push({
-          [`google.${q}`]: { $regex: req.query[q], $options: 'i' }
+          [`emails`]: { $regex: req.query[q], $options: 'i' }
         });
+      } else {
+        query.$and.push({ [q]: { $regex: req.query[q], $options: 'i' } });
       }
-      query.$and.push({ [q]: { $regex: req.query[q], $options: 'i' } });
     });
-
+    console.log(query.$and);
     User.findOne(query, (err, user) => {
       if (err) {
         res.status(500).end();

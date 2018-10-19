@@ -11,6 +11,7 @@ const movementSchema = new Schema(
     },
     client: { type: Schema.Types.ObjectId, ref: 'User' },
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
+    responsable: { type: Schema.Types.ObjectId, ref: 'User' },
     lines: Array({ type: Schema.Types.ObjectId, ref: 'Line' }),
     total: {
       net: Number,

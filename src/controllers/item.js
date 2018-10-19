@@ -17,7 +17,17 @@ const routes = {
       }
     });
   },
-  getOne(req, res) {},
+  getOne(req, res) {
+    Item.findById(req.params.id, (err, item) => {
+      if (err) {
+        res.status(500).end(err);
+      } else if (item) {
+        res.send(item);
+      } else {
+        res.status(404).end();
+      }
+    });
+  },
   create(req, res) {
     let item = new Item();
     let { name, tax } = req.body;

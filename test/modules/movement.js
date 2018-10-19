@@ -11,7 +11,7 @@ let data = {
 };
 export default {
   create: () =>
-    it('it should create an movement', function(done) {
+    it('CREATE an movement', function(done) {
       axios
         .post(api.movement.main, {
           name: data.name,
@@ -19,7 +19,8 @@ export default {
           dates: {
             expiration: new Date()
           },
-          // client: '',
+          client: global.userId,
+          resposable: global.loginId,
           lines: [
             {
               name: 'tomate',
@@ -63,7 +64,7 @@ export default {
         });
     }),
   list: () =>
-    it('it should find all movements', function(done) {
+    it('LIST ALL movements', function(done) {
       axios(api.movement.main)
         .then(res => {
           // console.log(res.data);
@@ -79,7 +80,7 @@ export default {
     }),
 
   update: () =>
-    it('it should update an movement', function(done) {
+    it('UPDATE an movement', function(done) {
       axios
         .put(api.movement.main + movementId, {
           name: 'test inc updated',
@@ -87,7 +88,8 @@ export default {
           dates: {
             expiration: new Date()
           },
-          // client: '',
+          client: global.loginId,
+          resposable: global.userId,
           lines: [
             {
               _id: linesIds[0],
@@ -134,7 +136,7 @@ export default {
         });
     }),
   null: () =>
-    it('it should set movement to null', done => {
+    it('SET MOVEMENT TO NULL', done => {
       axios
         .put(api.movement.main + movementId, {
           isActive: false
@@ -153,12 +155,28 @@ export default {
         });
     }),
   find: () =>
-    it('it should find movements', done => {
+    it('FIND BY QUERY movements', done => {
       axios(api.movement.find + `?query=${data.name.slice(3, 7)}`)
         .then(res => {
           res.should.have.status(200);
           res.data.should.be.a('object');
           res.data.docs.should.be.a('array');
+          done();
+        })
+        .catch(err => {
+          if (err.response) {
+            console.log(err.response.status);
+            console.log(err.response.statusText);
+          } else console.log(err);
+        });
+    }),
+
+  getOne: () =>
+    it('GET ONE movement by id', done => {
+      axios(api.movement.main + movementId)
+        .then(res => {
+          res.should.have.status(200);
+          res.data.should.be.a('object');
           done();
         })
         .catch(err => {

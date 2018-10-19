@@ -6,16 +6,13 @@ import Line from '../models/line';
 import logger from '../config/lib/logger';
 const routes = {
   get(req, res) {
-    logger('list movements');
     let query = {};
     let options = {};
     options.page = parseInt(req.query.page) || 1;
     options.limit = parseInt(req.query.limit) || 20;
     options.select = 'name client.name createdAt total state';
     options.populate = [{ path: 'client', select: 'name' }];
-    // query.name = req.query.name || null;
-    // query.active = bool(req.query.active) || null;
-    logger(query);
+
     Movement.paginate(query, options, (err, movements) => {
       if (err) {
         res.status(500).end();

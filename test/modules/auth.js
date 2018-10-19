@@ -18,7 +18,7 @@ import api from '../../src/config/api';
 const username = Math.random().toString(36);
 export default {
   register: () =>
-    it('it should register a user', done => {
+    it('REGISTER a user', done => {
       axios
         .post(api.auth.register, {
           username,
@@ -28,6 +28,7 @@ export default {
         .then(res => {
           res.should.have.status(200);
           res.data.should.be.a('object');
+          global.loginId = res.data._id;
           done();
         })
         .catch(err => {
@@ -38,7 +39,7 @@ export default {
     }),
 
   login: () =>
-    it('it should login', done => {
+    it('LOGIN a user', done => {
       axios
         .post(api.auth.login, {
           username,
