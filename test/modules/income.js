@@ -4,13 +4,13 @@ import axios from 'axios';
 use(chaiHttp);
 import api from '../../src/config/api';
 
-let incomeId;
+let movementId;
 let linesIds;
 export default {
   create: () =>
-    it('it should create an income', function(done) {
+    it('it should create an movement', function(done) {
       axios
-        .post(api.income.main, {
+        .post(api.movement.main, {
           name: 'test inc',
           description: 'test desc incm',
           dates: {
@@ -48,7 +48,7 @@ export default {
           currency: '5bbe5c8b2edaed42baf2b6c1'
         })
         .then(res => {
-          incomeId = res.data._id;
+          movementId = res.data._id;
           res.should.have.status(200);
           res.data.should.be.a('object');
           linesIds = res.data.lines;
@@ -60,8 +60,8 @@ export default {
         });
     }),
   list: () =>
-    it('it should find all incomes', function(done) {
-      axios(api.income.main)
+    it('it should find all movements', function(done) {
+      axios(api.movement.main)
         .then(res => {
           // console.log(res.data);
           res.should.have.status(200);
@@ -75,9 +75,9 @@ export default {
     }),
 
   update: () =>
-    it('it should update an income', function(done) {
+    it('it should update an movement', function(done) {
       axios
-        .put(api.income.main + incomeId, {
+        .put(api.movement.main + movementId, {
           name: 'test inc updated',
           description: 'test desc incm updated',
           dates: {

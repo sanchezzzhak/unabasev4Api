@@ -24,8 +24,8 @@ routes.use('/users', user);
 import business from './business';
 routes.use('/business', business);
 
-import income from './income';
-routes.use('/incomes', income);
+import movement from './movement';
+routes.use('/movements', movement);
 
 import tax from './tax';
 routes.use('/taxs', tax);

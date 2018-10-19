@@ -8,7 +8,7 @@ import api from '../src/config/api/index';
 import user from './modules/user';
 import business from './modules/business';
 import auth from './modules/auth';
-import income from './modules/income';
+import movement from './modules/movement';
 import tax from './modules/tax';
 let userId;
 // global.userId = '';
@@ -34,10 +34,10 @@ describe('Auth***************************************', () => {
   auth.login();
 });
 
-describe('Income***************************************', () => {
-  income.create();
-  income.list();
-  income.update();
+describe('Movement***************************************', () => {
+  movement.create();
+  movement.list();
+  movement.update();
 });
 
 describe('Tax***************************************', () => {

@@ -3,7 +3,7 @@ export default api => {
     /**
      * GET/  get doc list ... query: [name(STRING), isActive(boolean)]
      * GET/:id    get doc info
-     * POST/  create income
+     * POST/  create movement
      */
     main: `${api}business/`,
     /**

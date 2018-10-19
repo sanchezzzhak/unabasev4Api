@@ -44,7 +44,7 @@ export default api => {
      *
      */
     /**
-     *   POST/  create movements
+     *   POST/  create movement
      *    params {
      *      name: string,
      *      description: string,
@@ -71,7 +71,7 @@ export default api => {
      *    }
      */
     /**
-     *   PUT/  update movements
+     *   PUT/  update movement
      *    params {
      *      name: string,
      *      description: string,

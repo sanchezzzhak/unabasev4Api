@@ -79,7 +79,7 @@ app.use(express.static(path.join(__dirname, './public')));
 // );
 app.use(passport.initialize());
 app.use(passport.session());
-// app.use(morgan('combined'));
+if (env === 'test' || env === 'dev') app.use(morgan('dev'));
 //global var
 let allowedOrigins = [
   'https://unabase1.firebaseapp.com',

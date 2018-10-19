@@ -1,12 +1,12 @@
 import bool from 'normalize-bool';
-import Income from '../models/income';
+import Movement from '../models/movement';
 
-import itemLine from '../models/itemLine';
+import Line from '../models/line';
 
 import logger from '../config/lib/logger';
 const routes = {
   get(req, res) {
-    logger('list incomes');
+    logger('list movements');
     let query = {};
     let options = {};
     options.page = parseInt(req.query.page) || 1;
@@ -16,32 +16,32 @@ const routes = {
     // query.name = req.query.name || null;
     // query.active = bool(req.query.active) || null;
     logger(query);
-    Income.paginate(query, options, (err, incomes) => {
+    Movement.paginate(query, options, (err, movements) => {
       if (err) {
         res.status(500).end();
       } else {
-        res.json(incomes);
+        res.json(movements);
       }
     });
   },
   create: (req, res) => {
     const { name, dates, client, state, lines, description } = req.body;
     let errorOnItem = { state: false };
-    let newIncome = new Income();
-    newIncome.name = name || null;
-    newIncome.description = description || null;
-    newIncome.client = client || null;
-    newIncome.creator = req.user._id || null;
-    newIncome.state = state || null;
-    newIncome.lines = new Array();
-    newIncome.dates = {
+    let newMovement = new Movement();
+    newMovement.name = name || null;
+    newMovement.description = description || null;
+    newMovement.client = client || null;
+    newMovement.creator = req.user._id || null;
+    newMovement.state = state || null;
+    newMovement.lines = new Array();
+    newMovement.dates = {
       expiration: req.body.dates.expiration
     };
-    newIncome.total = {};
-    newIncome.total.net = req.body.total.net;
-    newIncome.total.tax = req.body.total.tax;
+    newMovement.total = {};
+    newMovement.total.net = req.body.total.net;
+    newMovement.total.tax = req.body.total.tax;
     lines.forEach(i => {
-      let newLine = new itemLine();
+      let newLine = new Line();
       newLine.name = i.name;
       newLine.tax = i.tax;
       newLine.quantity = i.quantity;
@@ -53,24 +53,24 @@ const routes = {
           errorOnItem.msg = err;
         } else {
           logger(line._id);
-          newIncome.lines.push(line._id);
+          newMovement.lines.push(line._id);
         }
       });
     });
     setTimeout(() => {
-      newIncome.save((err, income) => {
+      newMovement.save((err, movement) => {
         if (err) {
           console.log(err);
           res.status(500).send(err);
         } else {
           logger('sssssn');
-          res.send(income);
+          res.send(movement);
         }
       });
     }, 500);
   },
   getOne(req, res) {
-    Income.findOne({ _id: req.params.id })
+    Movement.findOne({ _id: req.params.id })
 
       // .populate('lines creator', 'creator.name')
       // .populate('creator', 'name')
@@ -82,11 +82,11 @@ const routes = {
         { path: 'creator', select: 'name google.email emails.default' },
         { path: 'client', select: 'name google.email emails.default' }
       ])
-      .exec((err, income) => {
+      .exec((err, movement) => {
         if (err) {
           res.status(500).send(err);
         } else {
-          res.send(income);
+          res.send(movement);
         }
       });
   },
@@ -94,14 +94,14 @@ const routes = {
     let query = {
       $or: [{ name: req.query.name || null }]
     };
-    Income.findOne({ _id: req.params.id })
+    Movement.findOne({ _id: req.params.id })
       .populate('items')
       .populate('creator', 'name')
-      .exec((err, income) => {
+      .exec((err, movement) => {
         if (err) {
           res.status(500).end();
         } else {
-          res.send(income);
+          res.send(movement);
         }
       });
   },
@@ -124,14 +124,14 @@ const routes = {
 
     req.body.lines.forEach(i => {
       if (i._id) {
-        itemLine.findByIdAndUpdate(i._id, i, { new: true }, (err, line) => {
+        Line.findByIdAndUpdate(i._id, i, { new: true }, (err, line) => {
           if (err) console.log(err);
           else {
             update.lines.push(i._id);
           }
         });
       } else {
-        let newLine = new itemLine();
+        let newLine = new Line();
         newLine.name = i.name;
         newLine.tax = i.tax;
         newLine.quantity = i.quantity;
@@ -148,16 +148,16 @@ const routes = {
         });
       }
     });
-    Income.findOneAndUpdate(
+    Movement.findOneAndUpdate(
       { _id: req.params.id },
       update,
       { new: true },
-      (err, income) => {
+      (err, movement) => {
         if (err) {
           console.log(err);
           res.status(500).send(err);
         } else {
-          res.send(income);
+          res.send(movement);
         }
       }
     );

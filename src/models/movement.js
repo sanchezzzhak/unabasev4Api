@@ -2,7 +2,7 @@ import User from './user';
 import mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate';
 const Schema = mongoose.Schema;
-const incomeSchema = new Schema(
+const movementSchema = new Schema(
   {
     name: String,
     description: String,
@@ -11,7 +11,7 @@ const incomeSchema = new Schema(
     },
     client: { type: Schema.Types.ObjectId, ref: 'User' },
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
-    lines: Array({ type: Schema.Types.ObjectId, ref: 'ItemLine' }),
+    lines: Array({ type: Schema.Types.ObjectId, ref: 'Line' }),
     total: {
       net: Number,
       tax: Number
@@ -23,7 +23,7 @@ const incomeSchema = new Schema(
   { timestamps: true }
 );
 
-incomeSchema.plugin(mongoosePaginate);
+movementSchema.plugin(mongoosePaginate);
 
-const Income = mongoose.model('Income', incomeSchema);
-export default Income;
+const Movement = mongoose.model('Movement', movementSchema);
+export default Movement;
