@@ -8,9 +8,10 @@ movements.use(auth.sToken);
 
 movements.get('/', ctl.get);
 // movements.get('/', ctl.filter)
+movements.get('/findOne', ctl.findOne);
+movements.get('/find', ctl.find);
 movements.get('/:id', ctl.getOne);
 movements.post('/', ctl.create);
 movements.put('/:id', ctl.updateOne);
-movements.get('/find', ctl.findOne);
 
 export default movements;

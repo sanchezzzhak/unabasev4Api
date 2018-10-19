@@ -97,6 +97,12 @@ export default api => {
      *
      *    }
      */
-    main: `${api}movements/`
+    main: `${api}movements/`,
+    /**
+     *   GET/
+     *   Query  [  query: String ]
+     *
+     */
+    find: `${api}movements/find`
   };
 };

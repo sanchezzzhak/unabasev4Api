@@ -17,6 +17,7 @@ export default {
           taxId = res.data._id;
           res.should.have.status(200);
           res.data.should.be.a('object');
+          global.taxId = res.data._id;
           done();
         })
         .catch(err => {

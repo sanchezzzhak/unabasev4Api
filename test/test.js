@@ -10,6 +10,7 @@ import business from './modules/business';
 import auth from './modules/auth';
 import movement from './modules/movement';
 import tax from './modules/tax';
+import item from './modules/item';
 let userId;
 // global.userId = '';
 let data = {
@@ -39,10 +40,18 @@ describe('Movement***************************************', () => {
   movement.list();
   movement.update();
   movement.null();
+  movement.find();
 });
 
 describe('Tax***************************************', () => {
   tax.create();
   tax.list();
   tax.update();
+});
+
+describe('Item***************************************', () => {
+  item.create();
+  item.list();
+  item.update();
+  item.find();
 });

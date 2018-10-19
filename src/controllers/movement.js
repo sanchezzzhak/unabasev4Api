@@ -105,6 +105,19 @@ const routes = {
         }
       });
   },
+  find: (req, res) => {
+    let query = {
+      $or: [{ name: { $regex: req.query.query, $options: 'i' } }]
+    };
+    let options = {};
+    Movement.paginate(query, options, (err, movement) => {
+      if (err) {
+        res.status(500).end();
+      } else {
+        res.send(movement);
+      }
+    });
+  },
   updateOne: (req, res) => {
     let update = {
       name: req.body.name,

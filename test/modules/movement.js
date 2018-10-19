@@ -6,12 +6,15 @@ import api from '../../src/config/api';
 
 let movementId;
 let linesIds;
+let data = {
+  name: 'test Movement name'
+};
 export default {
   create: () =>
     it('it should create an movement', function(done) {
       axios
         .post(api.movement.main, {
-          name: 'test inc',
+          name: data.name,
           description: 'test desc incm',
           dates: {
             expiration: new Date()
@@ -140,6 +143,22 @@ export default {
           res.should.have.status(200);
           res.data.should.be.a('object');
           res.data.isActive.should.be.a('boolean');
+          done();
+        })
+        .catch(err => {
+          if (err.response) {
+            console.log(err.response.status);
+            console.log(err.response.statusText);
+          } else console.log(err);
+        });
+    }),
+  find: () =>
+    it('it should find movements', done => {
+      axios(api.movement.find + `?query=${data.name.slice(3, 7)}`)
+        .then(res => {
+          res.should.have.status(200);
+          res.data.should.be.a('object');
+          res.data.docs.should.be.a('array');
           done();
         })
         .catch(err => {

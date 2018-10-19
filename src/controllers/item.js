@@ -31,8 +31,28 @@ const routes = {
       }
     });
   },
-  updateOne(req, res) {},
-  findOne(req, res) {}
+  updateOne(req, res) {
+    Item.findByIdAndUpdate(req.params.id, req.body, {}, (err, item) => {
+      if (err) {
+        res.status(500).end(err);
+      } else {
+        res.send(item);
+      }
+    });
+  },
+  find(req, res) {
+    let query = {
+      $or: [{ name: { $regex: req.query.query, $options: 'i' } }]
+    };
+    let options = {};
+    Item.paginate(query, options, (err, item) => {
+      if (err) {
+        res.status(500).end();
+      } else {
+        res.send(item);
+      }
+    });
+  }
 };
 
 module.exports = routes;
