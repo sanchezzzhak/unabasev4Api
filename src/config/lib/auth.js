@@ -47,10 +47,7 @@ export default {
       process.env.NODE_ENV === 'test'
     ) {
       let query = {
-        $or: [
-          { 'emails.default': { $regex: 'mail.com', $options: 'i' } },
-          { 'emails.google': { $regex: 'mail.com', $options: 'i' } }
-        ]
+        $or: [{ 'emails.email': { $regex: 'mail', $options: 'i' } }]
       };
       User.findOne(query).exec((err, user) => {
         if (err) {

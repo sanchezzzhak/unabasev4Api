@@ -68,7 +68,7 @@ export default {
           user.activeScope = user._id;
         }
         user.save((err, user) => {
-          const token = jwt.sign({ user: user.getUser() }, mConfig.mSecret, {
+          const token = jwt.sign({ user: user.getUser() }, mainConfig.mSecret, {
             expiresIn: '3d'
           });
           // res.cookie('access_token', token, {
@@ -120,7 +120,7 @@ export default {
         newUser.save(function(err, user) {
           if (err) throw err;
 
-          const token = jwt.sign({ user: user.getUser() }, mConfig.mSecret, {
+          const token = jwt.sign({ user: user.getUser() }, mainConfig.mSecret, {
             expiresIn: '3d'
           });
           user.activeScope = user._id;
@@ -163,7 +163,7 @@ export default {
       });
       res.redirect(url);
     } else {
-      // res.redirect(mConfig.web);
+      // res.redirect(mainConfig.web);
       res.send(req);
     }
   },
@@ -198,9 +198,11 @@ export default {
                 req.body.google.email.indexOf('@')
               )),
                 (newUser.google = req.body.google);
-              newUser.emails = {
-                google: req.body.google.email
-              };
+              newUser.emails = [];
+              newUser.emails.push({
+                email: req.body.google.email,
+                label: 'google'
+              });
               newUser.name = req.body.google.name;
               newUser.save((err, user) => {
                 if (err) {
@@ -210,7 +212,7 @@ export default {
                   user.save((err, userFound) => {
                     const token = jwt.sign(
                       { user: user.getUser() },
-                      mConfig.mSecret,
+                      mainConfig.mSecret,
                       {
                         expiresIn: '3d'
                       }
@@ -275,7 +277,7 @@ export default {
   //               user.save((err, userFound) => {
   //                 const token = jwt.sign(
   //                   { user: user.getUser() },
-  //                   mConfig.mSecret,
+  //                   mainConfig.mSecret,
   //                   {
   //                     expiresIn: '3d'
   //                   }
@@ -336,7 +338,7 @@ export default {
   //                   user.save((err, userFound) => {
   //                     const token = jwt.sign(
   //                       { user: user.getUser() },
-  //                       mConfig.mSecret,
+  //                       mainConfig.mSecret,
   //                       {
   //                         expiresIn: '3d'
   //                       }

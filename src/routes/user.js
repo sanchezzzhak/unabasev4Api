@@ -5,7 +5,7 @@ import {
   create,
   get,
   logout,
-  findOne,
+  find,
   getOne,
   password,
   update,
@@ -28,7 +28,7 @@ users.use(auth.sToken);
 users.post('/', create);
 users.get('/', get);
 users.get('/logout', logout);
-users.get('/find', findOne);
+users.get('/find/:q', find);
 users.get('/:id', getOne);
 users.put('/:id', update);
 users.put('/password/:id', password);

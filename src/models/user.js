@@ -11,8 +11,8 @@ let userSchema = Schema(
     username: { type: String },
     password: String,
     idnumber: { type: String },
-    phones: { type: Object },
-    emails: { type: Object },
+    phones: [{ phone: String, label: String }],
+    emails: [{ email: String, label: String }],
     /**
      *     enum: ['personal', 'business']
      */

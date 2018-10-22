@@ -7,7 +7,11 @@ use(chaiHttp);
 import api from '../../src/config/api';
 // let userId;
 let data = {
-  password: 'test123'
+  password: 'test123',
+  email: 'test@mail.com',
+  name: 'test surtest',
+  username: 'testUsername',
+  idnumber: Math.floor(Math.random() * (99999999 - 111111111) + 111111111)
 };
 
 export default {
@@ -15,16 +19,22 @@ export default {
     it('CREATE a user', done => {
       axios
         .post(api.user.main, {
-          name: 'test user',
-          username: 'test username',
+          name: data.name,
+          username: data.username,
           password: data.password,
-          idnumber: '255456562',
-          phones: {
-            default: '+56909909909'
-          },
-          emails: {
-            default: 'test@mail.com'
-          },
+          idnumber: data.idnumber,
+          phones: [
+            {
+              phone: '+56909909909',
+              label: 'default'
+            }
+          ],
+          emails: [
+            {
+              email: data.email,
+              label: 'default'
+            }
+          ],
           address: {
             street: 'carmen covarrubias',
             number: 32,
@@ -140,6 +150,27 @@ export default {
           if (err.response) {
             console.log(err.response.status);
             console.log(err.response.statusText);
+          } else console.log(err);
+        });
+    }),
+  find: () =>
+    it('FIND USERS BY name, username, email, idnumber', done => {
+      axios(`${api.user.find}/${data.name}`)
+        .then(res => {
+          res.should.have.status(200);
+          res.data.should.be.a('object');
+          res.data.docs.should.be.a('array');
+          res.data.total.should.be.a('number');
+          res.data.limit.should.be.a('number');
+          res.data.page.should.be.a('number');
+          res.data.pages.should.be.a('number');
+          done();
+        })
+        .catch(err => {
+          if (err.response) {
+            console.log(err.response.status);
+            console.log(err.response.statusText);
+            console.log(err.response.data);
           } else console.log(err);
         });
     })

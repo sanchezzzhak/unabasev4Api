@@ -122,28 +122,32 @@ export default {
       }
     );
   },
-  findOne: (req, res) => {
+  find: (req, res) => {
     let query = {
-      $and: []
+      $or: [
+        { 'emails.email': { $regex: req.params.q, $options: 'i' } },
+        { name: { $regex: req.params.q, $options: 'i' } },
+        { username: { $regex: req.params.q, $options: 'i' } },
+        { idnumber: { $regex: req.params.q, $options: 'i' } }
+      ]
     };
     console.log('find one!!');
-    Object.keys(req.query).forEach(q => {
-      if (q === 'email') {
-        query.$and.push({
-          [`emails`]: { $regex: req.query[q], $options: 'i' }
-        });
-      } else {
-        query.$and.push({ [q]: { $regex: req.query[q], $options: 'i' } });
-      }
-    });
-    console.log(query.$and);
-    User.findOne(query, (err, user) => {
+    // Object.keys(req.query).forEach(q => {
+    //   if (q === 'email') {
+    //     query.$or.push({
+    //       'emails.email': { $regex: req.query[q], $options: 'i' }
+    //     });
+    //   } else {
+    //     query.$or.push({ [q]: { $regex: req.query[q], $options: 'i' } });
+    //   }
+    // });
+    console.log(query.$or);
+    console.log(query.$or[0].em);
+    User.paginate(query, {}, (err, items) => {
       if (err) {
         res.status(500).end();
-      } else if (user) {
-        res.send(user);
       } else {
-        res.status(404).end();
+        res.send(items);
       }
     });
   }

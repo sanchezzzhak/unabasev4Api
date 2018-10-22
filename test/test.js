@@ -22,6 +22,7 @@ describe('User***************************************', () => {
   user.update();
   user.password();
   user.getOne();
+  user.find();
 });
 describe('Business***************************************', () => {
   business.create();
