@@ -12,7 +12,7 @@ import {
 items.get('/', get);
 items.post('/', create);
 items.put('/:id', updateOne);
-items.get('/find', find);
+items.get('/find/:q', find);
 items.get('/:id', getOne);
 
 export default items;

@@ -3,7 +3,7 @@ import User from '../models/user';
 import ntype from 'normalize-type';
 import logger from '../config/lib/logger';
 import findByValue from '../lib/findObjectByValue';
-
+import accountTypeByUrl from '../lib/accountTypeByUrl';
 export default {
   password: (req, res) => {
     const { password, newPassword } = req.body;
@@ -41,7 +41,8 @@ export default {
     options.limit = rquery.limit || 20;
     delete rquery.page;
     delete rquery.limit;
-    let query = { ...rquery };
+    const type = req.query.type || 'personal';
+    let query = { ...rquery, type };
     // query.name = req.query.name || null;
     // query.isActive = bool(req.query.active) || null;
 
@@ -67,7 +68,9 @@ export default {
   },
   getOne: (req, res) => {
     console.log(req.params.id);
-    User.findById(req.params.id, (err, user) => {
+
+    const type = req.query.type || 'personal';
+    User.findOne({ _id: req.params.id, type }, (err, user) => {
       if (err) {
         res.status(500).send(err);
       } else if (user) {
@@ -108,6 +111,23 @@ export default {
       }
     );
   },
+  user: (req, res) => {
+    let update = {
+      $addToSet: { users: req.body.user }
+    };
+    User.findByIdAndUpdate(
+      req.params.id,
+      update,
+      { new: true },
+      (err, item) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          res.send(item);
+        }
+      }
+    );
+  },
   scope: (req, res) => {
     User.findByIdAndUpdate(
       req.params.id,
@@ -123,12 +143,14 @@ export default {
     );
   },
   find: (req, res) => {
+    const type = req.query.type || 'personal';
     let query = {
       $or: [
         { 'emails.email': { $regex: req.params.q, $options: 'i' } },
         { name: { $regex: req.params.q, $options: 'i' } },
         { username: { $regex: req.params.q, $options: 'i' } },
-        { idnumber: { $regex: req.params.q, $options: 'i' } }
+        { idnumber: { $regex: req.params.q, $options: 'i' } },
+        { type }
       ]
     };
     console.log('find one!!');
@@ -142,7 +164,6 @@ export default {
     //   }
     // });
     console.log(query.$or);
-    console.log(query.$or[0].em);
     User.paginate(query, {}, (err, items) => {
       if (err) {
         res.status(500).end();

@@ -50,16 +50,15 @@ const routes = {
       }
     });
   },
-  find(req, res) {
+  find: (req, res) => {
     let query = {
-      $or: [{ name: { $regex: req.query.query, $options: 'i' } }]
+      name: { $regex: req.params.q, $options: 'i' }
     };
-    let options = {};
-    Item.paginate(query, options, (err, item) => {
+    Item.paginate(query, {}, (err, items) => {
       if (err) {
         res.status(500).end();
       } else {
-        res.send(item);
+        res.send(items);
       }
     });
   }

@@ -18,7 +18,7 @@ import api from '../../src/config/api';
 const username = Math.random().toString(36);
 export default {
   register: () =>
-    it('REGISTER a user', done => {
+    it('REGISTER a user @auth', done => {
       axios
         .post(api.auth.register, {
           username,
@@ -39,7 +39,7 @@ export default {
     }),
 
   login: () =>
-    it('LOGIN a user', done => {
+    it('LOGIN a user @auth', done => {
       axios
         .post(api.auth.login, {
           username,

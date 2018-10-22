@@ -11,6 +11,6 @@ taxs.get('/', ctl.get);
 taxs.get('/:id', ctl.getOne);
 taxs.post('/', ctl.create);
 taxs.put('/:id', ctl.updateOne);
-taxs.get('/find', ctl.findOne);
+taxs.get('/find/:q', ctl.find);
 
 export default taxs;

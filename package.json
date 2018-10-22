@@ -9,6 +9,7 @@
     "test": "NODE_ENV=test mocha --timeout 10000",
     "btest": "npm run build && NODE_ENV=test mocha --timeout 10000",
     "test6": "NODE_ENV=test mocha --timeout 10000 --require  babel-core/register --exclude /modules",
+    "t6g": "NODE_ENV=test mocha --timeout 10000 --require  babel-core/register --exclude /modules --grep",
     "start3": "nodemon ./src/app",
     "dev": "NODE_ENV=dev nodemon   ./src/app  --exec babel-node",
     "una": "NODE_ENV=una nodemon   ./src/app  --exec babel-node",

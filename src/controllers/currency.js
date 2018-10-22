@@ -10,11 +10,11 @@ const routes = {
     delete rquery.page;
     delete rquery.limit;
     let query = { ...rquery };
-    Currencies.paginate(query, options, (err, items) => {
+    Currency.paginate(query, options, (err, items) => {
       if (err) {
         res.status(500).end();
       } else {
-        res.send(items);
+        res.json(items);
       }
     });
   },
@@ -36,6 +36,41 @@ const routes = {
       (err, item) => {
         if (err) {
           res.status(500).send({ msg: err });
+        } else {
+          res.send(item);
+        }
+      }
+    );
+  },
+  getOne: (req, res) => {
+    Currency.findById(req.params.id, (err, item) => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.send(item);
+      }
+    });
+  },
+  find: (req, res) => {
+    let query = {
+      name: { $regex: req.params.q, $options: 'i' }
+    };
+    Currency.paginate(query, {}, (err, items) => {
+      if (err) {
+        res.status(500).end();
+      } else {
+        res.send(items);
+      }
+    });
+  },
+  updateOne: (req, res) => {
+    Currency.findOneAndUpdate(
+      { _id: req.params.id },
+      req.body,
+      { new: true },
+      (err, item) => {
+        if (err) {
+          res.status(500).send(err);
         } else {
           res.send(item);
         }

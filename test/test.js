@@ -11,6 +11,7 @@ import auth from './modules/auth';
 import movement from './modules/movement';
 import tax from './modules/tax';
 import item from './modules/item';
+import currency from './modules/currency';
 let userId;
 // global.userId = '';
 let data = {
@@ -24,6 +25,7 @@ describe('User***************************************', () => {
   user.getOne();
   user.find();
 });
+
 describe('Business***************************************', () => {
   business.create();
   business.list();
@@ -58,4 +60,11 @@ describe('Item***************************************', () => {
   item.update();
   item.find();
   item.getOne();
+});
+describe('Currency***************************************', () => {
+  currency.create();
+  currency.list();
+  currency.update();
+  currency.find();
+  currency.getOne();
 });

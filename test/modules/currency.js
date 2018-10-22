@@ -4,23 +4,32 @@ import axios from 'axios';
 use(chaiHttp);
 import api from '../../src/config/api';
 
-let itemId;
+let currencyId;
 let data = {
-  name: 'test item name'
+  name: 'test currency name',
+  decimal: ',',
+  thousand: '.',
+  prefix: '$',
+  suffix: '.',
+  presicion: 2
 };
 
 export default {
   create: () =>
-    it('CREATE an item @item', function(done) {
+    it('CREATE a currency @currency', done => {
       axios
-        .post(api.item.main, {
+        .post(api.currency.main, {
           name: data.name,
-          tax: global.taxId
+          decimal: data.decimal,
+          thousand: data.thousand,
+          prefix: data.prefix,
+          suffix: data.suffix,
+          precision: data.precision
         })
         .then(res => {
           res.should.have.status(200);
           res.data.should.be.a('object');
-          itemId = res.data._id;
+          currencyId = res.data._id;
           done();
         })
         .catch(err => {
@@ -31,10 +40,9 @@ export default {
         });
     }),
   list: () =>
-    it('LIST ALL items @item', function(done) {
-      axios(api.item.main)
+    it('LIST all currencies @currency', done => {
+      axios(api.currency.main)
         .then(res => {
-          // console.log(res.data);
           res.should.have.status(200);
           res.data.should.be.a('object');
           res.data.docs.should.be.a('array');
@@ -47,13 +55,16 @@ export default {
           } else console.log(err);
         });
     }),
-
   update: () =>
-    it('UPDATE an item @item', function(done) {
+    it('LIST all currencies @currency', done => {
       axios
-        .put(api.item.main + itemId, {
-          name: 'test item updated',
-          tax: global.taxId
+        .put(api.currency.main + currencyId, {
+          name: data.name + 'updated',
+          decimal: data.decimal,
+          thousand: data.thousand,
+          prefix: data.prefix,
+          suffix: data.suffix,
+          precision: data.precision
         })
         .then(res => {
           res.should.have.status(200);
@@ -68,8 +79,8 @@ export default {
         });
     }),
   find: () =>
-    it('FIND BY QUERY items @item', done => {
-      axios(`${api.item.find}/${data.name.slice(3, 7)}`)
+    it('FIND BY QUERY currencies - name @currency', done => {
+      axios(`${api.currency.find}/${data.name.slice(3, 7)}`)
         .then(res => {
           res.should.have.status(200);
           res.data.should.be.a('object');
@@ -84,8 +95,8 @@ export default {
         });
     }),
   getOne: () =>
-    it('GET ONE item by id @item', done => {
-      axios(api.item.main + itemId)
+    it('GET ONE currency by id @currency', done => {
+      axios(api.currency.main + currencyId)
         .then(res => {
           res.should.have.status(200);
           res.data.should.be.a('object');

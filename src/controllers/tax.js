@@ -54,21 +54,15 @@ export default {
       }
     );
   },
-  findOne(req, res) {
+  find: (req, res) => {
     let query = {
-      $and: []
+      name: { $regex: req.params.q, $options: 'i' }
     };
-    Object.keys(req.query).forEach(q => {
-      query.$and.push({ [q]: { $regex: req.query[q], $options: 'i' } });
-    });
-
-    Tax.findOne(query, (err, tax) => {
+    Tax.paginate(query, {}, (err, items) => {
       if (err) {
         res.status(500).end();
-      } else if (tax) {
-        res.send(tax);
       } else {
-        res.status(404).end();
+        res.send(items);
       }
     });
   }

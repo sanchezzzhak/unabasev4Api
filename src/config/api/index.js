@@ -11,6 +11,7 @@ import auth from './auth';
 import business from './business';
 import outcome from './outcome';
 import movement from './movement';
+import currency from './currency';
 // import task from './task';
 
 export default {
@@ -20,6 +21,7 @@ export default {
   auth: auth(api),
   business: business(api),
   outcome: outcome(api),
-  movement: movement(api)
+  movement: movement(api),
+  currency: currency(api)
   // task: task(api)
 };

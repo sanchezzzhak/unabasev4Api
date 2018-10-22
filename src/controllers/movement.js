@@ -1,17 +1,22 @@
 import bool from 'normalize-bool';
 import Movement from '../models/movement';
 
+import ntype from 'normalize-type';
 import Line from '../models/line';
 
 import logger from '../config/lib/logger';
 const routes = {
-  get(req, res) {
-    let query = {};
+  get: (req, res) => {
+    let rquery = ntype(req.query);
     let options = {};
-    options.page = parseInt(req.query.page) || 1;
-    options.limit = parseInt(req.query.limit) || 20;
+    options.page = rquery.page || 1;
+    options.limit = rquery.limit || 20;
+
     options.select = 'name client.name createdAt total state';
     options.populate = [{ path: 'client', select: 'name' }];
+    delete rquery.page;
+    delete rquery.limit;
+    let query = { ...rquery };
 
     Movement.paginate(query, options, (err, movements) => {
       if (err) {
@@ -104,14 +109,14 @@ const routes = {
   },
   find: (req, res) => {
     let query = {
-      $or: [{ name: { $regex: req.query.query, $options: 'i' } }]
+      name: { $regex: req.params.q, $options: 'i' },
+      description: { $regex: req.params.q, $options: 'i' }
     };
-    let options = {};
-    Movement.paginate(query, options, (err, movement) => {
+    Movement.paginate(query, {}, (err, items) => {
       if (err) {
         res.status(500).end();
       } else {
-        res.send(movement);
+        res.send(items);
       }
     });
   },

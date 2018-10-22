@@ -43,6 +43,7 @@ export default api => {
      *   params: [ :id]
      */
     password: `${api}users/password/`,
-    business: `${api}users/business/`
+    business: `${api}users/business/`,
+    user: `${api}users/user/`
   };
 };

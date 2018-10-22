@@ -1,16 +1,36 @@
 export default api => {
   return {
     /**
-     * GET/  get doc list ... query: [name(STRING), isActive(boolean)]
-     * GET/:id    get doc info
-     * POST/  create movement
+     *  GET/  get doc list params: [name(STRING), isActive(boolean), ]
+     */
+    /**
+     *
+     *  GET/:id    get doc info
+     */
+    /**
+     *  POST/   register business
+     *   params: {
+     *    email: String,
+     *    password: String,
+     *    name: String,  -------not in use
+     *
+     *   }
+     */
+    /**
+     *  PUT/   update business
+     *   params: {
+     *    email: String,
+     *    password: String,
+     *    name: String,  -------not in use
+     *
+     *   }
      */
     main: `${api}business/`,
     /**
-     * PATCH/
-     * name: string
+     *  GET/ find business by
+     *    name, username, idnumber or email
      */
-    update: `${api}business/update/`,
-    user: `${api}business/user/`
+    find: `${api}business/find`,
+    business: `${api}business/business/`
   };
 };

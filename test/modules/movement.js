@@ -11,7 +11,7 @@ let data = {
 };
 export default {
   create: () =>
-    it('CREATE an movement', function(done) {
+    it('CREATE an movement @movement', function(done) {
       axios
         .post(api.movement.main, {
           name: data.name,
@@ -64,7 +64,7 @@ export default {
         });
     }),
   list: () =>
-    it('LIST ALL movements', function(done) {
+    it('LIST ALL movements @movement', function(done) {
       axios(api.movement.main)
         .then(res => {
           // console.log(res.data);
@@ -80,7 +80,7 @@ export default {
     }),
 
   update: () =>
-    it('UPDATE an movement', function(done) {
+    it('UPDATE an movement @movement', function(done) {
       axios
         .put(api.movement.main + movementId, {
           name: 'test inc updated',
@@ -136,7 +136,7 @@ export default {
         });
     }),
   null: () =>
-    it('SET MOVEMENT TO NULL', done => {
+    it('SET MOVEMENT TO NULL @movement', done => {
       axios
         .put(api.movement.main + movementId, {
           isActive: false
@@ -155,8 +155,8 @@ export default {
         });
     }),
   find: () =>
-    it('FIND BY QUERY movements', done => {
-      axios(api.movement.find + `?query=${data.name.slice(3, 7)}`)
+    it('FIND BY QUERY movements @movement', done => {
+      axios(`${api.movement.find}/${data.name.slice(3, 7)}`)
         .then(res => {
           res.should.have.status(200);
           res.data.should.be.a('object');
@@ -172,7 +172,7 @@ export default {
     }),
 
   getOne: () =>
-    it('GET ONE movement by id', done => {
+    it('GET ONE movement by id @movement', done => {
       axios(api.movement.main + movementId)
         .then(res => {
           res.should.have.status(200);

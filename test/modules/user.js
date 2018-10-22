@@ -16,7 +16,7 @@ let data = {
 
 export default {
   create: () =>
-    it('CREATE a user', done => {
+    it('CREATE a user @user', done => {
       axios
         .post(api.user.main, {
           name: data.name,
@@ -61,9 +61,9 @@ export default {
         });
     }),
   list: () =>
-    it('LIST ALL users', done => {
+    it('LIST ALL users @user', done => {
       axios
-        .get(api.user.main + `?accountType=personal`)
+        .get(api.user.main + `?type=personal`)
         .then(res => {
           res.should.have.status(200);
           res.data.should.be.a('object');
@@ -83,7 +83,7 @@ export default {
         });
     }),
   update: () =>
-    it('UPDATE a user', done => {
+    it('UPDATE a user @user', done => {
       axios
         .put(api.user.main + global.userId, {
           name: 'test user updated',
@@ -119,7 +119,7 @@ export default {
         });
     }),
   password: () =>
-    it('CHANGE PASSWORD of a user', done => {
+    it('CHANGE PASSWORD of a user @user', done => {
       axios
         .put(api.user.password + global.userId, {
           password: data.password,
@@ -139,7 +139,7 @@ export default {
         });
     }),
   getOne: () =>
-    it('GET ONE user by id', done => {
+    it('GET ONE user by id @user', done => {
       axios(api.user.main + global.userId)
         .then(res => {
           res.should.have.status(200);
@@ -154,7 +154,7 @@ export default {
         });
     }),
   find: () =>
-    it('FIND USERS BY name, username, email, idnumber', done => {
+    it('FIND BY QUERY users -  name, username, email, idnumber @user', done => {
       axios(`${api.user.find}/${data.name}`)
         .then(res => {
           res.should.have.status(200);

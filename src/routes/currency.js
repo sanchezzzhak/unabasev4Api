@@ -2,18 +2,15 @@ import { Router } from 'express';
 const currencies = Router();
 
 import { body } from 'express-validator/check';
-import {
-  get,
-  create,
-  update,
-  findOne,
-  getOne,
-  validate
-} from '../controllers/currency';
+import { get, create, updateOne, find, getOne } from '../controllers/currency';
+
+import auth from '../config/lib/auth';
+currencies.use(auth.sToken);
+
 currencies.get('/', get);
+currencies.get('/:id', getOne);
 currencies.post('/', create);
-currencies.put('/:id', update);
-// currencies.get('/find', findOne);
-// currencies.get(':id', getOne);
+currencies.put('/:id', updateOne);
+currencies.get('/find/:q', find);
 
 export default currencies;

@@ -10,7 +10,8 @@ import {
   password,
   update,
   business,
-  scope
+  scope,
+  user
 } from '../controllers/user';
 
 import auth from '../config/lib/auth';
@@ -33,6 +34,7 @@ users.get('/:id', getOne);
 users.put('/:id', update);
 users.put('/password/:id', password);
 users.put('/business/:id', business);
+users.put('/user/:id', user);
 users.put('/scope/:id', scope);
 
 export default users;
