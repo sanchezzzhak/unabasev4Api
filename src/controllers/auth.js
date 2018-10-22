@@ -1,6 +1,6 @@
 import User from '../models/user';
 import jwt from 'jsonwebtoken';
-import mConfig from '../config/main';
+import mainConfig from '../config/main';
 import logger from '../config/lib/logger';
 import gauth from '../config/auth';
 import axios from 'axios';
