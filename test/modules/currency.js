@@ -16,7 +16,7 @@ let data = {
 
 export default {
   create: () =>
-    it('CREATE a currency @currency', done => {
+    it('CREATE a @currency', done => {
       axios
         .post(api.currency.main, {
           name: data.name,
@@ -56,7 +56,7 @@ export default {
         });
     }),
   update: () =>
-    it('LIST all currencies @currency', done => {
+    it('UPDATE  a @currency', done => {
       axios
         .put(api.currency.main + currencyId, {
           name: data.name + 'updated',

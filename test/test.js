@@ -52,6 +52,8 @@ describe('Tax***************************************', () => {
   tax.create();
   tax.list();
   tax.update();
+  tax.find();
+  tax.getOne();
 });
 
 describe('Item***************************************', () => {

@@ -19,11 +19,14 @@ export default {
     });
   },
   getOne(req, res) {
-    Tax.findOne({ id: req.params.id }, (err, tax) => {
+    console.log(req.params.id);
+    Tax.findById(req.params.id, (err, tax) => {
       if (err) {
-        res.status(404).end(err);
-      } else {
+        res.status(500).end(err);
+      } else if (tax) {
         res.send(tax);
+      } else {
+        res.status(404).send({ msg: 'tax not found' });
       }
     });
   },
