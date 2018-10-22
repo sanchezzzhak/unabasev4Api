@@ -17,7 +17,7 @@ const movementSchema = new Schema(
       net: Number,
       tax: Number
     },
-    state: String,
+    state: { String, default: 'draft' },
     isActive: { type: Boolean, default: true },
     currency: { type: Schema.Types.ObjectId, ref: 'Currency' }
   },
