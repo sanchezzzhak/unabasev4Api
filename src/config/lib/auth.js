@@ -36,8 +36,7 @@ export default {
         if (err) {
           res.status(403).send({ msg: 'Not authorized1' });
         } else {
-          console.log('decoded');
-          console.log(decoded);
+          req.user = decoded.user;
           next();
         }
       });
