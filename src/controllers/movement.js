@@ -17,7 +17,8 @@ const routes = {
     delete rquery.page;
     delete rquery.limit;
     let query = { ...rquery };
-
+    console.log('query');
+    console.log(query);
     Movement.paginate(query, options, (err, movements) => {
       if (err) {
         res.status(500).end();
@@ -34,7 +35,7 @@ const routes = {
     newMovement.description = description || null;
     newMovement.client = client || null;
     newMovement.creator = req.user._id || null;
-    newMovement.resposanble = req.user._id || null;
+    newMovement.resposable = req.user._id || null;
     newMovement.state = state || null;
     newMovement.lines = new Array();
     newMovement.dates = {
