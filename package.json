@@ -8,8 +8,8 @@
   "scripts": {
     "test": "NODE_ENV=test mocha --timeout 10000",
     "btest": "npm run build && NODE_ENV=test mocha --timeout 10000",
-    "test6": "NODE_ENV=test mocha --timeout 10000 --require  babel-core/register --exclude /modules",
-    "t6g": "NODE_ENV=test mocha --timeout 10000 --require  babel-core/register --exclude /modules --grep",
+    "test6": "NODE_ENV=test mocha --timeout 10000 --require  babel-core/register --exclude /modules --require babel-polyfill",
+    "t6g": "NODE_ENV=test mocha --timeout 10000 --require  babel-core/register --exclude /modules --require babel-polyfill --grep",
     "start3": "nodemon ./src/app",
     "dev": "NODE_ENV=dev nodemon   ./src/app  --exec babel-node",
     "una": "NODE_ENV=una nodemon   ./src/app  --exec babel-node",
@@ -52,6 +52,7 @@
     "pug": "^2.0.3",
     "restler": "^3.4.0",
     "serve-favicon": "^2.5.0",
+    "unabase_api_doc": "^1.0.0",
     "validator": "^10.8.0"
   },
   "devDependencies": {
@@ -60,6 +61,7 @@
     "babel-core": "^6.26.3",
     "babel-plugin-add-module-exports": "^1.0.0",
     "babel-plugin-transform-es2015-destructuring": "^6.23.0",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-2": "^6.24.1",
     "babel-preset-stage-3": "^6.24.1",

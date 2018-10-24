@@ -5544,6 +5544,11 @@ uid2@0.0.x:
   resolved "https://registry.yarnpkg.com/uid2/-/uid2-0.0.3.tgz#483126e11774df2f71b8b639dcd799c376162b82"
   integrity sha1-SDEm4Rd03y9xuLY53NeZw3YWK4I=
 
+unabase_api_doc@^1.0.0:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/unabase_api_doc/-/unabase_api_doc-1.0.2.tgz#15e4a8023bc0092a1c894ff600bdb18e4c6609d5"
+  integrity sha512-LMLC/ye5/Wc+E+MfVxNk8Ne9ICgCHelYEUoqduXApbtVH/oriyeDIT7Il8nIW9BVaQKBsWSXldOHRM2G6apGoA==
+
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/unicode-canonical-property-names-ecmascript/-/unicode-canonical-property-names-ecmascript-1.0.4.tgz#2619800c4c825800efdd8343af7dd9933cbe2818"

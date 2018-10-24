@@ -4,7 +4,7 @@ import { assert } from 'chai';
 const should = _should();
 import axios from 'axios';
 use(chaiHttp);
-import api from '../../src/config/api';
+// import api from '../../src/config/api';
 // let userId;
 let data = {
   password: 'test123',
@@ -15,7 +15,7 @@ let data = {
 };
 
 export default {
-  create: () =>
+  create: api =>
     it('CREATE a user @user', done => {
       axios
         .post(api.user.main, {
@@ -60,7 +60,7 @@ export default {
           } else console.log(err);
         });
     }),
-  list: () =>
+  list: api =>
     it('LIST ALL users @user', done => {
       axios
         .get(api.user.main + `?type=personal`)
@@ -82,7 +82,7 @@ export default {
           } else console.log(err);
         });
     }),
-  update: () =>
+  update: api =>
     it('UPDATE a user @user', done => {
       axios
         .put(api.user.main + global.userId, {
@@ -118,7 +118,7 @@ export default {
           } else console.log(err);
         });
     }),
-  password: () =>
+  password: api =>
     it('CHANGE PASSWORD of a user @user', done => {
       axios
         .put(api.user.password + global.userId, {
@@ -138,7 +138,7 @@ export default {
           } else console.log(err);
         });
     }),
-  getOne: () =>
+  getOne: api =>
     it('GET ONE user by id @user', done => {
       axios(api.user.main + global.userId)
         .then(res => {
@@ -153,7 +153,7 @@ export default {
           } else console.log(err);
         });
     }),
-  find: () =>
+  find: api =>
     it('FIND BY QUERY users -  name, username, email, idnumber @user', done => {
       axios(`${api.user.find}/${data.name}`)
         .then(res => {
