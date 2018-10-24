@@ -63,5 +63,4 @@ typings/
 src/config/auth.js
 src/config/main.js
 .prettierrc.json
-src/secret
 build/
