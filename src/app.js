@@ -17,10 +17,11 @@ import session from 'express-session';
 import cors from 'cors';
 import morgan from 'morgan';
 const env = process.env.NODE_ENV || '';
-/// database
-// logger('db con');
 
-// logger(env);
+/// database
+console.log('env');
+
+console.log(env);
 // logger(dbConfig[env]);
 mongoose.connect(
   dbConfig[env],
@@ -79,7 +80,10 @@ app.use(express.static(path.join(__dirname, './public')));
 // );
 app.use(passport.initialize());
 app.use(passport.session());
-if (env === 'test' || env === 'dev') app.use(morgan('dev'));
+if (env === 'test' || env === 'dev') {
+  console.log('using morgan');
+  app.use(morgan('dev'));
+}
 //global var
 let allowedOrigins = [
   'https://unabase1.firebaseapp.com',

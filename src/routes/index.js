@@ -36,4 +36,7 @@ routes.use('/items', item);
 import currency from './currency';
 routes.use('/currencies', currency);
 
+import mailer from './mailer';
+routes.use('/mailer', mailer);
+
 export default routes;
