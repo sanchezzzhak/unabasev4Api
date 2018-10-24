@@ -34,6 +34,7 @@ const routes = {
     newMovement.description = description || null;
     newMovement.client = client || null;
     newMovement.creator = req.user._id || null;
+    newMovement.resposanble = req.user._id || null;
     newMovement.state = state || null;
     newMovement.lines = new Array();
     newMovement.dates = {
