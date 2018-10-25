@@ -7,6 +7,7 @@ import { stringify, parse } from 'flatted';
 import logger from '../config/lib/logger';
 const routes = {
   get: (req, res) => {
+    req.nm = 'test';
     let rquery = ntype(req.query);
     let options = {};
     options.page = rquery.page || 1;

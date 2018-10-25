@@ -5,11 +5,10 @@ import bodyParser, { urlencoded, json } from 'body-parser';
 import xmlparser from 'express-xml-bodyparser';
 import flash from 'connect-flash';
 
-import logger from './config/lib/logger.js';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import dbConfig from './config/database.js';
-
+import logger from './lib/logger';
 import mainConfig from './config/main.js';
 const port = process.env.PORT || 3000;
 import favicon from 'serve-favicon';
@@ -22,7 +21,7 @@ const env = process.env.NODE_ENV || '';
 console.log('env');
 
 console.log(env);
-// logger(dbConfig[env]);
+// ()(dbConfig[env]);
 mongoose.connect(
   dbConfig[env],
   { useNewUrlParser: true }
@@ -42,7 +41,7 @@ db.once('open', () => {
 
 //check for DB erros
 db.on('error', err => {
-  logger(err);
+  console.log(err);
 });
 
 //init app
@@ -135,7 +134,7 @@ app.use('/', routes);
 
 //start server
 app.listen(port, () => {
-  logger('Server started on port ' + port + ' env: ' + env);
+  console.log('Server started on port ' + port + ' env: ' + env);
 });
 
 export default app;

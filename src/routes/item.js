@@ -8,11 +8,51 @@ import {
   getOne,
   find
 } from '../controllers/item';
-
-items.get('/', get);
-items.post('/', create);
-items.put('/:id', updateOne);
-items.get('/find/:q', find);
-items.get('/:id', getOne);
+let module = 'items';
+items.get(
+  '/',
+  logger({
+    name: 'list',
+    description: 'list items',
+    module
+  }),
+  get
+);
+items.post(
+  '/',
+  logger({
+    name: 'create',
+    description: 'create item',
+    module
+  }),
+  create
+);
+items.put(
+  '/:id',
+  logger({
+    name: 'update',
+    description: 'update item',
+    module
+  }),
+  updateOne
+);
+items.get(
+  '/find/:q',
+  logger({
+    name: 'find',
+    description: 'find items',
+    module
+  }),
+  find
+);
+items.get(
+  '/:id',
+  logger({
+    name: 'getOne',
+    description: 'get one item',
+    module
+  }),
+  getOne
+);
 
 export default items;
