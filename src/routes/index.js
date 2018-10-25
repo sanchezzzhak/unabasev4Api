@@ -39,4 +39,7 @@ routes.use('/currencies', currency);
 import mailer from './mailer';
 routes.use('/mailer', mailer);
 
+import log from './log';
+routes.use('/logs', log);
+
 export default routes;

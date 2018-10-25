@@ -3,7 +3,7 @@ import Movement from '../models/movement';
 
 import ntype from 'normalize-type';
 import Line from '../models/line';
-
+import { stringify, parse } from 'flatted';
 import logger from '../config/lib/logger';
 const routes = {
   get: (req, res) => {

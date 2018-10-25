@@ -78,6 +78,7 @@ app.use(express.static(path.join(__dirname, './public')));
 //     // cookie: { secure: true }
 //   })
 // );
+
 app.use(passport.initialize());
 app.use(passport.session());
 if (env === 'test' || env === 'dev') {
