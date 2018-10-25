@@ -43,7 +43,6 @@ const routes = {
     newMovement.description = description || null;
     newMovement.client = client || null;
     newMovement.creator = req.user._id || null;
-<<<<<<< HEAD
     newMovement.responsable = responsable || null;
     newMovement.state = state || null;
     newMovement.lines = new Array();
