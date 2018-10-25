@@ -28,14 +28,22 @@ const routes = {
     });
   },
   create: (req, res) => {
-    const { name, dates, client, state, lines, description } = req.body;
+    const {
+      name,
+      dates,
+      client,
+      state,
+      lines,
+      description,
+      responsable
+    } = req.body;
     let errorOnItem = { state: false };
     let newMovement = new Movement();
     newMovement.name = name || null;
     newMovement.description = description || null;
     newMovement.client = client || null;
     newMovement.creator = req.user._id || null;
-    newMovement.responsable = req.user._id || null;
+    newMovement.responsable = responsable || null;
     newMovement.state = state || null;
     newMovement.lines = new Array();
     newMovement.dates = {
