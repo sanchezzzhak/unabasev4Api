@@ -7,6 +7,11 @@ export default data => (req, res, next) => {
   let idx = req.ip.lastIndexOf(':');
   log.ip = req.ip.substring(idx + 1, req.ip.length);
   log.userAgent = req.get('User-Agent');
+  console.log('req headers');
+  console.log(req.headers);
+  console.log('req.connection');
+  console.log(req.connection);
+  console.log('req.ip');
   console.log(req.ip);
   log.save();
   next();
