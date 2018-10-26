@@ -6,6 +6,7 @@ import gauth from '../config/auth';
 import mainConfig from '../config/main';
 import ctl from '../controllers/auth';
 import User from '../models/user';
+import logger from '../lib/logger';
 const auth = Router();
 let module = 'auth';
 /*
@@ -17,6 +18,16 @@ let module = 'auth';
 }
 
 */
+auth.put(
+  '/verify/:id',
+  logger({
+    name: 'verify',
+    description: 'verify a user with local strategy',
+    module
+  }),
+  ctl.verify
+);
+
 auth.post(
   '/register',
   logger({

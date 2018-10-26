@@ -3,7 +3,9 @@ import Log from '../models/log';
 export default data => (req, res, next) => {
   let log = new Log();
   Object.assign(log, data);
-  log.user = req.user._id;
+  if (typeof req.user !== 'undefined') {
+    log.user = req.user._id;
+  }
   let ipHeader = req.headers['x-forwarded-for'];
   if (typeof ipHeader !== 'undefined') {
     let idx = ipHeader.IndexOf(',');

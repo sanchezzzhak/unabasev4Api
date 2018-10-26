@@ -4,6 +4,7 @@ import mainConfig from '../config/main';
 import logger from '../config/lib/logger';
 import gauth from '../config/auth';
 import axios from 'axios';
+import mailer from '../lib/mailer';
 export default {
   // if (err) {
   //   return next(err);
@@ -83,9 +84,29 @@ export default {
       }
     });
   },
+  verify: (req, res) => {
+    User.findById(req.params.id, (err, user) => {
+      if (err) {
+        res.status(500).send(err);
+      } else if (user) {
+        if (user.password.activateHash === req.body.hash) {
+          user.isActive = true;
+          user.save();
+          res.send({ msg: 'user verified', user: user.getUser() });
+        } else {
+          res.status(404).send({ msg: 'User could not be verified' });
+        }
+      } else {
+        res.status(404).send({ msg: 'user not found' });
+      }
+    });
+  },
   register(req, res) {
     logger('reg');
-    User.findOne({ username: req.body.username }, function(err, user) {
+    let query = {
+      $or: [{ username: req.body.username }, { 'emails.email': req.body.email }]
+    };
+    User.findOne(query, function(err, user) {
       // if there are any errors, return the error
       if (err) throw err;
 
@@ -93,27 +114,43 @@ export default {
       if (user) {
         // return done(null, false, req.flash('signupMessage', 'El nombre de usuario ya fue elegido.'));
         res.statusMessage = 'Username already exist';
-        res.status(404);
+        res.status(409);
+        let msg;
+        if (user.username === req.body.username) {
+          msg = 'Username already exist';
+        } else {
+          msg = 'email already registered';
+        }
         res.send({
-          msg: 'Username already exist'
+          msg
         });
       } else {
         // if there is no user with that email
         // create the user
-        var newUser = new User();
-
+        let newUser = new User();
+        let password = Math.random().toString(36);
+        let activateHash =
+          Math.random().toString(36) + Math.random().toString(36);
         // set the user's local credentials
         newUser.username =
           req.body.username ||
           req.body.email.slice(0, req.body.email.indexOf('@'));
-        newUser.password = newUser.generateHash(req.body.password);
-        // newUser.isActive = true;
+        // newUser.password.hash = newUser.generateHash(req.body.password);
+        // newUser.password.updatedAt = new Date();
+        newUser.password.hash = newUser.generateHash(password);
+        newUser.password.updatedAt = new Date();
+        newUser.password.isRandom = true;
+        newUser.password.activateHash = activateHash;
+        newUser.isActive = false;
         newUser.name = req.body.name;
         // newUser.rut = req.body.rut;
         // newUser.phone = req.body.phone;
         // newUser.cellphone = req.body.cellphone;
-        newUser.emails = {};
-        newUser.emails.default = req.body.email;
+        // newUser.emails = {};
+        newUser.emails.push({
+          email: req.body.email,
+          label: 'default'
+        });
         // newUser.address = req.body.address;
 
         // save the user
@@ -125,6 +162,18 @@ export default {
           });
           user.activeScope = user._id;
           user.save();
+          let msg = {
+            to: req.body.email,
+            subject: `Hola ${req.body.name} bienvenido a Unabase!`,
+            html: `tu clave de ingreso es: <br/> ${password} <br/>
+            ingresa <a href="https://unabase.net/verify/${activateHash}?id=${
+              user._id
+            }">aquí</a> para verificar tu cuenta.
+            
+            `
+          };
+
+          mailer(msg);
           req.user = user;
           res.json({ token, user: user.getUser() });
         });

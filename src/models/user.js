@@ -9,7 +9,13 @@ let userSchema = Schema(
     isActive: { type: Boolean, default: true },
     name: String,
     username: { type: String },
-    password: String,
+    // password: String,
+    password: {
+      hash: String,
+      updatedAt: { type: Date, default: new Date() },
+      isRandom: { type: Boolean, default: false },
+      activateHash: String
+    },
     idnumber: { type: String },
     phones: [{ phone: String, label: String }],
     emails: [{ email: String, label: String }],
@@ -118,7 +124,7 @@ userSchema.methods.getUser = function() {
 userSchema.methods.validPassword = function(password) {
   // console.log(password);
   // console.log(this.password);
-  return bcrypt.compareSync(password, this.password);
+  return bcrypt.compareSync(password, this.password.hash);
 };
 
 const User = mongoose.model('User', userSchema);

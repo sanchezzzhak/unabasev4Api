@@ -1,5 +1,6 @@
 import { Router } from 'express';
 const items = Router();
+import logger from '../lib/logger';
 import {
   get,
   create,
