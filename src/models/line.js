@@ -5,6 +5,7 @@ const lineSchema = new Schema(
   {
     name: { type: String, required: true },
     tax: { type: Schema.Types.ObjectId, ref: 'Tax' },
+    number: { type: Number, default: 0 },
     quantity: { type: Number },
     price: { type: Number },
     item: { type: Schema.Types.ObjectId, ref: 'Item' },

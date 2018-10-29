@@ -57,6 +57,7 @@ const routes = {
       let newLine = new Line();
       newLine.name = i.name;
       newLine.tax = i.tax;
+      newLine.number = i.number;
       newLine.quantity = i.quantity;
       newLine.price = i.price;
       newLine.item = i.item;
@@ -65,12 +66,13 @@ const routes = {
           errorOnItem.state = true;
           errorOnItem.msg = err;
         } else {
-          logger(line._id);
+          console.log(line._id);
           newMovement.lines.push(line._id);
         }
       });
     });
     setTimeout(() => {
+      console.log(newMovement);
       newMovement.save((err, movement) => {
         if (err) {
           console.log(err);
@@ -80,7 +82,7 @@ const routes = {
           res.send(movement);
         }
       });
-    }, 500);
+    }, 3000);
   },
   getOne(req, res) {
     Movement.findOne({ _id: req.params.id })

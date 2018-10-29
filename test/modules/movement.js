@@ -27,6 +27,7 @@ export default {
               tax: '5bbe5c732edaed42baf2b6c0',
               quantity: 2,
               price: 500,
+              number: 19,
               item: '5bbe5c8f2edaed42baf2b6c2'
             },
             {
@@ -34,6 +35,7 @@ export default {
               tax: '5bbe5c732edaed42baf2b6c0',
               quantity: 2,
               price: 500,
+              number: 19,
               item: '5bbe5c682edaed42baf2b6bf'
             },
             {
@@ -41,6 +43,7 @@ export default {
               tax: '5bbe5c732edaed42baf2b6c0',
               quantity: 2,
               price: 500,
+              number: 19,
               item: '5bbe5c8b2edaed42baf2b6c1'
             }
           ],
