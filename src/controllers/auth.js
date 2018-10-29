@@ -108,7 +108,9 @@ export default {
     };
     User.findOne(query, function(err, user) {
       // if there are any errors, return the error
-      if (err) throw err;
+      if (err) {
+        res.status(500).end();
+      }
 
       // check to see if theres already a user with that email
       if (user) {
@@ -128,6 +130,9 @@ export default {
         // if there is no user with that email
         // create the user
         let newUser = new User();
+
+        let password;
+        let activateHash;
         if (typeof req.body.password.hash === 'undefined') {
           let password = Math.random().toString(36);
           let activateHash =
