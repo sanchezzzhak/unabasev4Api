@@ -27,8 +27,6 @@ const data = {
 export default {
   register: () =>
     it('REGISTER a user @auth', done => {
-      console.log('username from test register');
-      console.log(data.username);
       axios
         .post(api.auth.register, {
           username: data.username,
@@ -52,8 +50,6 @@ export default {
 
   login: () =>
     it('LOGIN with username a user @auth', done => {
-      console.log('username from test login');
-      console.log(data.username);
       axios
         .post(api.auth.login, {
           username: data.username,
