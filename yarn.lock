@@ -5562,9 +5562,9 @@ uid2@0.0.x:
   integrity sha1-SDEm4Rd03y9xuLY53NeZw3YWK4I=
 
 unabase_api_doc@*:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/unabase_api_doc/-/unabase_api_doc-1.0.3.tgz#2ae2571447e572e608963dd145b86199254a522d"
-  integrity sha512-5YEYv65pmd5+8DeBlFuI83813dS1rMr/QrOwHtZ2PuKB/+u840SspD6ykQstTKRQvJioq5Uq4ySFVg82h9MZjw==
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/unabase_api_doc/-/unabase_api_doc-1.0.9.tgz#bbf1e8ba8c7bb6425547ca77530251470330b996"
+  integrity sha512-u6NJNpSwVgE0S8dx2PBiF6AmRD1OPo/qcxF7yJl5prSWa3HANszVYJ8ei47NRvYs5tLyYagVogCjxASNjM0R0Q==
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"

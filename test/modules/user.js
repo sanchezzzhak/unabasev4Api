@@ -21,7 +21,9 @@ export default {
         .post(api.user.main, {
           name: data.name,
           username: data.username,
-          password: data.password,
+          password: {
+            hash: data.password
+          },
           idnumber: data.idnumber,
           phones: [
             {

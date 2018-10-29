@@ -16,7 +16,9 @@ export default {
         .post(api.user.main, {
           name: 'test business',
           username: 'businessusername',
-          password: data.password,
+          password: {
+            hash: data.password
+          },
           idnumber: '255456562',
           type: 'business',
           phones: {

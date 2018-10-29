@@ -22,6 +22,11 @@ let data = {
   password: 'test123'
 };
 
+describe('Auth***************************************', () => {
+  auth.register(api);
+  auth.login(api);
+});
+
 describe('User***************************************', () => {
   user.create(api);
   user.list(api);
@@ -37,11 +42,6 @@ describe('Business***************************************', () => {
   business.update(api);
   business.password(api);
   business.user(api);
-});
-
-describe('Auth***************************************', () => {
-  auth.register(api);
-  auth.login(api);
 });
 
 describe('Movement***************************************', () => {

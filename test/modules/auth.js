@@ -14,16 +14,28 @@ import chaiHttp from 'chai-http';
 import axios from 'axios';
 use(chaiHttp);
 import api from '../../src/config/api';
+const data = {
+  password: 'testpass',
+  email: `${Math.random()
+    .toString(36)
+    .substring(2, 15)}@mail.com`,
+  username: `${Math.random()
+    .toString(36)
+    .substring(2, 15)}`
+};
 
-const username = Math.random().toString(36);
 export default {
   register: () =>
     it('REGISTER a user @auth', done => {
+      console.log('username from test register');
+      console.log(data.username);
       axios
         .post(api.auth.register, {
-          username,
-          password: 'testpass',
-          email: 'text@mail.com'
+          username: data.username,
+          password: {
+            hash: data.password
+          },
+          email: data.email
         })
         .then(res => {
           res.should.have.status(200);
@@ -39,11 +51,34 @@ export default {
     }),
 
   login: () =>
-    it('LOGIN a user @auth', done => {
+    it('LOGIN with username a user @auth', done => {
+      console.log('username from test login');
+      console.log(data.username);
       axios
         .post(api.auth.login, {
-          username,
-          password: 'testpass'
+          username: data.username,
+          password: {
+            hash: data.password
+          }
+        })
+        .then(res => {
+          res.should.have.status(200);
+          res.data.should.be.a('object');
+          res.data.should.have.property('token');
+          res.data.should.have.property('user');
+          done();
+        })
+        .catch(err => {
+          console.log(err.response.status);
+          console.log(err.response.statusText);
+        });
+    }),
+  loginEmail: () =>
+    it('LOGIN with email a user @auth', done => {
+      axios
+        .post(api.auth.login, {
+          email: data.email,
+          'password.hash': data.password
         })
         .then(res => {
           res.should.have.status(200);

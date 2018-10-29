@@ -44,7 +44,7 @@ export default {
         res.status(404).end();
 
         // res.send('User does not exist');
-      } else if (!user.validPassword(req.body.password)) {
+      } else if (!user.validPassword(req.body.password.hash)) {
         logger('Current password does not match');
 
         res.statusMessage = 'Current password does not match';
@@ -128,20 +128,28 @@ export default {
         // if there is no user with that email
         // create the user
         let newUser = new User();
-        let password = Math.random().toString(36);
-        let activateHash =
-          Math.random().toString(36) + Math.random().toString(36);
+        if (typeof req.body.password.hash === 'undefined') {
+          let password = Math.random().toString(36);
+          let activateHash =
+            Math.random().toString(36) + Math.random().toString(36);
+
+          newUser.password.hash = newUser.generateHash(password);
+          newUser.password.updatedAt = new Date();
+          newUser.password.isRandom = true;
+          newUser.password.activateHash = activateHash;
+          newUser.isActive = false;
+        } else {
+          newUser.password.hash = newUser.generateHash(req.body.password.hash);
+          newUser.password.updatedAt = new Date();
+          newUser.password.isRandom = false;
+          newUser.isActive = true;
+        }
         // set the user's local credentials
         newUser.username =
           req.body.username ||
           req.body.email.slice(0, req.body.email.indexOf('@'));
         // newUser.password.hash = newUser.generateHash(req.body.password);
         // newUser.password.updatedAt = new Date();
-        newUser.password.hash = newUser.generateHash(password);
-        newUser.password.updatedAt = new Date();
-        newUser.password.isRandom = true;
-        newUser.password.activateHash = activateHash;
-        newUser.isActive = false;
         newUser.name = req.body.name;
         // newUser.rut = req.body.rut;
         // newUser.phone = req.body.phone;
@@ -162,18 +170,22 @@ export default {
           });
           user.activeScope = user._id;
           user.save();
-          let msg = {
-            to: req.body.email,
-            subject: `Hola ${req.body.name} bienvenido a Unabase!`,
-            html: `tu clave de ingreso es: <br/> ${password} <br/>
-            ingresa <a href="https://unabase.net/verify/${activateHash}?id=${
-              user._id
-            }">aquí</a> para verificar tu cuenta.
-            
-            `
-          };
+          if (user.password.isRandom) {
+            let msg = {
+              to: req.body.email,
+              subject: `Hola ${req.body.name} bienvenido a Unabase!`,
+              html: `tu clave de ingreso es: <br/> ${password} <br/>
+              ingresa <a href="${
+                req.headers.origin
+              }/verify/${activateHash}?id=${
+                user._id
+              }">aquí</a> para verificar tu cuenta.
+              
+              `
+            };
 
-          mailer(msg);
+            mailer(msg);
+          }
           req.user = user;
           res.json({ token, user: user.getUser() });
         });

@@ -26,6 +26,8 @@ export default {
     });
   },
   sToken: (req, res, next) => {
+    console.log('host');
+    console.log(req.host);
     req.token = req.headers.authorization;
     // console.log(req.headers['authorization'].toString());
     if (
@@ -52,6 +54,7 @@ export default {
       };
       User.findOne(query).exec((err, user) => {
         if (err) {
+          console.log('err find');
           console.log(err);
         } else if (user) {
           logger('user set to ' + user.username);

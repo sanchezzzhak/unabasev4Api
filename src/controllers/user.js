@@ -15,10 +15,10 @@ export default {
         if (typeof user.password === 'undefined') {
           res.status(200).send({ msg: 'password created' });
 
-          user.password = user.generateHash(newPassword);
+          user.password.hash = user.generateHash(newPassword);
           user.save();
         } else if (user.validPassword(password)) {
-          user.password = user.generateHash(newPassword);
+          user.password.hash = user.generateHash(newPassword);
           user.save();
           res.status(200).send({ msg: 'password changed' });
         } else {
@@ -56,7 +56,7 @@ export default {
   },
   create: (req, res) => {
     let user = new User();
-    req.body.password = User.hash(req.body.password);
+    req.body.password.hash = User.hash(req.body.password.hash);
     Object.assign(user, req.body);
     user.save((err, item) => {
       if (err) {
