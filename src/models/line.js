@@ -24,4 +24,63 @@ lineSchema.methods.saveAsync = function() {
 };
 
 const Line = mongoose.model('Line', lineSchema);
+
+Line.updateManyMod = items => {
+  let lines = [];
+  let errorLines = [];
+  let count = 0;
+  let countError = 0;
+  let countSuccess = 0;
+  return new Promise((resolve, reject) => {
+    let check = (items, count) => {
+      if (items.length === count) {
+        console.log('items.length');
+        console.log(items.length);
+        console.log('count');
+        console.log(count);
+        resolve({
+          lines,
+          errorLines
+        });
+      }
+    };
+    items.forEach(i => {
+      if (i._id) {
+        Line.findByIdAndUpdate(i._id, i, { new: true }, (err, line) => {
+          if (err) {
+            errorLines.push({
+              _id: i._id,
+              error: err
+            });
+          } else {
+            lines.push(line._id);
+          }
+          count += 1;
+          check(items, count);
+        });
+      } else {
+        let newLine = new Line();
+        newLine.name = i.name;
+        newLine.tax = i.tax;
+        newLine.number = i.number;
+        newLine.quantity = i.quantity;
+        newLine.price = i.price;
+        newLine.item = i.item;
+        newLine.save((err, line) => {
+          if (err) {
+            errorLines.push({
+              _id: i._id,
+              error: err
+            });
+          } else {
+            lines.push(line._id);
+          }
+
+          count += 1;
+          check(items, count);
+        });
+      }
+    });
+  });
+};
 export default Line;

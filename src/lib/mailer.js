@@ -1,4 +1,5 @@
 import { send } from '../config/mailer';
+import template from './mails';
 
 export default msg =>
   new Promise((resolve, reject) => {

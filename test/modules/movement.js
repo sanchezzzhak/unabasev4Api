@@ -7,8 +7,12 @@ import api from '../../src/config/api';
 let movementId;
 let linesIds;
 let data = {
-  name: 'test Movement name'
+  name: 'test Movement name',
+  date: new Date()
 };
+console.log('date');
+console.log(data.date);
+console.log(data.date.toISOString());
 export default {
   create: () =>
     it('CREATE an movement @movement', function(done) {
@@ -17,10 +21,10 @@ export default {
           name: data.name,
           description: 'test desc incm',
           dates: {
-            expiration: new Date()
+            expiration: data.date
           },
-          client: global.userId,
-          resposable: global.loginId,
+          // client: global.userId,
+          // resposable: global.loginId,
           lines: [
             {
               name: 'tomate',

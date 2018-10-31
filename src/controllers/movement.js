@@ -53,36 +53,58 @@ const routes = {
     newMovement.total = {};
     newMovement.total.net = req.body.total.net;
     newMovement.total.tax = req.body.total.tax;
-    lines.forEach(i => {
-      let newLine = new Line();
-      newLine.name = i.name;
-      newLine.tax = i.tax;
-      newLine.number = i.number;
-      newLine.quantity = i.quantity;
-      newLine.price = i.price;
-      newLine.item = i.item;
-      newLine.save((err, line) => {
-        if (err) {
-          errorOnItem.state = true;
-          errorOnItem.msg = err;
-        } else {
-          console.log(line._id);
-          newMovement.lines.push(line._id);
-        }
+
+    Line.insertMany(lines)
+      .then(items => {
+        items.forEach(i => {
+          newMovement.lines.push(i._id);
+          console.log(i._id);
+        });
+
+        newMovement.save((err, movement) => {
+          if (err) {
+            console.log(err);
+            res.status(500).send(err);
+          } else {
+            logger('sssssn');
+            res.send(movement);
+          }
+        });
+      })
+      .catch(err => {
+        errorOnItem.state = true;
+        errorOnItem.msg = err;
       });
-    });
-    setTimeout(() => {
-      console.log(newMovement);
-      newMovement.save((err, movement) => {
-        if (err) {
-          console.log(err);
-          res.status(500).send(err);
-        } else {
-          logger('sssssn');
-          res.send(movement);
-        }
-      });
-    }, 3000);
+    // lines.forEach(async i => {
+    //   let newLine = new Line();
+    //   newLine.name = i.name;
+    //   newLine.tax = i.tax;
+    //   // newLine.number = i.number;
+    //   newLine.quantity = i.quantity;
+    //   newLine.price = i.price;
+    //   newLine.item = i.item;
+    //   // newLine.save((err, line) => {
+    //   //   if (err) {
+    //   //     errorOnItem.state = true;
+    //   //     errorOnItem.msg = err;
+    //   //   } else {
+    //   //     console.log(line._id);
+    //   //     newMovement.lines.push(line._id);
+    //   //   }
+    //   // });
+    //   // let nLine;
+    //   // try {
+    //   //   nLine = await newLine.save();
+    //   //   newMovement.lines.push(nLine._id);
+    //   //   console.log(nLine._id);
+    //   // } catch (err) {
+    //   //   errorOnItem.state = true;
+    //   //   errorOnItem.msg = err;
+    //   // }
+    // });
+    // setTimeout(() => {
+    //   console.log(newMovement);
+    // }, 500);
   },
   getOne(req, res) {
     Movement.findOne({ _id: req.params.id })
@@ -134,62 +156,87 @@ const routes = {
     });
   },
   updateOne: (req, res) => {
-    let update = {
-      name: req.body.name,
-      isActive: req.body.isActive,
-      description: req.body.description,
-      dates: {
-        expiration: req.body.expiration
-      },
-      client: req.body.client,
-      total: {
-        net: req.body.net,
-        tax: req.body.tax
-      },
-      state: req.body.state,
-      currency: req.body.currency,
-      lines: []
-    };
-    if (typeof req.body.lines !== 'undefined')
-      req.body.lines.forEach(i => {
-        if (i._id) {
-          Line.findByIdAndUpdate(i._id, i, { new: true }, (err, line) => {
-            if (err) console.log(err);
-            else {
-              update.lines.push(i._id);
-            }
-          });
-        } else {
-          let newLine = new Line();
-          newLine.name = i.name;
-          newLine.tax = i.tax;
-          newLine.quantity = i.quantity;
-          newLine.price = i.price;
-          newLine.item = i.item;
-          newLine.save((err, line) => {
-            if (err) {
-              errorOnItem.state = true;
-              errorOnItem.msg = err;
-            } else {
-              logger(line._id);
-              update.lines.push(line._id);
-            }
-          });
-        }
-      });
-    Movement.findOneAndUpdate(
-      { _id: req.params.id },
-      update,
-      { new: true },
-      (err, movement) => {
-        if (err) {
-          console.log(err);
-          res.status(500).send(err);
-        } else {
-          res.send(movement);
-        }
+    let data = req.body;
+    let update = {};
+    for (let i in data) {
+      if (
+        data.hasOwnProperty(i) &&
+        typeof data[i] !== 'undefined' &&
+        data[i] !== null &&
+        i !== 'lines'
+      ) {
+        update[i] = data[i];
       }
-    );
+    }
+    // update = {
+    //   name: req.body.name,
+    //   isActive: req.body.isActive,
+    //   description: req.body.description,
+    //   dates: {
+    //     expiration: req.body.dates.description
+    //   },
+    //   client: req.body.client,
+    //   total: {
+    //     net: req.body.net,
+    //     tax: req.body.tax
+    //   },
+    //   state: req.body.state,
+    //   currency: req.body.currency,
+    //   lines: []
+    // };
+    if (typeof req.body.lines !== 'undefined' && req.body.lines.length > 0) {
+      update.lines = [];
+      Line.updateManyMod(req.body.lines)
+        .then(items => {
+          console.log('items');
+          console.log(items);
+          items.lines.forEach(i => update.lines.push(i._id));
+
+          Movement.findOneAndUpdate(
+            { _id: req.params.id },
+            update,
+            { new: true },
+            (err, movement) => {
+              if (err) {
+                console.log(err);
+                res.status(500).send(err);
+              } else {
+                res.send(movement);
+              }
+            }
+          );
+        })
+        .catch(err => {
+          console.log('err');
+          console.log(err);
+        });
+      // req.body.lines.forEach(async i => {
+      //   if (i._id) {
+      //     await Line.findByIdAndUpdate(i._id, i, { new: true }, (err, line) => {
+      //       if (err) console.log(err);
+      //       else {
+      //         update.lines.push(i._id);
+      //       }
+      //     });
+      //   } else {
+      //     let newLine = new Line();
+      //     newLine.name = i.name;
+      //     newLine.tax = i.tax;
+      //     newLine.quantity = i.quantity;
+      //     newLine.price = i.price;
+      //     newLine.item = i.item;
+      //     await newLine.save((err, line) => {
+      //       if (err) {
+      //         errorOnItem.state = true;
+      //         errorOnItem.msg = err;
+      //       } else {
+      //         logger(line._id);
+      //         update.lines.push(line._id);
+      //       }
+      //     });
+      //   }
+      // });
+    }
   }
 };
 

@@ -44,15 +44,6 @@ describe('Business***************************************', () => {
   business.user(api);
 });
 
-describe('Movement***************************************', () => {
-  movement.create(api);
-  movement.list(api);
-  movement.update(api);
-  movement.null(api);
-  movement.find(api);
-  movement.getOne(api);
-});
-
 describe('Tax***************************************', () => {
   tax.create(api);
   tax.list(api);
@@ -68,10 +59,20 @@ describe('Item***************************************', () => {
   item.find(api);
   item.getOne(api);
 });
+
 describe('Currency***************************************', () => {
   currency.create(api);
   currency.list(api);
   currency.update(api);
   currency.find(api);
   currency.getOne(api);
+});
+
+describe('Movement***************************************', () => {
+  movement.create(api);
+  // movement.list(api);
+  movement.update(api);
+  // movement.null(api);
+  // movement.find(api);
+  // movement.getOne(api);
 });

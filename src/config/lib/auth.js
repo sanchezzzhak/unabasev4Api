@@ -27,7 +27,7 @@ export default {
   },
   sToken: (req, res, next) => {
     console.log('host');
-    console.log(req.host);
+    console.log(req.hostname);
     req.token = req.headers.authorization;
     // console.log(req.headers['authorization'].toString());
     if (

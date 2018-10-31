@@ -5,6 +5,7 @@ import logger from '../config/lib/logger';
 import gauth from '../config/auth';
 import axios from 'axios';
 import mailer from '../lib/mailer';
+import template from '../lib/mails';
 export default {
   // if (err) {
   //   return next(err);
@@ -133,10 +134,22 @@ export default {
 
         let password;
         let activateHash;
-        if (typeof req.body.password.hash === 'undefined') {
-          let password = Math.random().toString(36);
-          let activateHash =
-            Math.random().toString(36) + Math.random().toString(36);
+        console.log(req.body.password);
+
+        if (
+          typeof req.body.password === 'undefined' ||
+          req.body.password === null
+        ) {
+          password = Math.random()
+            .toString(36)
+            .substring(2, 15);
+          activateHash =
+            Math.random()
+              .toString(36)
+              .substring(2, 15) +
+            Math.random()
+              .toString(36)
+              .substring(2, 15);
 
           newUser.password.hash = newUser.generateHash(password);
           newUser.password.updatedAt = new Date();
@@ -176,17 +189,16 @@ export default {
           user.activeScope = user._id;
           user.save();
           if (user.password.isRandom) {
+            const text = template().register({
+              password,
+              origin: req.headers.origin,
+              activateHash,
+              id: user._id
+            });
             let msg = {
               to: req.body.email,
-              subject: `Hola ${req.body.name} bienvenido a Unabase!`,
-              html: `tu clave de ingreso es: <br/> ${password} <br/>
-              ingresa <a href="${
-                req.headers.origin
-              }/verify/${activateHash}?id=${
-                user._id
-              }">aquí</a> para verificar tu cuenta.
-              
-              `
+              subject: `Hola! ${req.body.name} bienvenido a Unabase!`,
+              html: text
             };
 
             mailer(msg);
