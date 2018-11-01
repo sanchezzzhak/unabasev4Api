@@ -8,6 +8,7 @@ export default data => (req, res, next) => {
   }
   let ipHeader = req.headers['x-forwarded-for'];
   console.log('ipHeader');
+  console.log(typeof ipHeader);
   console.log(ipHeader);
 
   if (typeof ipHeader !== 'undefined') {
