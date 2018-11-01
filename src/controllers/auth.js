@@ -14,7 +14,7 @@ export default {
         { 'emails.email': req.body.username }
       ]
     };
-    User.findOne({ username: req.body.username }, function(err, user) {
+    User.findOne(query, function(err, user) {
       // if there are any errors, return the error before anything else
       if (err) {
         throw err;
