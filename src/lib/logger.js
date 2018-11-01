@@ -7,6 +7,9 @@ export default data => (req, res, next) => {
     log.user = req.user._id;
   }
   let ipHeader = req.headers['x-forwarded-for'];
+  console.log('ipHeader');
+  console.log(ipHeader);
+
   if (typeof ipHeader !== 'undefined') {
     let idx = ipHeader.IndexOf(',');
     idx > 0 ? (log.ip = ipHeader.slice(0, idx)) : (log.ip = ipHeader);
