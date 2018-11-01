@@ -2,8 +2,8 @@ import User from '../models/user';
 
 import ntype from 'normalize-type';
 import logger from '../config/lib/logger';
-import findByValue from '../lib/findObjectByValue';
-import accountTypeByUrl from '../lib/accountTypeByUrl';
+// import findByValue from '../lib/findObjectByValue';
+// import accountTypeByUrl from '../lib/accountTypeByUrl';
 export default {
   password: (req, res) => {
     const { password, newPassword } = req.body;

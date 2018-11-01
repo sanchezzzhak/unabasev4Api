@@ -53,33 +53,6 @@ let userSchema = Schema(
      */
     business: Array({ type: Schema.Types.ObjectId, ref: 'User' }),
     users: Array({ type: Schema.Types.ObjectId, ref: 'User' })
-    // notifications: {
-    //   internal: {
-    //     task: {
-    //       changeResponsable: { type: Boolean, default: true }
-    //     }
-    //   },
-    //   email: {
-    //     task: {
-    //       newTask: { type: Boolean, default: true }
-    //     }
-    //   }
-    // },
-    // history: {
-    //   emailUrl: { type: String },
-    //   inviteUrl: { type: String }
-    // },
-    // guests: Array({ type: String }),
-    // config: {
-    //   tasks: {
-    //     timing: { type: Boolean, default: false },
-    //     timingTask: { type: Schema.Types.ObjectId, ref: 'Task' }
-    //   }
-    // },
-    // timer: {
-    //   timing: { type: Boolean, default: false },
-    //   task: { type: Schema.Types.ObjectId, ref: 'Task' }
-    // }
   },
   { timestamps: true }
 );

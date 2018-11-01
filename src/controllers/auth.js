@@ -7,30 +7,6 @@ import axios from 'axios';
 import mailer from '../lib/mailer';
 import template from '../lib/mails';
 export default {
-  // if (err) {
-  //   return next(err);
-  // }
-  // if (!user) {
-  //   res.statusMessage = info.msg;
-  //   res.status(info.code).end();
-  //   // return res.redirect(info.code, "/");
-  // } else {
-  //   req.logIn(user, function(err) {
-  //     if (err) {
-  //       return next(err);
-  //     } else {
-  //       const token = jwt.sign({ user: user.getUser() }, mainConfig.mSecret, {
-  //         // expiresIn: 60 * 60 * 24 * 7
-  //         expiresIn: 60 * 60 * 24 * 7
-  //       });
-  //       // res.cookie('access_token', token);
-  //       res.statusMessage = 'authenticated';
-  //       res.json({ token, user: user.getUser() });
-  //     }
-  //     // return res.redirect("/isAuth");
-  //   });
-  // }
-
   login(req, res) {
     User.findOne({ username: req.body.username }, function(err, user) {
       // if there are any errors, return the error before anything else
