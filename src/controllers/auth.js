@@ -8,6 +8,12 @@ import mailer from '../lib/mailer';
 import template from '../lib/mails';
 export default {
   login(req, res) {
+    let query = {
+      $or: [
+        { username: req.body.username },
+        { 'emails.email': req.body.username }
+      ]
+    };
     User.findOne({ username: req.body.username }, function(err, user) {
       // if there are any errors, return the error before anything else
       if (err) {
