@@ -12,7 +12,7 @@ export default data => (req, res, next) => {
   console.log(ipHeader);
 
   if (typeof ipHeader !== 'undefined') {
-    let idx = ipHeader.IndexOf(',');
+    let idx = ipHeader.toString().IndexOf(',');
     idx > 0 ? (log.ip = ipHeader.slice(0, idx)) : (log.ip = ipHeader);
   }
   log.userAgent = req.get('User-Agent');
