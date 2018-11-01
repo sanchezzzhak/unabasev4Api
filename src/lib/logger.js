@@ -6,13 +6,13 @@ export default data => (req, res, next) => {
   if (typeof req.user !== 'undefined') {
     log.user = req.user._id;
   }
-  let ipHeader = req.headers['x-forwarded-for'];
-  console.log('ipHeader');
-  console.log(typeof ipHeader);
-  console.log(ipHeader);
+  let ipHeader = req.headers['x-forwarded-for'] + '';
 
   if (typeof ipHeader !== 'undefined') {
-    let idx = String(ipHeader).IndexOf(',');
+    console.log('ipHeader');
+    console.log(typeof ipHeader);
+    console.log(ipHeader);
+    let idx = ipHeader.IndexOf(',');
     idx > 0 ? (log.ip = ipHeader.slice(0, idx)) : (log.ip = ipHeader);
   }
   log.userAgent = req.get('User-Agent');
