@@ -9,10 +9,7 @@ export default data => (req, res, next) => {
   let ipHeader = req.headers['x-forwarded-for'] + '';
 
   if (typeof ipHeader !== 'undefined') {
-    console.log('ipHeader');
-    console.log(typeof ipHeader);
-    console.log(ipHeader);
-    let idx = ipHeader.IndexOf(',');
+    let idx = ipHeader.indexOf(',');
     idx > 0 ? (log.ip = ipHeader.slice(0, idx)) : (log.ip = ipHeader);
   }
   log.userAgent = req.get('User-Agent');
