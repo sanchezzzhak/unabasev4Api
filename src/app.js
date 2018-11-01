@@ -16,7 +16,6 @@ import session from 'express-session';
 import cors from 'cors';
 import morgan from 'morgan';
 const env = process.env.NODE_ENV || '';
-
 /// database
 console.log('env');
 
@@ -58,7 +57,7 @@ app.use(json());
 app.use(xmlparser());
 app.use(cookieParser());
 
-// app.use(cors());
+app.use(cors());
 //load view engine
 app.set('views', path.join(__dirname, './views'));
 app.set('view engine', 'pug');
@@ -97,9 +96,10 @@ app.use(function(req, res, next) {
   res.locals.user = req.user || null;
   res.locals.host = mainConfig.host;
   let origin = req.headers.origin;
-  if (allowedOrigins.indexOf(origin) > -1) {
-    res.header('Access-Control-Allow-Origin', origin);
-  }
+
+  // if (allowedOrigins.indexOf(origin) > -1) {
+  // res.header('Access-Control-Allow-Origin', origin);
+  // }
   // res.header('Access-Control-Allow-Origin', true);
   // res.header("Access-Control-Allow-Origin", "http://localhost:8081");
   // res.header('Access-Control-Allow-Origin', mainConfig.web);

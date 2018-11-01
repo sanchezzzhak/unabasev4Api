@@ -34,6 +34,8 @@ export default {
       typeof req.token !== 'undefined' &&
       req.headers.authorization !== 'postmanvn4b4s3'
     ) {
+      console.log('req.token-----------------------');
+      console.log(req.token);
       jwt.verify(req.token, mainConfig.mSecret, (err, decoded) => {
         if (err) {
           res.status(403).send({ msg: 'Not authorized1' });
