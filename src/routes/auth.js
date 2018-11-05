@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { Router } from 'express';
 import jwt from 'jsonwebtoken';
-import passport from 'passport';
 import gauth from '../config/auth';
 import mainConfig from '../config/main';
 import ctl from '../controllers/auth';

@@ -79,8 +79,8 @@ app.use(express.static(path.join(__dirname, './public')));
 //   })
 // );
 
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 if (env === 'test' || env === 'dev') {
   console.log('using morgan');
   app.use(morgan('dev'));

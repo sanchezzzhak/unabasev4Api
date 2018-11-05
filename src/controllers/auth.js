@@ -28,7 +28,7 @@ export default {
         res.statusText = req.lg.user.notFound;
         console.log(req.lg.user.notFound);
         console.log(req.lg.user.notFound);
-        res.status(404).send(req.lg.user.notFound);
+        res.status(404).send({ err: req.lg.user.notFound });
       } else {
         const isValid =
           typeof req.body.password.hash !== 'undefined'
@@ -58,10 +58,10 @@ export default {
           });
         } else if (!isValid) {
           res.statusMessage = req.lg.user.wrongPassword;
-          res.status(403).end();
+          res.status(403).send({ err: req.lg.user.wrongPassword });
         } else if (!isActive) {
           res.statusMessage = req.lg.user.notActive;
-          res.status(401).end();
+          res.status(401).send({ err: req.lg.user.notActive });
         }
         //   // res.statusMessage = 'Current password does not match';
         //   // res.status(403).send({ msg: req.lg.user.wrongPassword });
