@@ -25,6 +25,7 @@ export default {
       // if no user is found, return the message
       if (!user) {
         res.statusMessage = req.lg.user.notFound;
+        res.statusText = req.lg.user.notFound;
         res.status(404).end();
       } else {
         const isValid =

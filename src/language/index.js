@@ -16,5 +16,7 @@ export default (req, res, next) => {
   } else {
     req.lg = languages['en'];
   }
+  console.log('req.locale.language');
+  console.log(req.locale.language);
   next();
 };
