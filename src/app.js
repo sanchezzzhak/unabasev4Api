@@ -5,7 +5,7 @@ import bodyParser, { urlencoded, json } from 'body-parser';
 import xmlparser from 'express-xml-bodyparser';
 
 import cookieParser from 'cookie-parser';
-import passport from 'passport';
+// import passport from 'passport';
 import dbConfig from './config/database.js';
 import logger from './lib/logger';
 import mainConfig from './config/main.js';
