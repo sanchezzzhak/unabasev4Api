@@ -5,7 +5,7 @@ export default {
     wrongPassword: 'has ingresado una contraseña incorrecta',
     notActive: 'usuario inactivo',
     successLogin: 'te has logeado',
-    verified: 'account verified',
-    notVerified: 'the account could not be verified'
+    verified: 'cuenta verificada',
+    notVerified: 'la cuenta no se ha podido verificar'
   }
 };

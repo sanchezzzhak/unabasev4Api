@@ -106,7 +106,7 @@ export default {
           user.isActive = true;
           user.save();
           res.statusMessage = req.lg.user.verified;
-          res.send({ msg: 'user verified1', user: user.getUser() });
+          res.send({ user: user.getUser() });
         } else {
           res.statusMessage = req.lg.user.notVerified;
           res.status(404).end();
