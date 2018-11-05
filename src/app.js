@@ -3,7 +3,6 @@ import * as path from 'path';
 import express, { Router } from 'express';
 import bodyParser, { urlencoded, json } from 'body-parser';
 import xmlparser from 'express-xml-bodyparser';
-import flash from 'connect-flash';
 
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
