@@ -27,7 +27,7 @@ export default {
         res.status(404).end();
 
         // res.send('User does not exist');
-      } else if (!user.validPassword(req.body.password)) {
+      } else if (!user.validPassword(req.body.password.hash)) {
         logger('Current password does not match');
 
         res.statusMessage = 'Current password does not match';
