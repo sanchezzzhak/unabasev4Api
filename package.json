@@ -21,24 +21,16 @@
     "start": "npm run build && node ./build/app.js"
   },
   "dependencies": {
-    "apollo-server-express": "^2.1.0",
     "axios": "^0.18.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
-    "connect-flash": "^0.1.1",
-    "connect-mongo": "^2.0.1",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
     "express": "^4.16.3",
-    "express-graphql": "^0.6.12",
     "express-locale": "^1.0.5",
     "express-session": "^1.15.6",
-    "express-validator": "^5.3.0",
     "express-xml-bodyparser": "^0.3.0",
     "google-auth-library": "^2.0.0",
-    "graphql": "^14.0.2",
-    "graphql-tools": "^4.0.0",
-    "joi": "^14.0.1",
     "jsonwebtoken": "^8.3.0",
     "mongoose": "^5.3.1",
     "mongoose-paginate": "^5.0.3",
@@ -47,15 +39,9 @@
     "nodemailer": "^4.6.8",
     "normalize-bool": "^1.0.0",
     "normalize-type": "^1.5.1",
-    "passport": "^0.4.0",
-    "passport-google-oauth": "^1.0.0",
-    "passport-local": "^1.0.0",
     "pug": "^2.0.3",
-    "request-ip": "^2.1.1",
-    "restler": "^3.4.0",
     "serve-favicon": "^2.5.0",
-    "unabase_api_doc": "*",
-    "validator": "^10.8.0"
+    "unabase_api_doc": "*"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.1.0",
@@ -69,10 +55,7 @@
     "babel-preset-stage-3": "^6.24.1",
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
-    "circular-json": "^0.5.9",
-    "flatted": "^2.0.0",
     "mocha": "^5.2.0",
-    "request": "^2.88.0",
     "typescript": "^3.0.3"
   }
 }

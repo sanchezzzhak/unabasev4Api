@@ -29,7 +29,7 @@ mongoose.connect(
 );
 
 mongoose.set('useCreateIndex', true);
-const MongoStore = require('connect-mongo')(session);
+// const MongoStore = require('connect-mongo')(session);
 
 let db = mongoose.connection;
 

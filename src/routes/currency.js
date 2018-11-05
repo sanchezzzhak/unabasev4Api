@@ -1,7 +1,6 @@
 import { Router } from 'express';
 const currencies = Router();
 
-import { body } from 'express-validator/check';
 import { get, create, updateOne, find, getOne } from '../controllers/currency';
 
 import logger from '../lib/logger';
