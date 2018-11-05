@@ -27,6 +27,7 @@ export default {
         res.statusMessage = req.lg.user.notFound;
         res.statusText = req.lg.user.notFound;
         console.log(req.lg.user.notFound);
+        console.log(req.lg.user.notFound);
         res.status(404).send(req.lg.user.notFound);
       } else {
         const isValid =
