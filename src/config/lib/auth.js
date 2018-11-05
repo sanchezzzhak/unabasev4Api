@@ -26,16 +26,12 @@ export default {
     });
   },
   sToken: (req, res, next) => {
-    console.log('host');
-    console.log(req.hostname);
     req.token = req.headers.authorization;
     // console.log(req.headers['authorization'].toString());
     if (
       typeof req.token !== 'undefined' &&
       req.headers.authorization !== 'postmanvn4b4s3'
     ) {
-      console.log('req.token-----------------------');
-      console.log(req.token);
       jwt.verify(req.token, mainConfig.mSecret, (err, decoded) => {
         if (err) {
           res.status(403).send({ msg: 'Not authorized1' });

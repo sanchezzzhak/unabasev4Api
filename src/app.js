@@ -15,6 +15,8 @@ import favicon from 'serve-favicon';
 import session from 'express-session';
 import cors from 'cors';
 import morgan from 'morgan';
+import localeMiddleware from 'express-locale';
+
 const env = process.env.NODE_ENV || '';
 /// database
 console.log('env');
@@ -58,6 +60,7 @@ app.use(xmlparser());
 app.use(cookieParser());
 
 app.use(cors());
+app.use(localeMiddleware());
 //load view engine
 app.set('views', path.join(__dirname, './views'));
 app.set('view engine', 'pug');

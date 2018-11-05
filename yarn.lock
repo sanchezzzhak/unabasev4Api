@@ -2570,6 +2570,13 @@ express-graphql@^0.6.12:
     http-errors "^1.3.0"
     raw-body "^2.3.2"
 
+express-locale@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/express-locale/-/express-locale-1.0.5.tgz#465254ed4bdeeec00e77cbd5e75a3e56a93de2ed"
+  integrity sha512-T4nOikzDKRklusQEJxGiOdAz4pAJ46z/O6j1j3kqgOhV2X2/w1Lr2SWbtDk9BmQLHQZJecUU6rOfDyN+0XYTUg==
+  dependencies:
+    babel-runtime "^6.26.0"
+
 express-session@^1.15.6:
   version "1.15.6"
   resolved "https://registry.yarnpkg.com/express-session/-/express-session-1.15.6.tgz#47b4160c88f42ab70fe8a508e31cbff76757ab0a"

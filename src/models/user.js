@@ -9,6 +9,7 @@ let userSchema = Schema(
     isActive: { type: Boolean, default: true },
     name: String,
     username: { type: String },
+    language: { type: String, default: 'es' },
     // password: String,
     password: {
       hash: String,

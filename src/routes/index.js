@@ -1,6 +1,8 @@
 import express from 'express';
 const routes = express.Router();
 import authConfig from '../config/lib/auth';
+import language from '../language';
+routes.use(language);
 
 routes.get('/', (req, res) => {
   res.send({ msg: `Unabase api. ${process.env.NODE_ENV}` });

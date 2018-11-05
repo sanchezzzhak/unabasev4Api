@@ -17,53 +17,83 @@ export default {
     User.findOne(query, function(err, user) {
       // if there are any errors, return the error before anything else
       if (err) {
-        throw err;
+        console.log(err);
+        res.statusMessage = req.lg.error.server;
+        res.status(500).end({ err });
       }
 
       // if no user is found, return the message
       if (!user) {
-        logger('User does not exist');
-        res.statusMessage = 'User does not exist';
+        res.statusMessage = req.lg.user.notFound;
         res.status(404).end();
-
-        // res.send('User does not exist');
-      } else if (!user.validPassword(req.body.password.hash)) {
-        logger('Current password does not match');
-
-        res.statusMessage = 'Current password does not match';
-        res.status(403).end();
-
-        // res.send('Current password does not match');
-        // return done(null, false, 'wrong pass123sg'); // create the loginMessage and save it to session as flashdata
-      } else if (!user.isActive) {
-        logger('User is not active');
-        res.statusMessage = 'User is not active';
-        res.status(401).end();
-
-        // res.send('User is not active');
       } else {
-        // all is well, return successful user
-        user.lastLogin = Date.now();
-        if (
-          user.activeScope == '' ||
-          !user.activeScope ||
-          user.activeScope == null
-        ) {
-          user.activeScope = user._id;
-        }
-        user.save((err, user) => {
-          const token = jwt.sign({ user: user.getUser() }, mainConfig.mSecret, {
-            expiresIn: '3d'
+        const isValid =
+          typeof req.body.password.hash !== 'undefined'
+            ? user.validPassword(req.body.password.hash)
+            : false;
+        const isActive = user.isActive;
+        if (isValid && isActive) {
+          user.lastLogin = Date.now();
+          if (
+            user.activeScope == '' ||
+            !user.activeScope ||
+            user.activeScope == null
+          ) {
+            user.activeScope = user._id;
+          }
+          user.save((err, user) => {
+            const token = jwt.sign(
+              { user: user.getUser() },
+              mainConfig.mSecret,
+              {
+                expiresIn: '3d'
+              }
+            );
+            req.user = user;
+            res.statusMessage = req.lg.user.successLogin;
+            res.json({ token, user: user.getUser() });
           });
-          // res.cookie('access_token', token, {
-          //   maxAge: 3600 * 24,
-          //   httpOnly: true
-          // });
-          // req.session.user = user;
-          req.user = user;
-          res.statusMessage = 'authenticated';
-          res.json({ token, user: user.getUser() });
-        });
+        } else if (!isValid) {
+          res.statusMessage = req.lg.user.wrongPassword;
+          res.status(403).end();
+        } else if (!isActive) {
+          res.statusMessage = req.lg.user.notActive;
+          res.status(401).end();
+        }
+        //   // res.statusMessage = 'Current password does not match';
+        //   // res.status(403).send({ msg: req.lg.user.wrongPassword });
+
+        //   // res.send('Current password does not match');
+        //   // return done(null, false, 'wrong pass123sg'); // create the loginMessage and save it to session as flashdata
+        // } else if (!user.isActive) {
+        //   logger('User is not active');
+        //   // res.statusMessage = 'User is not active';
+        //   // res.status(401).send({ msg: req.lg.user.notActive });
+
+        //   // res.send('User is not active');
+        // } else {
+        //   // all is well, return successful user
+        //   user.lastLogin = Date.now();
+        //   if (
+        //     user.activeScope == '' ||
+        //     !user.activeScope ||
+        //     user.activeScope == null
+        //   ) {
+        //     user.activeScope = user._id;
+        //   }
+        //   user.save((err, user) => {
+        //     const token = jwt.sign({ user: user.getUser() }, mainConfig.mSecret, {
+        //       expiresIn: '3d'
+        //     });
+        //     // res.cookie('access_token', token, {
+        //     //   maxAge: 3600 * 24,
+        //     //   httpOnly: true
+        //     // });
+        //     // req.session.user = user;
+        //     req.user = user;
+        //     res.statusMessage = 'authenticated';
+        //     res.json({ token, user: user.getUser() });
+        //   });
       }
     });
   },
@@ -75,12 +105,15 @@ export default {
         if (user.password.activateHash === req.body.hash) {
           user.isActive = true;
           user.save();
-          res.send({ msg: 'user verified', user: user.getUser() });
+          res.statusMessage = req.lg.user.verified;
+          res.send({ msg: 'user verified1', user: user.getUser() });
         } else {
-          res.status(404).send({ msg: 'User could not be verified' });
+          res.statusMessage = req.lg.user.notVerified;
+          res.status(404).end();
         }
       } else {
-        res.status(404).send({ msg: 'user not found' });
+        res.statusMessage = req.lg.user.notFound;
+        res.status(404).end();
       }
     });
   },
