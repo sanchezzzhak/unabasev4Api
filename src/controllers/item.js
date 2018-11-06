@@ -35,6 +35,7 @@ const routes = {
     item.tax = tax;
     item.save((err, itemSaved) => {
       if (err) {
+        console.log(err);
         res.status(500).end(err);
       } else {
         res.send(itemSaved);
