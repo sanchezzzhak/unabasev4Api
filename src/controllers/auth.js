@@ -1,11 +1,11 @@
 import User from '../models/user';
 import jwt from 'jsonwebtoken';
-import mainConfig from '../config/main';
-import logger from '../config/lib/logger';
 import gauth from '../config/auth';
 import axios from 'axios';
 import mailer from '../lib/mailer';
 import template from '../lib/mails';
+
+import envar from '../lib/envar';
 export default {
   login(req, res) {
     let query = {
@@ -45,13 +45,9 @@ export default {
             user.activeScope = user._id;
           }
           user.save((err, user) => {
-            const token = jwt.sign(
-              { user: user.getUser() },
-              mainConfig.mSecret,
-              {
-                expiresIn: '3d'
-              }
-            );
+            const token = jwt.sign({ user: user.getUser() }, envar().SECRET, {
+              expiresIn: '3d'
+            });
             req.user = user;
             res.statusMessage = req.lg.user.successLogin;
             res.json({ token, user: user.getUser() });
@@ -201,7 +197,7 @@ export default {
         newUser.save(function(err, user) {
           if (err) throw err;
 
-          const token = jwt.sign({ user: user.getUser() }, mainConfig.mSecret, {
+          const token = jwt.sign({ user: user.getUser() }, envar().SECRET, {
             expiresIn: '3d'
           });
           user.activeScope = user._id;
@@ -308,7 +304,7 @@ export default {
                   user.save((err, userFound) => {
                     const token = jwt.sign(
                       { user: user.getUser() },
-                      mainConfig.mSecret,
+                      envar().SECRET,
                       {
                         expiresIn: '3d'
                       }
@@ -329,10 +325,7 @@ export default {
             } else {
               // logger('user.google');
               // logger(user);
-              const token = jwt.sign(
-                { user: user.getUser() },
-                mainConfig.mSecret
-              );
+              const token = jwt.sign({ user: user.getUser() }, envar().SECRET);
               // res.cookie('access_token', token);
               res.json({ token, user: user.getUser() });
             }

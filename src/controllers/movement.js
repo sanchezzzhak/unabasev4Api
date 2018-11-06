@@ -4,7 +4,6 @@ import Movement from '../models/movement';
 import ntype from 'normalize-type';
 import Line from '../models/line';
 
-import logger from '../config/lib/logger';
 const routes = {
   get: (req, res) => {
     req.nm = 'test';
@@ -66,7 +65,6 @@ const routes = {
             console.log(err);
             res.status(500).send(err);
           } else {
-            logger('sssssn');
             res.send(movement);
           }
         });

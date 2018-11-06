@@ -1,22 +1,24 @@
-const nodemailer = require('nodemailer');
+import { createTransport } from 'nodemailer';
 
 const { log } = console;
 
-let config = require('../../config/main.js');
+import { mail, host as _host } from '../main.js';
 
-let fs = require('fs');
-let $ = require('cheerio');
-let bool = require('normalize-bool');
-const pug = require('pug');
-module.exports.transporter = nodemailer.createTransport(
+import { readFileSync } from 'fs';
+import $ from 'cheerio';
+import bool from 'normalize-bool';
+import pug from 'pug';
+
+console.log(envar());
+export const transporter = createTransport(
   {
-    host: config.mail.host,
-    port: config.mail.port,
-    secure: config.mail.secure,
+    host: mail.host,
+    port: mail.port,
+    secure: mail.secure,
     ignoreTLS: true,
     auth: {
-      user: config.mail.user,
-      pass: config.mail.pass
+      user: mail.user,
+      pass: mail.pass
     },
     logger: false,
     debug: false // include SMTP traffic in the logs
@@ -25,12 +27,12 @@ module.exports.transporter = nodemailer.createTransport(
     // default message fields
 
     // sender info
-    from: `Unabase M <${config.mail.user}>`
+    from: `Unabase M <${mail.user}>`
   }
 );
 // module.exports = transporter;
 
-module.exports.send = function(message, res) {
+export function send(message, res) {
   transporter.sendMail(message, (error, info) => {
     if (error) {
       console.log('Error occurred trying to send');
@@ -45,10 +47,10 @@ module.exports.send = function(message, res) {
     // only needed when using pooled connections
     // transporter.close();
   });
-};
+}
 
-module.exports.sendTemplate = function(message, res) {
-  let template = fs.readFileSync(
+export function sendTemplate(message, res) {
+  let template = readFileSync(
     __dirname.replace('controllers/lib', 'views') + '/mails/base.html',
     { encoding: 'utf-8' }
   );
@@ -56,7 +58,7 @@ module.exports.sendTemplate = function(message, res) {
   let templateText = $(template);
   templateText
     .find('#uLogo')
-    .attr('src', 'http://' + config.host + '/img/logom2.png');
+    .attr('src', 'http://' + _host + '/img/logom2.png');
 
   templateText
     .find('#uBody')
@@ -97,4 +99,4 @@ module.exports.sendTemplate = function(message, res) {
   // 	console.log(message.to);
   // 	return info;
   // })
-};
+}

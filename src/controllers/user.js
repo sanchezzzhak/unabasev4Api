@@ -1,7 +1,6 @@
 import User from '../models/user';
 
 import ntype from 'normalize-type';
-import logger from '../config/lib/logger';
 // import findByValue from '../lib/findObjectByValue';
 // import accountTypeByUrl from '../lib/accountTypeByUrl';
 export default {
@@ -28,7 +27,6 @@ export default {
     });
   },
   logout: (req, res) => {
-    logger('out');
     req.logout();
     req.session = null;
     res.status(200).send('Log out');

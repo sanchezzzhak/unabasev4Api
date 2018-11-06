@@ -8,7 +8,6 @@ import cookieParser from 'cookie-parser';
 // import passport from 'passport';
 import dbConfig from './config/database.js';
 import logger from './lib/logger';
-import mainConfig from './config/main.js';
 const port = process.env.PORT || 3000;
 import favicon from 'serve-favicon';
 import session from 'express-session';
@@ -96,7 +95,6 @@ let allowedOrigins = [
 app.use(function(req, res, next) {
   res.locals.activeUser = req.user || null;
   res.locals.user = req.user || null;
-  res.locals.host = mainConfig.host;
   let origin = req.headers.origin;
 
   if (allowedOrigins.indexOf(origin) > -1) {

@@ -1,8 +1,6 @@
 import nodemailer from 'nodemailer';
 import { user, pass } from '../secret/mail';
-console.log('config mail');
-console.log(user);
-console.log(pass);
+
 const transporter = nodemailer.createTransport(
   {
     service: 'gmail',

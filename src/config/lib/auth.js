@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import mainConfig from '../main';
 import User from '../../models/user';
-import logger from './logger';
 export default {
   isAuth: (req, res, next) => {
     if (
@@ -55,7 +54,6 @@ export default {
           console.log('err find');
           console.log(err);
         } else if (user) {
-          logger('user set to ' + user.username);
           req.user = user;
           next();
         } else {

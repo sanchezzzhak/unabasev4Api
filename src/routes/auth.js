@@ -2,7 +2,6 @@ import axios from 'axios';
 import { Router } from 'express';
 import jwt from 'jsonwebtoken';
 import gauth from '../config/auth';
-import mainConfig from '../config/main';
 import ctl from '../controllers/auth';
 import User from '../models/user';
 import logger from '../lib/logger';
