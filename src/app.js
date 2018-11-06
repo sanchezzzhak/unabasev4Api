@@ -125,7 +125,7 @@ import routes from './routes';
 import dotenv from 'dotenv';
 dotenv.config();
 import envar from './lib/envar';
-console.log(envar());
+console.log(envar({ path: '../.env' }));
 
 app.use('/', routes);
 
