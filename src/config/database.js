@@ -5,5 +5,6 @@ export default {
   dev: `mongodb://${main.user}:${main.pass}@${main.db.dev}`,
   una: `mongodb://${main.user}:${main.pass}@${main.db.una}`,
   test: `mongodb://${main.user}:${main.pass}@${main.db.test}`,
+  local: `mongodb://${main.user}:${main.pass}@${main.db.test}`,
   prod: `mongodb://${main.user}:${main.pass}@${main.db.prod}`
 };

@@ -12,6 +12,7 @@ import movement from './modules/movement';
 import tax from './modules/tax';
 import item from './modules/item';
 import currency from './modules/currency';
+import mailer from './modules/mailer';
 
 import api_doc from 'unabase_api_doc';
 
@@ -75,4 +76,9 @@ describe('Movement***************************************', () => {
   // movement.null(api);
   // movement.find(api);
   // movement.getOne(api);
+});
+
+describe('Mailer***********************************', () => {
+  mailer.sendFunc(api);
+  mailer.send(api);
 });

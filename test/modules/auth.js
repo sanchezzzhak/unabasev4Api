@@ -1,14 +1,3 @@
-// const chai = require('chai');
-// const chaiHttp = require('chai-http');
-// // const server = require('../build/app');
-// const assert = require('chai').assert;
-
-// const axios = require('axios');
-
-// const api = require('../build/config/api');
-// const should = chai.should();
-// chai.use(chaiHttp);
-
 import { should as _should, use } from 'chai';
 import chaiHttp from 'chai-http';
 import axios from 'axios';

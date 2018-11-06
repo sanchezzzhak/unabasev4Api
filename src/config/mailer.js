@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import { user, pass } from '../secret/mail';
-
+// import template from './mails';
 const transporter = nodemailer.createTransport(
   {
     service: 'gmail',
@@ -18,15 +18,8 @@ const mailer = {
     return new Promise((resolve, reject) => {
       transporter.sendMail(message, (err, info) => {
         if (err) {
-          console.log('err occurred trying to send');
-          console.log(err.message);
           reject(err);
         } else {
-          console.log(
-            'Message sent successfully!--------------------------------'
-          );
-          console.log(message.to);
-          console.log(info);
           resolve(info);
         }
 

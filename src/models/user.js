@@ -49,6 +49,9 @@ let userSchema = Schema(
       accessToken: String,
       imgUrl: String
     },
+    defaults: {
+      tax: { type: Schema.Types.ObjectId, ref: 'Tax' }
+    },
     /**
      *  array of ObjectIds from business asociated
      */

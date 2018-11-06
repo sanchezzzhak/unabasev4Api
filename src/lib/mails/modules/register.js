@@ -1,5 +1,10 @@
 import main from '../main';
-const register = ({ password, origin, activateHash, id }) => {
+const register = ({
+  password = '',
+  origin = '',
+  activateHash = '',
+  id = ''
+}) => {
   return main({
     content: `
     Estamos contentos de tenerte con nosotros! <br/>

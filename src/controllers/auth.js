@@ -2,7 +2,8 @@ import User from '../models/user';
 import jwt from 'jsonwebtoken';
 import gauth from '../config/auth';
 import axios from 'axios';
-import mailer from '../lib/mailer';
+import mailer from '../lib/mailer_deprecated';
+import { send } from '../config/mailer';
 import template from '../lib/mails';
 
 import envar from '../lib/envar';
@@ -117,7 +118,6 @@ export default {
     });
   },
   register(req, res) {
-    logger('reg');
     let query = {
       $or: [{ username: req.body.username }, { 'emails.email': req.body.email }]
     };
@@ -215,7 +215,7 @@ export default {
               html: text
             };
 
-            mailer(msg);
+            send(msg);
           }
           req.user = user;
           res.json({ token, user: user.getUser() });
