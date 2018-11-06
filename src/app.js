@@ -123,7 +123,7 @@ app.use(function(req, res, next) {
 
 import routes from './routes';
 
-import envar from '../lib/envar';
+import envar from './lib/envar';
 console.log(envar());
 
 app.use('/', routes);
