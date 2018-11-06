@@ -32,11 +32,11 @@ const routes = {
     let item = new Item();
     let { name, tax } = req.body;
     item.name = name;
-    item.tax = tax;
+    item.tax = tax || null;
     item.save((err, itemSaved) => {
       if (err) {
         console.log(err);
-        res.status(500).end(err);
+        res.status(500).end({ err });
       } else {
         res.send(itemSaved);
       }
