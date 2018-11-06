@@ -122,7 +122,8 @@ app.use(function(req, res, next) {
 });
 
 import routes from './routes';
-
+import dotenv from 'dotenv';
+dotenv.config();
 import envar from './lib/envar';
 console.log(envar());
 
