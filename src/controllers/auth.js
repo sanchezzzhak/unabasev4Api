@@ -325,6 +325,9 @@ export default {
             } else {
               // logger('user.google');
               // logger(user);
+
+              user.lastLogin = Date.now();
+              user.save();
               const token = jwt.sign({ user: user.getUser() }, envar().SECRET);
               // res.cookie('access_token', token);
               res.json({ token, user: user.getUser() });
