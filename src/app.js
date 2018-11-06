@@ -95,7 +95,7 @@ let allowedOrigins = [
 app.use(function(req, res, next) {
   res.locals.activeUser = req.user || null;
   res.locals.user = req.user || null;
-  let origin = req.headers.origin;
+  // let origin = req.headers.origin;
 
   // if (allowedOrigins.indexOf(origin) > -1) {
   //   res.header('Access-Control-Allow-Origin', origin);
@@ -122,6 +122,9 @@ app.use(function(req, res, next) {
 });
 
 import routes from './routes';
+
+import envar from '../lib/envar';
+console.log(envar());
 
 app.use('/', routes);
 
