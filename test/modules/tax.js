@@ -9,7 +9,7 @@ let data = {
 };
 let taxId;
 export default {
-  create: () =>
+  create: api =>
     it('CREATE tax @tax', done => {
       axios
         .post(api.tax.main, {
@@ -28,7 +28,7 @@ export default {
           // console.log(err.response.statusText);
         });
     }),
-  list: () =>
+  list: api =>
     it('LIST ALL taxs @tax', done => {
       axios(api.tax.main)
         .then(res => {
@@ -42,7 +42,7 @@ export default {
           console.log(err.response.statusText);
         });
     }),
-  update: () =>
+  update: api =>
     it('UPDATE a tax @tax', done => {
       axios
         .put(api.tax.main + global.taxId, {
@@ -61,7 +61,7 @@ export default {
           } else console.log(err);
         });
     }),
-  find: () =>
+  find: api =>
     it('FIND BY QUERY - name @tax', done => {
       axios(`${api.tax.find}/${data.name.slice(3, 7)}`)
         .then(res => {
@@ -77,7 +77,7 @@ export default {
           } else console.log(err);
         });
     }),
-  getOne: () =>
+  getOne: api =>
     it('GET ONE tax by id @tax', done => {
       axios(api.tax.main + global.taxId)
         .then(res => {

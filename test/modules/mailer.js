@@ -12,10 +12,8 @@ const data = {
 };
 
 export default {
-  send: () =>
+  send: api =>
     it(`SEND EMAIL by endpoint to ${data.to} @mailer`, done => {
-      console.log(api);
-
       const text = template().register({});
 
       const msg = {
@@ -26,19 +24,19 @@ export default {
       axios
         .post(api.mailer.main, msg)
         .then(res => {
-          res.envelope.from.should.be.a('string');
-          res.envelope.to.should.be.a('array');
+          res.data.envelope.from.should.be.a('string');
+          res.data.envelope.to.should.be.a('array');
           done();
         })
         .catch(err => {
-          // if (err.response) {
-          //   console.log(err.response.status);
-          //   console.log(err.response.statusText);
-          //   console.log(err.response.data);
-          // } else console.log(err);
+          if (err.response) {
+            console.log(err.response.status);
+            console.log(err.response.statusText);
+            console.log(err.response.data);
+          }
         });
     }),
-  sendFunc: () =>
+  sendFunc: api =>
     it(`SEND EMAIL by function to ${data.to} @mailer`, done => {
       const text = template().register({});
 

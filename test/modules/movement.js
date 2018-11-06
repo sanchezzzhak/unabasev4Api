@@ -2,7 +2,7 @@ import { should as _should, use } from 'chai';
 import chaiHttp from 'chai-http';
 import axios from 'axios';
 use(chaiHttp);
-import api from '../../src/config/api';
+// import api from '../../src/config/api';
 
 let movementId;
 let linesIds;
@@ -14,7 +14,7 @@ console.log('date');
 console.log(data.date);
 console.log(data.date.toISOString());
 export default {
-  create: () =>
+  create: api =>
     it('CREATE an movement @movement', function(done) {
       axios
         .post(api.movement.main, {
@@ -70,7 +70,7 @@ export default {
           console.log(err.response.statusText);
         });
     }),
-  list: () =>
+  list: api =>
     it('LIST ALL movements @movement', function(done) {
       axios(api.movement.main)
         .then(res => {
@@ -86,7 +86,7 @@ export default {
         });
     }),
 
-  update: () =>
+  update: api =>
     it('UPDATE an movement @movement', function(done) {
       axios
         .put(api.movement.main + movementId, {
@@ -142,7 +142,7 @@ export default {
           } else console.log(err);
         });
     }),
-  null: () =>
+  null: api =>
     it('SET MOVEMENT TO NULL @movement', done => {
       axios
         .put(api.movement.main + movementId, {
@@ -161,9 +161,9 @@ export default {
           } else console.log(err);
         });
     }),
-  find: () =>
+  find: api =>
     it('FIND BY QUERY movements @movement', done => {
-      axios(`${api.movement.find}/${data.name.slice(3, 7)}`)
+      axios(`${api.movement.find}${data.name.slice(3, 7)}`)
         .then(res => {
           res.should.have.status(200);
           res.data.should.be.a('object');
@@ -178,7 +178,7 @@ export default {
         });
     }),
 
-  getOne: () =>
+  getOne: api =>
     it('GET ONE movement by id @movement', done => {
       axios(api.movement.main + movementId)
         .then(res => {

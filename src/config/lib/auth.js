@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
-import mainConfig from '../main';
+// import mainConfig from '../main';
+
+import envar from '../../lib/envar';
 import User from '../../models/user';
 export default {
   isAuth: (req, res, next) => {
@@ -16,7 +18,7 @@ export default {
   },
   cToken: (req, res, next) => {
     req.token = req.cookies.access_token;
-    jwt.verify(req.token, mainConfig.mSecret, (err, decoded) => {
+    jwt.verify(req.token, envar().SECRET, (err, decoded) => {
       if (err) {
         res.status(403).send({ msg: 'Not authorized..' });
       } else {
@@ -31,7 +33,7 @@ export default {
       typeof req.token !== 'undefined' &&
       req.headers.authorization !== 'postmanvn4b4s3'
     ) {
-      jwt.verify(req.token, mainConfig.mSecret, (err, decoded) => {
+      jwt.verify(req.token, envar().SECRET, (err, decoded) => {
         if (err) {
           res.status(403).send({ msg: 'Not authorized1' });
         } else {

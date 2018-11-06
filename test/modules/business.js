@@ -10,7 +10,7 @@ let data = {
 };
 
 export default {
-  create: () =>
+  create: api =>
     it('CREATE business @business', done => {
       axios
         .post(api.user.main, {
@@ -52,7 +52,7 @@ export default {
         });
     }),
 
-  list: () =>
+  list: api =>
     it('LIST ALL business @business', done => {
       axios
         .get(api.user.main + `?type=business`)
@@ -75,7 +75,7 @@ export default {
         });
     }),
 
-  update: () =>
+  update: api =>
     it('UPDATE a business @business', done => {
       axios
         .put(api.user.main + global.businessId, {
@@ -113,7 +113,7 @@ export default {
         });
     }),
 
-  password: () =>
+  password: api =>
     it('CHANGE PASSWORD of a business @business', done => {
       axios
         .put(api.user.password + global.businessId, {
@@ -134,7 +134,7 @@ export default {
         });
     }),
 
-  user: () =>
+  user: api =>
     it('ASOCIATE A USER TO A BUSINESS @business', done => {
       axios
         .put(api.user.user + global.businessId, {

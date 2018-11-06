@@ -208,32 +208,20 @@ const routes = {
           console.log('err');
           console.log(err);
         });
-      // req.body.lines.forEach(async i => {
-      //   if (i._id) {
-      //     await Line.findByIdAndUpdate(i._id, i, { new: true }, (err, line) => {
-      //       if (err) console.log(err);
-      //       else {
-      //         update.lines.push(i._id);
-      //       }
-      //     });
-      //   } else {
-      //     let newLine = new Line();
-      //     newLine.name = i.name;
-      //     newLine.tax = i.tax;
-      //     newLine.quantity = i.quantity;
-      //     newLine.price = i.price;
-      //     newLine.item = i.item;
-      //     await newLine.save((err, line) => {
-      //       if (err) {
-      //         errorOnItem.state = true;
-      //         errorOnItem.msg = err;
-      //       } else {
-      //         logger(line._id);
-      //         update.lines.push(line._id);
-      //       }
-      //     });
-      //   }
-      // });
+    } else {
+      Movement.findOneAndUpdate(
+        { _id: req.params.id },
+        update,
+        { new: true },
+        (err, movement) => {
+          if (err) {
+            console.log(err);
+            res.status(500).send(err);
+          } else {
+            res.send(movement);
+          }
+        }
+      );
     }
   }
 };

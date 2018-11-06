@@ -2,7 +2,7 @@ import { should as _should, use } from 'chai';
 import chaiHttp from 'chai-http';
 import axios from 'axios';
 use(chaiHttp);
-import api from '../../src/config/api';
+// import api from '../../src/config/api.js';
 const data = {
   password: 'testpass',
   email: `${Math.random()
@@ -14,7 +14,7 @@ const data = {
 };
 
 export default {
-  register: () =>
+  register: api =>
     it('REGISTER a user @auth', done => {
       axios
         .post(api.auth.register, {
@@ -31,13 +31,17 @@ export default {
           done();
         })
         .catch(err => {
-          console.log(err);
+          if (err.response) {
+            console.log(err.response.status);
+            console.log(err.response.statusText);
+            console.log(err.response.data);
+          }
           // console.log(err.response.status);
           // console.log(err.response.statusText);
         });
     }),
 
-  login: () =>
+  login: api =>
     it('LOGIN with username a user @auth', done => {
       axios
         .post(api.auth.login, {
@@ -54,11 +58,14 @@ export default {
           done();
         })
         .catch(err => {
-          console.log(err.response.status);
-          console.log(err.response.statusText);
+          if (err.response) {
+            console.log(err.response.status);
+            console.log(err.response.statusText);
+            console.log(err.response.data);
+          }
         });
     }),
-  loginEmail: () =>
+  loginEmail: api =>
     it('LOGIN with email a user @auth', done => {
       axios
         .post(api.auth.login, {
@@ -73,8 +80,11 @@ export default {
           done();
         })
         .catch(err => {
-          console.log(err.response.status);
-          console.log(err.response.statusText);
+          if (err.response) {
+            console.log(err.response.status);
+            console.log(err.response.statusText);
+            console.log(err.response.data);
+          }
         });
     })
 };

@@ -40,6 +40,7 @@ db.once('open', () => {
 
 //check for DB erros
 db.on('error', err => {
+  console.log(dbConfig[env]);
   console.log(err);
 });
 
@@ -122,10 +123,7 @@ app.use(function(req, res, next) {
 });
 
 import routes from './routes';
-import dotenv from 'dotenv';
-dotenv.config();
-import envar from './lib/envar';
-console.log(envar());
+
 // console.log(process.env);
 
 app.use('/', routes);

@@ -14,6 +14,10 @@ export default function envar() {
     DB_USER: process.env.DB_USER,
     MAIL_PASS: process.env.MAIL_PASS,
     MAIL_USER: process.env.MAIL_USER,
-    DB_CONN: dbs.get(env)
+    DB_CONN: dbs.get(env),
+    DB_TEST: process.env.DB_TEST,
+    DB_DEV: process.env.DB_DEV,
+    DB_PROD: process.env.DB_PROD,
+    DB_UNA: process.env.DB_UNA
   };
 }

@@ -15,7 +15,7 @@ let data = {
 };
 
 export default {
-  create: () =>
+  create: api =>
     it('CREATE a @currency', done => {
       axios
         .post(api.currency.main, {
@@ -39,7 +39,7 @@ export default {
           } else console.log(err);
         });
     }),
-  list: () =>
+  list: api =>
     it('LIST all currencies @currency', done => {
       axios(api.currency.main)
         .then(res => {
@@ -55,7 +55,7 @@ export default {
           } else console.log(err);
         });
     }),
-  update: () =>
+  update: api =>
     it('UPDATE  a @currency', done => {
       axios
         .put(api.currency.main + currencyId, {
@@ -78,7 +78,7 @@ export default {
           } else console.log(err);
         });
     }),
-  find: () =>
+  find: api =>
     it('FIND BY QUERY currencies - name @currency', done => {
       axios(`${api.currency.find}/${data.name.slice(3, 7)}`)
         .then(res => {
@@ -94,7 +94,7 @@ export default {
           } else console.log(err);
         });
     }),
-  getOne: () =>
+  getOne: api =>
     it('GET ONE currency by id @currency', done => {
       axios(api.currency.main + currencyId)
         .then(res => {

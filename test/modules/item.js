@@ -10,7 +10,7 @@ let data = {
 };
 
 export default {
-  create: () =>
+  create: api =>
     it('CREATE an item @item', function(done) {
       axios
         .post(api.item.main, {
@@ -30,7 +30,7 @@ export default {
           } else console.log(err);
         });
     }),
-  list: () =>
+  list: api =>
     it('LIST ALL items @item', function(done) {
       axios(api.item.main)
         .then(res => {
@@ -48,7 +48,7 @@ export default {
         });
     }),
 
-  update: () =>
+  update: api =>
     it('UPDATE an item @item', function(done) {
       axios
         .put(api.item.main + itemId, {
@@ -67,7 +67,7 @@ export default {
           } else console.log(err);
         });
     }),
-  find: () =>
+  find: api =>
     it('FIND BY QUERY items @item', done => {
       axios(`${api.item.find}/${data.name.slice(3, 7)}`)
         .then(res => {
@@ -83,7 +83,7 @@ export default {
           } else console.log(err);
         });
     }),
-  getOne: () =>
+  getOne: api =>
     it('GET ONE item by id @item', done => {
       axios(api.item.main + itemId)
         .then(res => {

@@ -16,7 +16,8 @@ import mailer from './modules/mailer';
 
 import api_doc from 'unabase_api_doc';
 
-const api = api_doc('local');
+const api = api_doc('test');
+
 let userId;
 // global.userId = '';
 let data = {
@@ -71,11 +72,11 @@ describe('Currency***************************************', () => {
 
 describe('Movement***************************************', () => {
   movement.create(api);
-  // movement.list(api);
+  movement.list(api);
   movement.update(api);
-  // movement.null(api);
-  // movement.find(api);
-  // movement.getOne(api);
+  movement.null(api);
+  movement.find(api);
+  movement.getOne(api);
 });
 
 describe('Mailer***********************************', () => {

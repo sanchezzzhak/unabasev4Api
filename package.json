@@ -6,7 +6,6 @@
   "author": "Simon Gomes <xtgomes@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "NODE_ENV=test mocha --timeout 10000",
     "btest": "npm run build && NODE_ENV=test mocha --timeout 10000",
     "test": "NODE_ENV=test mocha --timeout 10000 --require  babel-core/register --exclude /modules --require babel-polyfill",
     "testl": "NODE_ENV=local mocha --timeout 10000 --require  babel-core/register --exclude /modules --require babel-polyfill",
