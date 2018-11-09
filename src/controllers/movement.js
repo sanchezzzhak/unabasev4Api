@@ -6,7 +6,6 @@ import Line from '../models/line';
 
 const routes = {
   get: (req, res) => {
-    req.nm = 'test';
     let rquery = ntype(req.query);
     let options = {};
     options.page = rquery.page || 1;
@@ -16,7 +15,17 @@ const routes = {
     options.populate = [{ path: 'client', select: 'name' }];
     delete rquery.page;
     delete rquery.limit;
-    let query = { ...rquery };
+    let query = {
+      ...rquery,
+      $or: [
+        {
+          creator: req.user._id
+        },
+        {
+          responsable: req.user._id
+        }
+      ]
+    };
     console.log('query');
     console.log(query);
     Movement.paginate(query, options, (err, movements) => {
