@@ -163,10 +163,10 @@ const routes = {
               responsable: req.user._id
             }
           ]
-        },
-        ...rquery
+        }
       ]
     };
+    Object.assign(query, rquery);
 
     console.log('query movement');
     console.log(query);
