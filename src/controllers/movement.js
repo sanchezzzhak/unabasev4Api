@@ -162,10 +162,14 @@ const routes = {
               responsable: req.user._id
             }
           ]
+        },
+        {
+          isActive: true
         }
       ]
     };
 
+    console.log('query movement');
     console.log(query);
     Movement.paginate(query, {}, (err, items) => {
       if (err) {
