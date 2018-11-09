@@ -141,6 +141,7 @@ const routes = {
       });
   },
   find: (req, res) => {
+    let rquery = ntype(req.query);
     let query = {
       $and: [
         {
@@ -163,9 +164,7 @@ const routes = {
             }
           ]
         },
-        {
-          isActive: true
-        }
+        ...rquery
       ]
     };
 
