@@ -156,15 +156,17 @@ const routes = {
         {
           $or: [
             {
-              creator: { $regex: req.user._id, $options: 'i' }
+              creator: req.user._id
             },
             {
-              responsable: { $regex: req.user._id, $options: 'i' }
+              responsable: req.user._id
             }
           ]
         }
       ]
     };
+
+    console.log(query);
     Movement.paginate(query, {}, (err, items) => {
       if (err) {
         console.warn(err);
