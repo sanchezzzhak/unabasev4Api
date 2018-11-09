@@ -169,8 +169,8 @@ const routes = {
     Object.assign(query, rquery);
 
     console.log('query movement');
-    console.log(query);
-    console.log(rquery);
+    console.log(query.$and[0]);
+    console.log(query.$and[1]);
     Movement.paginate(query, {}, (err, items) => {
       if (err) {
         console.warn(err);
