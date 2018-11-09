@@ -143,11 +143,15 @@ export default {
   find: (req, res) => {
     const type = req.query.type || 'personal';
     let query = {
-      $or: [
-        { 'emails.email': { $regex: req.params.q, $options: 'i' } },
-        { name: { $regex: req.params.q, $options: 'i' } },
-        { username: { $regex: req.params.q, $options: 'i' } },
-        { idnumber: { $regex: req.params.q, $options: 'i' } },
+      $and: [
+        {
+          $or: [
+            { 'emails.email': { $regex: req.params.q, $options: 'i' } },
+            { name: { $regex: req.params.q, $options: 'i' } },
+            { username: { $regex: req.params.q, $options: 'i' } },
+            { idnumber: { $regex: req.params.q, $options: 'i' } }
+          ]
+        },
         { type }
       ]
     };
@@ -161,7 +165,7 @@ export default {
     //     query.$or.push({ [q]: { $regex: req.query[q], $options: 'i' } });
     //   }
     // });
-    console.log(query.$or);
+    console.log(query);
     User.paginate(query, {}, (err, items) => {
       if (err) {
         res.status(500).end();
