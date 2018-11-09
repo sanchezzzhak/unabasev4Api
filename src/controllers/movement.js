@@ -167,7 +167,7 @@ const routes = {
     };
     Movement.paginate(query, {}, (err, items) => {
       if (err) {
-        res.status(500).end();
+        res.status(500).send(err);
       } else {
         res.send(items);
       }
