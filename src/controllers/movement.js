@@ -170,6 +170,7 @@ const routes = {
 
     console.log('query movement');
     console.log(query);
+    console.log(rquery);
     Movement.paginate(query, {}, (err, items) => {
       if (err) {
         console.warn(err);
