@@ -142,8 +142,28 @@ const routes = {
   },
   find: (req, res) => {
     let query = {
-      name: { $regex: req.params.q, $options: 'i' },
-      description: { $regex: req.params.q, $options: 'i' }
+      $and: [
+        {
+          $or: [
+            {
+              name: { $regex: req.params.q, $options: 'i' }
+            },
+            {
+              description: { $regex: req.params.q, $options: 'i' }
+            }
+          ]
+        },
+        {
+          $or: [
+            {
+              creator: { $regex: req.user._id, $options: 'i' }
+            },
+            {
+              responsable: { $regex: req.user._id, $options: 'i' }
+            }
+          ]
+        }
+      ]
     };
     Movement.paginate(query, {}, (err, items) => {
       if (err) {
