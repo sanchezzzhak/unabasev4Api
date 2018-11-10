@@ -215,7 +215,9 @@ export default {
               html: text
             };
 
-            send(msg);
+            send(msg)
+              .then(res => console.log(res))
+              .catch(err => console.warn(err));
           }
           req.user = user;
           res.json({ token, user: user.getUser() });
