@@ -6,12 +6,10 @@ const register = ({
   id = ''
 }) => {
   return main({
-    content: `
+    content: `<p style="font-size=1.5rem">
     Estamos contentos de tenerte con nosotros! <br/>
-    ahora solo debes ingresar con tu clave para activar tu cuenta.
-    Tu clave de ingreso es: <br/> ${password} <br/>
   ingresa <a href="${origin}/login?hash=${activateHash}&id=${id}&verifyAccount=true">aquí</a> para verificar tu cuenta.  
-  `
+  </p>`
   });
   //  return `Tu clave de ingreso es: <br/> ${password} <br/>
   // ingresa <a href="${
