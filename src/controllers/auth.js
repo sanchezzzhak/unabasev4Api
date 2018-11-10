@@ -104,9 +104,15 @@ export default {
       } else if (user) {
         if (user.password.activateHash === req.body.hash) {
           user.isActive = true;
-          user.save();
           res.statusMessage = req.lg.user.verified;
-          res.send({ user: user.getUser() });
+
+          user.save((err, user) => {
+            const token = jwt.sign({ user: user.getUser() }, envar().SECRET, {
+              expiresIn: '3d'
+            });
+            req.user = user;
+            res.json({ token, user: user.getUser() });
+          });
         } else {
           res.statusMessage = req.lg.user.notVerified;
           res.status(404).end();
