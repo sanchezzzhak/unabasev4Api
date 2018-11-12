@@ -209,19 +209,20 @@ export default {
           user.activeScope = user._id;
           user.save();
           if (user.password.isRandom) {
-            const text = template().register({
+            const { text, subject } = template().register({
               password,
               origin: req.headers.origin,
               lang: req.locale.language,
               activateHash,
-              id: user._id
+              id: user._id,
+              name: req.body.name
             });
             console.log('text');
             console.log(text);
 
             let msg = {
               to: req.body.email,
-              subject: `Hola! ${req.body.name} bienvenido a Unabase!`,
+              subject: subject,
               html: text
             };
 

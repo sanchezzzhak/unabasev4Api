@@ -46,6 +46,9 @@ db.on('error', err => {
 
 //init app
 const app = express();
+import templates from './lib/mails';
+console.log('template');
+console.log(templates().register({}).subject);
 
 const router = Router();
 
