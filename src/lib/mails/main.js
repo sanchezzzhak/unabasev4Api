@@ -1,5 +1,5 @@
 const footerHtml = `
-<img src="http://statics.una.cl/img/logohd.png" alt="Unabase" height="170" width="300">
+<img src="http://statics.una.cl/img/logohd.png" alt="Unabase" height="150" width="300">
 <h5>
 Te solicitamos no responder el presente email.</h5>`;
 
