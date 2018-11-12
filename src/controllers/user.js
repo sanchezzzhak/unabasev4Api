@@ -26,6 +26,22 @@ export default {
       }
     });
   },
+  restartPassword: (req, res) => {
+    let query = {
+      $or: [
+        { username: { $regex: req.params.q, $options: 'i' } },
+        { 'emails.email': { $regex: req.params.q, $options: 'i' } }
+      ]
+    };
+    User.findOne(query, (err, item) => {
+      if (err) {
+        res.status(500).send(err);
+      } else if (user) {
+      } else {
+        res.status(404).send({ msg: 'user not found' });
+      }
+    });
+  },
   logout: (req, res) => {
     req.logout();
     req.session = null;
