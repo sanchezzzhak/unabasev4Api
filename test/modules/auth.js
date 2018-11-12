@@ -10,7 +10,8 @@ const data = {
     .substring(2, 15)}@mail.com`,
   username: `${Math.random()
     .toString(36)
-    .substring(2, 15)}`
+    .substring(2, 15)}`,
+  name: 'pedro perez'
 };
 
 export default {
@@ -18,10 +19,7 @@ export default {
     it('REGISTER a user @auth', done => {
       axios
         .post(api.auth.register, {
-          username: data.username,
-          password: {
-            hash: data.password
-          },
+          name: data.name,
           email: data.email
         })
         .then(res => {

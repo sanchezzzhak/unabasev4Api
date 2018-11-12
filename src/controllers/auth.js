@@ -216,6 +216,9 @@ export default {
               activateHash,
               id: user._id
             });
+            console.log('text');
+            console.log(text);
+
             let msg = {
               to: req.body.email,
               subject: `Hola! ${req.body.name} bienvenido a Unabase!`,
