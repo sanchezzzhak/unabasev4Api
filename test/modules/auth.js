@@ -5,7 +5,10 @@ use(chaiHttp);
 // import api from '../../src/config/api.js';
 const data = {
   password: 'testpass',
-  email: `${Math.random()
+  email1: `${Math.random()
+    .toString(36)
+    .substring(2, 15)}@mail.com`,
+  email2: `${Math.random()
     .toString(36)
     .substring(2, 15)}@mail.com`,
   username: `${Math.random()
@@ -20,7 +23,7 @@ export default {
       axios
         .post(api.auth.register, {
           name: data.name,
-          email: data.email
+          email: data.email1
         })
         .then(res => {
           res.should.have.status(200);
@@ -43,7 +46,7 @@ export default {
       axios
         .post(api.auth.register, {
           name: data.name,
-          email: data.email,
+          email: data.email2,
           password: {
             hash: data.password
           }
@@ -69,7 +72,7 @@ export default {
     it('LOGIN with username a user @auth', done => {
       axios
         .post(api.auth.login, {
-          username: data.email,
+          username: data.email2,
           password: {
             hash: data.password
           }
