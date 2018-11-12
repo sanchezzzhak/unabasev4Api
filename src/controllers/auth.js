@@ -213,7 +213,8 @@ export default {
               password,
               origin: req.headers.origin,
               activateHash,
-              id: user._id
+              id: user._id,
+              lang: req.locale.language
             });
             let msg = {
               to: req.body.email,
