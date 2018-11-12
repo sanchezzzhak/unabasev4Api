@@ -15,12 +15,38 @@ const data = {
 };
 
 export default {
-  register: api =>
-    it('REGISTER a user @auth', done => {
+  registerWithout: api =>
+    it('REGISTER WITHOUT PASS a user @auth', done => {
       axios
         .post(api.auth.register, {
           name: data.name,
           email: data.email
+        })
+        .then(res => {
+          res.should.have.status(200);
+          res.data.should.be.a('object');
+          // global.loginId = res.data._id;
+          done();
+        })
+        .catch(err => {
+          if (err.response) {
+            console.log(err.response.status);
+            console.log(err.response.statusText);
+            console.log(err.response.data);
+          }
+          // console.log(err.response.status);
+          // console.log(err.response.statusText);
+        });
+    }),
+  registerWith: api =>
+    it('REGISTER WITH PASS a user @auth', done => {
+      axios
+        .post(api.auth.register, {
+          name: data.name,
+          email: data.email,
+          password: {
+            hash: data.password
+          }
         })
         .then(res => {
           res.should.have.status(200);
@@ -43,7 +69,7 @@ export default {
     it('LOGIN with username a user @auth', done => {
       axios
         .post(api.auth.login, {
-          username: data.username,
+          username: data.email,
           password: {
             hash: data.password
           }

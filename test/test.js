@@ -25,7 +25,8 @@ let data = {
 };
 
 describe('Auth***************************************', () => {
-  auth.register(api);
+  auth.registerWith(api);
+  auth.registerWithout(api);
   auth.login(api);
 });
 
