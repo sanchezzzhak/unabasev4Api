@@ -212,9 +212,9 @@ export default {
             const text = template().register({
               password,
               origin: req.headers.origin,
+              lang: req.locale.language,
               activateHash,
-              id: user._id,
-              lang: req.locale.language
+              id: user._id
             });
             let msg = {
               to: req.body.email,

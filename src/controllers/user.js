@@ -37,6 +37,23 @@ export default {
       if (err) {
         res.status(500).send(err);
       } else if (user) {
+        const text = template().restartPassword({
+          origin: req.headers.origin,
+          lang: req.locale.language,
+          id: req.user._id
+        });
+        const msg = {
+          to: req.body.email,
+          subject: 'Reinicio de contraseña',
+          html: text
+        };
+        send(msg)
+          .then(res => {
+            res.status(200).send({ msg: 'password restart success' });
+          })
+          .catch(err => {
+            res.status(500).send(err);
+          });
       } else {
         res.status(404).send({ msg: 'user not found' });
       }
