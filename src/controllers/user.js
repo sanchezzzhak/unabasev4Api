@@ -37,14 +37,14 @@ export default {
       if (err) {
         res.status(500).send(err);
       } else if (user) {
-        const text = template().restartPassword({
+        const { text, subject } = template().restartPassword({
           origin: req.headers.origin,
           lang: req.locale.language,
           id: req.user._id
         });
         const msg = {
           to: req.body.email,
-          subject: 'Reinicio de contraseña',
+          subject: subject,
           html: text
         };
         send(msg)
