@@ -40,7 +40,7 @@ export default {
         const { text, subject } = template().restartPassword({
           origin: req.headers.origin,
           lang: req.locale.language,
-          id: req.user._id
+          id: item._id
         });
         const msg = {
           to: req.body.email,
