@@ -17,7 +17,6 @@ import mailer from './modules/mailer';
 import api_doc from 'unabase_api_doc';
 
 const api = api_doc(process.env.NODE_ENV);
-console.log(api.user.main);
 let userId;
 // global.userId = '';
 let data = {
@@ -35,6 +34,7 @@ describe('User***************************************', () => {
   user.list(api);
   user.update(api);
   user.password(api);
+  user.restart(api);
   user.getOne(api);
   user.find(api);
 });

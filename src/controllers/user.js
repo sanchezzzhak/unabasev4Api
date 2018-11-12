@@ -1,5 +1,7 @@
 import User from '../models/user';
 
+import { send } from '../config/mailer';
+import template from '../lib/mails';
 import ntype from 'normalize-type';
 // import findByValue from '../lib/findObjectByValue';
 // import accountTypeByUrl from '../lib/accountTypeByUrl';
@@ -26,32 +28,42 @@ export default {
       }
     });
   },
-  restartPassword: (req, res) => {
+  restart: (req, res) => {
+    console.log('enter restart password');
+
     let query = {
       $or: [
         { username: { $regex: req.params.q, $options: 'i' } },
         { 'emails.email': { $regex: req.params.q, $options: 'i' } }
       ]
     };
+
+    // console.log(query.$or);
     User.findOne(query, (err, item) => {
       if (err) {
         res.status(500).send(err);
-      } else if (user) {
+      } else if (item) {
+        const email = item.emails.filter(
+          i => i.label === 'default' || i.label === 'google'
+        );
+
         const { text, subject } = template().restartPassword({
           origin: req.headers.origin,
           lang: req.locale.language,
           id: item._id
         });
         const msg = {
-          to: req.body.email,
+          to: email[0].email,
           subject: subject,
           html: text
         };
         send(msg)
-          .then(res => {
+          .then(resp => {
             res.status(200).send({ msg: 'password restart success' });
           })
           .catch(err => {
+            console.log('err+++++++===');
+            console.log(err);
             res.status(500).send(err);
           });
       } else {

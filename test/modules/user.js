@@ -8,7 +8,7 @@ use(chaiHttp);
 // let userId;
 let data = {
   password: 'test123',
-  email: 'test@mail.com',
+  email: 'sgomes@una.cl',
   name: 'test surtest',
   username: 'testUsername',
   idnumber: Math.floor(Math.random() * (99999999 - 111111111) + 111111111)
@@ -138,6 +138,32 @@ export default {
             console.log(err.response.statusText);
             console.log(err.response.data);
           } else console.log(err);
+        });
+    }),
+  restart: api =>
+    it('REQUEST RESTART PASSWORD of a user @user', done => {
+      console.log(api.user.restartPassword + data.email);
+      // console.log(`${api.user.restartPassword}/${global.userId}`);
+
+      axios
+        .post(api.user.restartPassword + data.email, {
+          password: data.password,
+          newPassword: 'changedpassword123'
+        })
+        .then(res => {
+          res.should.have.status(200);
+          res.data.should.be.a('object');
+          done();
+        })
+        .catch(err => {
+          if (err.response) {
+            console.log(err.response.status);
+            console.log(err.response.statusText);
+            console.log(err.response.data);
+          } else {
+            console.log(err.request._currentURl);
+            console.log(err.request.method);
+          }
         });
     }),
   getOne: api =>

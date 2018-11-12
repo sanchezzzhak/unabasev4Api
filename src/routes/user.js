@@ -12,11 +12,10 @@ import {
   business,
   scope,
   user,
-  restartPassword
+  restart
 } from '../controllers/user';
 
 import auth from '../config/lib/auth';
-import restartPassword from '../lib/mails/modules/restartPassword';
 users.use(auth.sToken);
 
 /*
@@ -35,7 +34,7 @@ users.get('/find/:q', find);
 users.get('/:id', getOne);
 users.put('/:id', update);
 users.put('/password/:id', password);
-users.post('/restart/:q', restartPassword);
+users.post('/restart/:q', restart);
 users.put('/business/:id', business);
 users.put('/user/:id', user);
 users.put('/scope/:id', scope);

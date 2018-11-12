@@ -20,6 +20,7 @@ const env = process.env.NODE_ENV || '';
 console.log('env');
 
 console.log(env);
+
 // ()(dbConfig[env]);
 mongoose.connect(
   dbConfig[env],
