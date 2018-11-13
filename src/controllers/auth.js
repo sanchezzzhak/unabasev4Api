@@ -8,6 +8,44 @@ import template from '../lib/mails';
 
 import envar from '../lib/envar';
 export default {
+  password: (req, res) => {
+    const { newPassword } = req.body;
+    console.log('enter restart password');
+    User.findById(req.params.id, function(err, user) {
+      if (err) {
+        res.status(500).send(err);
+      } else if (!user) {
+        res.statusMessage = req.lg.user.notFound;
+        res.statusText = req.lg.user.notFound;
+        res.status(404).send({ err: req.lg.user.notFound });
+      } else {
+        user.password.hash = user.generateHash(newPassword);
+
+        const isActive = user.isActive;
+        if (isActive) {
+          user.lastLogin = Date.now();
+          if (
+            user.activeScope == '' ||
+            !user.activeScope ||
+            user.activeScope == null
+          ) {
+            user.activeScope = user._id;
+          }
+          user.save((err, user) => {
+            const token = jwt.sign({ user: user.getUser() }, envar().SECRET, {
+              expiresIn: '3d'
+            });
+            req.user = user;
+            res.statusMessage = req.lg.user.successLogin;
+            res.json({ token, user: user.getUser() });
+          });
+        } else if (!isActive) {
+          res.statusMessage = req.lg.user.notActive;
+          res.status(401).send({ err: req.lg.user.notActive });
+        }
+      }
+    });
+  },
   login(req, res) {
     let query = {
       $or: [

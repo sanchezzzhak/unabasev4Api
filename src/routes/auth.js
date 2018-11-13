@@ -36,6 +36,16 @@ auth.post(
   ctl.register
 );
 
+auth.post(
+  '/password/:id',
+  logger({
+    name: 'restart password',
+    description: 'restart a password',
+    module
+  }),
+  ctl.password
+);
+
 // auth.get('/errUser', ctl.errUser);
 
 auth.post(
