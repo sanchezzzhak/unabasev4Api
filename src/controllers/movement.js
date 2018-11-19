@@ -44,7 +44,8 @@ const routes = {
       state,
       lines,
       description,
-      responsable
+      responsable,
+      total
     } = req.body;
     let errorOnItem = { state: false };
     let newMovement = new Movement();
@@ -57,8 +58,7 @@ const routes = {
     newMovement.lines = new Array();
     newMovement.dates = dates;
     newMovement.total = {};
-    newMovement.total.net = req.body.total.net;
-    newMovement.total.tax = req.body.total.tax;
+    newMovement.total = total;
 
     Line.insertMany(lines)
       .then(items => {
