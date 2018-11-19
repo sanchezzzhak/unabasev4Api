@@ -33,7 +33,7 @@ export function create() {
   });
 }
 
-export function update() {
+export function updateOne() {
   Line.findById(req.params.id, req.body, { new: true }, (err, item) => {
     if (err) {
       console.log(err);
