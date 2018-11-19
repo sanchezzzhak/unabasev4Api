@@ -45,6 +45,6 @@ import log from './log';
 routes.use('/logs', log);
 
 import line from './line';
-routes.use('./lines', line);
+routes.use('/lines', line);
 
 export default routes;

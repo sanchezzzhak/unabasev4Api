@@ -1,6 +1,6 @@
 import Line from '../models/line';
 
-export function get() {
+export function get(req, res) {
   let rquery = ntype(req.query);
   let options = {};
   options.page = rquery.page || 1;
@@ -22,7 +22,7 @@ export function get() {
     }
   });
 }
-export function create() {
+export function create(req, res) {
   let line = new Line(req.body);
   line.save((err, item) => {
     if (err) {
@@ -33,13 +33,18 @@ export function create() {
   });
 }
 
-export function updateOne() {
-  Line.findById(req.params.id, req.body, { new: true }, (err, item) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send(err);
-    } else {
-      res.send(movement);
+export function updateOne(req, res) {
+  Line.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    { new: true },
+    (err, item) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send(err);
+      } else {
+        res.send(item);
+      }
     }
-  });
+  );
 }

@@ -28,7 +28,7 @@ lines.post(
   create
 );
 lines.put(
-  '/',
+  '/:id',
   logger({
     name: 'updateOne lines',
     description: 'updateOne line',
@@ -36,3 +36,5 @@ lines.put(
   }),
   updateOne
 );
+
+export default lines;
