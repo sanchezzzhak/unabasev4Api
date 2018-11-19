@@ -55,7 +55,7 @@ const routes = {
     newMovement.client = client || null;
     newMovement.creator = req.user._id || null;
     newMovement.responsable = responsable || req.user._id || null;
-    newMovement.state = state || null;
+    newMovement.state = state || 'draft';
     newMovement.lines = new Array();
 
     newMovement.dates = dates;
