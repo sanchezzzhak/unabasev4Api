@@ -37,7 +37,6 @@ const routes = {
     });
   },
   create: (req, res) => {
-    console.log('create mov');
     const {
       name,
       dates,
@@ -51,20 +50,17 @@ const routes = {
     let errorOnItem = { state: false };
     let newMovement = new Movement();
 
-    console.log('create mov2');
     newMovement.name = name || null;
     newMovement.description = description || null;
     newMovement.client = client || null;
     newMovement.creator = req.user._id || null;
-    newMovement.responsable = responsable || null;
+    newMovement.responsable = responsable || req.user._id || null;
     newMovement.state = state || null;
     newMovement.lines = new Array();
 
-    console.log('create mov3');
     newMovement.dates = dates;
     // newMovement.total = {};
     newMovement.total = total;
-    console.log('create mov4');
     if (typeof lines !== 'undefined' && lines.length) {
       Line.insertMany(lines)
         .then(items => {
