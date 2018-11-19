@@ -60,7 +60,11 @@ const routes = {
 
     newMovement.dates = dates;
     // newMovement.total = {};
-    newMovement.total = total;
+    const { net, tax } = total || 0;
+    newMovement.total = {
+      net: net || 0,
+      tax: tax || 0
+    };
     if (typeof lines !== 'undefined' && lines.length) {
       Line.insertMany(lines)
         .then(items => {
