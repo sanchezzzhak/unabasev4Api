@@ -60,5 +60,8 @@
     "chai-http": "^4.2.0",
     "mocha": "^5.2.0",
     "typescript": "^3.0.3"
+  },
+  "engines": {
+    "yarn": "YARN NO LONGER USED - use npm instead."
   }
 }

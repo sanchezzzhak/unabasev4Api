@@ -55,9 +55,7 @@ const routes = {
     newMovement.responsable = responsable || null;
     newMovement.state = state || null;
     newMovement.lines = new Array();
-    newMovement.dates = {
-      expiration: req.body.dates.expiration
-    };
+    newMovement.dates = dates;
     newMovement.total = {};
     newMovement.total.net = req.body.total.net;
     newMovement.total.tax = req.body.total.tax;
@@ -178,16 +176,24 @@ const routes = {
     Object.assign(query, rquery);
 
     console.log('query movement');
-    console.log(query.$and[0]);
-    console.log(query.$and[1]);
-    Movement.paginate(query, {}, (err, items) => {
-      if (err) {
-        console.warn(err);
-        res.status(500).send(err);
-      } else {
-        res.send(items);
+    console.log(query.$and[0].$or);
+    console.log(query.$and[1].$or);
+
+    Movement.paginate(
+      query,
+      {
+        path: 'client',
+        match: { name: req.params.q }
+      },
+      (err, items) => {
+        if (err) {
+          console.warn(err);
+          res.status(500).send(err);
+        } else {
+          res.send(items);
+        }
       }
-    });
+    );
   },
   updateOne: (req, res) => {
     let data = req.body;
