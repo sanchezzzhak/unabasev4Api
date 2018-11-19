@@ -57,7 +57,7 @@ const routes = {
     newMovement.state = state || null;
     newMovement.lines = new Array();
     newMovement.dates = dates;
-    newMovement.total = {};
+    // newMovement.total = {};
     newMovement.total = total;
 
     Line.insertMany(lines)
