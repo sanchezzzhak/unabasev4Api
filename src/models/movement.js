@@ -14,8 +14,8 @@ const movementSchema = new Schema(
     responsable: { type: Schema.Types.ObjectId, ref: 'User' },
     lines: Array({ type: Schema.Types.ObjectId, ref: 'Line' }),
     total: {
-      net: Number,
-      tax: Number
+      net: { type: Number, default: 0 },
+      tax: { type: Number, default: 0 }
     },
     state: { type: String, default: 'draft' },
     isActive: { type: Boolean, default: true },
