@@ -56,7 +56,6 @@ const routes = {
     newMovement.state = state || null;
     newMovement.lines = new Array();
     newMovement.dates = dates;
-
     newMovement.total = {};
     newMovement.total.net = req.body.total.net;
     newMovement.total.tax = req.body.total.tax;
