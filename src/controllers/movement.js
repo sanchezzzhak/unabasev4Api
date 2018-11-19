@@ -37,6 +37,7 @@ const routes = {
     });
   },
   create: (req, res) => {
+    console.log('create mov');
     const {
       name,
       dates,
@@ -49,6 +50,8 @@ const routes = {
     } = req.body;
     let errorOnItem = { state: false };
     let newMovement = new Movement();
+
+    console.log('create mov2');
     newMovement.name = name || null;
     newMovement.description = description || null;
     newMovement.client = client || null;
@@ -56,30 +59,53 @@ const routes = {
     newMovement.responsable = responsable || null;
     newMovement.state = state || null;
     newMovement.lines = new Array();
+
+    console.log('create mov3');
     newMovement.dates = dates;
     // newMovement.total = {};
     newMovement.total = total;
+    console.log('create mov4');
+    // if (typeof lines !== 'undefined' && lines.length) {
+    //   Line.insertMany(lines)
+    //     .then(items => {
+    //       items.forEach(i => {
+    //         newMovement.lines.push(i._id);
+    //         console.log(i._id);
+    //       });
 
-    Line.insertMany(lines)
-      .then(items => {
-        items.forEach(i => {
-          newMovement.lines.push(i._id);
-          console.log(i._id);
-        });
+    //       newMovement.save((err, movement) => {
+    //         if (err) {
+    //           console.log(err);
+    //           res.status(500).send(err);
+    //         } else {
+    //           res.send(movement);
+    //         }
+    //       });
+    //     })
+    //     .catch(err => {
+    //       errorOnItem.state = true;
+    //       errorOnItem.msg = err;
+    //     });
+    // } else {
+    //   newMovement.save((err, movement) => {
+    //     if (err) {
+    //       console.log(err);
+    //       res.status(500).send(err);
+    //     } else {
+    //       res.send(movement);
+    //     }
+    //   });
+    // }
 
-        newMovement.save((err, movement) => {
-          if (err) {
-            console.log(err);
-            res.status(500).send(err);
-          } else {
-            res.send(movement);
-          }
-        });
-      })
-      .catch(err => {
-        errorOnItem.state = true;
-        errorOnItem.msg = err;
-      });
+    newMovement.save((err, movement) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send(err);
+      } else {
+        res.send(movement);
+      }
+    });
+
     // lines.forEach(async i => {
     //   let newLine = new Line();
     //   newLine.name = i.name;
