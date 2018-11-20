@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const lines = Router();
-import { create, get, updateOne } from '../controllers/line';
+import { create, get, updateOne, deleteOne } from '../controllers/line';
 
 import auth from '../config/lib/auth';
 import logger from '../lib/logger';
@@ -35,6 +35,15 @@ lines.put(
     module
   }),
   updateOne
+);
+lines.delete(
+  '/:id',
+  logger({
+    name: 'delete one line',
+    description: 'delete one line',
+    module
+  }),
+  deleteOne
 );
 
 export default lines;
