@@ -1,4 +1,5 @@
 import Line from '../models/line';
+import Movement from '../models/movement';
 
 export function get(req, res) {
   let rquery = ntype(req.query);
@@ -28,6 +29,16 @@ export function create(req, res) {
     if (err) {
       res.status(500).send(err);
     } else {
+      if (item.movement) {
+        Movement.findByIdAndUpdate(
+          item.movement,
+          { $addToSet: { lines: item._id } },
+          {},
+          (err, movement) => {
+            if (err) console.log(err);
+          }
+        );
+      }
       res.send(item);
     }
   });
