@@ -59,3 +59,14 @@ export function updateOne(req, res) {
     }
   );
 }
+
+export function deleteOne(req, res) {
+  Line.findByIdAndRemove(req.params.id, (err, item) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+    } else {
+      res.send(item);
+    }
+  });
+}
