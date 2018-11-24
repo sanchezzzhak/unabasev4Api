@@ -1,4 +1,5 @@
 import { create, deleteOne, getFrom } from '../controllers/comment';
+import { Router } from 'express';
 const comment = Router();
 let module = 'comment';
 
