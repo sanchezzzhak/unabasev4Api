@@ -47,4 +47,7 @@ routes.use('/logs', log);
 import line from './line';
 routes.use('/lines', line);
 
+import comment from './comment';
+routes.use('/comments', comment);
+
 export default routes;
