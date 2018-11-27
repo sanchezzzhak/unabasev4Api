@@ -78,7 +78,9 @@ const routes = {
               console.log(err);
               res.status(500).send(err);
             } else {
-              res.send(movement);
+              movement.populate('client', err => {
+                res.send(movement);
+              });
             }
           });
         })
@@ -92,7 +94,9 @@ const routes = {
           console.log(err);
           res.status(500).send(err);
         } else {
-          res.send(movement);
+          movement.populate('client', err => {
+            res.send(movement);
+          });
         }
       });
     }

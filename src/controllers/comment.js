@@ -12,13 +12,17 @@ export const create = (req, res) => {
 };
 
 export const getFrom = (req, res) => {
-  Comment.find({ id: req.params.id, name: req.params.name }, (err, items) => {
-    if (err) {
-      res.status(500).send({ msg: err });
-    } else {
-      res.send(items);
+  console.log(req.params);
+  Comment.find(
+    { 'from.id': req.params.id, 'from.name': req.params.name },
+    (err, items) => {
+      if (err) {
+        res.status(500).send({ msg: err });
+      } else {
+        res.send(items);
+      }
     }
-  });
+  );
 };
 
 export const deleteOne = (req, res) => {
