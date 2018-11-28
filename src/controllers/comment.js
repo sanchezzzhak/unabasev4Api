@@ -2,11 +2,14 @@ import Comment from '../models/comments';
 
 export const create = (req, res) => {
   let comment = new Comment(req.body);
+  comment.creator = req.user._id;
   comment.save((err, item) => {
     if (err) {
       res.status(500).send({ msg: err });
     } else {
-      res.send(item);
+      item.populate('creator', 'name google', err => {
+        res.send(item);
+      });
     }
   });
 };
