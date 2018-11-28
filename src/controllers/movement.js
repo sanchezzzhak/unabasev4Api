@@ -213,7 +213,9 @@ const routes = {
       query,
       {
         path: 'client',
-        match: { name: req.params.q }
+        match: { name: req.params.q },
+
+        populate: [{ path: 'client', select: 'name' }]
       },
       (err, items) => {
         if (err) {
