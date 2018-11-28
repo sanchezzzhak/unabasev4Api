@@ -9,7 +9,8 @@ const lineSchema = new Schema(
     quantity: { type: Number },
     price: { type: Number },
     item: { type: Schema.Types.ObjectId, ref: 'Item' },
-    movement: { type: Schema.Types.ObjectId, ref: 'Movement' }
+    movement: { type: Schema.Types.ObjectId, ref: 'Movement' },
+    comments: Array({ type: Schema.Types.ObjectId, ref: 'Comment' })
   },
   { timestamps: true }
 );

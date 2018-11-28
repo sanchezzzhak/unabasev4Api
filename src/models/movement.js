@@ -13,6 +13,7 @@ const movementSchema = new Schema(
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
     responsable: { type: Schema.Types.ObjectId, ref: 'User' },
     lines: Array({ type: Schema.Types.ObjectId, ref: 'Line' }),
+    comments: Array({ type: Schema.Types.ObjectId, ref: 'Comment' }),
     total: {
       net: { type: Number, default: 0 },
       tax: { type: Number, default: 0 }
