@@ -9,7 +9,7 @@ const commentSchema = new Schema(
       name: { type: String }
     },
     text: { type: String, maxlength: 2000 },
-    sub: { type: Schema.Types.ObjectId, ref: 'Comment' },
+    parent: { type: Schema.Types.ObjectId, ref: 'Comment' },
     users: Array({ type: Schema.Types.ObjectId, ref: 'User' })
   },
   { timestamps: true }
