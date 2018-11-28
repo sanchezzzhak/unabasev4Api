@@ -151,6 +151,7 @@ const routes = {
       // .populate('client', 'name')
       .populate([
         { path: 'lines' },
+        { path: 'comments' },
         { path: 'creator', select: 'name google.email emails.default' },
         { path: 'client', select: 'name google.email emails.default' }
       ])
@@ -167,7 +168,8 @@ const routes = {
       $or: [{ name: req.query.name || null }]
     };
     Movement.findOne({ _id: req.params.id })
-      .populate('items')
+      .populate('lines')
+      .populate('comments')
       .populate('creator', 'name')
       .exec((err, movement) => {
         if (err) {
