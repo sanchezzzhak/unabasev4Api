@@ -151,6 +151,7 @@ const routes = {
       // .populate('client', 'name')
       .populate([
         { path: 'lines' },
+        { path: 'lines.comments' },
         { path: 'comments' },
         { path: 'creator', select: 'name google.email emails.default' },
         { path: 'client', select: 'name google.email emails.default' }
