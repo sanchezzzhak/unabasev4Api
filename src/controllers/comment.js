@@ -1,4 +1,6 @@
 import Comment from '../models/comments';
+import Movement from '../models/movement';
+import Line from '../models/line';
 
 export const create = (req, res) => {
   let comment = new Comment(req.body);
@@ -8,6 +10,25 @@ export const create = (req, res) => {
       res.status(500).send({ msg: err });
     } else {
       item.populate('creator', 'name google', err => {
+        switch (req.body.from.name) {
+          case 'movement':
+            console.log(req.body.from.name);
+            Movement.findOneAndUpdate(
+              { _id: req.body.from.id },
+              { $addToSet: { comments: item._id } },
+              {}
+            ).exec();
+            break;
+          case 'line':
+            console.log(req.body.from.name);
+            Line.findOneAndUpdate(
+              { _id: req.body.from.id },
+              { $addToSet: { comments: item._id } },
+              {}
+            ).exec();
+            break;
+        }
+
         res.send(item);
       });
     }
