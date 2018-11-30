@@ -154,6 +154,7 @@ const routes = {
         { path: 'lines.comments' },
         { path: 'lines.comments.creator' },
         { path: 'comments' },
+        { path: 'comments.creator' },
         { path: 'creator', select: 'name google.email emails.default' },
         { path: 'client', select: 'name google.email emails.default' }
       ])
