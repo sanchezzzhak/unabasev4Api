@@ -52,7 +52,10 @@ let userSchema = Schema(
     defaults: {
       tax: { type: Schema.Types.ObjectId, ref: 'Tax' }
     },
-    relations: Array({ type: Schema.Types.ObjectId, ref: 'User' }),
+    relations: Array({
+      ref: { type: Schema.Types.ObjectId, ref: 'User' },
+      id: { type: String }
+    }),
     /**
      *  array of ObjectIds from business asociated
      */

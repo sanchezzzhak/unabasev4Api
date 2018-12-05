@@ -200,16 +200,30 @@ export default {
         { type }
       ]
     };
-    console.log('find one!!');
-    // Object.keys(req.query).forEach(q => {
-    //   if (q === 'email') {
-    //     query.$or.push({
-    //       'emails.email': { $regex: req.query[q], $options: 'i' }
-    //     });
-    //   } else {
-    //     query.$or.push({ [q]: { $regex: req.query[q], $options: 'i' } });
-    //   }
-    // });
+    User.paginate(query, {}, (err, items) => {
+      if (err) {
+        res.status(500).end();
+      } else {
+        res.send(items);
+      }
+    });
+  },
+  relationsFind: (req, res) => {
+    let query = {
+      $and: [
+        {
+          $or: [
+            { 'emails.email': { $regex: req.params.q, $options: 'i' } },
+            { name: { $regex: req.params.q, $options: 'i' } },
+            { username: { $regex: req.params.q, $options: 'i' } },
+            { idnumber: { $regex: req.params.q, $options: 'i' } }
+          ]
+        },
+        {
+          'relations.id': req.user._id
+        }
+      ]
+    };
     console.log(query);
     User.paginate(query, {}, (err, items) => {
       if (err) {
