@@ -12,8 +12,8 @@ export const get = (req, res) => {
   delete rquery.createdAt;
   delete rquery.page;
   delete rquery.limit;
-  let query = { ...rquery, type };
-  Contact.paginate(query, options, (err, items) => {
+  // let query = { ...rquery };
+  Contact.paginate(rquery, options, (err, items) => {
     if (err) {
       res.status(500).end();
     } else {
