@@ -64,13 +64,24 @@ export const find = (req, res) => {
       }
     ]
   };
-  Contact.paginate(query, {}, (err, items) => {
-    if (err) {
-      res.status(500).end({ err });
-    } else {
-      res.send(items);
+  Contact.paginate(
+    query,
+    {
+      populate: [
+        {
+          path: 'user',
+          select: 'name google.name google.email google.imgUrl emails.default'
+        }
+      ]
+    },
+    (err, items) => {
+      if (err) {
+        res.status(500).end({ err });
+      } else {
+        res.send(items);
+      }
     }
-  });
+  );
 };
 export const updateOne = (req, res) => {
   Contact.findByIdAndUpdate(req.params.id, req.body, {}, (err, item) => {
