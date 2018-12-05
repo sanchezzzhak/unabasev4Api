@@ -1,14 +1,14 @@
 import { Router } from 'express';
-const contact = Router();
-import { get, getOne, find, updateOne, create } from '../models/contact';
+const contacts = Router();
+import { get, getOne, find, updateOne, create } from '../controllers/contact';
 
 import auth from '../config/lib/auth';
-contact.use(auth.sToken);
+contacts.use(auth.sToken);
 
-contact.post('/', create);
-contact.get('/', get);
-contact.get('/find/:q', find);
-contact.get('/:id', getOne);
-contact.put('/:id', updateOne);
+contacts.post('/', create);
+contacts.get('/', get);
+contacts.get('/find/:q', find);
+contacts.get('/:id', getOne);
+contacts.put('/:id', updateOne);
 
-export default contact;
+export default contacts;
