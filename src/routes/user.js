@@ -12,7 +12,8 @@ import {
   business,
   scope,
   user,
-  restart
+  restart,
+  relationsFind
 } from '../controllers/user';
 
 import auth from '../config/lib/auth';
@@ -31,6 +32,7 @@ users.post('/', create);
 users.get('/', get);
 users.get('/logout', logout);
 users.get('/find/:q', find);
+users.get('/relations/:q', relationsFind);
 users.get('/:id', getOne);
 users.put('/:id', update);
 users.put('/password/:id', password);
