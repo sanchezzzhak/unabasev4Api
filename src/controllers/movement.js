@@ -8,12 +8,19 @@ const routes = {
   get: (req, res) => {
     let rquery = ntype(req.query);
     let options = {};
+    const sort = rquery.createdAt
+      ? { createdAt: rquery.createdAt }
+      : { createdAt: 'desc' };
     options.page = rquery.page || 1;
     options.limit = rquery.limit || 20;
 
+    console.log('sort');
+    console.log(sort);
     options.select = 'name client.name createdAt total state';
     options.populate = [{ path: 'client', select: 'name' }];
-    options.sort = { createdAt: 'desc' };
+
+    options.sort = { ...sort };
+    delete rquery.createdAt;
     delete rquery.page;
     delete rquery.limit;
     let query = {
