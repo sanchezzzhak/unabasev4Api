@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate';
 const Schema = mongoose.Schema;
 
 const businessSchema = Schema(
@@ -11,7 +12,8 @@ const businessSchema = Schema(
     legalName: String, // razón social,
     businessType: String, // giro
     idnumber: String,
-    phones: Array({ type: String }),
+    phones: [{ phone: String, label: String }],
+    emails: [{ email: String, label: String }],
     address: {
       street: String,
       number: Number,
@@ -20,7 +22,6 @@ const businessSchema = Schema(
       region: String,
       country: String
     },
-    emails: Array({ type: String }),
     website: String,
     v3: {
       ip: String,
@@ -29,6 +30,7 @@ const businessSchema = Schema(
       url: String
     },
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
+    users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     admins: Array({
       description: String,
       user: { type: Schema.Types.ObjectId, ref: 'User' }
@@ -36,7 +38,7 @@ const businessSchema = Schema(
   },
   { timestamps: true }
 );
-
+businessSchema.plugin(mongoosePaginate);
 const Business = mongoose.model('Business', businessSchema);
 
 export default Business;
