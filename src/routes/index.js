@@ -29,7 +29,7 @@ routes.use('/auth', auth);
 routes.use('/users', user);
 routes.use('/business', business);
 routes.use('/movements', movement);
-routes.use('/taxs', tax);
+routes.use('/taxes', tax);
 routes.use('/items', item);
 routes.use('/currencies', currency);
 routes.use('/mailer', mailer);
