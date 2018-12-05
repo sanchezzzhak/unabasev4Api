@@ -8,46 +8,34 @@ routes.get('/', (req, res) => {
   res.send({ msg: `Unabase api. ${process.env.NODE_ENV}` });
 });
 
-routes.get('/tzxax', (req, res) => {
-  res.send({ msg: `Unabase api. ${process.env.NODE_ENV}` });
-});
-
 routes.get('/isAuth', authConfig.sToken, (req, res) => {
   res.statusMessage = 'authenticated';
   res.send(req.user.getUser());
 });
-
 import auth from './auth';
-routes.use('/auth', auth);
-
 import user from './user';
-routes.use('/users', user);
-
 import business from './business';
-routes.use('/business', business);
-
 import movement from './movement';
-routes.use('/movements', movement);
-
 import tax from './tax';
-routes.use('/taxs', tax);
-
 import item from './item';
-routes.use('/items', item);
-
 import currency from './currency';
-routes.use('/currencies', currency);
-
 import mailer from './mailer';
-routes.use('/mailer', mailer);
-
 import log from './log';
-routes.use('/logs', log);
-
 import line from './line';
-routes.use('/lines', line);
-
 import comment from './comment';
+import contact from './contact';
+
+routes.use('/auth', auth);
+routes.use('/users', user);
+routes.use('/business', business);
+routes.use('/movements', movement);
+routes.use('/taxs', tax);
+routes.use('/items', item);
+routes.use('/currencies', currency);
+routes.use('/mailer', mailer);
+routes.use('/logs', log);
+routes.use('/lines', line);
 routes.use('/comments', comment);
+routes.use('/contacts', contact);
 
 export default routes;
