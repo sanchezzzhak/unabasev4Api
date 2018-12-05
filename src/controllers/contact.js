@@ -84,11 +84,16 @@ export const find = (req, res) => {
   );
 };
 export const updateOne = (req, res) => {
-  Contact.findByIdAndUpdate(req.params.id, req.body, {}, (err, item) => {
-    if (err) {
-      res.status(500).end({ err });
-    } else {
-      res.send(item);
+  Contact.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    { new: true },
+    (err, item) => {
+      if (err) {
+        res.status(500).end({ err });
+      } else {
+        res.send(item);
+      }
     }
-  });
+  );
 };
