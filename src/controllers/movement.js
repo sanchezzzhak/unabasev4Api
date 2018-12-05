@@ -13,6 +13,7 @@ const routes = {
 
     options.select = 'name client.name createdAt total state';
     options.populate = [{ path: 'client', select: 'name' }];
+    options.sort = { createdAt: 'desc' };
     delete rquery.page;
     delete rquery.limit;
     let query = {
