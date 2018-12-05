@@ -10,11 +10,11 @@ const contactSchema = new Schema(
     name: String,
     emails: [{ email: String, label: String }],
     phones: [{ phone: String, label: String }],
-    idnumber: { type: String },
+    idNumber: { type: String },
     user: { type: Schema.Types.ObjectId, ref: 'User' }
   },
   { timestamps: true }
 );
-
+contactSchema.plugin(mongoosePaginate);
 const Contact = mongoose.model('Contact', contactSchema);
 export default Contact;

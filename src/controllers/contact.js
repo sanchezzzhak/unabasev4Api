@@ -1,5 +1,5 @@
 import Contact from '../models/contact';
-
+import ntype from 'normalize-type';
 export const get = (req, res) => {
   let rquery = ntype(req.query);
   let options = {};
@@ -22,15 +22,20 @@ export const get = (req, res) => {
   });
 };
 export const getOne = (req, res) => {
-  Contact.findById(req.params.id, (err, item) => {
-    if (err) {
-      res.status(500).end(err);
-    } else if (item) {
-      res.send(item);
-    } else {
-      res.status(404).end();
-    }
-  });
+  Contact.findById(req.params.id)
+    .populate({
+      path: 'user',
+      select: 'name google.name google.email google.imgUrl emails.default'
+    })
+    .exec((err, item) => {
+      if (err) {
+        res.status(500).end({ err });
+      } else if (item) {
+        res.send(item);
+      } else {
+        res.status(404).end();
+      }
+    });
 };
 export const create = (req, res) => {
   let contact = new Contact(req.body);
