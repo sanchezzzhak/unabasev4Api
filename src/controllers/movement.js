@@ -17,7 +17,11 @@ const routes = {
     console.log('sort');
     console.log(sort);
     options.select = 'name client.name createdAt total state';
-    options.populate = [{ path: 'client', select: 'name' }];
+    options.populate = [
+      { path: 'client', select: 'name google emails.default' },
+      { path: 'responsable', select: 'name google emails.default' },
+      { path: 'creator', select: 'name google emails.default' }
+    ];
 
     options.sort = { ...sort };
     delete rquery.createdAt;
@@ -159,12 +163,11 @@ const routes = {
       // .populate('client', 'name')
       .populate([
         { path: 'lines' },
-        { path: 'lines.comments' },
-        { path: 'lines.comments.creator' },
         { path: 'comments' },
         { path: 'comments.creator' },
-        { path: 'creator', select: 'name google.email emails.default' },
-        { path: 'client', select: 'name google.email emails.default' }
+        { path: 'creator', select: 'name google emails.default' },
+        { path: 'client', select: 'name google emails.default' }
+        { path: 'responsable', select: 'name google emails.default' }
       ])
       .exec((err, movement) => {
         if (err) {
@@ -179,9 +182,14 @@ const routes = {
       $or: [{ name: req.query.name || null }]
     };
     Movement.findOne({ _id: req.params.id })
-      .populate('lines')
-      .populate('comments')
-      .populate('creator', 'name')
+    .populate([
+      { path: 'lines' },
+      { path: 'comments' },
+      { path: 'comments.creator' },
+      { path: 'creator', select: 'name google emails.default' },
+      { path: 'client', select: 'name google emails.default' }
+      { path: 'responsable', select: 'name google emails.default' }
+    ])
       .exec((err, movement) => {
         if (err) {
           res.status(500).end();
