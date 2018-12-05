@@ -126,15 +126,18 @@ const routes = {
             [
               {
                 path: 'client',
-                select: 'name google.name google.email google.imgUrl'
+                select:
+                  'name google.name google.email google.imgUrl emails.default'
               },
               {
                 path: 'responsable',
-                select: 'name google.name google.email google.imgUrl'
+                select:
+                  'name google.name google.email google.imgUrl emails.default'
               },
               {
                 path: 'creator',
-                select: 'name google.name google.email google.imgUrl'
+                select:
+                  'name google.name google.email google.imgUrl emails.default'
               }
             ],
             err => {
@@ -197,9 +200,19 @@ const routes = {
         { path: 'lines' },
         { path: 'comments' },
         { path: 'comments.creator' },
-        { path: 'creator', select: 'name google emails.default' },
-        { path: 'client', select: 'name google emails.default' },
-        { path: 'responsable', select: 'name google emails.default' }
+
+        {
+          path: 'client',
+          select: 'name google.name google.email google.imgUrl emails.default'
+        },
+        {
+          path: 'responsable',
+          select: 'name google.name google.email google.imgUrl emails.default'
+        },
+        {
+          path: 'creator',
+          select: 'name google.name google.email google.imgUrl emails.default'
+        }
       ])
       .exec((err, movement) => {
         if (err) {
