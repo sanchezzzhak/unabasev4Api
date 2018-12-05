@@ -90,9 +90,25 @@ const routes = {
               console.log(err);
               res.status(500).send(err);
             } else {
-              movement.populate('client', err => {
-                res.send(movement);
-              });
+              movement.populate(
+                [
+                  {
+                    path: 'client',
+                    select: 'name google.name google.email google.imgUrl'
+                  },
+                  {
+                    path: 'responsable',
+                    select: 'name google.name google.email google.imgUrl'
+                  },
+                  {
+                    path: 'creator',
+                    select: 'name google.name google.email google.imgUrl'
+                  }
+                ],
+                err => {
+                  res.send(movement);
+                }
+              );
             }
           });
         })
@@ -106,9 +122,25 @@ const routes = {
           console.log(err);
           res.status(500).send(err);
         } else {
-          movement.populate('client', err => {
-            res.send(movement);
-          });
+          movement.populate(
+            [
+              {
+                path: 'client',
+                select: 'name google.name google.email google.imgUrl'
+              },
+              {
+                path: 'responsable',
+                select: 'name google.name google.email google.imgUrl'
+              },
+              {
+                path: 'creator',
+                select: 'name google.name google.email google.imgUrl'
+              }
+            ],
+            err => {
+              res.send(movement);
+            }
+          );
         }
       });
     }
@@ -166,7 +198,7 @@ const routes = {
         { path: 'comments' },
         { path: 'comments.creator' },
         { path: 'creator', select: 'name google emails.default' },
-        { path: 'client', select: 'name google emails.default' }
+        { path: 'client', select: 'name google emails.default' },
         { path: 'responsable', select: 'name google emails.default' }
       ])
       .exec((err, movement) => {
@@ -182,14 +214,14 @@ const routes = {
       $or: [{ name: req.query.name || null }]
     };
     Movement.findOne({ _id: req.params.id })
-    .populate([
-      { path: 'lines' },
-      { path: 'comments' },
-      { path: 'comments.creator' },
-      { path: 'creator', select: 'name google emails.default' },
-      { path: 'client', select: 'name google emails.default' }
-      { path: 'responsable', select: 'name google emails.default' }
-    ])
+      .populate([
+        { path: 'lines' },
+        { path: 'comments' },
+        { path: 'comments.creator' },
+        { path: 'creator', select: 'name google emails.default' },
+        { path: 'client', select: 'name google emails.default' },
+        { path: 'responsable', select: 'name google emails.default' }
+      ])
       .exec((err, movement) => {
         if (err) {
           res.status(500).end();
