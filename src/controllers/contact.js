@@ -68,7 +68,7 @@ export const create = (req, res) => {
     }
   });
 };
-export const find = (req, res, next) => {
+export const find = (req, res) => {
   let rquery = ntype(req.query);
   let options = {};
   options.page = rquery.page || 1;
@@ -84,6 +84,43 @@ export const find = (req, res, next) => {
         email: { $regex: req.params.q, $options: 'i' }
       }
     ]
+  };
+  Contact.paginate(
+    query,
+    {
+      populate: [
+        {
+          path: 'user',
+          select: 'name google.name google.email google.imgUrl emails.default'
+        }
+      ]
+    },
+    (err, items) => {
+      if (err) {
+        res.status(500).end({ err });
+      } else {
+        res.send(items);
+      }
+    }
+  );
+};
+export const findSelf = (req, res) => {
+  let rquery = ntype(req.query);
+  let options = {};
+  options.page = rquery.page || 1;
+  options.limit = rquery.limit || 20;
+  delete rquery.page;
+  delete rquery.limit;
+  let query = {
+    $or: [
+      {
+        name: { $regex: req.params.q, $options: 'i' }
+      },
+      {
+        email: { $regex: req.params.q, $options: 'i' }
+      }
+    ],
+    creator: req.user._id
   };
   Contact.paginate(
     query,
