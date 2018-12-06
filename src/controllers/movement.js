@@ -53,6 +53,7 @@ const routes = {
       name,
       dates,
       client,
+      contact,
       state,
       lines,
       description,
@@ -65,6 +66,7 @@ const routes = {
     newMovement.name = name || null;
     newMovement.description = description || null;
     newMovement.client = client || null;
+    newMovement.client = contact || null;
     newMovement.creator = req.user._id || null;
     newMovement.responsable = responsable || req.user._id || null;
     newMovement.state = state || 'draft';
