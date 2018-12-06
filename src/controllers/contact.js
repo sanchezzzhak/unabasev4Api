@@ -64,6 +64,8 @@ export const create = (req, res) => {
             }
           }
         );
+      } else {
+        res.send(item);
       }
     }
   });
