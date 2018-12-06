@@ -55,7 +55,12 @@ export const create = (req, res) => {
             if (err) {
               res.status(500).end({ err });
             } else {
-              res.send(item);
+              item.populate(
+                [{ path: 'user', select: 'name google emails' }],
+                err => {
+                  res.send(item);
+                }
+              );
             }
           }
         );

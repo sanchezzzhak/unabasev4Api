@@ -28,19 +28,19 @@ const routes = {
     delete rquery.page;
     delete rquery.limit;
     let query = {
-      ...rquery,
-      $or: [
-        {
-          creator: req.user._id
-        },
-        {
-          responsable: req.user._id
-        }
-      ]
+      ...rquery
     };
-    console.log('query');
-    console.log(query);
-    Movement.paginate(query, options, (err, movements) => {
+    // if (!rquery.client) {
+    //   query.$or = [
+    //     {
+    //       creator: req.user._id
+    //     },
+    //     {
+    //       responsable: req.user._id
+    //     }
+    //   ];
+    // }
+    Movement.paginate(rquery, options, (err, movements) => {
       if (err) {
         res.status(500).end();
       } else {
