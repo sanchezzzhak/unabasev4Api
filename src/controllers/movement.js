@@ -27,9 +27,6 @@ const routes = {
     delete rquery.createdAt;
     delete rquery.page;
     delete rquery.limit;
-    let query = {
-      ...rquery
-    };
 
     Movement.paginate(rquery, options, (err, movements) => {
       if (err) {
