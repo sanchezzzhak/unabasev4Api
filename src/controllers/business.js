@@ -74,6 +74,7 @@ export default {
     let update = {
       [action]: { users: req.body.user }
     };
+
     Business.findByIdAndUpdate(
       req.params.id,
       update,
