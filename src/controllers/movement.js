@@ -27,8 +27,20 @@ const routes = {
     delete rquery.createdAt;
     delete rquery.page;
     delete rquery.limit;
-
-    Movement.paginate(rquery, options, (err, movements) => {
+    let query = {
+      ...rquery
+    };
+    if (!rquery.creator) {
+      query.$or = [
+        {
+          creator: rquery.creator
+        },
+        {
+          responsable: rquery.creator
+        }
+      ];
+    }
+    Movement.paginate(query, options, (err, movements) => {
       if (err) {
         res.status(500).end();
       } else {
