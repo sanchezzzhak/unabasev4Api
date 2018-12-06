@@ -8,10 +8,10 @@ const contactSchema = new Schema(
   {
     isActive: { type: Boolean, default: true },
     name: String,
-    emails: [{ email: String, label: String }],
-    phones: [{ phone: String, label: String }],
-    idNumber: { type: String },
-    user: { type: Schema.Types.ObjectId, ref: 'User' }
+    email: String,
+    phone: String,
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
+    creator: { type: Schema.Types.ObjectId, ref: 'User' }
   },
   { timestamps: true }
 );

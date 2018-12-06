@@ -1,5 +1,7 @@
 import Contact from '../models/contact';
 import ntype from 'normalize-type';
+import User from '../models/user';
+
 export const get = (req, res) => {
   let rquery = ntype(req.query);
   let options = {};
@@ -39,11 +41,25 @@ export const getOne = (req, res) => {
 };
 export const create = (req, res) => {
   let contact = new Contact(req.body);
+  contact.creator = req.user._id;
   contact.save((err, item) => {
     if (err) {
       res.status(500).end({ err });
     } else {
-      res.send(item);
+      if (item.user && item.user !== '') {
+        User.findByIdAndUpdate(
+          item.user,
+          { $addToSet: { contacts: item._id } },
+          { new: true },
+          (err, user) => {
+            if (err) {
+              res.status(500).end({ err });
+            } else {
+              res.send(item);
+            }
+          }
+        );
+      }
     }
   });
 };

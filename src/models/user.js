@@ -56,6 +56,7 @@ let userSchema = Schema(
       ref: { type: Schema.Types.ObjectId, ref: 'User' },
       id: { type: String }
     }),
+    contacts: Array({ type: Schema.Types.ObjectId, ref: 'Contact' }),
     /**
      *  array of ObjectIds from business asociated
      */
