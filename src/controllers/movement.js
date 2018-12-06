@@ -30,16 +30,7 @@ const routes = {
     let query = {
       ...rquery
     };
-    // if (!rquery.client) {
-    //   query.$or = [
-    //     {
-    //       creator: req.user._id
-    //     },
-    //     {
-    //       responsable: req.user._id
-    //     }
-    //   ];
-    // }
+
     Movement.paginate(rquery, options, (err, movements) => {
       if (err) {
         res.status(500).end();
