@@ -68,7 +68,7 @@ export const create = (req, res) => {
     }
   });
 };
-export const find = (req, res) => {
+export const find = (req, res, next) => {
   let rquery = ntype(req.query);
   let options = {};
   options.page = rquery.page || 1;
@@ -81,7 +81,7 @@ export const find = (req, res) => {
         name: { $regex: req.params.q, $options: 'i' }
       },
       {
-        'emails.email': { $regex: req.params.q, $options: 'i' }
+        email: { $regex: req.params.q, $options: 'i' }
       }
     ]
   };
