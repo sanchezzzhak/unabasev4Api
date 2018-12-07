@@ -21,7 +21,8 @@ const movementSchema = new Schema(
     state: { type: String, default: 'draft' },
     isActive: { type: Boolean, default: true },
     currency: { type: Schema.Types.ObjectId, ref: 'Currency' },
-    contact: { type: Schema.Types.ObjectId, ref: 'Contact' }
+    contact: { type: Schema.Types.ObjectId, ref: 'Contact' },
+    contactName: { type: String }
   },
   { timestamps: true }
 );
