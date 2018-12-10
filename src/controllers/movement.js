@@ -106,6 +106,9 @@ const routes = {
                   {
                     path: 'creator',
                     select: 'name google.name google.email google.imgUrl'
+                  },
+                  {
+                    path: 'contact'
                   }
                 ],
                 err => {
@@ -141,6 +144,9 @@ const routes = {
                 path: 'creator',
                 select:
                   'name google.name google.email google.imgUrl emails.default'
+              },
+              {
+                path: 'contact'
               }
             ],
             err => {
