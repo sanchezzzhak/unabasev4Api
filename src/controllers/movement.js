@@ -19,6 +19,7 @@ const routes = {
     options.select = 'name client.name createdAt total state';
     options.populate = [
       { path: 'client', select: 'name google emails.default' },
+      { path: 'contact' },
       { path: 'responsable', select: 'name google emails.default' },
       { path: 'creator', select: 'name google emails.default' }
     ];
