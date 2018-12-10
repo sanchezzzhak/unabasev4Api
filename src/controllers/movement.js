@@ -207,6 +207,7 @@ const routes = {
       // .populate('client', 'name')
       .populate([
         { path: 'lines' },
+        { path: 'contact' },
         { path: 'comments' },
         { path: 'comments.creator' },
 
