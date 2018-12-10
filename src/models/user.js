@@ -57,6 +57,9 @@ let userSchema = Schema(
       id: { type: String }
     }),
     contacts: Array({ type: Schema.Types.ObjectId, ref: 'Contact' }),
+    notifications: {
+      newUserContact: { type: Boolean, default: true }
+    },
     /**
      *  array of ObjectIds from business asociated
      */
