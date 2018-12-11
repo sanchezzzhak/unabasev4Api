@@ -31,7 +31,10 @@ let userSchema = Schema(
     /**
      *  active scope, personal or one of the business asociated
      */
-    scope: { type: Schema.Types.ObjectId, ref: 'User' },
+    scope: {
+      id: { type: Schema.Types.ObjectId, ref: 'Business' },
+      type: { type: String, enum: ['personal', 'business'] }
+    },
     address: {
       street: String,
       number: Number,
