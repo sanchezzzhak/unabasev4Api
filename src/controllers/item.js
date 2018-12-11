@@ -8,7 +8,7 @@ const routes = {
     options.limit = rquery.limit || 20;
     delete rquery.page;
     delete rquery.limit;
-    let query = { ...rquery };
+    let query = { ...rquery, creator: req.user._id };
     Item.paginate(query, options, (err, taxs) => {
       if (err) {
         res.status(500).end();
