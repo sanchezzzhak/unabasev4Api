@@ -29,10 +29,8 @@ const routes = {
     });
   },
   create(req, res) {
-    let item = new Item();
-    let { name, tax } = req.body;
-    item.name = name;
-    item.tax = tax || null;
+    let item = new Item(req.body);
+    item.creator = req.user._id;
     item.save((err, itemSaved) => {
       if (err) {
         console.log(err);
