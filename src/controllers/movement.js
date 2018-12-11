@@ -62,24 +62,25 @@ const routes = {
       total
     } = req.body;
     let errorOnItem = { state: false };
-    let newMovement = new Movement();
+    delete req.body.lines;
+    let newMovement = new Movement(req.body);
+    // newMovement.name = name || null;
+    // newMovement.description = description || null;
+    // newMovement.client = client || null;
+    // newMovement.contact = contact || null;
+    // newMovement.state = state || 'draft';
+    // newMovement.dates = dates;
 
-    newMovement.name = name || null;
-    newMovement.description = description || null;
-    newMovement.client = client || null;
-    newMovement.contact = contact || null;
-    newMovement.creator = req.user._id || null;
+    // req.body.responsable ?
     newMovement.responsable = responsable || req.user._id || null;
-    newMovement.state = state || 'draft';
+    newMovement.creator = req.user._id || null;
     newMovement.lines = new Array();
 
-    newMovement.dates = dates;
-    // newMovement.total = {};
-    const { net, tax } = total || 0;
-    newMovement.total = {
-      net: net || 0,
-      tax: tax || 0
-    };
+    // const { net, tax } = total || 0;
+    // newMovement.total = {
+    //   net: net || 0,
+    //   tax: tax || 0
+    // };
     if (typeof lines !== 'undefined' && lines.length) {
       Line.insertMany(lines)
         .then(items => {
@@ -156,46 +157,6 @@ const routes = {
         }
       });
     }
-
-    // newMovement.save((err, movement) => {
-    //   if (err) {
-    //     console.log(err);
-    //     res.status(500).send(err);
-    //   } else {
-    //     res.send(movement);
-    //   }
-    // });
-
-    // lines.forEach(async i => {
-    //   let newLine = new Line();
-    //   newLine.name = i.name;
-    //   newLine.tax = i.tax;
-    //   // newLine.number = i.number;
-    //   newLine.quantity = i.quantity;
-    //   newLine.price = i.price;
-    //   newLine.item = i.item;
-    //   // newLine.save((err, line) => {
-    //   //   if (err) {
-    //   //     errorOnItem.state = true;
-    //   //     errorOnItem.msg = err;
-    //   //   } else {
-    //   //     console.log(line._id);
-    //   //     newMovement.lines.push(line._id);
-    //   //   }
-    //   // });
-    //   // let nLine;
-    //   // try {
-    //   //   nLine = await newLine.save();
-    //   //   newMovement.lines.push(nLine._id);
-    //   //   console.log(nLine._id);
-    //   // } catch (err) {
-    //   //   errorOnItem.state = true;
-    //   //   errorOnItem.msg = err;
-    //   // }
-    // });
-    // setTimeout(() => {
-    //   console.log(newMovement);
-    // }, 500);
   },
   getOne(req, res) {
     Movement.findOne({ _id: req.params.id })
