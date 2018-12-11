@@ -16,7 +16,7 @@ const routes = {
 
     console.log('sort');
     console.log(sort);
-    options.select = 'name client.name createdAt total state';
+    options.select = 'name client.name createdAt total state contactName';
     options.populate = [
       { path: 'client', select: 'name google emails.default' },
       { path: 'contact' },
