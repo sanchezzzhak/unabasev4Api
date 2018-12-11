@@ -4,7 +4,8 @@ import mongoosePaginate from 'mongoose-paginate';
 const itemSchema = new Schema(
   {
     name: String,
-    tax: { type: Schema.Types.ObjectId, ref: 'Tax' }
+    tax: { type: Schema.Types.ObjectId, ref: 'Tax' },
+    creator: { type: Schema.Types.ObjectId, ref: 'User' }
   },
   { timestamps: true }
 );
