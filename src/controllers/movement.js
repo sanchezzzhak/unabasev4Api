@@ -34,10 +34,10 @@ const routes = {
     if (!rquery.creator) {
       query.$or = [
         {
-          creator: rquery.creator
+          creator: req.user._id
         },
         {
-          responsable: rquery.creator
+          responsable: req.user._id
         }
       ];
     }

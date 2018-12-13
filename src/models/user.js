@@ -33,7 +33,11 @@ let userSchema = Schema(
      */
     scope: {
       id: { type: Schema.Types.ObjectId, ref: 'Business' },
-      type: { type: String, enum: ['personal', 'business'] }
+      type: {
+        type: String,
+        enum: ['personal', 'business'],
+        default: 'personal'
+      }
     },
     address: {
       street: String,
