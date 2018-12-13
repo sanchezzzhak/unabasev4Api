@@ -31,16 +31,17 @@ const routes = {
     let query = {
       ...rquery
     };
-    if (!rquery.creator) {
+    if (rquery.creator) {
       query.$or = [
         {
-          creator: req.user._id
+          creator: rquery.creator
         },
         {
-          responsable: req.user._id
+          responsable: rquery.creator
         }
       ];
     }
+
     Movement.paginate(query, options, (err, movements) => {
       if (err) {
         res.status(500).end();
