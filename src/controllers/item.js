@@ -30,7 +30,7 @@ const routes = {
   },
   create(req, res) {
     Item.findOne(
-      { name: { $regex: new RegExp(req.body.name, 'i') } },
+      { name: { $regex: new RegExp(`^${req.body.name}$`, 'i') } },
       (err, itemFound) => {
         if (err) {
           console.log(err);
