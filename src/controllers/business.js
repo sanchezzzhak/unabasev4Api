@@ -1,4 +1,5 @@
 // @ts-nocheck
+import ntype from 'normalize-type';
 
 import Business from '../models/business';
 import User from '../models/user';
