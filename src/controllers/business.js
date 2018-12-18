@@ -10,9 +10,7 @@ export default {
       if (err) throw err;
 
       if (business) {
-        res.statusMessage = 'Business already exist';
-        res.status(409).end();
-        res.send({
+        res.status(409).send({
           msg: 'Business already exist'
         });
       } else if (typeof req.body.idnumber === 'undefined') {
@@ -30,13 +28,13 @@ export default {
     });
   },
   getOne: (req, res) => {
-    Business.findOne({ _id: req.params._id }, (err, business) => {
+    Business.findOne({ _id: req.params.id }, (err, business) => {
       if (err) {
-        res.status(500).send({ err });
+        res.status(500).send(err);
       } else if (business) {
         res.send(business);
       } else {
-        res.status(404).end({ msg: 'business not found' });
+        res.status(404).end('business not found');
       }
     });
   },
