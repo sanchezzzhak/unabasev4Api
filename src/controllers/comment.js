@@ -40,7 +40,7 @@ export const getFrom = (req, res) => {
   Comment.find({ 'from.id': req.params.id, 'from.name': req.params.name })
     .populate('creator', 'name google')
     .sort({
-      createAt: 'desc'
+      createdAt: 'desc'
     })
     .exec((err, items) => {
       if (err) {
