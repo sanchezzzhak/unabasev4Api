@@ -170,7 +170,7 @@ const routes = {
       .populate([
         { path: 'lines' },
         { path: 'contact' },
-        { path: 'comments' },
+        { path: 'comments', options: { sort: -1 } },
         { path: 'comments.creator' },
 
         {
