@@ -17,6 +17,24 @@ movements.get(
   }),
   ctl.get
 );
+movements.get(
+  '/personal/:state',
+  logger({
+    name: 'list movements',
+    description: 'get the list of movements',
+    module
+  }),
+  ctl.get
+);
+movements.get(
+  '/business/:state',
+  logger({
+    name: 'list movements',
+    description: 'get the list of movements',
+    module
+  }),
+  ctl.get
+);
 // movements.get('/', ctl.filter)
 movements.get(
   '/findOne',
