@@ -12,7 +12,15 @@ const movementSchema = new Schema(
     client: { type: Schema.Types.ObjectId, ref: 'User' },
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
     responsable: { type: Schema.Types.ObjectId, ref: 'User' },
-    business: { type: Schema.Types.ObjectId, ref: 'Business' },
+    personal: {
+      client: { type: Schema.Types.ObjectId, ref: 'User' },
+      responsable: { type: Schema.Types.ObjectId, ref: 'User' }
+    },
+    business: {
+      client: { type: Schema.Types.ObjectId, ref: 'Business' },
+      provider: { type: Schema.Types.ObjectId, ref: 'Business' }
+    },
+    isBusiness: { type: Boolean, default: false },
     lines: Array({ type: Schema.Types.ObjectId, ref: 'Line' }),
     comments: Array({ type: Schema.Types.ObjectId, ref: 'Comment' }),
     total: {

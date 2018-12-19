@@ -24,7 +24,7 @@ movements.get(
     description: 'get the list of movements',
     module
   }),
-  ctl.get
+  ctl.getPersonal
 );
 movements.get(
   '/business/:state',

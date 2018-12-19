@@ -34,7 +34,48 @@ const routes = {
     //     }
     //   ];
     // }
-
+    Movement.paginate(query, options, (err, movements) => {
+      if (err) {
+        res.status(500).end();
+      } else {
+        res.json(movements);
+      }
+    });
+  },
+  getPersonal: (req, res) => {
+    // const state = req.params.state;
+    let rquery = ntype(req.query);
+    let options = {};
+    const sort = rquery.createdAt
+      ? { createdAt: rquery.createdAt }
+      : { createdAt: 'desc' };
+    options.page = rquery.page || 1;
+    options.limit = rquery.limit || 20;
+    options.select = 'name client.name createdAt total state contactName';
+    options.populate = [
+      { path: 'personal.client', select: 'name google emails.default' },
+      { path: 'contact' },
+      { path: 'personal.responsable', select: 'name google emails.default' },
+      { path: 'creator', select: 'name google emails.default' }
+    ];
+    options.sort = { ...sort };
+    delete rquery.createdAt;
+    delete rquery.page;
+    delete rquery.limit;
+    let query = {
+      isBusiness: false
+    };
+    switch (req.params.state) {
+      case 'in':
+        query.$or = [
+          { 'personal.responsable': req.user._id },
+          { creator: req.user._id }
+        ];
+        break;
+      case 'out':
+        query.$client = req.user._id;
+        break;
+    }
     Movement.paginate(query, options, (err, movements) => {
       if (err) {
         res.status(500).end();
@@ -66,7 +107,7 @@ const routes = {
     // newMovement.dates = dates;
 
     // req.body.responsable ?
-    newMovement.responsable = responsable || req.user._id || null;
+    newMovement.personal.responsable = responsable || req.user._id || null;
     newMovement.creator = req.user._id || null;
     newMovement.lines = new Array();
 
@@ -91,11 +132,11 @@ const routes = {
               movement.populate(
                 [
                   {
-                    path: 'client',
+                    path: 'personal.client',
                     select: 'name google.name google.email google.imgUrl'
                   },
                   {
-                    path: 'responsable',
+                    path: 'personal.responsable',
                     select: 'name google.name google.email google.imgUrl'
                   },
                   {
@@ -199,8 +240,8 @@ const routes = {
         { path: 'comments' },
         { path: 'comments.creator' },
         { path: 'creator', select: 'name google emails.default' },
-        { path: 'client', select: 'name google emails.default' },
-        { path: 'responsable', select: 'name google emails.default' }
+        { path: 'personal.client', select: 'name google emails.default' },
+        { path: 'personal.responsable', select: 'name google emails.default' }
       ])
       .exec((err, movement) => {
         if (err) {
@@ -230,7 +271,7 @@ const routes = {
               creator: req.user._id
             },
             {
-              responsable: req.user._id
+              'personal.responsable': req.user._id
             }
           ]
         }
@@ -248,7 +289,10 @@ const routes = {
         path: 'client',
         match: { name: req.params.q },
 
-        populate: [{ path: 'client', select: 'name' }, { path: 'contact' }]
+        populate: [
+          { path: 'personal.client', select: 'name' },
+          { path: 'contact' }
+        ]
       },
       (err, items) => {
         if (err) {
