@@ -13,9 +13,6 @@ const routes = {
       : { createdAt: 'desc' };
     options.page = rquery.page || 1;
     options.limit = rquery.limit || 20;
-
-    console.log('sort');
-    console.log(sort);
     options.select = 'name client.name createdAt total state contactName';
     options.populate = [
       { path: 'client', select: 'name google emails.default' },
@@ -23,7 +20,6 @@ const routes = {
       { path: 'responsable', select: 'name google emails.default' },
       { path: 'creator', select: 'name google emails.default' }
     ];
-
     options.sort = { ...sort };
     delete rquery.createdAt;
     delete rquery.page;
