@@ -189,8 +189,10 @@ const routes = {
       .exec((err, movement) => {
         if (err) {
           res.status(500).send(err);
-        } else {
+        } else if (movement) {
           res.send(movement);
+        } else {
+          res.status(404).send('Not found');
         }
       });
   },
