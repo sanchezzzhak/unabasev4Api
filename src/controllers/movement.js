@@ -27,16 +27,13 @@ const routes = {
     let query = {
       ...rquery
     };
-    if (rquery.creator) {
-      query.$or = [
-        {
-          creator: rquery.creator
-        },
-        {
-          responsable: rquery.creator
-        }
-      ];
-    }
+    // if (rquery.responsable) {
+    //   query.$or = [
+    //     {
+    //       responsable: rquery.creator
+    //     }
+    //   ];
+    // }
 
     Movement.paginate(query, options, (err, movements) => {
       if (err) {
