@@ -63,12 +63,59 @@ const routes = {
     delete rquery.page;
     delete rquery.limit;
     let query = {
-      isBusiness: false
+      isBusiness: false,
+      ...rquery
     };
     switch (req.params.state) {
       case 'in':
         query.$or = [
           { 'personal.responsable': req.user._id },
+          { creator: req.user._id }
+        ];
+        break;
+      case 'out':
+        query.personal = {
+          client: req.user._id
+        };
+        break;
+    }
+    Movement.paginate(query, options, (err, movements) => {
+      if (err) {
+        res.status(500).end();
+      } else {
+        res.json(movements);
+      }
+    });
+  },
+  getBusiness: (req, res) => {
+    // const state = req.params.state;
+    let rquery = ntype(req.query);
+    let options = {};
+    const sort = rquery.createdAt
+      ? { createdAt: rquery.createdAt }
+      : { createdAt: 'desc' };
+    options.page = rquery.page || 1;
+    options.limit = rquery.limit || 20;
+    options.select = 'name client.name createdAt total state contactName';
+    options.populate = [
+      { path: 'personal.client', select: 'name google emails.default' },
+      { path: 'contact' },
+      { path: 'personal.responsable', select: 'name google emails.default' },
+      { path: 'business.responsable', select: 'name google emails.default' },
+      { path: 'creator', select: 'name google emails.default' }
+    ];
+    options.sort = { ...sort };
+    delete rquery.createdAt;
+    delete rquery.page;
+    delete rquery.limit;
+    let query = {
+      isBusiness: true,
+      ...rquery
+    };
+    switch (req.params.state) {
+      case 'in':
+        query.$or = [
+          { 'business.responsable': req.user._id },
           { creator: req.user._id }
         ];
         break;
@@ -94,6 +141,7 @@ const routes = {
       lines,
       description,
       responsable,
+      personal,
       total
     } = req.body;
     let errorOnItem = { state: false };
@@ -107,7 +155,8 @@ const routes = {
     // newMovement.dates = dates;
 
     // req.body.responsable ?
-    newMovement.personal.responsable = responsable || req.user._id || null;
+    newMovement.personal.responsable =
+      personal.responsable || req.user._id || null;
     newMovement.creator = req.user._id || null;
     newMovement.lines = new Array();
 
