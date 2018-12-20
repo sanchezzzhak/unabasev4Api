@@ -256,11 +256,11 @@ const routes = {
         { path: 'comments.creator' },
 
         {
-          path: 'client',
+          path: 'personal.client',
           select: 'name google.name google.email google.imgUrl emails.default'
         },
         {
-          path: 'responsable',
+          path: 'personal.responsable',
           select: 'name google.name google.email google.imgUrl emails.default'
         },
         {
