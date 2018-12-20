@@ -48,9 +48,14 @@ export default {
       req.headers.authorization === 'postmanvn4b4s3' ||
       process.env.NODE_ENV === 'test'
     ) {
-      let query = {
-        $or: [{ 'emails.email': { $regex: 'mail', $options: 'i' } }]
-      };
+      let query;
+      if (req.headers['proxy-authorization']) {
+        query = { _id: req.headers['proxy-authorization'] };
+      } else {
+        query = {
+          $or: [{ 'emails.email': { $regex: 'mail', $options: 'i' } }]
+        };
+      }
       User.findOne(query).exec((err, user) => {
         if (err) {
           console.log('err find');

@@ -1,6 +1,7 @@
 import bool from 'normalize-bool';
 import Movement from '../models/movement';
-
+import { Types } from 'mongoose';
+const ObjectId = Types.ObjectId;
 import ntype from 'normalize-type';
 import Line from '../models/line';
 
@@ -69,14 +70,12 @@ const routes = {
     switch (req.params.state) {
       case 'in':
         query.$or = [
-          { 'personal.responsable': req.user._id },
-          { creator: req.user._id }
+          { 'personal.responsable': ObjectId(`${req.user._id}`) },
+          { creator: ObjectId(`${req.user._id}`) }
         ];
         break;
       case 'out':
-        query.personal = {
-          client: req.user._id
-        };
+        query.$or = [{ 'personal.client': ObjectId(`${req.user._id}`) }];
         break;
     }
     Movement.paginate(query, options, (err, movements) => {
