@@ -69,10 +69,7 @@ const routes = {
     };
     switch (req.params.state) {
       case 'in':
-        query.$or = [
-          { 'personal.responsable': ObjectId(`${req.user._id}`) },
-          { creator: ObjectId(`${req.user._id}`) }
-        ];
+        query.$or = [{ 'personal.responsable': ObjectId(`${req.user._id}`) }];
         break;
       case 'out':
         query.$or = [{ 'personal.client': ObjectId(`${req.user._id}`) }];

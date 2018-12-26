@@ -127,6 +127,7 @@ app.use(function(req, res, next) {
 });
 
 import routes from './routes';
+import axios from 'axios';
 
 // console.log(process.env);
 
