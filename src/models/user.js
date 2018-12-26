@@ -49,6 +49,7 @@ let userSchema = Schema(
     },
     lastLogin: Date,
     access: Array({ type: Object }),
+    imgUrl: String,
     google: {
       id: String,
       name: String,
