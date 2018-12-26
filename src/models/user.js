@@ -104,6 +104,7 @@ userSchema.methods.getUser = function() {
       country: this.country
     },
     lastLogin: this.lastLogin,
+    imgUrl: this.imgUrl,
     google: {
       name: this.google.name,
       email: this.google.email,
