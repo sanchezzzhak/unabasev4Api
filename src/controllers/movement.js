@@ -73,10 +73,10 @@ const routes = {
     };
     switch (req.params.state) {
       case 'in':
-        query.$or = [{ 'personal.responsable': ObjectId(`${req.user._id}`) }];
+        query.$or = [{ responsable: ObjectId(`${req.user._id}`) }];
         break;
       case 'out':
-        query.$or = [{ 'personal.client': ObjectId(`${req.user._id}`) }];
+        query.$or = [{ client: ObjectId(`${req.user._id}`) }];
         break;
     }
     Movement.paginate(query, options, (err, movements) => {
