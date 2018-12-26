@@ -160,6 +160,8 @@ const routes = {
 
     console.log('new');
     console.log(newMovement.personal.responsable);
+    console.log(isEmpty(newMovement.personal.responsable));
+
     console.log('from req');
     console.log(personal.responsable);
     newMovement.creator = req.user._id || null;
