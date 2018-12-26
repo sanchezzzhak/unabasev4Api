@@ -51,7 +51,8 @@ export default {
       $or: [
         { username: req.body.username },
         { 'emails.email': req.body.username }
-      ]
+      ],
+      type: 'personal'
     };
     User.findOne(query, function(err, user) {
       // if there are any errors, return the error before anything else
@@ -328,7 +329,8 @@ export default {
         // });
         User.findOne(
           {
-            'google.id': data.data.sub
+            'google.id': data.data.sub,
+            type: 'personal'
           },
           (err, user) => {
             if (err) {
