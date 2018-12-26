@@ -55,10 +55,10 @@ const routes = {
     options.limit = rquery.limit || 20;
     options.select = 'name client.name createdAt total state contactName';
     options.populate = [
-      { path: 'personal.client', select: 'name google imgUrl emails.default' },
+      { path: 'client', select: 'name google imgUrl emails.default' },
       { path: 'contact' },
       {
-        path: 'personal.responsable',
+        path: 'responsable',
         select: 'name imgUrl google emails.default'
       },
       { path: 'creator', select: 'name google imgUrl emails.default' }
@@ -98,15 +98,11 @@ const routes = {
     options.limit = rquery.limit || 20;
     options.select = 'name client.name createdAt total state contactName';
     options.populate = [
-      { path: 'personal.client', select: 'name google imgUrl emails.default' },
+      { path: 'client', select: 'name google imgUrl emails.default' },
       { path: 'contact' },
       {
-        path: 'personal.responsable',
+        path: 'responsable',
         select: 'name google imgUrl emails.default'
-      },
-      {
-        path: 'business.responsable',
-        select: 'name google  imgUrl emails.default'
       },
       { path: 'creator', select: 'name google imgUrl emails.default' }
     ];
@@ -120,10 +116,7 @@ const routes = {
     };
     switch (req.params.state) {
       case 'in':
-        query.$or = [
-          { 'business.responsable': req.user._id },
-          { creator: req.user._id }
-        ];
+        query.$or = [{ responsable: req.user._id }, { creator: req.user._id }];
         break;
       case 'out':
         query.$client = req.user._id;
@@ -188,11 +181,11 @@ const routes = {
               movement.populate(
                 [
                   {
-                    path: 'personal.client',
+                    path: 'client',
                     select: 'name google.name google.email  imgUrl'
                   },
                   {
-                    path: 'personal.responsable',
+                    path: 'responsable',
                     select: 'name google.name google.email  imgUrl'
                   },
                   {
@@ -324,7 +317,7 @@ const routes = {
               creator: req.user._id
             },
             {
-              'personal.responsable': req.user._id
+              responsable: req.user._id
             }
           ]
         }
