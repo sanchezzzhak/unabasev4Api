@@ -27,7 +27,7 @@ export const getOne = (req, res) => {
   Contact.findById(req.params.id)
     .populate({
       path: 'user',
-      select: 'name google.name google.email google.imgUrl emails.default'
+      select: 'name google.name google.email imgUrl emails.default'
     })
     .exec((err, item) => {
       if (err) {
@@ -56,7 +56,7 @@ export const create = (req, res) => {
               res.status(500).end({ err });
             } else {
               item.populate(
-                [{ path: 'user', select: 'name google emails' }],
+                [{ path: 'user', select: 'name google imgUrl emails' }],
                 err => {
                   res.send(item);
                 }
@@ -93,7 +93,7 @@ export const find = (req, res) => {
       populate: [
         {
           path: 'user',
-          select: 'name google.name google.email google.imgUrl emails.default'
+          select: 'name google.name google.email imgUrl emails.default'
         }
       ]
     },
@@ -130,7 +130,7 @@ export const findSelf = (req, res) => {
       populate: [
         {
           path: 'user',
-          select: 'name google.name google.email google.imgUrl emails.default'
+          select: 'name google.name google.email imgUrl emails.default'
         }
       ]
     },
