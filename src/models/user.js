@@ -94,6 +94,7 @@ userSchema.methods.getUser = function() {
     phones: this.phones,
     emails: this.emails,
     scope: this.scope,
+    type: this.type,
     address: {
       street: this.street,
       number: this.number,
