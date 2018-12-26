@@ -17,10 +17,10 @@ const routes = {
     options.limit = rquery.limit || 20;
     options.select = 'name client.name createdAt total state contactName';
     options.populate = [
-      { path: 'client', select: 'name google emails.default' },
+      { path: 'client', select: 'name imgUrl google emails.default' },
       { path: 'contact' },
-      { path: 'responsable', select: 'name google emails.default' },
-      { path: 'creator', select: 'name google emails.default' }
+      { path: 'responsable', select: 'name imgUrl google emails.default' },
+      { path: 'creator', select: 'name imgUrl google emails.default' }
     ];
     options.sort = { ...sort };
     delete rquery.createdAt;
@@ -55,10 +55,13 @@ const routes = {
     options.limit = rquery.limit || 20;
     options.select = 'name client.name createdAt total state contactName';
     options.populate = [
-      { path: 'personal.client', select: 'name google emails.default' },
+      { path: 'personal.client', select: 'name google imgUrl emails.default' },
       { path: 'contact' },
-      { path: 'personal.responsable', select: 'name google emails.default' },
-      { path: 'creator', select: 'name google emails.default' }
+      {
+        path: 'personal.responsable',
+        select: 'name imgUrl google emails.default'
+      },
+      { path: 'creator', select: 'name google imgUrl emails.default' }
     ];
     options.sort = { ...sort };
     delete rquery.createdAt;
@@ -95,11 +98,17 @@ const routes = {
     options.limit = rquery.limit || 20;
     options.select = 'name client.name createdAt total state contactName';
     options.populate = [
-      { path: 'personal.client', select: 'name google emails.default' },
+      { path: 'personal.client', select: 'name google imgUrl emails.default' },
       { path: 'contact' },
-      { path: 'personal.responsable', select: 'name google emails.default' },
-      { path: 'business.responsable', select: 'name google emails.default' },
-      { path: 'creator', select: 'name google emails.default' }
+      {
+        path: 'personal.responsable',
+        select: 'name google imgUrl emails.default'
+      },
+      {
+        path: 'business.responsable',
+        select: 'name google  imgUrl emails.default'
+      },
+      { path: 'creator', select: 'name google imgUrl emails.default' }
     ];
     options.sort = { ...sort };
     delete rquery.createdAt;
@@ -180,15 +189,15 @@ const routes = {
                 [
                   {
                     path: 'personal.client',
-                    select: 'name google.name google.email google.imgUrl'
+                    select: 'name google.name google.email  imgUrl'
                   },
                   {
                     path: 'personal.responsable',
-                    select: 'name google.name google.email google.imgUrl'
+                    select: 'name google.name google.email  imgUrl'
                   },
                   {
                     path: 'creator',
-                    select: 'name google.name google.email google.imgUrl'
+                    select: 'name google.name google.email  imgUrl'
                   },
                   {
                     path: 'contact'
@@ -214,19 +223,16 @@ const routes = {
           movement.populate(
             [
               {
-                path: 'personal.client',
-                select:
-                  'name google.name google.email google.imgUrl emails.default'
+                path: 'client',
+                select: 'name google.name google.email imgUrl emails.default'
               },
               {
-                path: 'personal.responsable',
-                select:
-                  'name google.name google.email google.imgUrl emails.default'
+                path: 'responsable',
+                select: 'name google.name google.email imgUrl emails.default'
               },
               {
                 path: 'creator',
-                select:
-                  'name google.name google.email google.imgUrl emails.default'
+                select: 'name google.name google.email imgUrl emails.default'
               },
               {
                 path: 'contact'
@@ -255,16 +261,16 @@ const routes = {
         { path: 'comments.creator' },
 
         {
-          path: 'personal.client',
-          select: 'name google.name google.email google.imgUrl emails.default'
+          path: 'client',
+          select: 'name google.name google.email imgUrl emails.default'
         },
         {
-          path: 'personal.responsable',
-          select: 'name google.name google.email google.imgUrl emails.default'
+          path: 'responsable',
+          select: 'name google.name google.email imgUrl emails.default'
         },
         {
           path: 'creator',
-          select: 'name google.name google.email google.imgUrl emails.default'
+          select: 'name google.name google.email imgUrl emails.default'
         }
       ])
       .exec((err, movement) => {
@@ -286,9 +292,9 @@ const routes = {
         { path: 'lines' },
         { path: 'comments' },
         { path: 'comments.creator' },
-        { path: 'creator', select: 'name google emails.default' },
-        { path: 'personal.client', select: 'name google emails.default' },
-        { path: 'personal.responsable', select: 'name google emails.default' }
+        { path: 'creator', select: 'name google  imgUrl emails.default' },
+        { path: 'client', select: 'name google  imgUrl emails.default' },
+        { path: 'responsable', select: 'name google imgUrl emails.default' }
       ])
       .exec((err, movement) => {
         if (err) {
@@ -337,7 +343,7 @@ const routes = {
         match: { name: req.params.q },
 
         populate: [
-          { path: 'personal.client', select: 'name' },
+          { path: 'client', select: 'name imgUrl' },
           { path: 'contact' }
         ]
       },
