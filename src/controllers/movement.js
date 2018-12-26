@@ -159,9 +159,9 @@ const routes = {
     }
 
     console.log('new');
-    console.log(newMovement.personal);
+    console.log(newMovement.personal.responsable);
     console.log('from req');
-    console.log(personal);
+    console.log(personal.responsable);
     newMovement.creator = req.user._id || null;
     newMovement.lines = new Array();
 
