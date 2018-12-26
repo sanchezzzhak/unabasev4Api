@@ -151,6 +151,10 @@ const routes = {
     // newMovement.dates = dates;
 
     // req.body.responsable ?
+    console.log('new');
+    console.log(newMovement.personal);
+    console.log('from req');
+    console.log(personal);
     newMovement.personal.responsable =
       personal.responsable || req.user._id || null;
     newMovement.creator = req.user._id || null;
