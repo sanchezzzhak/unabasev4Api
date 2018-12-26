@@ -87,8 +87,8 @@ export default {
     delete rquery.limit;
     const type = req.query.type || 'personal';
     let query = { ...rquery, type };
-    if(type === 'business'){
-      query.users: { $in: [req.user._id]}
+    if (type === 'business') {
+      query.users = { $in: [req.user._id] };
     }
     // query.name = req.query.name || null;
     // query.isActive = bool(req.query.active) || null;
