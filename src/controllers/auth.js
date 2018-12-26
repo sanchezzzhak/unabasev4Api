@@ -344,6 +344,7 @@ export default {
               )),
                 (newUser.google = req.body.google);
               newUser.emails = [];
+              newUser.imgUrl = req.body.google.imgUrl;
               newUser.emails.push({
                 email: req.body.google.email,
                 label: 'google'

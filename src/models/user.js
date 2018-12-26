@@ -71,7 +71,7 @@ let userSchema = Schema(
     /**
      *  array of ObjectIds from business asociated
      */
-    business: Array({ type: Schema.Types.ObjectId, ref: 'Business' }),
+    business: Array({ type: Schema.Types.ObjectId, ref: 'User' }),
     users: Array({ type: Schema.Types.ObjectId, ref: 'User' })
   },
   { timestamps: true }

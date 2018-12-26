@@ -35,7 +35,8 @@ export default {
       $or: [
         { username: { $regex: req.params.q, $options: 'i' } },
         { 'emails.email': { $regex: req.params.q, $options: 'i' } }
-      ]
+      ],
+      type: 'personal'
     };
 
     // console.log(query.$or);
@@ -174,7 +175,12 @@ export default {
   scope: (req, res) => {
     User.findByIdAndUpdate(
       req.params.id,
-      { scope: req.body.business },
+      {
+        scope: {
+          type: req.body.type,
+          id: req.body.id
+        }
+      },
       { new: true },
       (err, item) => {
         if (err) {
