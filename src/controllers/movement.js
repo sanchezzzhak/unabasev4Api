@@ -154,16 +154,7 @@ const routes = {
     // req.body.responsable ?
     // newMovement.personal.responsable =
     //   personal.responsable || req.user._id || null;
-    if (isEmpty(newMovement.personal.responsable)) {
-      newMovement.personal.responsable = req.user._id;
-    }
 
-    console.log('new');
-    console.log(newMovement.personal.responsable);
-    console.log(isEmpty(newMovement.personal.responsable));
-
-    console.log('from req');
-    console.log(personal.responsable);
     newMovement.creator = req.user._id || null;
     newMovement.lines = new Array();
 
