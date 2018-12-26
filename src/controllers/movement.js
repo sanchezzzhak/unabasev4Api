@@ -4,6 +4,7 @@ import { Types } from 'mongoose';
 const ObjectId = Types.ObjectId;
 import ntype from 'normalize-type';
 import Line from '../models/line';
+import { isEmpty } from '../lib/isEmpty';
 
 const routes = {
   get: (req, res) => {
@@ -151,12 +152,16 @@ const routes = {
     // newMovement.dates = dates;
 
     // req.body.responsable ?
+    // newMovement.personal.responsable =
+    //   personal.responsable || req.user._id || null;
+    if (isEmpty(newMovement.personal.responsable)) {
+      newMovement.personal.responsable = req.user._id;
+    }
+
     console.log('new');
     console.log(newMovement.personal);
     console.log('from req');
     console.log(personal);
-    newMovement.personal.responsable =
-      personal.responsable || req.user._id || null;
     newMovement.creator = req.user._id || null;
     newMovement.lines = new Array();
 
