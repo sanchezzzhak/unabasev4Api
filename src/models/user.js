@@ -68,6 +68,16 @@ let userSchema = Schema(
     notifications: {
       newUserContact: { type: Boolean, default: true }
     },
+    //business info
+    legalName: String, // razón social,
+    businessType: Array({ type: String }), // giro
+    website: String,
+    creator: { type: Schema.Types.ObjectId, ref: 'User' },
+    admins: Array({
+      description: String,
+      user: { type: Schema.Types.ObjectId, ref: 'User' }
+    }),
+
     /**
      *  array of ObjectIds from business asociated
      */
