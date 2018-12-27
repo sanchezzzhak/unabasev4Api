@@ -102,9 +102,18 @@ export default {
     });
   },
   create: (req, res) => {
-    let user = new User();
-    req.body.password.hash = User.hash(req.body.password.hash);
-    Object.assign(user, req.body);
+    let user = new User(req.body);
+    if (
+      typeof req.body.password !== 'undefined' &&
+      req.body.password.hash !== ''
+    ) {
+      user.password.hash = User.hash(req.body.password.hash);
+    }
+    if (user.type === 'business') {
+      user.creator = req.user._id;
+      user.users.push(req.user._id);
+    }
+    // Object.assign(user, );
     user.save((err, item) => {
       if (err) {
         res.status(500).end();
