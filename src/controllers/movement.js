@@ -18,6 +18,7 @@ export const getPersonal = (req, res) => {
   options.limit = rquery.limit || 20;
   options.select = 'name client.name createdAt total state contactName';
   options.populate = [
+    { path: 'client' },
     { path: 'client.data' },
     { path: 'client.data.user', select: 'name google imgUrl emails.default' },
     { path: 'contact' },
@@ -398,4 +399,6 @@ export const updateOne = (req, res) => {
   );
   // }
 };
-export const linkMovement = () => {};
+export const linkMovement = user => {
+  // Movement.find({ client });
+};
