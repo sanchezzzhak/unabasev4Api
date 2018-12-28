@@ -1,6 +1,15 @@
 import { Router } from 'express';
 const movements = Router();
-import ctl from '../controllers/movement';
+import {
+  get,
+  getPersonal,
+  getBusiness,
+  create,
+  getOne,
+  findOne,
+  find,
+  updateOne
+} from '../controllers/movement';
 import auth from '../config/lib/auth';
 import logger from '../lib/logger';
 // if (process.env.NODE_ENV !== 'test') {
@@ -15,7 +24,7 @@ movements.get(
     description: 'get the list of movements',
     module
   }),
-  ctl.get
+  get
 );
 movements.get(
   '/personal/:state',
@@ -24,7 +33,7 @@ movements.get(
     description: 'get the list of movements',
     module
   }),
-  ctl.getPersonal
+  getPersonal
 );
 movements.get(
   '/business/:state',
@@ -33,9 +42,9 @@ movements.get(
     description: 'get the list of movements',
     module
   }),
-  ctl.get
+  get
 );
-// movements.get('/', ctl.filter)
+// movements.get('/', filter)
 movements.get(
   '/findOne',
   logger({
@@ -43,7 +52,7 @@ movements.get(
     description: 'create movement',
     module
   }),
-  ctl.findOne
+  findOne
 );
 movements.get(
   '/find/:q',
@@ -52,7 +61,7 @@ movements.get(
     description: 'create movement',
     module
   }),
-  ctl.find
+  find
 );
 movements.get(
   '/:id',
@@ -61,7 +70,7 @@ movements.get(
     description: 'get one movement by id',
     module
   }),
-  ctl.getOne
+  getOne
 );
 movements.post(
   '/',
@@ -70,8 +79,8 @@ movements.post(
     description: 'create movement',
     module
   }),
-  ctl.create
+  create
 );
-movements.put('/:id', ctl.updateOne);
+movements.put('/:id', updateOne);
 
 export default movements;
