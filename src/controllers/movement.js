@@ -18,7 +18,8 @@ export const getPersonal = (req, res) => {
   options.limit = rquery.limit || 20;
   options.select = 'name client.name createdAt total state contactName';
   options.populate = [
-    { path: 'client', select: 'name google imgUrl emails.default' },
+    { path: 'client.data' },
+    { path: 'client.data.user', select: 'name google imgUrl emails.default' },
     { path: 'contact' },
     {
       path: 'responsable',
@@ -58,9 +59,10 @@ export const get = (req, res) => {
     : { createdAt: 'desc' };
   options.page = rquery.page || 1;
   options.limit = rquery.limit || 20;
-  options.select = 'name client.name createdAt total state contactName';
+  options.select = 'name client createdAt total state';
   options.populate = [
-    { path: 'client', select: 'name imgUrl google emails.default' },
+    { path: 'client.data' },
+    { path: 'client.data.user', select: 'name google imgUrl emails.default' },
     { path: 'contact' },
     { path: 'responsable', select: 'name imgUrl google emails.default' },
     { path: 'creator', select: 'name imgUrl google emails.default' }
@@ -96,9 +98,10 @@ export const getBusiness = (req, res) => {
     : { createdAt: 'desc' };
   options.page = rquery.page || 1;
   options.limit = rquery.limit || 20;
-  options.select = 'name client.name createdAt total state contactName';
+  options.select = 'name client createdAt total state contactName';
   options.populate = [
-    { path: 'client', select: 'name google imgUrl emails.default' },
+    { path: 'client.data' },
+    { path: 'client.data.user', select: 'name google imgUrl emails.default' },
     { path: 'contact' },
     {
       path: 'responsable',
@@ -245,10 +248,8 @@ export const getOne = (req, res) => {
       { path: 'comments', options: { sort: { createdAt: 'desc' } } },
       { path: 'comments.creator' },
 
-      {
-        path: 'client',
-        select: 'name google.name google.email imgUrl emails.default'
-      },
+      { path: 'client.data' },
+      { path: 'client.data.user', select: 'name google imgUrl emails.default' },
       {
         path: 'responsable',
         select: 'name google.name google.email imgUrl emails.default'
@@ -278,7 +279,8 @@ export const findOne = (req, res) => {
       { path: 'comments' },
       { path: 'comments.creator' },
       { path: 'creator', select: 'name google  imgUrl emails.default' },
-      { path: 'client', select: 'name google  imgUrl emails.default' },
+      { path: 'client.data' },
+      { path: 'client.data.user', select: 'name google imgUrl emails.default' },
       { path: 'responsable', select: 'name google imgUrl emails.default' }
     ])
     .exec((err, movement) => {
@@ -323,7 +325,13 @@ export const find = (req, res) => {
       path: 'client',
       match: { name: req.params.q },
 
-      populate: [{ path: 'client', select: 'name imgUrl' }, { path: 'contact' }]
+      populate: [
+        { path: 'client.data' },
+        {
+          path: 'client.data.user',
+          select: 'name google imgUrl emails.default'
+        }
+      ]
     },
     (err, items) => {
       if (err) {
@@ -348,46 +356,46 @@ export const updateOne = (req, res) => {
       update[i] = data[i];
     }
   }
-  if (typeof req.body.lines !== 'undefined' && req.body.lines.length > 0) {
-    update.lines = [];
-    Line.updateManyMod(req.body.lines)
-      .then(items => {
-        console.log('items');
-        console.log(items);
-        items.lines.forEach(i => update.lines.push(i._id));
+  // if (typeof req.body.lines !== 'undefined' && req.body.lines.length > 0) {
+  //   update.lines = [];
+  //   Line.updateManyMod(req.body.lines)
+  //     .then(items => {
+  //       console.log('items');
+  //       console.log(items);
+  //       items.lines.forEach(i => update.lines.push(i._id));
 
-        Movement.findOneAndUpdate(
-          { _id: req.params.id },
-          update,
-          { new: true },
-          (err, movement) => {
-            if (err) {
-              console.log(err);
-              res.status(500).send(err);
-            } else {
-              res.send(movement);
-            }
-          }
-        );
-      })
-      .catch(err => {
-        console.log('err');
+  //       Movement.findOneAndUpdate(
+  //         { _id: req.params.id },
+  //         update,
+  //         { new: true },
+  //         (err, movement) => {
+  //           if (err) {
+  //             console.log(err);
+  //             res.status(500).send(err);
+  //           } else {
+  //             res.send(movement);
+  //           }
+  //         }
+  //       );
+  //     })
+  //     .catch(err => {
+  //       console.log('err');
+  //       console.log(err);
+  //     });
+  // } else {
+  Movement.findOneAndUpdate(
+    { _id: req.params.id },
+    update,
+    { new: true },
+    (err, movement) => {
+      if (err) {
         console.log(err);
-      });
-  } else {
-    Movement.findOneAndUpdate(
-      { _id: req.params.id },
-      update,
-      { new: true },
-      (err, movement) => {
-        if (err) {
-          console.log(err);
-          res.status(500).send(err);
-        } else {
-          res.send(movement);
-        }
+        res.status(500).send(err);
+      } else {
+        res.send(movement);
       }
-    );
-  }
+    }
+  );
+  // }
 };
 export const linkMovement = () => {};
