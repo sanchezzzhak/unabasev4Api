@@ -9,27 +9,12 @@ export const create = (req, res) => {
     if (err) {
       res.status(500).send({ msg: err });
     } else {
-      item.populate('creator', 'name google', err => {
-        switch (req.body.from.name) {
-          case 'movement':
-            console.log(req.body.from.name);
-            Movement.findOneAndUpdate(
-              { _id: req.body.from.id },
-              { $addToSet: { comments: item._id } },
-              {}
-            ).exec();
-            break;
-          case 'line':
-            console.log(req.body.from.name);
-            Line.findOneAndUpdate(
-              { _id: req.body.from.id },
-              { $addToSet: { comments: item._id } },
-              {}
-            ).exec();
-            break;
+      item.populate('creator', 'name', err => {
+        if (err) {
+          res.status(500).send({ msg: err });
+        } else {
+          res.send(item);
         }
-
-        res.send(item);
       });
     }
   });

@@ -5,7 +5,7 @@ const commentSchema = new Schema(
   {
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
     from: {
-      id: { type: Schema.Types.ObjectId },
+      id: { type: Schema.Types.ObjectId, refPath: 'from.name' },
       name: { type: String }
     },
     text: { type: String, maxlength: 2000 },
