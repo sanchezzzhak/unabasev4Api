@@ -12,7 +12,7 @@ const movementSchema = new Schema(
     // client: { type: Schema.Types.ObjectId, ref: 'User' },
     client: {
       type: { type: String, enum: ['unknown', 'contact', 'user'] },
-      data: { type: Schema.Types.ObjectId, ref: 'Contact' }
+      data: { type: Schema.Types.ObjectId, refPath: 'client.type' }
     },
 
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
