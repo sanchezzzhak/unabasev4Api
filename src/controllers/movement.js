@@ -16,15 +16,15 @@ export const getPersonal = (req, res) => {
     : { createdAt: 'desc' };
   options.page = rquery.page || 1;
   options.limit = rquery.limit || 20;
-  options.select = 'name client.name createdAt total state contactName';
+  options.select = 'name client responsable createdAt total state';
   options.populate = [
-    { path: 'client' },
-    { path: 'client.data' },
-    { path: 'client.data.user', select: 'name google imgUrl emails.default' },
-    { path: 'contact' },
     {
-      path: 'responsable',
-      select: 'name imgUrl google emails.default'
+      path: 'client.data',
+      select: 'name google.name google.email imgUrl emails.default type'
+    },
+    {
+      path: 'responsable.data',
+      select: 'name google.name google.email imgUrl emails.default type'
     },
     { path: 'creator', select: 'name google imgUrl emails.default' }
   ];
@@ -38,10 +38,10 @@ export const getPersonal = (req, res) => {
   };
   switch (req.params.state) {
     case 'in':
-      query.$or = [{ responsable: ObjectId(`${req.user._id}`) }];
+      query.$or = [{ 'responsable.data': ObjectId(`${req.user._id}`) }];
       break;
     case 'out':
-      query.$or = [{ client: ObjectId(`${req.user._id}`) }];
+      query.$or = [{ 'client.data': ObjectId(`${req.user._id}`) }];
       break;
   }
   Movement.paginate(query, options, (err, movements) => {
@@ -60,13 +60,17 @@ export const get = (req, res) => {
     : { createdAt: 'desc' };
   options.page = rquery.page || 1;
   options.limit = rquery.limit || 20;
-  options.select = 'name client createdAt total state';
+  options.select = 'name client responsable createdAt total state';
   options.populate = [
-    { path: 'client.data' },
-    { path: 'client.data.user', select: 'name google imgUrl emails.default' },
-    { path: 'contact' },
-    { path: 'responsable', select: 'name imgUrl google emails.default' },
-    { path: 'creator', select: 'name imgUrl google emails.default' }
+    {
+      path: 'client.data',
+      select: 'name imgUrl emails type'
+    },
+    {
+      path: 'responsable.data',
+      select: 'name imgUrl emails type'
+    },
+    { path: 'creator', select: 'name imgUrl  emails' }
   ];
   options.sort = { ...sort };
   delete rquery.createdAt;
@@ -99,16 +103,17 @@ export const getBusiness = (req, res) => {
     : { createdAt: 'desc' };
   options.page = rquery.page || 1;
   options.limit = rquery.limit || 20;
-  options.select = 'name client createdAt total state contactName';
+  options.select = 'name client responsable createdAt total state ';
   options.populate = [
-    { path: 'client.data' },
-    { path: 'client.data.user', select: 'name google imgUrl emails.default' },
-    { path: 'contact' },
     {
-      path: 'responsable',
-      select: 'name google imgUrl emails.default'
+      path: 'client.data',
+      select: 'name imgUrl emails type'
     },
-    { path: 'creator', select: 'name google imgUrl emails.default' }
+    {
+      path: 'responsable.data',
+      select: 'name imgUrl emails type'
+    },
+    { path: 'creator', select: 'name  imgUrl emails' }
   ];
   options.sort = { ...sort };
   delete rquery.createdAt;
@@ -118,12 +123,13 @@ export const getBusiness = (req, res) => {
     isBusiness: true,
     ...rquery
   };
+
   switch (req.params.state) {
     case 'in':
-      query.$or = [{ responsable: req.user._id }, { creator: req.user._id }];
+      query.$or = [{ 'responsable.data': ObjectId(`${req.user._id}`) }];
       break;
     case 'out':
-      query.$client = req.user._id;
+      query.$or = [{ 'client.data': ObjectId(`${req.user._id}`) }];
       break;
   }
   Movement.paginate(query, options, (err, movements) => {
@@ -153,7 +159,7 @@ export const create = (req, res) => {
   let newMovement = new Movement(req.body);
 
   newMovement.creator = req.user._id || null;
-  newMovement.lines = new Array();
+  // newMovement.lines = new Array();
 
   // const { net, tax } = total || 0;
   // newMovement.total = {
@@ -212,16 +218,16 @@ export const create = (req, res) => {
       movement.populate(
         [
           {
-            path: 'client',
-            select: 'name google.name google.email imgUrl emails.default'
+            path: 'client.data',
+            select: 'name  imgUrl emails type'
           },
           {
-            path: 'responsable',
-            select: 'name google.name google.email imgUrl emails.default'
+            path: 'responsable.data',
+            select: 'name  imgUrl emails type'
           },
           {
             path: 'creator',
-            select: 'name google.name google.email imgUrl emails.default'
+            select: 'name  imgUrl emails type'
           },
           {
             path: 'contact'
@@ -249,15 +255,17 @@ export const getOne = (req, res) => {
       { path: 'comments', options: { sort: { createdAt: 'desc' } } },
       { path: 'comments.creator' },
 
-      { path: 'client.data' },
-      { path: 'client.data.user', select: 'name google imgUrl emails.default' },
       {
-        path: 'responsable',
-        select: 'name google.name google.email imgUrl emails.default'
+        path: 'client.data',
+        select: 'name  imgUrl emails type'
+      },
+      {
+        path: 'responsable.data',
+        select: 'name  imgUrl emails type'
       },
       {
         path: 'creator',
-        select: 'name google.name google.email imgUrl emails.default'
+        select: 'name  imgUrl emails'
       }
     ])
     .exec((err, movement) => {
@@ -279,10 +287,15 @@ export const findOne = (req, res) => {
       { path: 'lines' },
       { path: 'comments' },
       { path: 'comments.creator' },
-      { path: 'creator', select: 'name google  imgUrl emails.default' },
-      { path: 'client.data' },
-      { path: 'client.data.user', select: 'name google imgUrl emails.default' },
-      { path: 'responsable', select: 'name google imgUrl emails.default' }
+      { path: 'creator', select: 'name  imgUrl emails' },
+      {
+        path: 'client.data',
+        select: 'name   imgUrl emails type'
+      },
+      {
+        path: 'responsable.data',
+        select: 'name  imgUrl emails type'
+      }
     ])
     .exec((err, movement) => {
       if (err) {
@@ -312,7 +325,7 @@ export const find = (req, res) => {
             creator: req.user._id
           },
           {
-            responsable: req.user._id
+            'responsable.data': ObjectId(`${req.user._id}`)
           }
         ]
       }
@@ -327,10 +340,13 @@ export const find = (req, res) => {
       match: { name: req.params.q },
 
       populate: [
-        { path: 'client.data' },
         {
-          path: 'client.data.user',
-          select: 'name google imgUrl emails.default'
+          path: 'client.data',
+          select: 'name   imgUrl emails type'
+        },
+        {
+          path: 'responsable.data',
+          select: 'name   imgUrl emails type'
         }
       ]
     },

@@ -11,12 +11,18 @@ const movementSchema = new Schema(
     },
     // client: { type: Schema.Types.ObjectId, ref: 'User' },
     client: {
-      type: { type: String, enum: ['unknown', 'contact', 'user'] },
-      data: { type: Schema.Types.ObjectId, refPath: 'client.type' }
+      type: { type: String, enum: ['unknown', 'Contact', 'User'] },
+      data: { type: Schema.Types.ObjectId, refPath: 'client.type' },
+      name: String
+    },
+    responsable: {
+      type: { type: String, enum: ['unknown', 'Contact', 'User'] },
+      data: { type: Schema.Types.ObjectId, refPath: 'responsable.type' },
+      name: String
     },
 
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
-    responsable: { type: Schema.Types.ObjectId, ref: 'User' },
+    // responsable: { type: Schema.Types.ObjectId, ref: 'User' },
     personal: {
       client: { type: Schema.Types.ObjectId, ref: 'User' },
       responsable: { type: Schema.Types.ObjectId, ref: 'User' }
@@ -34,9 +40,9 @@ const movementSchema = new Schema(
     },
     state: { type: String, default: 'draft' },
     isActive: { type: Boolean, default: true },
-    currency: { type: Schema.Types.ObjectId, ref: 'Currency' },
-    contact: { type: Schema.Types.ObjectId, ref: 'Contact' },
-    contactName: { type: String }
+    currency: { type: Schema.Types.ObjectId, ref: 'Currency' }
+    // contact: { type: Schema.Types.ObjectId, ref: 'Contact' },
+    // contactName: { type: String }
   },
   { timestamps: true }
 );
