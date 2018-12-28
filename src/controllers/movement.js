@@ -145,17 +145,8 @@ export const create = (req, res) => {
   } = req.body;
   let errorOnItem = { state: false };
   delete req.body.lines;
-  let newMovement = new Movement(req.body);
-  // newMovement.name = name || null;
-  // newMovement.description = description || null;
-  // newMovement.client = client || null;
-  // newMovement.contact = contact || null;
-  // newMovement.state = state || 'draft';
-  // newMovement.dates = dates;
 
-  // req.body.responsable ?
-  // newMovement.personal.responsable =
-  //   personal.responsable || req.user._id || null;
+  let newMovement = new Movement(req.body);
 
   newMovement.creator = req.user._id || null;
   newMovement.lines = new Array();
@@ -165,79 +156,80 @@ export const create = (req, res) => {
   //   net: net || 0,
   //   tax: tax || 0
   // };
-  if (typeof lines !== 'undefined' && lines.length) {
-    Line.insertMany(lines)
-      .then(items => {
-        items.forEach(i => {
-          newMovement.lines.push(i._id);
-          console.log(i._id);
-        });
 
-        newMovement.save((err, movement) => {
-          if (err) {
-            console.log(err);
-            res.status(500).send(err);
-          } else {
-            movement.populate(
-              [
-                {
-                  path: 'client',
-                  select: 'name google.name google.email  imgUrl'
-                },
-                {
-                  path: 'responsable',
-                  select: 'name google.name google.email  imgUrl'
-                },
-                {
-                  path: 'creator',
-                  select: 'name google.name google.email  imgUrl'
-                },
-                {
-                  path: 'contact'
-                }
-              ],
-              err => {
-                res.send(movement);
-              }
-            );
+  // if (typeof lines !== 'undefined' && lines.length) {
+  //   Line.insertMany(lines)
+  //     .then(items => {
+  //       items.forEach(i => {
+  //         newMovement.lines.push(i._id);
+  //         console.log(i._id);
+  //       });
+
+  //       newMovement.save((err, movement) => {
+  //         if (err) {
+  //           console.log(err);
+  //           res.status(500).send(err);
+  //         } else {
+  //           movement.populate(
+  //             [
+  //               {
+  //                 path: 'client',
+  //                 select: 'name google.name google.email  imgUrl'
+  //               },
+  //               {
+  //                 path: 'responsable',
+  //                 select: 'name google.name google.email  imgUrl'
+  //               },
+  //               {
+  //                 path: 'creator',
+  //                 select: 'name google.name google.email  imgUrl'
+  //               },
+  //               {
+  //                 path: 'contact'
+  //               }
+  //             ],
+  //             err => {
+  //               res.send(movement);
+  //             }
+  //           );
+  //         }
+  //       });
+  //     })
+  //     .catch(err => {
+  //       errorOnItem.state = true;
+  //       errorOnItem.msg = err;
+  //     });
+  // } else {
+  newMovement.save((err, movement) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+    } else {
+      movement.populate(
+        [
+          {
+            path: 'client',
+            select: 'name google.name google.email imgUrl emails.default'
+          },
+          {
+            path: 'responsable',
+            select: 'name google.name google.email imgUrl emails.default'
+          },
+          {
+            path: 'creator',
+            select: 'name google.name google.email imgUrl emails.default'
+          },
+          {
+            path: 'contact'
           }
-        });
-      })
-      .catch(err => {
-        errorOnItem.state = true;
-        errorOnItem.msg = err;
-      });
-  } else {
-    newMovement.save((err, movement) => {
-      if (err) {
-        console.log(err);
-        res.status(500).send(err);
-      } else {
-        movement.populate(
-          [
-            {
-              path: 'client',
-              select: 'name google.name google.email imgUrl emails.default'
-            },
-            {
-              path: 'responsable',
-              select: 'name google.name google.email imgUrl emails.default'
-            },
-            {
-              path: 'creator',
-              select: 'name google.name google.email imgUrl emails.default'
-            },
-            {
-              path: 'contact'
-            }
-          ],
-          err => {
-            res.send(movement);
-          }
-        );
-      }
-    });
-  }
+        ],
+        err => {
+          res.send(movement);
+        }
+      );
+    }
+  });
+  // }
 };
 export const getOne = (req, res) => {
   Movement.findOne({ _id: req.params.id })

@@ -9,7 +9,12 @@ const movementSchema = new Schema(
     dates: {
       expiration: Date
     },
-    client: { type: Schema.Types.ObjectId, ref: 'User' },
+    // client: { type: Schema.Types.ObjectId, ref: 'User' },
+    client: {
+      type: { type: String, enum: ['unknown', 'contact', 'user'] },
+      data: { type: Schema.Types.ObjectId, ref: 'Contact' }
+    },
+
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
     responsable: { type: Schema.Types.ObjectId, ref: 'User' },
     personal: {
