@@ -5,6 +5,7 @@ import axios from 'axios';
 import mailer from '../lib/mailer_deprecated';
 import { send } from '../config/mailer';
 import template from '../lib/mails';
+import { linkMovement } from './movement';
 
 import envar from '../lib/envar';
 export default {
@@ -354,6 +355,7 @@ export default {
                 if (err) {
                   res.status(500).end();
                 } else {
+                  linkMovement(user.emails.google, user);
                   user.activeScope = user._id;
                   user.save((err, userFound) => {
                     const token = jwt.sign(
