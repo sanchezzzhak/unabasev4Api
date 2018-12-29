@@ -1,5 +1,6 @@
 import bool from 'normalize-bool';
 import Movement from '../models/movement';
+import Contact from '../models/contact';
 import { Types } from 'mongoose';
 const ObjectId = Types.ObjectId;
 import ntype from 'normalize-type';
@@ -415,6 +416,32 @@ export const updateOne = (req, res) => {
   );
   // }
 };
-export const linkMovement = user => {
-  // Movement.find({ client });
+export const linkMovement = (email, user) => {
+  Contact.find({ email }, (err, contacts) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+    } else {
+      for (contact of contacts) {
+        let client = {
+          'client.type': 'Contact',
+          'client.data': contact._id
+        };
+        let clientUpdate = {
+          'client.type': 'User',
+          'client.data': user._id
+        };
+        let responsable = {
+          'responsable.type': 'Contact',
+          'responsable.data': contact._id
+        };
+        let responsableUpdate = {
+          'responsable.type': 'User',
+          'responsable.data': user._id
+        };
+        Movement.updateMany(client, clientUpdate, {}).exec();
+        Movement.updateMany(responsable, responsableUpdate, {}).exec();
+      }
+    }
+  });
 };
