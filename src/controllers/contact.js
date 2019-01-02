@@ -131,6 +131,10 @@ export const findSelf = (req, res) => {
         {
           path: 'user',
           select: 'name google.name google.email imgUrl emails.default'
+        },
+        {
+          path: 'client.data',
+          select: 'name   imgUrl emails type'
         }
       ]
     },

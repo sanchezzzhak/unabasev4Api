@@ -45,6 +45,9 @@ export const getPersonal = (req, res) => {
       query.$or = [{ 'client.data': ObjectId(`${req.user._id}`) }];
       break;
   }
+  console.log('query');
+  console.log(query);
+  console.log(query.$or);
   Movement.paginate(query, options, (err, movements) => {
     if (err) {
       res.status(500).end();
