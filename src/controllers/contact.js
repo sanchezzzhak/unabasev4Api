@@ -135,6 +135,10 @@ export const findSelf = (req, res) => {
         {
           path: 'client.data',
           select: 'name   imgUrl emails type'
+        },
+        {
+          path: 'responsable.data',
+          select: 'name   imgUrl emails type'
         }
       ]
     },
