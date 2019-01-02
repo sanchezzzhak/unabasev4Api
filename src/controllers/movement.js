@@ -39,15 +39,13 @@ export const getPersonal = (req, res) => {
   };
   switch (req.params.state) {
     case 'in':
-      query.responsable = {
-        data: ObjectId(`${req.user._id}`)
-      };
-      // query.$or = [{ 'responsable.data': ObjectId(`${req.user._id}`) }];
+      // query.responsable = {        data: ObjectId(`${req.user._id}`)      };
+      query.$or = [{ 'responsable.data': ObjectId(`${req.user._id}`) }];
       break;
     case 'out':
-      query.client = { data: ObjectId(`${req.user._id}`) };
+      // query.client = { data: ObjectId(`${req.user._id}`) };
 
-      // query.$or = [{ 'client.data': ObjectId(`${req.user._id}`) }];
+      query.$or = [{ 'client.data': ObjectId(`${req.user._id}`) }];
       break;
   }
 
