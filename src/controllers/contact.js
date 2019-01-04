@@ -44,6 +44,7 @@ export const create = (req, res) => {
   contact.creator = req.user._id;
   contact.save((err, item) => {
     if (err) {
+      console.log(err);
       res.status(500).end({ err });
     } else {
       if (item.user && item.user !== '') {
@@ -130,15 +131,7 @@ export const findSelf = (req, res) => {
       populate: [
         {
           path: 'user',
-          select: 'name google.name google.email imgUrl emails.default'
-        },
-        {
-          path: 'client.data',
-          select: 'name   imgUrl emails type'
-        },
-        {
-          path: 'responsable.data',
-          select: 'name   imgUrl emails type'
+          select: 'name  imgUrl emails'
         }
       ]
     },
