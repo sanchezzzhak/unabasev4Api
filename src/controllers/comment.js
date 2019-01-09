@@ -23,7 +23,7 @@ export const create = (req, res) => {
 export const getFrom = (req, res) => {
   console.log(req.params);
   Comment.find({ 'from.id': req.params.id, 'from.name': req.params.name })
-    .populate('creator', 'name google')
+    .populate('creator', 'name imgUrl')
     .sort({
       createdAt: 'desc'
     })
