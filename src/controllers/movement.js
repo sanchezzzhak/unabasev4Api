@@ -21,11 +21,11 @@ export const getPersonal = (req, res) => {
   options.populate = [
     {
       path: 'client.data',
-      select: 'name google.name google.email imgUrl emails.default type'
+      select: 'isActive name  email phone creator user imgUrl emails type'
     },
     {
       path: 'responsable.data',
-      select: 'name google.name google.email imgUrl emails.default type'
+      select: 'isActive name  email phone creator user imgUrl emails type'
     },
     { path: 'creator', select: 'name google imgUrl emails.default' }
   ];
@@ -265,11 +265,11 @@ export const getOne = (req, res) => {
 
       {
         path: 'client.data',
-        select: 'name  imgUrl emails type'
+        select: 'isActive name  email phone creator user imgUrl emails type'
       },
       {
         path: 'responsable.data',
-        select: 'name  imgUrl emails type'
+        select: 'isActive name  email phone creator user imgUrl emails type'
       },
       {
         path: 'creator',
@@ -298,11 +298,11 @@ export const findOne = (req, res) => {
       { path: 'creator', select: 'name  imgUrl emails' },
       {
         path: 'client.data',
-        select: 'name   imgUrl emails type'
+        select: 'isActive name  email phone creator user imgUrl emails type'
       },
       {
         path: 'responsable.data',
-        select: 'name  imgUrl emails type'
+        select: 'isActive name  email phone creator user imgUrl emails type'
       }
     ])
     .exec((err, movement) => {
@@ -350,11 +350,11 @@ export const find = (req, res) => {
       populate: [
         {
           path: 'client.data',
-          select: 'name   imgUrl emails type'
+          select: 'isActive name  email phone creator user imgUrl emails type'
         },
         {
           path: 'responsable.data',
-          select: 'name   imgUrl emails type'
+          select: 'isActive name  email phone creator user imgUrl emails type'
         }
       ]
     },
