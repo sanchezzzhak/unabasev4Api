@@ -9,7 +9,7 @@ export const create = (req, res) => {
     if (err) {
       res.status(500).send({ msg: err });
     } else {
-      item.populate('creator', 'name', err => {
+      item.populate('creator', 'name imgUrl', err => {
         if (err) {
           res.status(500).send({ msg: err });
         } else {
