@@ -20,6 +20,7 @@ const movementSchema = new Schema(
       data: { type: Schema.Types.ObjectId, refPath: 'responsable.type' },
       name: String
     },
+    editor: { type: Schema.Types.ObjectId, ref: 'User' },
 
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
     // responsable: { type: Schema.Types.ObjectId, ref: 'User' },
