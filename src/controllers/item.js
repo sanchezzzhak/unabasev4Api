@@ -20,6 +20,7 @@ const routes = {
   getOne(req, res) {
     Item.findById(req.params.id, (err, item) => {
       if (err) {
+        console.log(err);
         res.status(500).end(err);
       } else if (item) {
         res.send(item);
