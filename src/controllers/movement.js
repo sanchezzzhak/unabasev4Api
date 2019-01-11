@@ -227,11 +227,11 @@ export const create = (req, res) => {
         [
           {
             path: 'client.data',
-            select: 'name  imgUrl emails type'
+            select: 'name  phone email imgUrl emails type'
           },
           {
             path: 'responsable.data',
-            select: 'name  imgUrl emails type'
+            select: 'name  phone email imgUrl emails type'
           },
           {
             path: 'creator',
