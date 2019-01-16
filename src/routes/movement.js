@@ -12,10 +12,20 @@ import {
 } from '../controllers/movement';
 import auth from '../config/lib/auth';
 import logger from '../lib/logger';
+let module = 'movement';
 // if (process.env.NODE_ENV !== 'test') {
+movements.get(
+  '/:id',
+  logger({
+    name: 'get one movement by id',
+    description: 'get one movement by id',
+    module
+  }),
+  getOne
+);
+
 movements.use(auth.sToken);
 // }
-let module = 'movement';
 
 movements.get(
   '/',
@@ -63,15 +73,7 @@ movements.get(
   }),
   find
 );
-movements.get(
-  '/:id',
-  logger({
-    name: 'get one movement by id',
-    description: 'get one movement by id',
-    module
-  }),
-  getOne
-);
+
 movements.post(
   '/',
   logger({

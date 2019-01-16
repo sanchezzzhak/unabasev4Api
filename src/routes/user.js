@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const users = Router();
-import ctl from '../controllers/user';
+
 import {
   create,
   get,

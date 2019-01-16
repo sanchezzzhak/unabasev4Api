@@ -6,6 +6,7 @@ const ObjectId = Types.ObjectId;
 import ntype from 'normalize-type';
 import Line from '../models/line';
 import { isEmpty } from '../lib/isEmpty';
+import { errHandler } from '../lib/errorHandler';
 
 const routes = {};
 export const getPersonal = (req, res) => {
@@ -167,61 +168,17 @@ export const create = (req, res) => {
   let newMovement = new Movement(req.body);
 
   newMovement.creator = req.user._id || null;
-  // newMovement.lines = new Array();
 
-  // const { net, tax } = total || 0;
-  // newMovement.total = {
-  //   net: net || 0,
-  //   tax: tax || 0
-  // };
-
-  // if (typeof lines !== 'undefined' && lines.length) {
-  //   Line.insertMany(lines)
-  //     .then(items => {
-  //       items.forEach(i => {
-  //         newMovement.lines.push(i._id);
-  //         console.log(i._id);
-  //       });
-
-  //       newMovement.save((err, movement) => {
-  //         if (err) {
-  //           console.log(err);
-  //           res.status(500).send(err);
-  //         } else {
-  //           movement.populate(
-  //             [
-  //               {
-  //                 path: 'client',
-  //                 select: 'name google.name google.email  imgUrl'
-  //               },
-  //               {
-  //                 path: 'responsable',
-  //                 select: 'name google.name google.email  imgUrl'
-  //               },
-  //               {
-  //                 path: 'creator',
-  //                 select: 'name google.name google.email  imgUrl'
-  //               },
-  //               {
-  //                 path: 'contact'
-  //               }
-  //             ],
-  //             err => {
-  //               res.send(movement);
-  //             }
-  //           );
-  //         }
-  //       });
-  //     })
-  //     .catch(err => {
-  //       errorOnItem.state = true;
-  //       errorOnItem.msg = err;
-  //     });
-  // } else {
   newMovement.save((err, movement) => {
     if (err) {
       console.log(err);
-      res.status(500).send(err);
+      // res.status(500).send(err);
+      errHandler({
+        err,
+        res,
+        from: 'movement create',
+        status: 500
+      });
     } else {
       movement.populate(
         [
