@@ -106,15 +106,16 @@ userSchema.methods.getUser = function() {
     emails: this.emails,
     scope: this.scope,
     type: this.type,
-    address: {
-      street: this.street,
-      number: this.number,
-      town: this.town,
-      district: this.district,
-      city: this.city,
-      region: this.region,
-      country: this.country
-    },
+    address: this.address,
+    // address: {
+    //   street: this.street,
+    //   number: this.number,
+    //   town: this.town,
+    //   district: this.district,
+    //   city: this.city,
+    //   region: this.region,
+    //   country: this.country
+    // },
     lastLogin: this.lastLogin,
     imgUrl: this.imgUrl,
     google: {
