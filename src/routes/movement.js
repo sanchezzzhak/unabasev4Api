@@ -46,14 +46,23 @@ movements.get(
   getPersonal
 );
 movements.get(
-  '/business/:state',
+  '/business/:state/:id',
   logger({
     name: 'list movements',
     description: 'get the list of movements',
     module
   }),
-  get
+  getBusiness
 );
+// movements.get(
+//   '/business/:state',
+//   logger({
+//     name: 'list movements',
+//     description: 'get the list of movements',
+//     module
+//   }),
+//   get
+// );
 // movements.get('/', filter)
 movements.get(
   '/findOne',
