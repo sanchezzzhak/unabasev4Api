@@ -31,7 +31,7 @@ export default {
         }
       })
       .then(resp => {
-        res.send(resp);
+        res.send(resp.data);
       })
       .catch(err => {
         console.log(envar);
