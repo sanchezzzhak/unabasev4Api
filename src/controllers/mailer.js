@@ -1,6 +1,7 @@
 import { send } from '../config/mailer';
 import axios from 'axios';
-import { user, pass } from '../secret/mail';
+// import { user, pass } from '../secret/mail';
+import { envar } from '../lib/envar';
 
 export default {
   send: (req, res) => {
@@ -9,8 +10,8 @@ export default {
       to: req.body.to, // list of receivers
       subject: req.body.subject, // Subject line
       html: req.body.html, // plain text body,
-      user,
-      pass,
+      user: envar().user,
+      pass: envar().pass,
       service: 'gmail',
       from: 'Unabase  <notificaciones@unabase.com>'
     };
@@ -23,7 +24,11 @@ export default {
     //     res.status(500).send(err);
     //   });
     axios
-      .post('https://unabase.cc/mail', mailOptions)
+      .post('https://unabase.cc/mail', mailOptions, {
+        headers: {
+          'x-api-key': envar().mailApiKey
+        }
+      })
       .then(resp => {
         res.send(resp);
       })
