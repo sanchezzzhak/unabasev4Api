@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+// import mongoose from 'mongoose';
 import * as path from 'path';
 import express, { Router } from 'express';
 import bodyParser, { urlencoded, json } from 'body-parser';
@@ -14,7 +14,7 @@ import session from 'express-session';
 import cors from 'cors';
 import morgan from 'morgan';
 import localeMiddleware from 'express-locale';
-
+import db from './db';
 const env = process.env.NODE_ENV || '';
 /// database
 console.log('env');
@@ -22,15 +22,15 @@ console.log('env');
 console.log(env);
 
 // ()(dbConfig[env]);
-mongoose.connect(
-  dbConfig[env],
-  { useNewUrlParser: true }
-);
+// mongoose.connect(
+//   dbConfig[env],
+//   { useNewUrlParser: true }
+// );
 
-mongoose.set('useCreateIndex', true);
-// const MongoStore = require('connect-mongo')(session);
+// mongoose.set('useCreateIndex', true);
+// // const MongoStore = require('connect-mongo')(session);
 
-let db = mongoose.connection;
+// let db = mongoose.connection;
 
 //check connection
 db.once('open', () => {

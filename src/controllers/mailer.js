@@ -1,4 +1,6 @@
 import { send } from '../config/mailer';
+import axios from 'axios';
+import { user, pass } from '../secret/mail';
 
 export default {
   send: (req, res) => {
@@ -6,21 +8,45 @@ export default {
     const mailOptions = {
       to: req.body.to, // list of receivers
       subject: req.body.subject, // Subject line
-      html: req.body.html // plain text body
+      html: req.body.html, // plain text body,
+      user,
+      pass,
+      service: 'gmail',
+      from: 'Unabase  <notificaciones@unabase.com>'
     };
 
-    send(mailOptions)
-      .then(data => {
-        res.send(data);
+    // send(mailOptions)
+    //   .then(data => {
+    //     res.send(data);
+    //   })
+    //   .catch(err => {
+    //     res.status(500).send(err);
+    //   });
+    axios
+      .post('https://unabase.cc/mail', mailOptions)
+      .then(resp => {
+        res.send(resp);
       })
       .catch(err => {
         res.status(500).send(err);
       });
-    // transporter.sendMail(mailOptions, function (err, info) {
-    //   if(err)
-    //     console.log(err)
-    //   else
-    //     console.log(info);
-    // });
   }
 };
+// {
+// 	"to": "simon@unabase.com",
+// 	"subject": "test for microservice serveless mailer from aws lambda22",
+// 	"html": "hello from the other side !!!",
+
+// 		"pass": "$dVhsIYs#88B!!@iF2LO",
+// 		"user": "noreply@unabxase.net",
+
+// 	"service": "gmail",
+// 	"from": "Unabase  <noreply@unabase.net>",
+// 	"attachments": [
+// 		{
+// 			"filename": "test.pdf",
+// 			"path": "http://www.extranjeria.gob.cl/media/2018/03/Requisitos-De-Permanencia-Definitiva-Por-Correo-Para-Residentes-Con-Contrato-Como-Dependiente.pdf"
+// 		}
+// 		]
+
+// }
