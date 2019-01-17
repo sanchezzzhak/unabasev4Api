@@ -7,8 +7,17 @@ import ntype from 'normalize-type';
 // import accountTypeByUrl from '../lib/accountTypeByUrl';
 export const create = (req, res) => {
   let user = new User();
-  req.body.password.hash = User.hash(req.body.password.hash);
+  if (req.body.password) {
+    req.body.password.hash = User.hash(req.body.password.hash);
+  }
+  const type = req.body.type || 'personal';
+  if (type === 'business') {
+    user.creator = req.user._id;
+    user.users = [req.user._id];
+    user.admins = [{ description: 'creator', user: req.user._id }];
+  }
   Object.assign(user, req.body);
+
   user.save((err, item) => {
     if (err) {
       res.status(500).end();

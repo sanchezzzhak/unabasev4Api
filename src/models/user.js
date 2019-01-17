@@ -19,7 +19,7 @@ let userSchema = Schema(
     },
     idnumber: { type: String },
     phones: [{ phone: String, label: String }],
-    emails: [{ email: String, label: String }],
+    emails: [{ _id: false, email: String, label: String }],
     /**
      *     enum: ['personal', 'business']
      */
@@ -74,6 +74,7 @@ let userSchema = Schema(
     website: String,
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
     admins: Array({
+      _id: false,
       description: String,
       user: { type: Schema.Types.ObjectId, ref: 'User' }
     }),
