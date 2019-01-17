@@ -18,6 +18,7 @@ export default function envar() {
     DB_TEST: process.env.DB_TEST,
     DB_DEV: process.env.DB_DEV,
     DB_PROD: process.env.DB_PROD,
-    DB_UNA: process.env.DB_UNA
+    DB_UNA: process.env.DB_UNA,
+    mailApiKey: process.env.mailApiKey
   };
 }
