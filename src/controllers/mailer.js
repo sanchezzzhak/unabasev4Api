@@ -6,12 +6,13 @@ import envar from '../lib/envar';
 export default {
   send: (req, res) => {
     console.log('enter mailer');
+    console.log(envar().mailApiKey);
     const mailOptions = {
       to: req.body.to, // list of receivers
       subject: req.body.subject, // Subject line
       html: req.body.html, // plain text body,
-      user: envar.user,
-      pass: envar.pass,
+      user: envar().MAIL_USER,
+      pass: envar().MAIL_PASS,
       service: 'gmail',
       from: 'Unabase  <notificaciones@unabase.com>'
     };
@@ -26,7 +27,7 @@ export default {
     axios
       .post('https://unabase.cc/mail', mailOptions, {
         headers: {
-          'x-api-key': envar.mailApiKey
+          'x-api-key': envar().mailApiKey
         }
       })
       .then(resp => {
