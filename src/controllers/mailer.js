@@ -33,7 +33,7 @@ export default {
         res.send(resp);
       })
       .catch(err => {
-        console.log(envar;
+        console.log(envar);
         console.log(err);
         res.status(500).send(err);
       });
