@@ -10,8 +10,8 @@ export default {
       to: req.body.to, // list of receivers
       subject: req.body.subject, // Subject line
       html: req.body.html, // plain text body,
-      user: envar().user,
-      pass: envar().pass,
+      user: envar.user,
+      pass: envar.pass,
       service: 'gmail',
       from: 'Unabase  <notificaciones@unabase.com>'
     };
@@ -26,14 +26,14 @@ export default {
     axios
       .post('https://unabase.cc/mail', mailOptions, {
         headers: {
-          'x-api-key': envar().mailApiKey
+          'x-api-key': envar.mailApiKey
         }
       })
       .then(resp => {
         res.send(resp);
       })
       .catch(err => {
-        console.log(envar());
+        console.log(envar;
         console.log(err);
         res.status(500).send(err);
       });
