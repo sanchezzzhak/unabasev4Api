@@ -1,6 +1,6 @@
 // @ts-nocheck
 import ntype from 'normalize-type';
-
+import Contact from '../models/contact';
 import Business from '../models/business';
 import User from '../models/user';
 import business from '../routes/business';
@@ -22,7 +22,11 @@ export default {
 
         newBusiness.save((err, business) => {
           if (err) res.status(500).end({ err });
-          else res.send(business);
+          else {
+            let contact = new Contact();
+            contact.name = business.name;
+            contact.res.send(business);
+          }
         });
       }
     });

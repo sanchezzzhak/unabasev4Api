@@ -121,7 +121,13 @@ userSchema.methods.getUser = function() {
       name: this.google.name,
       email: this.google.email,
       imgUrl: this.google.imgUrl
-    }
+    },
+    legalName: this.legalName,
+    businessType: this.businessType,
+    website: this.website,
+    creator: this.creator,
+    admins: this.admins,
+    users: this.users
   };
   return user;
 };

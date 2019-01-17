@@ -10,6 +10,8 @@ const contactSchema = new Schema(
     name: String,
     email: String,
     phone: String,
+    type: { type: String, enum: ['Business', 'User'] },
+    link: { type: Schema.Types.ObjectId, refPath: 'type' },
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     creator: { type: Schema.Types.ObjectId, ref: 'User' }
   },
