@@ -6,7 +6,7 @@ const ObjectId = Types.ObjectId;
 import ntype from 'normalize-type';
 import Line from '../models/line';
 import { isEmpty } from '../lib/isEmpty';
-import { errHandler } from '../lib/errorHandler';
+import { errorHandler } from '../lib/errorHandler';
 
 const routes = {};
 export const getPersonal = (req, res) => {
@@ -173,7 +173,7 @@ export const create = (req, res) => {
     if (err) {
       console.log(err);
       // res.status(500).send(err);
-      errHandler({
+      errorHandler({
         err,
         res,
         from: 'movement create',
