@@ -129,7 +129,6 @@ export const getBusiness = (req, res) => {
   delete rquery.page;
   delete rquery.limit;
   let query = {
-    isBusiness: true,
     ...rquery
   };
 
