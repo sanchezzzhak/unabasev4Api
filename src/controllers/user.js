@@ -5,6 +5,7 @@ import template from '../lib/mails';
 import ntype from 'normalize-type';
 // import findByValue from '../lib/findObjectByValue';
 // import accountTypeByUrl from '../lib/accountTypeByUrl';
+import Contact from '../models/contact';
 export const create = (req, res) => {
   let user = new User();
   if (req.body.password) {
@@ -15,6 +16,11 @@ export const create = (req, res) => {
     user.creator = req.user._id;
     user.users = [req.user._id];
     user.admins = [{ description: 'creator', user: req.user._id }];
+
+    let contact = new Contact();
+    contact.name = user.name;
+    contact.type = 'Business';
+    contact.save();
   }
   Object.assign(user, req.body);
 
