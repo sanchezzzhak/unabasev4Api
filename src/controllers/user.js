@@ -28,6 +28,13 @@ export const create = (req, res) => {
     if (err) {
       res.status(500).end();
     } else {
+      if (type === 'business') {
+        let contact = new Contact();
+        contact.name = user.name;
+        contact.type = 'Business';
+        contact.user = user._id;
+        contact.save();
+      }
       res.send(item);
     }
   });
