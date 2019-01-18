@@ -18,11 +18,6 @@ export const create = (req, res) => {
     user.creator = req.user._id;
     user.users = [req.user._id];
     user.admins = [{ description: 'creator', user: req.user._id }];
-
-    let contact = new Contact();
-    contact.name = user.name;
-    contact.type = 'Business';
-    contact.save();
   }
   user.save((err, item) => {
     if (err) {
