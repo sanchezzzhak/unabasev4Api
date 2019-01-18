@@ -117,13 +117,28 @@ export const findSelf = (req, res) => {
   let query = {
     $or: [
       {
-        name: { $regex: req.params.q, $options: 'i' }
+        $or: [
+          {
+            name: { $regex: req.params.q, $options: 'i' }
+          },
+          {
+            email: { $regex: req.params.q, $options: 'i' }
+          }
+        ],
+        creator: req.user._id
       },
       {
-        email: { $regex: req.params.q, $options: 'i' }
+        $or: [
+          {
+            name: { $regex: req.params.q, $options: 'i' }
+          },
+          {
+            email: { $regex: req.params.q, $options: 'i' }
+          }
+        ],
+        type: 'business'
       }
-    ],
-    creator: req.user._id
+    ]
   };
   Contact.paginate(
     query,
