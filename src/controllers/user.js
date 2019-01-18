@@ -12,6 +12,8 @@ export const create = (req, res) => {
     req.body.password.hash = User.hash(req.body.password.hash);
   }
   const type = req.body.type || 'personal';
+
+  Object.assign(user, req.body);
   if (type === 'business') {
     user.creator = req.user._id;
     user.users = [req.user._id];
@@ -22,8 +24,6 @@ export const create = (req, res) => {
     contact.type = 'Business';
     contact.save();
   }
-  Object.assign(user, req.body);
-
   user.save((err, item) => {
     if (err) {
       res.status(500).end();
