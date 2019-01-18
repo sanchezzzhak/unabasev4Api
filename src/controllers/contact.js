@@ -136,7 +136,7 @@ export const findSelf = (req, res) => {
             email: { $regex: req.params.q, $options: 'i' }
           }
         ],
-        type: 'business'
+        type: 'Business'
       }
     ]
   };
