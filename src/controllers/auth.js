@@ -328,6 +328,8 @@ export default {
         // logger({
         //   'google.id': data.data.sub
         // });
+        console.log('data google');
+        console.log(data.data);
         User.findOne(
           {
             'google.id': data.data.sub,
