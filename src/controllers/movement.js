@@ -35,7 +35,6 @@ export const getPersonal = (req, res) => {
   delete rquery.page;
   delete rquery.limit;
   let query = {
-    isBusiness: false,
     ...rquery
   };
   switch (req.params.state) {
