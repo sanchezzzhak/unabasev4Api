@@ -133,15 +133,17 @@ export const getOne = (req, res) => {
   console.log(req.params.id);
 
   const type = req.query.type || 'personal';
-  User.findOne({ _id: req.params.id, type }, (err, user) => {
-    if (err) {
-      res.status(500).send(err);
-    } else if (user) {
-      res.send(user.getUser());
-    } else {
-      res.status(404).send({ msg: 'user not found' });
-    }
-  });
+  User.findOne({ _id: req.params.id, type })
+    .populate('users')
+    .exec((err, user) => {
+      if (err) {
+        res.status(500).send(err);
+      } else if (user) {
+        res.send(user.getUser());
+      } else {
+        res.status(404).send({ msg: 'user not found' });
+      }
+    });
 };
 export const update = (req, res) => {
   User.findOneAndUpdate(
