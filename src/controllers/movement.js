@@ -28,7 +28,8 @@ export const getPersonal = (req, res) => {
       path: 'responsable.data',
       select: 'isActive name  email phone creator user imgUrl emails type'
     },
-    { path: 'creator', select: 'name google imgUrl emails.default' }
+    { path: 'creator', select: 'name google imgUrl emails.default' },
+    { path: 'lines' }
   ];
   options.sort = { ...sort };
   delete rquery.createdAt;
@@ -121,7 +122,8 @@ export const getBusiness = (req, res) => {
       path: 'responsable.data',
       select: 'name imgUrl emails type'
     },
-    { path: 'creator', select: 'name  imgUrl emails' }
+    { path: 'creator', select: 'name  imgUrl emails' },
+    { path: 'lines' }
   ];
   options.sort = { ...sort };
   delete rquery.createdAt;
