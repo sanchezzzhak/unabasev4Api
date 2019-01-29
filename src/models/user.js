@@ -18,7 +18,7 @@ let userSchema = Schema(
       activateHash: String
     },
     idnumber: { type: String },
-    phones: [{ phone: String, label: String }],
+    phones: [{ _id: false, phone: String, label: String }],
     emails: [{ _id: false, email: String, label: String }],
     /**
      *     enum: ['personal', 'business']

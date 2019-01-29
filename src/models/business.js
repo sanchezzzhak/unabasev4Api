@@ -10,30 +10,27 @@ const businessSchema = Schema(
     },
     name: String,
     legalName: String, // razón social,
-    businessType: Array({ type: String }), // giro
+    businessType: Array({ _id: false, name: String, number: Number }), // giro
     idnumber: String,
-    phones: [{ phone: String, label: String }],
-    emails: [{ email: String, label: String }],
+    phones: [{ _id: false, phone: String, label: String }],
+    emails: [{ _id: false, email: String, label: String }],
+    imgUrl: String,
     address: {
-      street: String,
-      number: Number,
-      district: String,
-      city: String,
-      region: String,
-      country: String
+      lat: String,
+      long: String,
+      text: String
     },
     website: String,
-    v3: {
-      ip: String,
-      nodePort: Number,
-      webPort: Number,
-      url: String
-    },
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
-    users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     admins: Array({
+      _id: false,
       description: String,
       user: { type: Schema.Types.ObjectId, ref: 'User' }
+    }),
+    users: Array({
+      _id: false,
+      type: Schema.Types.ObjectId,
+      ref: 'User'
     })
   },
   { timestamps: true }
