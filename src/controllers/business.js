@@ -25,7 +25,11 @@ export default {
           else {
             let contact = new Contact();
             contact.name = business.name;
-            contact.res.send(business);
+            contact.type = 'Business';
+            contact.link = business._id;
+            contact.save();
+
+            res.send(business);
           }
         });
       }

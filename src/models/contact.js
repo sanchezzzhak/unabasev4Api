@@ -13,6 +13,7 @@ const contactSchema = new Schema(
     type: { type: String, enum: ['Business', 'User'] },
     link: { type: Schema.Types.ObjectId, refPath: 'type' },
     user: { type: Schema.Types.ObjectId, ref: 'User' },
+    business: { type: Schema.Types.ObjectId, ref: 'Business' },
     creator: { type: Schema.Types.ObjectId, ref: 'User' }
   },
   { timestamps: true }
