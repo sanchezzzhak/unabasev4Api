@@ -40,12 +40,9 @@ let userSchema = Schema(
       }
     },
     address: {
-      street: String,
-      number: Number,
-      district: String,
-      city: String,
-      region: String,
-      country: String
+      lat: String,
+      long: String,
+      text: String
     },
     lastLogin: Date,
     access: Array({ type: Object }),
