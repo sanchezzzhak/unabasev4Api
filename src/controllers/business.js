@@ -26,7 +26,7 @@ export default {
         newBusiness.admins = [{ description: 'creator', user: req.user._id }];
         console.log(newBusiness.users);
         console.log(newBusiness.admins);
-        newBusiness.save((err, badminsss) => {
+        newBusiness.save((err, business) => {
           if (err) {
             console.log(err);
             res.status(500).end({ err });
