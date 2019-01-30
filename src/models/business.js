@@ -24,7 +24,7 @@ const businessSchema = Schema(
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
     admins: Array({
       _id: false,
-      description: String,
+      description: { type: String },
       user: { type: Schema.Types.ObjectId, ref: 'User' }
     }),
     users: Array({

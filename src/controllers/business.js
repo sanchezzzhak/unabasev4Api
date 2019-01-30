@@ -20,9 +20,13 @@ export default {
       } else {
         let newBusiness = new Business(req.body);
         newBusiness.creator = req.user._id;
+        console.log('//');
+        console.log(req.user._id);
         newBusiness.users = [req.user._id];
         newBusiness.admins = [{ description: 'creator', user: req.user._id }];
-        newBusiness.save((err, business) => {
+        console.log(newBusiness.users);
+        console.log(newBusiness.admins);
+        newBusiness.save((err, badminsss) => {
           if (err) {
             console.log(err);
             res.status(500).end({ err });
