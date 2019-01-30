@@ -70,6 +70,7 @@ export default {
     delete rquery.page;
     delete rquery.limit;
 
+    rquery.users = { $in: [req.user._id] };
     Business.paginate(rquery, options, (err, item) => {
       if (err) {
         res.status(500).end();
