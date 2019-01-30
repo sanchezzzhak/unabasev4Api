@@ -21,8 +21,10 @@ export default {
         let newBusiness = new Business(req.body);
 
         newBusiness.save((err, business) => {
-          if (err) res.status(500).end({ err });
-          else {
+          if (err) {
+            console.log(err);
+            res.status(500).end({ err });
+          } else {
             let contact = new Contact();
             contact.name = business.name;
             contact.type = 'Business';
