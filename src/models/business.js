@@ -18,12 +18,12 @@ const businessSchema = Schema(
     address: {
       lat: String,
       long: String,
-      text: String
+      text: String,
       address: {
         lat: String,
         long: String,
         text: String
-      },
+      }
     },
     website: String,
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
