@@ -48,7 +48,17 @@ export default {
       if (err) {
         res.status(500).send(err);
       } else if (business) {
-        res.send(business);
+        business.populate(
+          [
+            {
+              path: 'users',
+              select: 'name  phone email imgUrl emails type'
+            }
+          ],
+          err => {
+            res.send(business);
+          }
+        );
       } else {
         res.status(404).end('business not found');
       }
