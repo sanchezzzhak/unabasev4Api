@@ -33,8 +33,7 @@ export default {
           } else {
             let contact = new Contact();
             contact.name = business.name;
-            contact.type = 'Business';
-            contact.link = business._id;
+            contact.business = business._id;
             contact.save();
 
             res.send(business);
