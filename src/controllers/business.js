@@ -34,6 +34,7 @@ export default {
             let contact = new Contact();
             contact.name = business.name;
             contact.business = business._id;
+            contact.type = 'Business';
             contact.save();
 
             res.send(business);
