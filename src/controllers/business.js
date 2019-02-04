@@ -50,7 +50,7 @@ export default {
         business.populate(
           [
             {
-              path: 'users',
+              path: 'users.user',
               select: 'name  phone email imgUrl emails type'
             }
           ],
