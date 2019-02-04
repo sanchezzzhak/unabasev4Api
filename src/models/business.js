@@ -27,15 +27,15 @@ const businessSchema = Schema(
     },
     website: String,
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
-    admins: Array({
-      _id: false,
-      description: { type: String },
-      user: { type: Schema.Types.ObjectId, ref: 'User' }
-    }),
+    // admins: Array({
+    //   _id: false,
+    //   description: { type: String },
+    //   user: { type: Schema.Types.ObjectId, ref: 'User' }
+    // }),
     users: Array({
       _id: false,
-      type: Schema.Types.ObjectId,
-      ref: 'User'
+      user: { type: Schema.Types.ObjectId, ref: 'User' },
+      description: { type: String }
     })
   },
   { timestamps: true }
