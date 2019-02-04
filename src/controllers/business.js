@@ -4,6 +4,8 @@ import Contact from '../models/contact';
 import Business from '../models/business';
 import User from '../models/user';
 import business from '../routes/business';
+import { Types } from 'mongoose';
+const ObjectId = Types.ObjectId;
 export default {
   create: (req, res) => {
     Business.findOne({ idnumber: req.body.idnumber }, (err, business) => {
@@ -83,11 +85,8 @@ export default {
     delete rquery.page;
     delete rquery.limit;
 
-    rquery.users = { $in: [{ user: req.user._id }] };
-    console.log('////');
-    console.log(rquery);
-    console.log('////');
-    console.log(options);
+    rquery.$or = [{ 'users.user': ObjectId(`${req.user._id}`) }];
+
     Business.paginate(rquery, options, (err, item) => {
       if (err) {
         console.log(err);
