@@ -83,7 +83,7 @@ export default {
     delete rquery.page;
     delete rquery.limit;
 
-    rquery.users = { $in: [req.user._id] };
+    rquery.users = { user: req.user._id };
     console.log('////');
     console.log(rquery);
     console.log('////');
