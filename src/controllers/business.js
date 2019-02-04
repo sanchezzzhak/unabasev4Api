@@ -86,7 +86,8 @@ export default {
     rquery.users = { $in: [req.user._id] };
     Business.paginate(rquery, options, (err, item) => {
       if (err) {
-        res.status(500).end();
+        console.log(err);
+        res.status(500).end({ err });
       } else {
         res.send(item);
       }
