@@ -84,10 +84,14 @@ export default {
     delete rquery.limit;
 
     rquery.users = { $in: [req.user._id] };
+    console.log('////');
+    console.log(rquery);
+    console.log('////');
+    console.log(options);
     Business.paginate(rquery, options, (err, item) => {
       if (err) {
         console.log(err);
-        res.status(500).end({ err });
+        res.status(500).end(err);
       } else {
         res.send(item);
       }
