@@ -8,14 +8,14 @@ import { Types } from 'mongoose';
 const ObjectId = Types.ObjectId;
 export default {
   create: (req, res) => {
-    Business.findOne({ idnumber: req.body.idnumber }, (err, business) => {
+    Business.findOne({ idNumber: req.body.idNumber }, (err, business) => {
       if (err) throw err;
 
       if (business) {
         res.status(409).send({
           msg: 'Business already exist'
         });
-      } else if (typeof req.body.idnumber === 'undefined') {
+      } else if (typeof req.body.idNumber === 'undefined') {
         res.send({
           msg: 'You must enter an id number'
         });

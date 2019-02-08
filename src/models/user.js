@@ -17,7 +17,7 @@ let userSchema = Schema(
       isRandom: { type: Boolean, default: false },
       activateHash: String
     },
-    idnumber: { type: String },
+    idNumber: { type: String },
     phones: [{ _id: false, phone: String, label: String }],
     emails: [{ _id: false, email: String, label: String }],
     /**
@@ -98,7 +98,7 @@ userSchema.methods.getUser = function() {
     isActive: this.isActive,
     name: this.name,
     username: this.username,
-    idnumber: this.idnumber,
+    idNumber: this.idNumber,
     phones: this.phones,
     emails: this.emails,
     scope: this.scope,

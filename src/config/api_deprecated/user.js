@@ -34,7 +34,7 @@ export default api => {
     login: `${api}users/login`,
     /**
      *  GET/ find users by
-     *    name, username, idnumber or email
+     *    name, username, idNumber or email
      */
     find: `${api}users/find`,
     logout: `${api}users/logout`,

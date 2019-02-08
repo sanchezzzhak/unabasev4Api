@@ -28,7 +28,7 @@ export default api => {
     main: `${api}business/`,
     /**
      *  GET/ find business by
-     *    name, username, idnumber or email
+     *    name, username, idNumber or email
      */
     find: `${api}business/find`,
     business: `${api}business/business/`

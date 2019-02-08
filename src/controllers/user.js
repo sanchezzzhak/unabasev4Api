@@ -211,7 +211,7 @@ export const find = (req, res) => {
           { 'emails.email': { $regex: req.params.q, $options: 'i' } },
           { name: { $regex: req.params.q, $options: 'i' } },
           { username: { $regex: req.params.q, $options: 'i' } },
-          { idnumber: { $regex: req.params.q, $options: 'i' } }
+          { idNumber: { $regex: req.params.q, $options: 'i' } }
         ]
       },
       { type }
@@ -233,7 +233,7 @@ export const relationsFind = (req, res) => {
           { 'emails.email': { $regex: req.params.q, $options: 'i' } },
           { name: { $regex: req.params.q, $options: 'i' } },
           { username: { $regex: req.params.q, $options: 'i' } },
-          { idnumber: { $regex: req.params.q, $options: 'i' } }
+          { idNumber: { $regex: req.params.q, $options: 'i' } }
         ]
       },
       {
