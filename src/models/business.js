@@ -11,7 +11,7 @@ const businessSchema = Schema(
     name: String,
     legalName: String, // razón social,
     businessType: Array({ _id: false, name: String, number: Number }), // giro
-    idnumber: String,
+    idNumber: String,
     phones: [{ _id: false, phone: String, label: String }],
     emails: [{ _id: false, email: String, label: String }],
     imgUrl: String,

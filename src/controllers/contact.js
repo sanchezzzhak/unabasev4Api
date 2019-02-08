@@ -147,6 +147,10 @@ export const findSelf = (req, res) => {
         {
           path: 'user',
           select: 'name  imgUrl emails'
+        },
+        {
+          path: 'business',
+          select: 'name idNumber legalName'
         }
       ]
     },
