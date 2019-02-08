@@ -253,7 +253,7 @@ export const relationsFind = (req, res) => {
 export const lastItems = (req, res) => {
   Line.find({ creator: req.user._id })
     .sort({ updatedAt: -1 })
-    .limit(5)
+    .limit(20)
     .populate({ path: 'item' })
     .exec((err, lines) => {
       if (err) {
