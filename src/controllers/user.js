@@ -1,5 +1,5 @@
 import User from '../models/user';
-
+import Line from '../models/line';
 import { send } from '../config/mailer';
 import template from '../lib/mails';
 import ntype from 'normalize-type';
@@ -249,4 +249,21 @@ export const relationsFind = (req, res) => {
       res.send(items);
     }
   });
+};
+export const lastItems = (req, res) => {
+  Line.find({ creator: req.user._id })
+    .sort({ updatedAt: -1 })
+    .limit(20)
+    .populate({ path: 'item' })
+    .exec((err, lines) => {
+      if (err) {
+        res.status(500).end();
+      } else {
+        let items = [];
+        for (line of lines) {
+          items.push(line.item);
+        }
+        res.send(items);
+      }
+    });
 };

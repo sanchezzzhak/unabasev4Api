@@ -13,7 +13,8 @@ import {
   scope,
   user,
   restart,
-  relationsFind
+  relationsFind,
+  lastItems
 } from '../controllers/user';
 
 import auth from '../config/lib/auth';
@@ -34,6 +35,7 @@ users.get('/logout', logout);
 users.get('/find/:q', find);
 users.get('/relations/:q', relationsFind);
 users.get('/:id', getOne);
+users.get('/lastItems', lastItems);
 users.put('/:id', update);
 users.put('/password/:id', password);
 users.post('/restart/:q', restart);

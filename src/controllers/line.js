@@ -25,6 +25,7 @@ export function get(req, res) {
 }
 export function create(req, res) {
   let line = new Line(req.body);
+  line.creator = req.user._id;
   line.save((err, item) => {
     if (err) {
       res.status(500).send(err);
