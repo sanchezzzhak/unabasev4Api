@@ -261,7 +261,9 @@ export const lastItems = (req, res) => {
       } else {
         let items = [];
         for (let line of lines) {
-          items.push(line.item);
+          if (item.filter(i => i._id === line._id).length === 0) {
+            items.push(line.item);
+          }
         }
         res.send(items);
       }
