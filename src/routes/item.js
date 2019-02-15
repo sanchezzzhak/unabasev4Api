@@ -1,6 +1,9 @@
 import { Router } from 'express';
 const items = Router();
+import auth from '../config/lib/auth';
 import logger from '../lib/logger';
+
+items.use(auth.sToken);
 import {
   get,
   create,
