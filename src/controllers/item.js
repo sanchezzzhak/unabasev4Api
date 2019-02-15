@@ -54,13 +54,18 @@ const routes = {
     );
   },
   updateOne(req, res) {
-    Item.findByIdAndUpdate(req.params.id, req.body, {}, (err, item) => {
-      if (err) {
-        res.status(500).end(err);
-      } else {
-        res.send(item);
+    Item.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true },
+      (err, item) => {
+        if (err) {
+          res.status(500).end(err);
+        } else {
+          res.send(item);
+        }
       }
-    });
+    );
   },
   find: (req, res) => {
     let query = {
