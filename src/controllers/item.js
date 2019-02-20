@@ -40,28 +40,6 @@ const routes = {
           res.send(itemFound);
         } else {
           let item = new Item(req.body);
-          // item.creator = req.user._id;
-          item.save((err, itemSaved) => {
-            if (err) {
-              console.log(err);
-              res.status(500).end({ err });
-            } else {
-              res.send(itemSaved);
-            }
-          });
-        }
-      }
-    );
-    Item.findOne(
-      { name: { $regex: new RegExp(`^${req.body.name}$`, 'i') } },
-      (err, itemFound) => {
-        if (err) {
-          console.log(err);
-          res.status(500).end({ err });
-        } else if (itemFound) {
-          res.send(itemFound);
-        } else {
-          let item = new Item(req.body);
           item.creator = req.user._id;
           item.save((err, itemSaved) => {
             if (err) {
