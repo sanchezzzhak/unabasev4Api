@@ -27,7 +27,7 @@ const itemSchema = new Schema(
         price: { type: Number }
       }
     },
-    cost: { type: Number }
+    price: { type: Number }
   },
   { timestamps: true }
 );

@@ -6,6 +6,12 @@ const routes = {
     let options = {};
     options.page = rquery.page || 1;
     options.limit = rquery.limit || 20;
+    options.populate = [
+      {
+        path: 'tax',
+        select: 'number name'
+      }
+    ];
     delete rquery.page;
     delete rquery.limit;
     let query = { ...rquery, creator: req.user._id };

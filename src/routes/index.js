@@ -37,5 +37,8 @@ routes.use('/logs', log);
 routes.use('/lines', line);
 routes.use('/comments', comment);
 routes.use('/contacts', contact);
+routes.post('/t', (req, res) => {
+  res.send(req.body);
+});
 
 export default routes;
