@@ -18,16 +18,18 @@ const routes = {
     });
   },
   getOne(req, res) {
-    Item.findById(req.params.id, (err, item) => {
-      if (err) {
-        console.log(err);
-        res.status(500).end(err);
-      } else if (item) {
-        res.send(item);
-      } else {
-        res.status(404).end();
-      }
-    });
+    Item.findById(req.params.id)
+      .populate({ path: tax })
+      .exec((err, item) => {
+        if (err) {
+          console.log(err);
+          res.status(500).end(err);
+        } else if (item) {
+          res.send(item);
+        } else {
+          res.status(404).end();
+        }
+      });
   },
   create(req, res) {
     Item.findOne(
