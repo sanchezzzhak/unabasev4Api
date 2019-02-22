@@ -43,7 +43,7 @@ export function create(req, res) {
       }
       Item.findByIdAndUpdate(
         line.item,
-        { lastPrice: item.price },
+        { lastPrice: line.price },
         { new: true }
       ).exec();
       res.send(line);
