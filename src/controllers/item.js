@@ -25,7 +25,7 @@ const routes = {
   },
   getOne(req, res) {
     Item.findById(req.params.id)
-      .populate({ path: tax })
+      .populate({ path: 'tax' })
       .exec((err, item) => {
         if (err) {
           console.log(err);
