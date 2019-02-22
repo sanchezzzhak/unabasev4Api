@@ -3,6 +3,7 @@ import mongoose, { Schema, mongo } from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate';
 const itemSchema = new Schema(
   {
+    isActive: Boolean,
     name: String,
     tax: Array({ type: Schema.Types.ObjectId, ref: 'Tax' }),
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
