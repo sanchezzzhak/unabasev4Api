@@ -56,12 +56,17 @@ export function updateOne(req, res) {
     req.params.id,
     req.body,
     { new: true },
-    (err, item) => {
+    (err, line) => {
       if (err) {
         console.log(err);
         res.status(500).send(err);
       } else {
-        res.send(item);
+        Item.findByIdAndUpdate(
+          line.item,
+          { lastPrice: line.price },
+          { new: true }
+        ).exec();
+        res.send(line);
       }
     }
   );
