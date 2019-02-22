@@ -1,5 +1,6 @@
 import Line from '../models/line';
 import Movement from '../models/movement';
+import Item from '../models/item';
 
 export function get(req, res) {
   let rquery = ntype(req.query);
@@ -26,21 +27,26 @@ export function get(req, res) {
 export function create(req, res) {
   let line = new Line(req.body);
   line.creator = req.user._id;
-  line.save((err, item) => {
+  line.save((err, line) => {
     if (err) {
       res.status(500).send(err);
     } else {
-      if (item.movement) {
+      if (line.movement) {
         Movement.findByIdAndUpdate(
-          item.movement,
-          { $addToSet: { lines: item._id } },
+          line.movement,
+          { $addToSet: { lines: line._id } },
           {},
           (err, movement) => {
             if (err) console.log(err);
           }
         );
       }
-      res.send(item);
+      Item.findByIdAndUpdate(
+        line.item,
+        { lastPrice: item.price },
+        { new: true }
+      ).exec();
+      res.send(line);
     }
   });
 }

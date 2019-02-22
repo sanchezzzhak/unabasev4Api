@@ -259,13 +259,16 @@ export const lastItems = (req, res) => {
       if (err) {
         res.status(500).end();
       } else {
-        let items = [];
+        let docs = [];
         for (let line of lines) {
-          if (items.filter(i => i._id === line.item._id).length === 0) {
-            items.push(line.item);
+          if (docs.filter(i => i._id === line.item._id).length === 0) {
+            docs.push(line.item);
           }
         }
-        res.send(items);
+        res.send({
+          docs,
+          total: docs.length
+        });
       }
     });
 };
