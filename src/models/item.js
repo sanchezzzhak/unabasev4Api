@@ -28,7 +28,8 @@ const itemSchema = new Schema(
         price: { type: Number }
       }
     },
-    price: { type: Number }
+    price: { type: Number },
+    lastPrice: { type: Number }
   },
   { timestamps: true }
 );
