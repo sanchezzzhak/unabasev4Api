@@ -265,10 +265,11 @@ export const lastItems = (req, res) => {
             docs.push(line.item);
           }
         }
-        res.send({
-          docs,
-          total: docs.length
-        });
+        // res.send({
+        //   docs,
+        //   total: docs.length
+        // });
+        res.send(docs);
       }
     });
 };
