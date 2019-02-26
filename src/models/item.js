@@ -21,11 +21,11 @@ const itemSchema = new Schema(
     margin: {
       max: {
         percentage: { type: Number },
-        price: { type: Number }
+        price: { type: Number, default: 0 }
       },
       min: {
         percentage: { type: Number },
-        price: { type: Number }
+        price: { type: Number, default: 0 }
       }
     },
     price: { type: Number },
