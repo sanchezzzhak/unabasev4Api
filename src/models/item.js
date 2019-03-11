@@ -5,29 +5,47 @@ const itemSchema = new Schema(
   {
     isActive: { type: Boolean, default: true },
     name: String,
-    tax: Array({ type: Schema.Types.ObjectId, ref: 'Tax' }),
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
-    quantity: { type: Number },
-    estimate: {
+    quantity: {
       buy: {
-        lock: { type: Boolean, default: false },
-        price: { type: Number }
+        min: { type: Number },
+        max: { type: Number }
       },
       sell: {
-        lock: { type: Boolean, default: false },
-        price: { type: Number }
+        min: { type: Number },
+        max: { type: Number }
       }
     },
-    margin: {
-      max: {
-        percentage: { type: Number },
-        price: { type: Number, default: 0 }
-      },
-      min: {
-        percentage: { type: Number },
-        price: { type: Number, default: 0 }
+    global: [
+      {
+        currency: { type: Schema.Types.ObjectId, ref: 'Currency' },
+        estimate: {
+          buy: {
+            lock: { type: Boolean, default: true },
+            price: { type: Number }
+          },
+          sell: {
+            lock: { type: Boolean, default: true },
+            price: { type: Number }
+          },
+          cost: {
+            lock: { type: Boolean, default: true },
+            price: { type: Number }
+          }
+        },
+        tax: Array({ type: Schema.Types.ObjectId, ref: 'Tax' }),
+        margin: {
+          max: {
+            percentage: { type: Number },
+            price: { type: Number, default: 0 }
+          },
+          min: {
+            percentage: { type: Number },
+            price: { type: Number, default: 0 }
+          }
+        }
       }
-    },
+    ],
     price: { type: Number },
     lastPrice: { type: Number }
   },

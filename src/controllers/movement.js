@@ -215,7 +215,7 @@ export const getOne = (req, res) => {
     // .populate('client', 'google.email')
     // .populate('client', 'name')
     .populate([
-      { path: 'lines' },
+      // { path: 'lines' },
       { path: 'contact' },
       { path: 'comments', options: { sort: { createdAt: 'desc' } } },
       { path: 'comments.creator' },
@@ -237,7 +237,16 @@ export const getOne = (req, res) => {
       if (err) {
         res.status(500).send(err);
       } else if (movement) {
-        res.send(movement);
+        Lines.find({ movement: movement._id })
+          .populate('item')
+          .exec((err, lines) => {
+            if (err) {
+              res.status(500).send(err);
+            } else {
+              movement.lines = lines;
+              res.send(movement);
+            }
+          });
       } else {
         res.status(404).send('Not found');
       }
