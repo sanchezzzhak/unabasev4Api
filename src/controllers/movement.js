@@ -237,7 +237,7 @@ export const getOne = (req, res) => {
       if (err) {
         res.status(500).send(err);
       } else if (movement) {
-        Lines.find({ movement: movement._id })
+        Line.find({ movement: movement._id })
           .populate('item')
           .exec((err, lines) => {
             if (err) {
