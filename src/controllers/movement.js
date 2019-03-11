@@ -238,7 +238,7 @@ export const getOne = (req, res) => {
         res.status(500).send(err);
       } else if (movement) {
         Line.find({ movement: movement._id })
-          .populate('item')
+          .populate('item', 'lastPrice global')
           .exec((err, lines) => {
             if (err) {
               res.status(500).send(err);

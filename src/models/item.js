@@ -43,11 +43,13 @@ const itemSchema = new Schema(
             percentage: { type: Number },
             price: { type: Number, default: 0 }
           }
+        },
+        lastPrice: {
+          buy: { type: Number },
+          sell: { type: Number }
         }
       }
-    ],
-    price: { type: Number },
-    lastPrice: { type: Number }
+    ]
   },
   { timestamps: true }
 );
