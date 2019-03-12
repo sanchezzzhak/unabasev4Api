@@ -27,6 +27,7 @@ export function get(req, res) {
 export function create(req, res) {
   let line = new Line(req.body);
   let movementType = req.body.movementType === 'income' ? 'sell' : 'buy';
+  let currency = req.body.currency;
   line.creator = req.user._id;
   line.save((err, line) => {
     if (err) {
@@ -43,10 +44,17 @@ export function create(req, res) {
         );
       }
 
-      let lastPrice = {
-        [movementType]: line.price
+      let global = {
+        currency,
+        lastPrice: {
+          [movementType]: line.price
+        }
       };
-      Item.findByIdAndUpdate(line.item, lastPrice, { new: true }).exec();
+      Item.findByIdAndUpdate(
+        line.item,
+        { $set: { global } },
+        { new: true }
+      ).exec();
       res.send(line);
     }
   });
@@ -54,6 +62,7 @@ export function create(req, res) {
 
 export function updateOne(req, res) {
   let movementType = req.body.movementType === 'income' ? 'sell' : 'buy';
+  let currency = req.body.currency;
   Line.findByIdAndUpdate(
     req.params.id,
     req.body,
@@ -63,10 +72,17 @@ export function updateOne(req, res) {
         console.log(err);
         res.status(500).send(err);
       } else if (line) {
-        let lastPrice = {
-          [movementType]: line.price
+        let global = {
+          currency,
+          lastPrice: {
+            [movementType]: line.price
+          }
         };
-        Item.findByIdAndUpdate(line.item, lastPrice, { new: true }).exec();
+        Item.findByIdAndUpdate(
+          line.item,
+          { $set: { global } },
+          { new: true }
+        ).exec();
         res.send(line);
       }
     }
