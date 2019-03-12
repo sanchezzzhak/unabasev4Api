@@ -62,7 +62,7 @@ export function updateOne(req, res) {
       if (err) {
         console.log(err);
         res.status(500).send(err);
-      } else {
+      } else if (line) {
         let lastPrice = {
           [movementType]: line.price
         };
