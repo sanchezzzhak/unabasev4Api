@@ -388,7 +388,12 @@ export default {
               user.save();
               const token = jwt.sign({ user: user.getUser() }, envar().SECRET);
               // res.cookie('access_token', token);
-              res.json({ token, user: user.getUser() });
+              let getUser = user.getUser();
+              let userData = {
+                ...getUser,
+                currency: user.currency
+              };
+              res.json({ token, user: userData });
             }
           }
         );

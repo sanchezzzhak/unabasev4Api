@@ -115,7 +115,7 @@ userSchema.methods.getUser = function() {
     //   country: this.country
     // },
     lastLogin: this.lastLogin,
-    currency: this.currency,
+    // currency: this.currency,
     imgUrl: this.imgUrl,
     google: {
       name: this.google.name,
