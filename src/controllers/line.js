@@ -26,6 +26,7 @@ export function get(req, res) {
 }
 export function create(req, res) {
   let line = new Line(req.body);
+  let movementType = req.body.movementType;
   line.creator = req.user._id;
   line.save((err, line) => {
     if (err) {
@@ -43,7 +44,7 @@ export function create(req, res) {
       }
       Item.findByIdAndUpdate(
         line.item,
-        { lastPrice: line.price },
+        { lastPrice[req.body.movementType]: line.price },
         { new: true }
       ).exec();
       res.send(line);
@@ -63,7 +64,7 @@ export function updateOne(req, res) {
       } else {
         Item.findByIdAndUpdate(
           line.item,
-          { lastPrice: line.price },
+          { lastPrice[req.body.movementType]: line.price },
           { new: true }
         ).exec();
         res.send(line);
