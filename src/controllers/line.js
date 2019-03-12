@@ -42,11 +42,11 @@ export function create(req, res) {
           }
         );
       }
-      Item.findByIdAndUpdate(
-        line.item,
-        { lastPrice[req.body.movementType]: line.price },
-        { new: true }
-      ).exec();
+
+      let lastPrice = {
+        [req.body.movementType]: line.price
+      };
+      Item.findByIdAndUpdate(line.item, lastPrice, { new: true }).exec();
       res.send(line);
     }
   });
@@ -62,11 +62,10 @@ export function updateOne(req, res) {
         console.log(err);
         res.status(500).send(err);
       } else {
-        Item.findByIdAndUpdate(
-          line.item,
-          { lastPrice[req.body.movementType]: line.price },
-          { new: true }
-        ).exec();
+        let lastPrice = {
+          [req.body.movementType]: line.price
+        };
+        Item.findByIdAndUpdate(line.item, lastPrice, { new: true }).exec();
         res.send(line);
       }
     }
