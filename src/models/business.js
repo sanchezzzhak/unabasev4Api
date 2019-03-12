@@ -26,6 +26,7 @@ const businessSchema = Schema(
       }
     },
     website: String,
+    currency: { type: Schema.Types.ObjectId, ref: 'Currency' },
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
     // admins: Array({
     //   _id: false,
