@@ -53,6 +53,7 @@ export function create(req, res) {
       console.log('////////////////////////////');
       console.log(global);
       console.log('////////////////////////////');
+      console.log(req.body.movementType);
       Item.findByIdAndUpdate(
         line.item,
         { $set: { global } },
@@ -84,7 +85,7 @@ export function updateOne(req, res) {
         console.log('////////////////////////////');
         console.log(global);
         console.log('////////////////////////////');
-        console.log(movementType);
+        console.log(req.body.movementType);
         Item.findByIdAndUpdate(
           line.item,
           { $set: { global } },
