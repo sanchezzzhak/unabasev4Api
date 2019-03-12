@@ -388,12 +388,14 @@ export default {
               user.save();
               const token = jwt.sign({ user: user.getUser() }, envar().SECRET);
               // res.cookie('access_token', token);
-              let getUser = user.getUser();
-              let userData = {
-                ...getUser,
-                currency: user.currency
-              };
-              res.json({ token, user: userData });
+              user.populate([{ path: 'currency' }], err => {
+                let getUser = user.getUser();
+                let userData = {
+                  ...getUser,
+                  currency: user.currency
+                };
+                res.json({ token, user: userData });
+              });
             }
           }
         );
