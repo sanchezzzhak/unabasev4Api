@@ -78,6 +78,10 @@ export function updateOne(req, res) {
             [movementType]: line.price
           }
         };
+        console.log('////////////////////////////');
+        console.log(global);
+        console.log('////////////////////////////');
+        console.log(movementType);
         Item.findByIdAndUpdate(
           line.item,
           { $set: { global } },
