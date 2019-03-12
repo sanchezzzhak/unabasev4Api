@@ -26,7 +26,7 @@ export function get(req, res) {
 }
 export function create(req, res) {
   let line = new Line(req.body);
-  let movementType = req.body.movementType;
+  let movementType = req.body.movementType === 'income' ? 'sell' : 'buy';
   line.creator = req.user._id;
   line.save((err, line) => {
     if (err) {
@@ -44,7 +44,7 @@ export function create(req, res) {
       }
 
       let lastPrice = {
-        [req.body.movementType]: line.price
+        [movementType]: line.price
       };
       Item.findByIdAndUpdate(line.item, lastPrice, { new: true }).exec();
       res.send(line);
@@ -53,6 +53,7 @@ export function create(req, res) {
 }
 
 export function updateOne(req, res) {
+  let movementType = req.body.movementType === 'income' ? 'sell' : 'buy';
   Line.findByIdAndUpdate(
     req.params.id,
     req.body,
@@ -63,7 +64,7 @@ export function updateOne(req, res) {
         res.status(500).send(err);
       } else {
         let lastPrice = {
-          [req.body.movementType]: line.price
+          [movementType]: line.price
         };
         Item.findByIdAndUpdate(line.item, lastPrice, { new: true }).exec();
         res.send(line);
