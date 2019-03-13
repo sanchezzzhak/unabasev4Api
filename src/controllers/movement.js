@@ -124,7 +124,8 @@ export const getBusiness = (req, res) => {
       select: 'name imgUrl emails type'
     },
     { path: 'creator', select: 'name  imgUrl emails' },
-    { path: 'lines' }
+    { path: 'lines' },
+    { path: 'currency' }
   ];
   options.sort = { ...sort };
   delete rquery.createdAt;
