@@ -146,18 +146,15 @@ export const getOne = (req, res) => {
     });
 };
 export const update = (req, res) => {
-  User.findOneAndUpdate(
-    { _id: req.params.id },
-    req.body,
-    { new: true },
-    (err, item) => {
+  User.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
+    .populate('currency')
+    .exec((err, item) => {
       if (err) {
         res.status(500).send(err);
       } else {
         res.send(item);
       }
-    }
-  );
+    });
 };
 export const business = (req, res) => {
   let update = {
