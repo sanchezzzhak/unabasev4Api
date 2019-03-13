@@ -29,7 +29,8 @@ export const getPersonal = (req, res) => {
       select: 'isActive name  email phone creator user imgUrl emails type'
     },
     { path: 'creator', select: 'name google imgUrl emails.default' },
-    { path: 'lines' }
+    { path: 'lines' },
+    { path: 'currency' }
   ];
   options.sort = { ...sort };
   delete rquery.createdAt;
