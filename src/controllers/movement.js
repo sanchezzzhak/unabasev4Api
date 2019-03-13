@@ -67,7 +67,7 @@ export const getPersonal = (req, res) => {
       //     'quantity price'
       //   );
       // }
-      res.json(newMovements);
+      res.json(movements);
     }
   });
 };
