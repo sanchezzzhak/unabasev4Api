@@ -29,7 +29,7 @@ export const getPersonal = (req, res) => {
       select: 'isActive name  email phone creator user imgUrl emails type'
     },
     { path: 'creator', select: 'name google imgUrl emails.default' },
-    { path: 'lines' },
+    // { path: 'lines' },
     { path: 'currency' }
   ];
   options.sort = { ...sort };
@@ -54,11 +54,20 @@ export const getPersonal = (req, res) => {
   console.log('query');
   console.log(query);
   console.log(query.$or);
-  Movement.paginate(query, options, (err, movements) => {
+  Movement.paginate(query, options, async (err, movements) => {
     if (err) {
       res.status(500).end();
     } else {
-      res.json(movements);
+      let newMovements = {};
+      Object.assign(newMovements, movements);
+      newMovements.docs = [];
+      for (let i = 0; i < movements.docs.length; i++) {
+        let lines = await Line.find(
+          { movement: movements.docs[i]._id },
+          'quantity price'
+        );
+      }
+      res.json(newMovements);
     }
   });
 };
