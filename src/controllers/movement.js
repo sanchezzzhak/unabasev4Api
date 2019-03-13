@@ -406,7 +406,7 @@ export const linkMovement = (email, user) => {
       console.log(err);
       res.status(500).send(err);
     } else {
-      for (contact of contacts) {
+      for (let contact of contacts) {
         let client = {
           'client.type': 'Contact',
           'client.data': contact._id
