@@ -58,8 +58,14 @@ export function create(req, res) {
         line.item,
         { $set: { global } },
         { new: true }
-      ).exec();
-      res.send(line);
+      ).exec((err, item) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          line.item = item;
+          res.send(line);
+        }
+      });
     }
   });
 }
