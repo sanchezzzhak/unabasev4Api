@@ -242,6 +242,9 @@ export const getOne = (req, res) => {
       {
         path: 'creator',
         select: 'name  imgUrl emails'
+      },
+      {
+        path: 'currency'
       }
     ])
     .exec((err, movement) => {
