@@ -207,6 +207,9 @@ export const create = (req, res) => {
           },
           {
             path: 'contact'
+          },
+          {
+            path: 'currency'
           }
         ],
         err => {
