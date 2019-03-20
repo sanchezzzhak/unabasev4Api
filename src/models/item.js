@@ -22,28 +22,37 @@ const itemSchema = new Schema(
         estimate: {
           buy: {
             lock: { type: Boolean, default: true },
-            price: { type: Number }
+            min: { type: Number },
+            max: { type: Number },
+            margin: {
+              max: {
+                percentage: { type: Number },
+                price: { type: Number, default: 0 }
+              },
+              min: {
+                percentage: { type: Number },
+                price: { type: Number, default: 0 }
+              }
+            }
           },
           sell: {
             lock: { type: Boolean, default: true },
-            price: { type: Number }
-          },
-          cost: {
-            lock: { type: Boolean, default: true },
-            price: { type: Number }
+            min: { type: Number },
+            max: { type: Number },
+            margin: {
+              max: {
+                percentage: { type: Number },
+                price: { type: Number, default: 0 }
+              },
+              min: {
+                percentage: { type: Number },
+                price: { type: Number, default: 0 }
+              }
+            },
           }
         },
         tax: Array({ type: Schema.Types.ObjectId, ref: 'Tax' }),
-        margin: {
-          max: {
-            percentage: { type: Number },
-            price: { type: Number, default: 0 }
-          },
-          min: {
-            percentage: { type: Number },
-            price: { type: Number, default: 0 }
-          }
-        },
+
         lastPrice: {
           buy: { type: Number },
           sell: { type: Number }
