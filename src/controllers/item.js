@@ -31,7 +31,21 @@ const routes = {
           console.log(err);
           res.status(500).end(err);
         } else if (item) {
-          res.send(item);
+          item.populate(
+            [
+              {
+                path: 'global.tax'
+              }
+            ],
+            err => {
+              if (err) {
+                console.log(err);
+                res.status(500).end(err);
+              } else {
+                res.send(item);
+              }
+            }
+          );
         } else {
           res.status(404).end();
         }
