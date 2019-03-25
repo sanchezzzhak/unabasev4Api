@@ -60,8 +60,14 @@ export function create(req, res) {
         } else {
           let index = item.global.map(i => i.currency).indexOf(currency);
           item.global[index].lastPrice[movementType] = line.price;
-          line.item = item;
-          res.send(line);
+          item.save((err, newItem) => {
+            if (err) {
+              res.status(500).send(err);
+            } else {
+              line.item = newItem;
+              res.send(line);
+            }
+          });
         }
       });
     }
