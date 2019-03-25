@@ -44,24 +44,22 @@ export function create(req, res) {
         );
       }
 
-      let global = {
-        currency,
-        lastPrice: {
-          [movementType]: line.price
-        }
-      };
+      // let global = {
+      //   currency,
+      //   lastPrice: {
+      //     [movementType]: line.price
+      //   }
+      // };
       console.log('////////////////////////////');
       console.log(global);
       console.log('////////////////////////////');
       console.log(req.body.movementType);
-      Item.findByIdAndUpdate(
-        line.item,
-        { $set: { global } },
-        { new: true }
-      ).exec((err, item) => {
+      Item.findOne({ 'global.currency': currency }).exec((err, item) => {
         if (err) {
           res.status(500).send(err);
         } else {
+          let index = item.global.map(i => i.currency).indexOf(currency);
+          item.global[index].lastPrice[movementType] = line.price;
           line.item = item;
           res.send(line);
         }
