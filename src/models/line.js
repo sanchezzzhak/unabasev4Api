@@ -8,6 +8,13 @@ const lineSchema = new Schema(
     number: { type: Number, default: 0 },
     quantity: { type: Number },
     price: { type: Number },
+    numbers: {
+      price: Number,
+      budget: Number,
+      cost: Number
+    }
+    // quantity: Array({}),
+
     item: { type: Schema.Types.ObjectId, ref: 'Item' },
     movement: { type: Schema.Types.ObjectId, ref: 'Movement' },
     comments: Array({ type: Schema.Types.ObjectId, ref: 'Comment' }),

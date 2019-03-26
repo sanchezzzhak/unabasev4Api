@@ -81,7 +81,13 @@ let userSchema = Schema(
      *  array of ObjectIds from business asociated
      */
     business: Array({ type: Schema.Types.ObjectId, ref: 'User' }),
-    users: Array({ type: Schema.Types.ObjectId, ref: 'User' })
+    users: Array({ type: Schema.Types.ObjectId, ref: 'User' }),
+    quantity: [
+      {
+        name: 'cantidad',
+        number: 1
+      }
+    ]
   },
   { timestamps: true }
 );
