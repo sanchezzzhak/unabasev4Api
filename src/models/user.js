@@ -84,7 +84,7 @@ let userSchema = Schema(
     users: Array({ type: Schema.Types.ObjectId, ref: 'User' }),
     quantity: [
       {
-        name: 'cantidad',
+        name: { type: String, default: 'Cantidad' },
         number: 1
       }
     ]
