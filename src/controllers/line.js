@@ -30,7 +30,10 @@ export function get(req, res) {
 export function create(req, res) {
   let line = new Line(req.body);
   let movementType = req.body.movementType === 'income' ? 'sell' : 'buy';
-  let currency = req.body.currency;
+  let currency =
+    typeof req.body.currency === 'object'
+      ? req.body.currency._id
+      : req.body.currency;
   line.creator = req.user._id;
   line.save((err, line) => {
     if (err) {
