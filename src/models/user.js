@@ -85,7 +85,7 @@ let userSchema = Schema(
     quantity: [
       {
         name: { type: String, default: 'Cantidad' },
-        number: 1
+        number: { type: Number, default: 1 }
       }
     ]
   },
