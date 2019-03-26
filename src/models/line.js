@@ -12,7 +12,7 @@ const lineSchema = new Schema(
       price: Number,
       budget: Number,
       cost: Number
-    }
+    },
     // quantity: Array({}),
 
     item: { type: Schema.Types.ObjectId, ref: 'Item' },
