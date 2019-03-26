@@ -133,6 +133,7 @@ userSchema.methods.getUser = function() {
     website: this.website,
     creator: this.creator,
     admins: this.admins,
+    quantity: this.quantity,
     users: this.users
   };
   return user;
