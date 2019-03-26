@@ -2,6 +2,9 @@ import Line from '../models/line';
 import Movement from '../models/movement';
 import Item from '../models/item';
 
+import { Types } from 'mongoose';
+const ObjectId = Types.ObjectId;
+
 export function get(req, res) {
   let rquery = ntype(req.query);
   let options = {};
@@ -54,11 +57,16 @@ export function create(req, res) {
       console.log(global);
       console.log('////////////////////////////');
       console.log(req.body.movementType);
+
       Item.findOne({ 'global.currency': currency }).exec((err, item) => {
         if (err) {
           res.status(500).send(err);
         } else {
-          let index = item.global.map(i => i.currency).indexOf(currency);
+          let foundItem = item.global.map(i => {
+            let t = i.currency;
+            return i.currency.toString();
+          });
+          let index = foundItem.indexOf(currency);
           item.global[index].lastPrice[movementType] = line.price;
           item.save((err, newItem) => {
             if (err) {
