@@ -62,10 +62,13 @@ export function create(req, res) {
         if (err) {
           res.status(500).send(err);
         } else {
-          let foundItem = item.global.map(i => i.currency.toString());
+          if (item.global.length) {
+            let index = item.global
+              .map(i => i.currency.toString())
+              .indexOf(currency);
+            item.global[index].lastPrice[movementType] = line.price;
+          }
 
-          let index = foundItem.indexOf(currency);
-          item.global[index].lastPrice[movementType] = line.price;
           item.save((err, newItem) => {
             if (err) {
               res.status(500).send(err);
