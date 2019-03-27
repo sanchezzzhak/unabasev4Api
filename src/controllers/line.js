@@ -61,7 +61,7 @@ export function create(req, res) {
       console.log('////////////////////////////');
       console.log(req.body.movementType);
 
-      Item.findOne({ 'global.currency': currency }).exec((err, item) => {
+      Item.findOne({ _id: req.body.item }).exec((err, item) => {
         if (err) {
           res.status(500).send(err);
         } else {
