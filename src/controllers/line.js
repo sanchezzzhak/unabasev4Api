@@ -28,6 +28,8 @@ export function get(req, res) {
   });
 }
 export function create(req, res) {
+  console.log('//////////////////////////// req.body from create');
+  console.log(req.body);
   let line = new Line(req.body);
   let movementType = req.body.movementType === 'income' ? 'sell' : 'buy';
   let currency =
@@ -87,6 +89,8 @@ export function create(req, res) {
 }
 
 export function updateOne(req, res) {
+  console.log('//////////////////////////// req.body from update');
+  console.log(req.body);
   let movementType = req.body.movementType === 'income' ? 'sell' : 'buy';
   let currency = req.body.currency;
   Line.findByIdAndUpdate(
