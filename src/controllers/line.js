@@ -58,7 +58,7 @@ export function create(req, res) {
       // };
       // console.log('////////////////////////////');
       // console.log(global);
-      console.log('////////////////////////////');
+      console.log('//////////////////////////// from create');
       console.log(req.body.movementType);
 
       Item.findOne({ _id: req.body.item }).exec((err, item) => {
@@ -101,12 +101,12 @@ export function updateOne(req, res) {
         let global = {
           currency,
           lastPrice: {
-            [movementType]: line.price
+            [movementType]: line.numbers.price
           }
         };
-        console.log('////////////////////////////');
+        console.log('//////////////////////////// from update');
         console.log(global);
-        console.log('////////////////////////////');
+        console.log('//////////////////////////// from update');
         console.log(req.body.movementType);
         Item.findByIdAndUpdate(
           line.item,
