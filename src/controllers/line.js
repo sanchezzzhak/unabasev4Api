@@ -56,10 +56,10 @@ export function create(req, res) {
       //     [movementType]: line.price
       //   }
       // };
-      console.log('////////////////////////////');
-      console.log(global);
-      console.log('////////////////////////////');
-      console.log(req.body.movementType);
+      // console.log('////////////////////////////');
+      // console.log(global);
+      // console.log('////////////////////////////');
+      // console.log(req.body.movementType);
 
       Item.findOne({ _id: req.body.item }).exec((err, item) => {
         if (err) {
