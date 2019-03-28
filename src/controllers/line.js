@@ -33,9 +33,9 @@ export function create(req, res) {
   let line = new Line(req.body);
   let movementType = req.body.movementType === 'income' ? 'sell' : 'buy';
   let currency =
-    typeof req.body.item.global[0].currency === 'object'
-      ? req.body.item.global[0].currency._id
-      : req.body.item.global[0].currency;
+    typeof req.body.currency === 'object'
+      ? req.body.currency._id
+      : req.body.currency;
   line.creator = req.user._id;
   line.save((err, line) => {
     if (err) {
