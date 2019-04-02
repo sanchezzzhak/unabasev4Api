@@ -27,8 +27,8 @@ export function get(req, res) {
     }
   });
 }
-export function createMany(res, res) {
-  let movementType = req.params.movementType;
+export function createMany(req, res) {
+  let movementType = req.params.movementType === 'income' ? 'sell' : 'buy';
   Line.insertMany(req.body, (err, lines) => {
     if (err) {
       res.status(500).send(err);
