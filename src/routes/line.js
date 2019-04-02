@@ -1,6 +1,12 @@
 import { Router } from 'express';
 const lines = Router();
-import { create, get, updateOne, deleteOne } from '../controllers/line';
+import {
+  create,
+  get,
+  updateOne,
+  deleteOne,
+  createMany
+} from '../controllers/line';
 
 import auth from '../config/lib/auth';
 import logger from '../lib/logger';
@@ -26,6 +32,15 @@ lines.post(
     module
   }),
   create
+);
+lines.post(
+  '/many/:movementType',
+  logger({
+    name: 'create line',
+    description: 'create line',
+    module
+  }),
+  createMany
 );
 lines.put(
   '/:id',

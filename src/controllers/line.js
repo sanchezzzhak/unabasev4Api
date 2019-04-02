@@ -27,6 +27,31 @@ export function get(req, res) {
     }
   });
 }
+export function createMany(res, res) {
+  let movementType = req.params.movementType;
+  Line.insertMany(req.body, (err, lines) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      for (let line of lines) {
+        Item.findById(line.item.toString()).exec((err, item) => {
+          if (err) {
+            res.status(500).send(err);
+          } else {
+            if (item.global.length) {
+              let index = item.global
+                .map(i => line.currency.toString())
+                .indexOf(currency);
+              item.global[index].lastPrice[movementType] = line.price;
+              item.save();
+            }
+          }
+        });
+      }
+      res.send(lines);
+    }
+  });
+}
 export function create(req, res) {
   console.log('//////////////////////////// req.body from create');
   console.log(req.body);
@@ -41,28 +66,16 @@ export function create(req, res) {
     if (err) {
       res.status(500).send(err);
     } else {
-      if (line.movement) {
-        Movement.findByIdAndUpdate(
-          line.movement,
-          { $addToSet: { lines: line._id } },
-          {},
-          (err, movement) => {
-            if (err) console.log(err);
-          }
-        );
-      }
-
-      // let global = {
-      //   currency,
-      //   lastPrice: {
-      //     [movementType]: line.price
-      //   }
-      // };
-      // console.log('////////////////////////////');
-      // console.log(global);
-      console.log('//////////////////////////// from create');
-      console.log(req.body.movementType);
-
+      // if (line.movement) {
+      //   Movement.findByIdAndUpdate(
+      //     line.movement,
+      //     { $addToSet: { lines: line._id } },
+      //     {},
+      //     (err, movement) => {
+      //       if (err) console.log(err);
+      //     }
+      //   );
+      // }
       Item.findOne({ _id: req.body.item }).exec((err, item) => {
         if (err) {
           res.status(500).send(err);
