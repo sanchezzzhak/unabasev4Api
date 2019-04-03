@@ -31,32 +31,23 @@ export function createMany(req, res) {
   let movementType = req.query.movementType === 'income' ? 'sell' : 'buy';
   let currency = req.query.currency === 'income' ? 'sell' : 'buy';
   let linesArray = [];
-  Line.insertMany(req.body, (err, lines) => {
+  Line.insertMany(req.body, async (err, lines) => {
     if (err) {
       res.status(500).send(err);
     } else {
-      for (let line of lines) {
-        Item.findById(line.item.toString()).exec((err, item) => {
-          if (err) {
-            res.status(500).send(err);
-          } else {
-            if (item.global.length) {
-              let index = item.global.map(i => currency).indexOf(currency);
-              item.global[index].lastPrice[movementType] = line.price;
-              item.save();
-              line.item = item;
-              linesArray.push(line);
-            }
-          }
-        });
-      }
+      // for (let line of lines) {
+      //    line.populate([{ path: 'item' }], err => {
+      //     linesArray.push(line);
+      //   });
+      // }
 
-      // res.send(linesArray);
+      await Line.populate(lines, { path: 'item' });
+      res.send(lines);
     }
-  }).then(data => {
-    console.log('data::');
-    console.log(data);
   });
+  // Line.insertMany(req.body).then(async result => {
+  //   console.log(result);
+  // });
 }
 export function create(req, res) {
   console.log('//////////////////////////// req.body from create');
