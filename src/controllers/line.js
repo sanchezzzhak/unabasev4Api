@@ -44,20 +44,12 @@ export function createMany(req, res) {
                 .indexOf(currency);
               item.global[index].lastPrice[movementType] = line.price;
               item.save();
+              line.item = item;
             }
           }
         });
       }
-      lines.populate(
-        [
-          {
-            path: 'item'
-          }
-        ],
-        err => {
-          res.send(lines);
-        }
-      );
+      res.send(lines);
     }
   });
 }
