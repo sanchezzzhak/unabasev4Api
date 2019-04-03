@@ -48,15 +48,15 @@ export function createMany(req, res) {
       //     }
       //   });
       // }
-      lines.forEach(async line => {
-        await Item.findById(line.item.toString()).exec((err, item) => {
+      lines.forEach(line => {
+        Item.findById(line.item.toString()).exec(async (err, item) => {
           if (err) {
             res.status(500).send(err);
           } else {
             if (item.global.length) {
               let index = item.global.map(i => currency).indexOf(currency);
               item.global[index].lastPrice[movementType] = line.price;
-              item.save();
+              await item.save();
             }
           }
           line.item = item;
