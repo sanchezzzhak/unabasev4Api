@@ -30,30 +30,30 @@ export function get(req, res) {
 export function createMany(req, res) {
   let movementType = req.query.movementType === 'income' ? 'sell' : 'buy';
   let currency = req.query.currency === 'income' ? 'sell' : 'buy';
-  Line.insertMany(req.body)
-    .populate('item')
-    .exec((err, lines) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-        for (let line of lines) {
-          Item.findById(line.item.toString()).exec((err, item) => {
-            if (err) {
-              res.status(500).send(err);
-            } else {
-              if (item.global.length) {
-                let index = item.global.map(i => currency).indexOf(currency);
-                item.global[index].lastPrice[movementType] = line.price;
-                item.save();
-                line.item = item;
-              }
+  let linesArray = [];
+  Line.insertMany(req.body).exec(async (err, lines) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      for (let line of lines) {
+        await Item.findById(line.item.toString()).exec((err, item) => {
+          if (err) {
+            res.status(500).send(err);
+          } else {
+            if (item.global.length) {
+              let index = item.global.map(i => currency).indexOf(currency);
+              item.global[index].lastPrice[movementType] = line.price;
+              item.save();
+              line.item = item;
+              linesArray.push(line);
             }
-          });
-        }
-
-        res.send(lines);
+          }
+        });
       }
-    });
+
+      res.send(lines);
+    }
+  });
 }
 export function create(req, res) {
   console.log('//////////////////////////// req.body from create');
