@@ -24,6 +24,7 @@ const itemSchema = new Schema(
             lock: { type: Boolean, default: true },
             min: { type: Number },
             max: { type: Number },
+            price: { type: Number },
             margin: {
               max: {
                 percentage: { type: Number },
@@ -39,6 +40,7 @@ const itemSchema = new Schema(
             lock: { type: Boolean, default: true },
             min: { type: Number },
             max: { type: Number },
+            price: { type: Number },
             margin: {
               max: {
                 percentage: { type: Number },
@@ -48,7 +50,7 @@ const itemSchema = new Schema(
                 percentage: { type: Number },
                 price: { type: Number, default: 0 }
               }
-            },
+            }
           }
         },
         tax: Array({ type: Schema.Types.ObjectId, ref: 'Tax' }),

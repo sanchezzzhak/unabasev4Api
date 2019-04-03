@@ -28,26 +28,14 @@ export function get(req, res) {
   });
 }
 export function createMany(req, res) {
-  let movementType = req.query.movementType === 'income' ? 'sell' : 'buy';
-  let currency = req.query.currency === 'income' ? 'sell' : 'buy';
-  let linesArray = [];
   Line.insertMany(req.body, async (err, lines) => {
     if (err) {
       res.status(500).send(err);
     } else {
-      // for (let line of lines) {
-      //    line.populate([{ path: 'item' }], err => {
-      //     linesArray.push(line);
-      //   });
-      // }
-
       await Line.populate(lines, { path: 'item' });
       res.send(lines);
     }
   });
-  // Line.insertMany(req.body).then(async result => {
-  //   console.log(result);
-  // });
 }
 export function create(req, res) {
   console.log('//////////////////////////// req.body from create');
@@ -63,16 +51,6 @@ export function create(req, res) {
     if (err) {
       res.status(500).send(err);
     } else {
-      // if (line.movement) {
-      //   Movement.findByIdAndUpdate(
-      //     line.movement,
-      //     { $addToSet: { lines: line._id } },
-      //     {},
-      //     (err, movement) => {
-      //       if (err) console.log(err);
-      //     }
-      //   );
-      // }
       Item.findOne({ _id: req.body.item }).exec((err, item) => {
         if (err) {
           res.status(500).send(err);
