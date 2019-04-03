@@ -44,6 +44,7 @@
     "normalize-bool": "^1.0.0",
     "normalize-type": "^1.5.1",
     "pug": "^2.0.3",
+    "save": "^2.3.3",
     "serve-favicon": "^2.5.0",
     "unabase_api_doc": "*"
   },
