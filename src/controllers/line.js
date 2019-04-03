@@ -28,7 +28,8 @@ export function get(req, res) {
   });
 }
 export function createMany(req, res) {
-  let movementType = req.params.movementType === 'income' ? 'sell' : 'buy';
+  let movementType = req.query.movementType === 'income' ? 'sell' : 'buy';
+  let currency = req.query.currency === 'income' ? 'sell' : 'buy';
   Line.insertMany(req.body, (err, lines) => {
     if (err) {
       res.status(500).send(err);
@@ -39,9 +40,7 @@ export function createMany(req, res) {
             res.status(500).send(err);
           } else {
             if (item.global.length) {
-              let index = item.global
-                .map(i => line.currency.toString())
-                .indexOf(currency);
+              let index = item.global.map(i => currency).indexOf(currency);
               item.global[index].lastPrice[movementType] = line.price;
               item.save();
               line.item = item;
