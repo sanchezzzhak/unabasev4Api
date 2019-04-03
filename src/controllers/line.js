@@ -1,6 +1,7 @@
 import Line from '../models/line';
 import Movement from '../models/movement';
 import Item from '../models/item';
+import Currency from '../models/currency';
 
 import { Types } from 'mongoose';
 const ObjectId = Types.ObjectId;
@@ -80,7 +81,10 @@ export function updateOne(req, res) {
   console.log('//////////////////////////// req.body from update');
   console.log(req.body);
   let movementType = req.body.movementType === 'income' ? 'sell' : 'buy';
-  let currency = req.body.currency;
+  let currency =
+    typeof req.body.currency === 'object'
+      ? req.body.currency._id
+      : req.body.currency;
   Line.findByIdAndUpdate(
     req.params.id,
     req.body,
