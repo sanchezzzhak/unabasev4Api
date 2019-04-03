@@ -4,5 +4,5 @@
     "babel-preset-stage-2",
     "babel-preset-stage-3"
   ],
-  "plugins": ["add-module-exports", "babel-polifyll"]
+  "plugins": ["add-module-exports", "@babel/plugin-transform-runtime"]
 }
