@@ -51,7 +51,7 @@ export function createMany(req, res) {
         });
       }
 
-      res.send(lines);
+      res.send(linesArray);
     }
   });
 }
