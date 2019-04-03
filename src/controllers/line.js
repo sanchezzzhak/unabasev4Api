@@ -115,6 +115,7 @@ export function updateOne(req, res) {
                 .map(i => currency.toString())
                 .indexOf(currency);
               item.global[index].lastPrice[movementType] = line.price;
+              item.save();
             }
           })
         );
