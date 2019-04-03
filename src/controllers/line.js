@@ -34,8 +34,22 @@ export function createMany(req, res) {
     if (err) {
       res.status(500).send(err);
     } else {
-      for (let line of lines) {
-        Item.findById(line.item.toString()).exec((err, item) => {
+      // for (let line of lines) {
+      //   Item.findById(line.item.toString()).exec((err, item) => {
+      //     if (err) {
+      //       res.status(500).send(err);
+      //     } else {
+      //       if (item.global.length) {
+      //         let index = item.global.map(i => currency).indexOf(currency);
+      //         item.global[index].lastPrice[movementType] = line.price;
+      //         item.save();
+      //         line.item = item;
+      //       }
+      //     }
+      //   });
+      // }
+      lines.forEach(async line => {
+        await Item.findById(line.item.toString()).exec((err, item) => {
           if (err) {
             res.status(500).send(err);
           } else {
@@ -43,11 +57,13 @@ export function createMany(req, res) {
               let index = item.global.map(i => currency).indexOf(currency);
               item.global[index].lastPrice[movementType] = line.price;
               item.save();
-              line.item = item;
             }
           }
+          line.item = item;
+          console.log('bef');
         });
-      }
+      });
+      console.log('aft');
       res.send(lines);
     }
   });
