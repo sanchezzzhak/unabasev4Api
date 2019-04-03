@@ -90,32 +90,43 @@ export function updateOne(req, res) {
         console.log(err);
         res.status(500).send(err);
       } else if (line) {
-        let global = {
-          currency,
-          lastPrice: {
-            [movementType]: line.numbers.price
-          }
-        };
-        console.log('//////////////////////////// global from update');
-        console.log(global);
-        console.log('//////////////////////////// from update');
+        // let global = {
+        //   currency,
+        //   lastPrice: {
+        //     [movementType]: line.numbers.price
+        //   }
+        // };
+        // console.log('//////////////////////////// global from update');
+        // console.log(global);
+        console.log('/---------------req.body.movementType');
         console.log(req.body.movementType);
+        console.log('/---------------movementType');
+        console.log(movementType);
+        console.log('/---------------currency');
+        console.log(currency);
+        console.log('/---------------currencytoString');
+        console.log(currency.toString());
+        console.log('/---------------line.item.toString()');
+        console.log(line.item.toString());
         // Item.findByIdAndUpdate(
         //   line.item,
         //   { $set: { global } },
         //   { new: true }
         // ).exec();
-        console.log('line.item.toString()');
-        console.log(line.item.toString());
         Item.findById(line.item.toString()).exec((err, item) => {
           if (err) {
             res.status(500).send(err);
           } else {
+            console.log('/---------------item found');
+            console.log(item);
             let index = item.global
-              .map(i => currency.toString())
+              .map(i => i.currency.toString())
               .indexOf(currency);
+            console.log('/---------------index');
+            console.log(index);
             item.global[index].lastPrice[movementType] = line.numbers.price;
             item.save();
+            console.log('/---------------item.global[index]');
             console.log(item.global[index]);
           }
         });
