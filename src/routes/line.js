@@ -34,7 +34,7 @@ lines.post(
   create
 );
 lines.post(
-  '/many/:movementType',
+  '/many',
   logger({
     name: 'create line',
     description: 'create line',
