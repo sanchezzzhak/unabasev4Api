@@ -31,7 +31,7 @@ export function createMany(req, res) {
   let movementType = req.query.movementType === 'income' ? 'sell' : 'buy';
   let currency = req.query.currency === 'income' ? 'sell' : 'buy';
   let linesArray = [];
-  Line.insertMany(req.body).exec(async (err, lines) => {
+  Line.insertMany(req.body, async (err, lines) => {
     if (err) {
       res.status(500).send(err);
     } else {
