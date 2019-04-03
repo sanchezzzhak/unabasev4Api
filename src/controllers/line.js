@@ -105,7 +105,7 @@ export function updateOne(req, res) {
         //   { $set: { global } },
         //   { new: true }
         // ).exec();
-        Item.findById().exec(
+        Item.findById(line.item.toString()).exec(
           (err,
           item => {
             if (err) {
