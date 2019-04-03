@@ -48,7 +48,16 @@ export function createMany(req, res) {
           }
         });
       }
-      res.send(lines);
+      lines.populate(
+        [
+          {
+            path: 'item'
+          }
+        ],
+        err => {
+          res.send(lines);
+        }
+      );
     }
   });
 }
