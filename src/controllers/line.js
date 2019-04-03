@@ -96,7 +96,7 @@ export function updateOne(req, res) {
             [movementType]: line.numbers.price
           }
         };
-        console.log('//////////////////////////// from update');
+        console.log('//////////////////////////// global from update');
         console.log(global);
         console.log('//////////////////////////// from update');
         console.log(req.body.movementType);
@@ -105,20 +105,20 @@ export function updateOne(req, res) {
         //   { $set: { global } },
         //   { new: true }
         // ).exec();
-        Item.findById(line.item.toString()).exec(
-          (err,
-          item => {
-            if (err) {
-              res.status(500).send(err);
-            } else {
-              let index = item.global
-                .map(i => currency.toString())
-                .indexOf(currency);
-              item.global[index].lastPrice[movementType] = line.price;
-              item.save();
-            }
-          })
-        );
+        console.log('line.item.toString()');
+        console.log(line.item.toString());
+        Item.findById(line.item.toString()).exec((err, item) => {
+          if (err) {
+            res.status(500).send(err);
+          } else {
+            let index = item.global
+              .map(i => currency.toString())
+              .indexOf(currency);
+            item.global[index].lastPrice[movementType] = line.numbers.price;
+            item.save();
+            console.log(item.global[index]);
+          }
+        });
         res.send(line);
       }
     }
