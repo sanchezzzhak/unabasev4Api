@@ -100,11 +100,24 @@ export function updateOne(req, res) {
         console.log(global);
         console.log('//////////////////////////// from update');
         console.log(req.body.movementType);
-        Item.findByIdAndUpdate(
-          line.item,
-          { $set: { global } },
-          { new: true }
-        ).exec();
+        // Item.findByIdAndUpdate(
+        //   line.item,
+        //   { $set: { global } },
+        //   { new: true }
+        // ).exec();
+        Item.findById().exec(
+          (err,
+          item => {
+            if (err) {
+              res.status(500).send(err);
+            } else {
+              let index = item.global
+                .map(i => currency.toString())
+                .indexOf(currency);
+              item.global[index].lastPrice[movementType] = line.price;
+            }
+          })
+        );
         res.send(line);
       }
     }
