@@ -6,6 +6,8 @@ const routes = {
     let options = {};
     options.page = rquery.page || 1;
     options.limit = rquery.limit || 20;
+    options.sort = { updatedAt: -1 };
+
     options.populate = [
       {
         path: 'tax',
