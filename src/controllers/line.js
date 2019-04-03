@@ -51,7 +51,7 @@ export function createMany(req, res) {
         });
       }
 
-      res.send(linesArray);
+      // res.send(linesArray);
     }
   }).then(data => {
     console.log('data::');
