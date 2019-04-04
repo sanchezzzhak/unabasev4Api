@@ -37,7 +37,12 @@ const movementSchema = new Schema(
     comments: Array({ type: Schema.Types.ObjectId, ref: 'Comment' }),
     total: {
       net: { type: Number, default: 0 },
-      tax: { type: Number, default: 0 }
+      tax: { type: Number, default: 0 },
+      budget: { type: Number, default: 0 },
+      profit: {
+        number: { type: Number, default: 0 },
+        percentage: { type: Number, default: 0 }
+      }
     },
     state: { type: String, default: 'draft' },
     isActive: { type: Boolean, default: true },

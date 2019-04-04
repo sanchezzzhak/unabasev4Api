@@ -54,7 +54,7 @@ export const getPersonal = (req, res) => {
   console.log('query');
   console.log(query);
   console.log(query.$or);
-  Movement.paginate(query, options, (err, movements) => {
+  Movement.paginate(query, options, async (err, movements) => {
     if (err) {
       res.status(500).end();
     } else {
