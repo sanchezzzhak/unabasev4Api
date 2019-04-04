@@ -117,6 +117,9 @@ export function updateOne(req, res) {
         //   { $set: { global } },
         //   { new: true }
         // ).exec();
+        Movement.findByIdAndUpdate(line.movement, {
+          total: req.body.totalMovement
+        }).exec();
         Item.findById(line.item.toString()).exec((err, item) => {
           if (err) {
             res.status(500).send(err);
