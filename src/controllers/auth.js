@@ -330,8 +330,7 @@ export default {
         // });
         console.log('data google');
         console.log(data.data);
-        console.log('req body google');
-        console.log(req.body.google);
+
         User.findOne(
           {
             'google.id': data.data.sub
