@@ -194,7 +194,7 @@ export default {
 
         let password;
         let activateHash;
-        
+        console.log(req.body.password);
 
         if (
           typeof req.body.password === 'undefined' ||
@@ -333,7 +333,8 @@ export default {
 
         User.findOne(
           {
-            'google.id': data.data.sub
+            'google.id': data.data.sub,
+            type: 'personal'
           },
           (err, user) => {
             if (err) {
