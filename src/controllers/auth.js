@@ -194,7 +194,7 @@ export default {
 
         let password;
         let activateHash;
-        console.log(req.body.password);
+        
 
         if (
           typeof req.body.password === 'undefined' ||
