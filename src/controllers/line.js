@@ -108,9 +108,9 @@ export function updateOne(req, res) {
       Movement.findByIdAndUpdate(line.movement, {
         total: req.body.totalMovement
       }).exec();
-      Line.findByIdAndUpdate(line.parent, {
+      Line.findByIdAndUpdate(req.body.parent, {
         $addToSet: { children: line._id }
-      });
+      }).exec();
       Item.findById(line.item.toString()).exec((err, item) => {
         if (err) {
           res.status(500).send(err);
