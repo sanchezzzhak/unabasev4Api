@@ -12,7 +12,14 @@ export function get(req, res) {
   options.page = rquery.page || 1;
   options.limit = rquery.limit || 20;
 
-  options.populate = [{ path: 'tax', select: 'name number' }, { path: 'item' }];
+  options.populate = [
+    { path: 'tax', select: 'name number' },
+    { path: 'item' },
+    {
+      path: children,
+      populate: { path: children, populate: { path: children, populate: { path: children, populate: children } } }
+    }
+  ];
   delete rquery.page;
   delete rquery.limit;
   let query = {
