@@ -16,8 +16,11 @@ export function get(req, res) {
     { path: 'tax', select: 'name number' },
     { path: 'item' },
     {
-      path: children,
-      populate: { path: children, populate: { path: children, populate: { path: children, populate: children } } }
+      path: 'children',
+      populate: {
+        path: 'children',
+        populate: { path: 'children', populate: { path: 'children', populate: 'children' } }
+      }
     }
   ];
   delete rquery.page;

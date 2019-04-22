@@ -233,8 +233,11 @@ export const getOne = (req, res) => {
         path: 'currency'
       },
       {
-        path: children,
-        populate: { path: children, populate: { path: children, populate: { path: children, populate: children } } }
+        path: 'children',
+        populate: {
+          path: 'children',
+          populate: { path: 'children', populate: { path: 'children', populate: 'children' } }
+        }
       }
     ])
     .exec((err, movement) => {
