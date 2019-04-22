@@ -231,13 +231,6 @@ export const getOne = (req, res) => {
       },
       {
         path: 'currency'
-      },
-      {
-        path: 'children',
-        populate: {
-          path: 'children',
-          populate: { path: 'children', populate: { path: 'children', populate: 'children' } }
-        }
       }
     ])
     .exec((err, movement) => {
@@ -245,7 +238,20 @@ export const getOne = (req, res) => {
         res.status(500).send(err);
       } else if (movement) {
         Line.find({ movement: movement._id })
-          .populate('item', 'lastPrice global')
+          // .populate({'item', 'lastPrice global'})
+          .populate([
+            {
+              path: 'children',
+              populate: {
+                path: 'children',
+                populate: { path: 'children', populate: { path: 'children', populate: 'children' } }
+              }
+            },
+            {
+              path: 'item',
+              select: 'lastPrice global'
+            }
+          ])
           .exec((err, lines) => {
             if (err) {
               res.status(500).send(err);
