@@ -13,9 +13,7 @@ export const getPersonal = (req, res) => {
   // const state = req.params.state;
   let rquery = ntype(req.query);
   let options = {};
-  const sort = rquery.createdAt
-    ? { createdAt: rquery.createdAt }
-    : { createdAt: 'desc' };
+  const sort = rquery.createdAt ? { createdAt: rquery.createdAt } : { createdAt: 'desc' };
   options.page = rquery.page || 1;
   options.limit = rquery.limit || 20;
   options.select = 'name client responsable createdAt total state';
@@ -74,9 +72,7 @@ export const getPersonal = (req, res) => {
 export const get = (req, res) => {
   let rquery = ntype(req.query);
   let options = {};
-  const sort = rquery.createdAt
-    ? { createdAt: rquery.createdAt }
-    : { createdAt: 'desc' };
+  const sort = rquery.createdAt ? { createdAt: rquery.createdAt } : { createdAt: 'desc' };
   options.page = rquery.page || 1;
   options.limit = rquery.limit || 20;
   options.select = 'name client responsable createdAt total state';
@@ -117,9 +113,7 @@ export const getBusiness = (req, res) => {
   // const state = req.params.state;
   let rquery = ntype(req.query);
   let options = {};
-  const sort = rquery.createdAt
-    ? { createdAt: rquery.createdAt }
-    : { createdAt: 'desc' };
+  const sort = rquery.createdAt ? { createdAt: rquery.createdAt } : { createdAt: 'desc' };
   options.page = rquery.page || 1;
   options.limit = rquery.limit || 20;
   options.select = 'name client responsable createdAt total state ';
@@ -161,18 +155,7 @@ export const getBusiness = (req, res) => {
   });
 };
 export const create = (req, res) => {
-  const {
-    name,
-    dates,
-    client,
-    contact,
-    state,
-    lines,
-    description,
-    responsable,
-    personal,
-    total
-  } = req.body;
+  const { name, dates, client, contact, state, lines, description, responsable, personal, total } = req.body;
   let errorOnItem = { state: false };
   delete req.body.lines;
 
@@ -248,6 +231,10 @@ export const getOne = (req, res) => {
       },
       {
         path: 'currency'
+      },
+      {
+        path: children,
+        populate: { path: children, populate: { path: children, populate: { path: children, populate: children } } }
       }
     ])
     .exec((err, movement) => {
@@ -355,12 +342,7 @@ export const updateOne = (req, res) => {
   let data = req.body;
   let update = {};
   for (let i in data) {
-    if (
-      data.hasOwnProperty(i) &&
-      typeof data[i] !== 'undefined' &&
-      data[i] !== null &&
-      i !== 'lines'
-    ) {
+    if (data.hasOwnProperty(i) && typeof data[i] !== 'undefined' && data[i] !== null && i !== 'lines') {
       update[i] = data[i];
     }
   }
@@ -391,19 +373,14 @@ export const updateOne = (req, res) => {
   //       console.log(err);
   //     });
   // } else {
-  Movement.findOneAndUpdate(
-    { _id: req.params.id },
-    update,
-    { new: true },
-    (err, movement) => {
-      if (err) {
-        console.log(err);
-        res.status(500).send(err);
-      } else {
-        res.send(movement);
-      }
+  Movement.findOneAndUpdate({ _id: req.params.id }, update, { new: true }, (err, movement) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+    } else {
+      res.send(movement);
     }
-  );
+  });
   // }
 };
 export const linkMovement = (email, user) => {
