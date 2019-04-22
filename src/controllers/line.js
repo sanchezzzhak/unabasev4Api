@@ -110,7 +110,7 @@ export function updateOne(req, res) {
       }).exec();
       Line.findByIdAndUpdate(line.parent, {
         $addToSet: { children: line._id }
-      });
+      }).exec();
       Item.findById(line.item.toString()).exec((err, item) => {
         if (err) {
           res.status(500).send(err);
