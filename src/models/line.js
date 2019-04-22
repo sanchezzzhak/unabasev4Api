@@ -13,6 +13,9 @@ const lineSchema = new Schema(
       budget: Number,
       cost: Number
     },
+    children: Array,
+    listIndex: Number,
+    parentLine: Number,
     // quantity: Array({}),
 
     item: { type: Schema.Types.ObjectId, ref: 'Item' },
