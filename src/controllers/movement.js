@@ -237,7 +237,7 @@ export const getOne = (req, res) => {
       if (err) {
         res.status(500).send(err);
       } else if (movement) {
-        Line.find({ movement: movement._id, children: { $not: { $size: 0 } } })
+        Line.find({ movement: movement._id, parent: { $exists: false } })
           // .populate({'item', 'lastPrice global'})
           .populate([
             {
