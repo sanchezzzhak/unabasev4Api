@@ -244,7 +244,7 @@ export const getOne = (req, res) => {
               path: 'children',
               populate: {
                 path: 'children',
-                populate: { path: 'children', populate: { path: 'children', populate: 'children' } }
+                populate: { path: 'children item', populate: { path: 'children item', populate: 'children item' } }
               }
             },
             {
