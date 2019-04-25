@@ -242,10 +242,31 @@ export const getOne = (req, res) => {
           .populate([
             {
               path: 'children',
-              populate: {
-                path: 'children',
-                populate: { path: 'children item', populate: { path: 'children item', populate: 'children item' } }
-              }
+              populate: [
+                {
+                  path: 'children',
+                  populate: [
+                    {
+                      path: 'children',
+                      populate: [
+                        { path: 'children', populate: 'children' },
+                        {
+                          path: 'item',
+                          select: 'lastPrice global'
+                        }
+                      ]
+                    },
+                    {
+                      path: 'item',
+                      select: 'lastPrice global'
+                    }
+                  ]
+                },
+                {
+                  path: 'item',
+                  select: 'lastPrice global'
+                }
+              ]
             },
             {
               path: 'item',
