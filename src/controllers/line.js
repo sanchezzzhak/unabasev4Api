@@ -119,7 +119,7 @@ export function updateOne(req, res) {
         total: req.body.totalMovement
       }).exec();
       Line.findByIdAndUpdate(req.body.parent, {
-        $addToSet: { children: line._id }
+        $addToSet: { children: ObjectId(line._id) }
       }).exec();
       Item.findById(line.item.toString()).exec((err, item) => {
         if (err) {
