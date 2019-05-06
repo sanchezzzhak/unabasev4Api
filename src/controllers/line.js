@@ -1,9 +1,9 @@
-import Line from '../models/line';
-import Movement from '../models/movement';
-import Item from '../models/item';
-import Currency from '../models/currency';
+import Line from "../models/line";
+import Movement from "../models/movement";
+import Item from "../models/item";
+import Currency from "../models/currency";
 
-import { Types } from 'mongoose';
+import { Types } from "mongoose";
 const ObjectId = Types.ObjectId;
 
 export function get(req, res) {
@@ -13,13 +13,13 @@ export function get(req, res) {
   options.limit = rquery.limit || 20;
 
   options.populate = [
-    { path: 'tax', select: 'name number' },
-    { path: 'item' },
+    { path: "tax", select: "name number" },
+    { path: "item" },
     {
-      path: 'children',
+      path: "children",
       populate: {
-        path: 'children',
-        populate: { path: 'children', populate: { path: 'children', populate: 'children' } }
+        path: "children",
+        populate: { path: "children", populate: { path: "children", populate: "children" } }
       }
     }
   ];
@@ -28,7 +28,7 @@ export function get(req, res) {
   let query = {
     ...rquery
   };
-  console.log('query');
+  console.log("query");
   console.log(query);
   Line.paginate(query, options, (err, items) => {
     if (err) {
@@ -43,17 +43,17 @@ export function createMany(req, res) {
     if (err) {
       res.status(500).send(err);
     } else {
-      await Line.populate(lines, { path: 'item' });
+      await Line.populate(lines, { path: "item" });
       res.send(lines);
     }
   });
 }
 export function create(req, res) {
-  console.log('//////////////////////////// req.body from create');
+  console.log("//////////////////////////// req.body from create");
   console.log(req.body);
   let line = new Line(req.body);
-  let movementType = req.body.movementType === 'income' ? 'sell' : 'buy';
-  let currency = typeof req.body.currency === 'object' ? req.body.currency._id : req.body.currency;
+  let movementType = req.body.movementType === "income" ? "sell" : "buy";
+  let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
   line.creator = req.user._id;
   line.save((err, line) => {
     if (err) {
@@ -83,10 +83,10 @@ export function create(req, res) {
 }
 
 export function updateOne(req, res) {
-  console.log('//////////////////////////// req.body from update');
+  console.log("//////////////////////////// req.body from update");
   console.log(req.body);
-  let movementType = req.body.movementType === 'income' ? 'sell' : 'buy';
-  let currency = typeof req.body.currency === 'object' ? req.body.currency._id : req.body.currency;
+  let movementType = req.body.movementType === "income" ? "sell" : "buy";
+  let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
   Line.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, line) => {
     if (err) {
       console.log(err);
@@ -100,15 +100,15 @@ export function updateOne(req, res) {
       // };
       // console.log('//////////////////////////// global from update');
       // console.log(global);
-      console.log('/---------------req.body.movementType');
+      console.log("/---------------req.body.movementType");
       console.log(req.body.movementType);
-      console.log('/---------------movementType');
+      console.log("/---------------movementType");
       console.log(movementType);
-      console.log('/---------------currency');
+      console.log("/---------------currency");
       console.log(currency);
-      console.log('/---------------currencytoString');
+      console.log("/---------------currencytoString");
       console.log(currency.toString());
-      console.log('/---------------line.item.toString()');
+      console.log("/---------------line.item.toString()");
       console.log(line.item.toString());
       // Item.findByIdAndUpdate(
       //   line.item,
@@ -121,21 +121,23 @@ export function updateOne(req, res) {
       Line.findByIdAndUpdate(req.body.parent, {
         $addToSet: { children: ObjectId(line._id) }
       }).exec();
-      Item.findById(line.item.toString()).exec((err, item) => {
-        if (err) {
-          res.status(500).send(err);
-        } else {
-          console.log('/---------------item found');
-          console.log(item);
-          let index = item.global.map(i => i.currency.toString()).indexOf(currency);
-          console.log('/---------------index');
-          console.log(index);
-          item.global[index].lastPrice[movementType] = line.numbers.price;
-          item.save();
-          console.log('/---------------item.global[index]');
-          console.log(item.global[index]);
-        }
-      });
+      if (typeof currency !== "undefined") {
+        Item.findById(line.item.toString()).exec((err, item) => {
+          if (err) {
+            res.status(500).send(err);
+          } else {
+            console.log("/---------------item found");
+            console.log(item);
+            let index = item.global.map(i => i.currency.toString()).indexOf(currency);
+            console.log("/---------------index");
+            console.log(index);
+            item.global[index].lastPrice[movementType] = line.numbers.price;
+            item.save();
+            console.log("/---------------item.global[index]");
+            console.log(item.global[index]);
+          }
+        });
+      }
       res.send(line);
     }
   });
