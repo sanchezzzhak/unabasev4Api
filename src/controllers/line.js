@@ -126,7 +126,7 @@ export function updateOne(req, res) {
           }
         });
       }
-      line.populate([{ path: "item" }], err => {
+      line.populate([{ path: "item" }, { path: "children" }], err => {
         if (err) {
           console.log(err);
           res.status(500).send(err);
