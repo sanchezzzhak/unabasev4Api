@@ -81,6 +81,16 @@ export function create(req, res) {
     }
   });
 }
+export function updateMany(req, res) {
+  Line.updateMany({ _id: { $in: req.body.lines } }, { $set: req.body.data }, (err, lines) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+    } else {
+      res.send(lines);
+    }
+  });
+}
 
 export function updateOne(req, res) {
   console.log("//////////////////////////// req.body from update");
