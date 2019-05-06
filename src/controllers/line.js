@@ -126,7 +126,14 @@ export function updateOne(req, res) {
           }
         });
       }
-      res.send(line);
+      line.populate([{ path: "item" }], err => {
+        if (err) {
+          console.log(err);
+          res.status(500).send(err);
+        } else {
+          res.send(line);
+        }
+      });
     }
   });
 }
