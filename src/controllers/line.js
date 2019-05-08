@@ -55,7 +55,12 @@ export function createMany(req, res) {
     if (err) {
       res.status(500).send(err);
     } else {
-      await Line.populate(lines, { path: "item" });
+      await Line.populate(lines, [{ path: "item" }, { path: "parent" }]);
+      console.log("parent");
+      console.log(req.body);
+      Line.findByIdAndUpdate(req.body[0].parent, {
+        $addToSet: { children: lines.map(line => line._id) }
+      }).exec();
       res.send(lines);
     }
   });
