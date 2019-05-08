@@ -6,6 +6,18 @@ import Currency from "../models/currency";
 import { Types } from "mongoose";
 const ObjectId = Types.ObjectId;
 
+export const getOne = (req, res) => {
+  Line.findOne({ _id: req.params.id })
+    .populate({ path: "children" })
+    .exec((err, line) => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.send(line);
+      }
+    });
+};
+
 export function get(req, res) {
   let rquery = ntype(req.query);
   let options = {};
@@ -88,7 +100,7 @@ export function updateMany(req, res) {
       res.status(500).send(err);
     } else {
       Line.findByIdAndUpdate(req.body.lines[0].parent, {
-        $addToSet: { children: lines }
+        $addToSet: { children: lines.map(line => line._id) }
       }).exec();
       res.send(lines);
     }
