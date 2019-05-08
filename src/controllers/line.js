@@ -99,18 +99,15 @@ export function create(req, res) {
   });
 }
 export function updateMany(req, res) {
-  Line.updateMany({ _id: { $in: req.body.lines } }, { $set: req.body.data }, (err, lines) => {
+  Line.updateMany({ _id: { $in: req.body.lines } }, { $set: req.body.data }, async (err, lines) => {
     if (err) {
       console.log(err);
       res.status(500).send(err);
     } else {
-      console.log("parent");
-      console.log(req.body.lines[0].parent);
-      console.log(lines.map(line => line._id));
-
-      Line.findByIdAndUpdate(req.body.lines[0].parent, {
-        $addToSet: { children: lines.map(line => line._id) }
-      }).exec();
+      // Line.findByIdAndUpdate(req.body.lines[0].parent, {
+      //   $addToSet: { children: lines.map(line => line._id) }
+      // }).exec();
+      await Line.populate(lines, [{ path: "parent" }]);
       res.send(lines);
     }
   });
