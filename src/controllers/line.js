@@ -87,6 +87,9 @@ export function updateMany(req, res) {
       console.log(err);
       res.status(500).send(err);
     } else {
+      Line.findByIdAndUpdate(req.body.parent, {
+        $addToSet: { children: lines }
+      }).exec();
       res.send(lines);
     }
   });
