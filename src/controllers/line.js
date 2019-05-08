@@ -99,6 +99,10 @@ export function updateMany(req, res) {
       console.log(err);
       res.status(500).send(err);
     } else {
+      console.log("parent");
+      console.log(req.body.lines[0].parent);
+      console.log(lines.map(line => line._id));
+
       Line.findByIdAndUpdate(req.body.lines[0].parent, {
         $addToSet: { children: lines.map(line => line._id) }
       }).exec();
