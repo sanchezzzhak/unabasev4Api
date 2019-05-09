@@ -85,6 +85,9 @@ export function create(req, res) {
             item.global[index].lastPrice[movementType] = line.price;
           }
 
+          Line.findByIdAndUpdate(req.body.parent, {
+            $addToSet: { children: line._id }
+          }).exec();
           item.save((err, newItem) => {
             if (err) {
               res.status(500).send(err);
