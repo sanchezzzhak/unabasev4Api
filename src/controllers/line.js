@@ -117,8 +117,8 @@ export function updateMany(req, res) {
 }
 export function deleteMany(req, res) {
   console.log("deleteMany");
-  console.log(req.body);
-  Line.deleteMany({ _id: { $in: req.body } }, (err, resp) => {
+  console.log(req.body.lines);
+  Line.deleteMany({ _id: { $in: req.body.lines } }, (err, resp) => {
     if (err) {
       console.log(err);
       res.status(500).send(err);
