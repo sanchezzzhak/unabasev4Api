@@ -116,7 +116,7 @@ export function updateMany(req, res) {
   });
 }
 export function deleteMany(req, res) {
-  Line.deleteMany(req.body, (err, resp) => {
+  Line.deleteMany({ _id: { $in: req.body } }, (err, resp) => {
     if (err) {
       console.log(err);
       res.status(500).send(err);
