@@ -120,7 +120,6 @@ export function deleteMany(req, res) {
   console.log(req.body.lines);
   Line.deleteMany({ _id: { $in: req.body.lines } }, (err, resp) => {
     if (err) {
-      console.log(err);
       res.status(500).send(err);
     } else {
       res.send(resp);
