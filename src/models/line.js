@@ -1,10 +1,10 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const lineSchema = new Schema(
   {
     name: { type: String, required: true },
-    tax: { type: Schema.Types.ObjectId, ref: 'Tax' },
+    tax: { type: Schema.Types.ObjectId, ref: "Tax" },
     number: { type: Number, default: 0 },
     quantity: { type: Number },
     price: { type: Number },
@@ -13,16 +13,16 @@ const lineSchema = new Schema(
       budget: Number,
       cost: Number
     },
-    children: Array({ type: Schema.Types.ObjectId, ref: 'Line' }),
+    children: Array({ type: Schema.Types.ObjectId, ref: "Line" }),
     listIndex: Number,
-    parent: { type: Schema.Types.ObjectId, ref: 'Line' },
+    parent: { type: Schema.Types.ObjectId, ref: "Line" },
 
     // quantity: Array({}),
 
-    item: { type: Schema.Types.ObjectId, ref: 'Item' },
-    movement: { type: Schema.Types.ObjectId, ref: 'Movement' },
-    comments: Array({ type: Schema.Types.ObjectId, ref: 'Comment' }),
-    creator: { type: Schema.Types.ObjectId, ref: 'User' }
+    item: { type: Schema.Types.ObjectId, ref: "Item" },
+    movement: { type: Schema.Types.ObjectId, ref: "Movement" },
+    comments: Array({ type: Schema.Types.ObjectId, ref: "Comment" }),
+    creator: { type: Schema.Types.ObjectId, ref: "User" }
   },
   { timestamps: true }
 );
@@ -35,8 +35,32 @@ lineSchema.methods.saveAsync = function() {
     });
   });
 };
+lineSchema.methods.updateParentTotal = function() {
+  return new Promise((resolve, reject) => {
+    let thisParent = this.parent;
+    this.populate([{ path: "children", select: "numbers" }], err => {
+      let sum = 0;
+      for (let child of parentLine.children) {
+        sum += child.numbers.price;
+      }
+      parentLine.numbers.price = sum;
 
-const Line = mongoose.model('Line', lineSchema);
+      parentLine.save();
+    });
+    if (thisParent) {
+      Line.findById(thisParent, (err, line) => {
+        if (err) return reject(err);
+        else if (line) {
+          line.updateParentTotal();
+        }
+      });
+    } else {
+      resolve();
+    }
+  });
+};
+
+const Line = mongoose.model("Line", lineSchema);
 
 Line.updateManyMod = items => {
   let lines = [];
@@ -47,9 +71,9 @@ Line.updateManyMod = items => {
   return new Promise((resolve, reject) => {
     let check = (items, count) => {
       if (items.length === count) {
-        console.log('items.length');
+        console.log("items.length");
         console.log(items.length);
-        console.log('count');
+        console.log("count");
         console.log(count);
         resolve({
           lines,

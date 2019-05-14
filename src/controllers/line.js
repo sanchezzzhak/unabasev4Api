@@ -147,21 +147,22 @@ export function updateOne(req, res) {
         if (err) {
           res.status(500).send(err);
         } else {
-          console.log("children");
-          console.log(parentLine.children);
-          console.log(parentLine.children.includes(line._id));
-          console.log(parentLine.children.indexOf(line._id));
           if (parentLine.children.indexOf(line._id) < 0) {
             parentLine.children.push(line._id);
           }
-          parentLine.populate([{ path: "children" }], err => {
-            let sum = 0;
-            for (let child of parentLine.children) {
-              sum += child.numbers.price;
+          // parentLine.populate([{ path: "children", select: "numbers" }], err => {
+          //   let sum = 0;
+          //   for (let child of parentLine.children) {
+          //     sum += child.numbers.price;
+          //   }
+          //   parentLine.numbers.price = sum;
+          // });
+          parentLine.save((err, parentLine) => {
+            if (err) {
+              res.status(500).send(err);
+            } else {
+              parentLine.updateParentTotal();
             }
-            parentLine.numbers.price = sum;
-
-            parentLine.save();
           });
         }
       });
