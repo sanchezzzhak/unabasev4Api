@@ -153,7 +153,7 @@ export function updateOne(req, res) {
           parentLine.save();
           parentLine.populate([{ path: "children" }], err => {
             let sum = 0;
-            for (let child of children) {
+            for (let child of parentLine.children) {
               sum += child.numbers.price;
             }
             parentLine.numbers.price = sum;
