@@ -37,7 +37,7 @@ lineSchema.methods.saveAsync = function() {
 };
 lineSchema.methods.updateParentTotal = function() {
   return new Promise((resolve, reject) => {
-    let thisParent = this.parent;
+    // let thisParent = this.parent;
     this.populate([{ path: "children", select: "numbers" }], err => {
       let sum = 0;
       for (let child of this.children) {
@@ -45,18 +45,22 @@ lineSchema.methods.updateParentTotal = function() {
       }
       this.numbers.price = sum;
 
-      this.save();
-    });
-    if (thisParent) {
-      Line.findById(thisParent, (err, line) => {
+      this.save((err, newLine) => {
         if (err) return reject(err);
-        else if (line) {
-          line.updateParentTotal();
+        else {
+          if (newLine.parent) {
+            Line.findById(newLine.parent, (err, line) => {
+              if (err) return reject(err);
+              else if (line) {
+                line.updateParentTotal();
+              }
+            });
+          } else {
+            resolve();
+          }
         }
       });
-    } else {
-      resolve();
-    }
+    });
   });
 };
 
