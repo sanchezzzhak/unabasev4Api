@@ -40,12 +40,12 @@ lineSchema.methods.updateParentTotal = function() {
     let thisParent = this.parent;
     this.populate([{ path: "children", select: "numbers" }], err => {
       let sum = 0;
-      for (let child of parentLine.children) {
+      for (let child of this.children) {
         sum += child.numbers.price;
       }
-      parentLine.numbers.price = sum;
+      this.numbers.price = sum;
 
-      parentLine.save();
+      this.save();
     });
     if (thisParent) {
       Line.findById(thisParent, (err, line) => {
