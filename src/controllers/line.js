@@ -156,8 +156,9 @@ export function updateOne(req, res) {
               sum += child.numbers.price;
             }
             parentLine.numbers.price = sum;
+
+            parentLine.save();
           });
-          parentLine.save();
         }
       });
 
