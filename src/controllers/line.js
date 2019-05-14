@@ -137,23 +137,23 @@ export function updateOne(req, res) {
       console.log(err);
       res.status(500).send(err);
     } else if (line) {
-      // console.log("/---------------req.body.movementType");
-      // console.log(req.body.movementType);
-      // console.log("/---------------movementType");
-      // console.log(movementType);
-      // console.log("/---------------currency");
-      // console.log(currency);
-      // console.log("/---------------currencytoString");
-      // console.log(currency.toString());
-      // console.log("/---------------line.item.toString()");
-      // console.log(line.item.toString());
-
       Movement.findByIdAndUpdate(line.movement, {
         total: req.body.totalMovement
       }).exec();
-      Line.findByIdAndUpdate(req.body.parent, {
-        $addToSet: { children: ObjectId(line._id) }
-      }).exec();
+      // Line.findByIdAndUpdate(req.body.parent, {
+      //   $addToSet: { children: ObjectId(line._id) }
+      // }).exec();
+      Line.findById(req.body.parent, (err, parentLine) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          if (!parentLine.children.includes(line._id)) {
+            parentLine.children.push(line._id);
+          }
+          parentLine.save();
+        }
+      });
+
       if (typeof currency !== "undefined") {
         Item.findById(line.item.toString()).exec((err, item) => {
           if (err) {
@@ -171,6 +171,7 @@ export function updateOne(req, res) {
           }
         });
       }
+
       line.populate([{ path: "item" }, { path: "children" }], err => {
         if (err) {
           console.log(err);
