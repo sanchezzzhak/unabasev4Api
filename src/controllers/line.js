@@ -147,6 +147,10 @@ export function updateOne(req, res) {
         if (err) {
           res.status(500).send(err);
         } else {
+          console.log("children");
+          console.log(parentLine.children);
+          console.log(parentLine.children.includes(line._id));
+          console.log(parentLine.children.indexOf(line._id));
           if (!parentLine.children.includes(line._id)) {
             parentLine.children.push(line._id);
           }
