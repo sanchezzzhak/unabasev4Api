@@ -150,7 +150,8 @@ export function updateOne(req, res) {
           if (!parentLine.children.includes(line._id)) {
             parentLine.children.push(line._id);
           }
-          parentLine.populate([{ path: children }], err => {
+          parentLine.save();
+          parentLine.populate([{ path: "children" }], err => {
             let sum = 0;
             for (let child of children) {
               sum += child.numbers.price;
