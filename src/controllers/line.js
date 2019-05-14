@@ -151,7 +151,7 @@ export function updateOne(req, res) {
           console.log(parentLine.children);
           console.log(parentLine.children.includes(line._id));
           console.log(parentLine.children.indexOf(line._id));
-          if (!parentLine.children.includes(line._id)) {
+          if (parentLine.children.indexOf(line._id) < 0) {
             parentLine.children.push(line._id);
           }
           parentLine.populate([{ path: "children" }], err => {
