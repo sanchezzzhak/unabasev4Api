@@ -128,8 +128,6 @@ export function deleteMany(req, res) {
 }
 
 export function updateOne(req, res) {
-  console.log("//////////////////////////// req.body from update");
-  console.log(req.body);
   let movementType = req.body.movementType === "income" ? "sell" : "buy";
   let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
   Line.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, line) => {
