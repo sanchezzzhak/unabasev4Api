@@ -147,7 +147,16 @@ export function updateOne(req, res) {
             if (err) {
               res.status(500).send(err);
             } else {
-              parentLine.updateParentTotal();
+              parentLine
+                .updateParentTotal()
+                .then(resp => {
+                  console.log("resp from updatePArenttotal");
+                  console.log(resp);
+                })
+                .catch(err => {
+                  console.log("err from updatePArenttotal");
+                  console.log(err);
+                });
             }
           });
         }
@@ -181,6 +190,7 @@ export function updateOne(req, res) {
         } else {
           Line.getTreeTotals(line.movement)
             .then(lineTree => {
+              console.log("before send responde");
               res.send({ line, lineTree });
             })
             .catch(err => {
