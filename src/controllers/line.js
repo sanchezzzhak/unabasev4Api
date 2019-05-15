@@ -195,6 +195,7 @@ export function updateOne(req, res) {
 }
 
 export function deleteOne(req, res) {
+  Line.findOneAndUpdate({ children: { $in: req.params.id } }, { $pull: { children: { $in: req.params.id } } }).exec();
   Line.findByIdAndRemove(req.params.id, (err, item) => {
     if (err) {
       console.log(err);
