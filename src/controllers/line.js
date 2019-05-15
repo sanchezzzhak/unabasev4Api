@@ -116,12 +116,13 @@ export function updateMany(req, res) {
   });
 }
 export function deleteMany(req, res) {
-  console.log("deleteMany");
-  console.log(req.body);
-  Line.deleteMany({ _id: { $in: req.body.lines } }, (err, resp) => {
+  Line.deleteMany({ _id: { $in: req.body.lines.map(i => i._id) } }, (err, resp) => {
     if (err) {
       res.status(500).send(err);
     } else {
+      for (let line of req.body.lines) {
+        Line.findByIdAndUpdate(line.parent, { $pull: { children: { $in: line._id } } }).exec();
+      }
       res.send(resp);
     }
   });
@@ -146,8 +147,14 @@ export function updateOne(req, res) {
         } else {
           if (parentLine.children.indexOf(line._id) < 0) {
             parentLine.children.push(line._id);
+            parentLine.save();
           }
-          parentLine.save();
+          console.log("parentLine._id !== line.parent-------------");
+          console.log(parentLine._id !== line.parent);
+          console.log(parentLine._id);
+          console.log(line.parent);
+          // if(parentLine._id !== line.parent){
+          // }
           Line.updateParentTotal(req.body.parent, () => {
             console.log("after update parent total!!!!!!!!!!!");
             if (typeof currency !== "undefined") {

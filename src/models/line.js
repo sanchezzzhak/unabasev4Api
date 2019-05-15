@@ -81,7 +81,7 @@ Line.updateParentTotal = (parentId, callback) => {
     parentLine.populate([{ path: "children", select: "numbers" }], err => {
       let sum = 0;
       for (let child of parentLine.children) {
-        sum += child.numbers.price;
+        sum += child.numbers.price * child.quantity;
       }
       parentLine.numbers.price = sum;
 
