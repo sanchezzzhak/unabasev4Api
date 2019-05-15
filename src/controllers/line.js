@@ -131,7 +131,10 @@ export function deleteMany(req, res) {
 export function updateOne(req, res) {
   let movementType = req.body.movementType === "income" ? "sell" : "buy";
   let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
-
+  Line.findOneAndUpdate(
+    { children: { $in: req.params.id }, _id: { $ne: req.body.parent } },
+    { $pull: { children: { $in: req.params.id } } }
+  ).exec();
   Line.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, line) => {
     if (err) {
       console.log(err);
@@ -153,8 +156,7 @@ export function updateOne(req, res) {
           console.log(parentLine._id !== line.parent);
           console.log(parentLine._id);
           console.log(line.parent);
-          // if(parentLine._id !== line.parent){
-          // }
+
           Line.updateParentTotal(req.body.parent, () => {
             console.log("after update parent total!!!!!!!!!!!");
             if (typeof currency !== "undefined") {

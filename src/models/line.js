@@ -91,23 +91,6 @@ Line.updateParentTotal = (parentId, callback) => {
       } else {
         if (callback) callback();
       }
-
-      // parentLine.save((err, newLine) => {
-      //   if (err) return reject(err);
-      //   else {
-      //     if (newLine.parent) {
-      //       Line.findById(newLine.parent, (err, line) => {
-      //         if (err) return reject(err);
-      //         else if (line) {
-      //           // line.updateParentTotal();
-      //           Line.updateParentTotal(line._id);
-      //         }
-      //       });
-      //     } else {
-      //       resolve();
-      //     }
-      //   }
-      // });
     });
   });
   // });
