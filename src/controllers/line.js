@@ -157,7 +157,7 @@ export function updateOne(req, res) {
           console.log(parentLine._id);
           console.log(line.parent);
 
-          Line.updateParentTotal(req.body.parent, topParent => {
+          Line.updateParentTotal(req.body.parent, () => {
             console.log("after update parent total!!!!!!!!!!!");
             if (typeof currency !== "undefined") {
               Item.findById(line.item.toString()).exec((err, item) => {
@@ -177,7 +177,7 @@ export function updateOne(req, res) {
                 console.log(err);
                 res.status(500).send(err);
               } else {
-                Line.getTreeTotals(topParent)
+                Line.getTreeTotals()
                   .then(lineTree => {
                     console.log("before send responde");
                     res.send({ line, lineTree });

@@ -96,27 +96,27 @@ Line.updateParentTotal = (parentId, callback) => {
   // });
 };
 
-Line.getTreeTotals = parentId => {
+Line.getTreeTotals = movementId => {
   return new Promise((resolve, reject) => {
-    // Line.find({ movement: movementId })
-    //   .select("parent numbers name")
-    //   .exec((err, lines) => {
-    //     if (err) reject(err);
-    //     else resolve(lines);
-    //   });
-    Line.find({ _id: parentId })
-      .select("parent numbers name children")
-      .populate({
-        path: "children",
-        populate: {
-          path: "children",
-          populate: { path: "children", populate: { path: "children", populate: "children" } }
-        }
-      })
+    Line.find({ movement: movementId })
+      .select("parent numbers name")
       .exec((err, lines) => {
         if (err) reject(err);
         else resolve(lines);
       });
+    // Line.find({ _id: parentId })
+    //   .select("parent numbers name children")
+    //   .populate({
+    //     path: "children",
+    //     populate: {
+    //       path: "children",
+    //       populate: { path: "children", populate: { path: "children", populate: "children" } }
+    //     }
+    //   })
+    //   .exec((err, lines) => {
+    //     if (err) reject(err);
+    //     else resolve(lines);
+    //   });
   });
 };
 
