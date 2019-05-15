@@ -89,17 +89,30 @@ Line.updateParentTotal = (parentId, callback) => {
       if (parentLine.parent) {
         Line.updateParentTotal(parentLine.parent, callback);
       } else {
-        if (callback) callback();
+        if (callback) callback(parentLine._id);
       }
     });
   });
   // });
 };
 
-Line.getTreeTotals = movementId => {
+Line.getTreeTotals = parentId => {
   return new Promise((resolve, reject) => {
-    Line.find({ movement: movementId })
-      .select("parent numbers name")
+    // Line.find({ movement: movementId })
+    //   .select("parent numbers name")
+    //   .exec((err, lines) => {
+    //     if (err) reject(err);
+    //     else resolve(lines);
+    //   });
+    Line.find({ _id: parentId })
+      .select("parent numbers name children")
+      .populate({
+        path: "children",
+        populate: {
+          path: "children",
+          populate: { path: "children", populate: { path: "children", populate: "children" } }
+        }
+      })
       .exec((err, lines) => {
         if (err) reject(err);
         else resolve(lines);
