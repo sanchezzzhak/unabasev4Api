@@ -142,55 +142,64 @@ export function updateOne(req, res) {
           if (parentLine.children.indexOf(line._id) < 0) {
             parentLine.children.push(line._id);
           }
+          parentLine.save();
+          Line.updateParentTotal(parantLine._id)
+            .then(resp => {
+              console.log("resp from updatePArenttotal");
+              console.log(resp);
+              Movement.findByIdAndUpdate(line.movement, {
+                total: req.body.totalMovement
+              }).exec();
 
-          parentLine.save((err, parentLine) => {
-            if (err) {
-              res.status(500).send(err);
-            } else {
-              parentLine
-                .updateParentTotal()
-                .then(resp => {
-                  console.log("resp from updatePArenttotal");
-                  console.log(resp);
-                  Movement.findByIdAndUpdate(line.movement, {
-                    total: req.body.totalMovement
-                  }).exec();
+              if (typeof currency !== "undefined") {
+                Item.findById(line.item.toString()).exec((err, item) => {
+                  if (err) {
+                    res.status(500).send(err);
+                  } else {
+                    let index = item.global.map(i => i.currency.toString()).indexOf(currency);
 
-                  if (typeof currency !== "undefined") {
-                    Item.findById(line.item.toString()).exec((err, item) => {
-                      if (err) {
-                        res.status(500).send(err);
-                      } else {
-                        let index = item.global.map(i => i.currency.toString()).indexOf(currency);
-
-                        item.global[index].lastPrice[movementType] = line.numbers.price;
-                        item.save();
-                      }
-                    });
+                    item.global[index].lastPrice[movementType] = line.numbers.price;
+                    item.save();
                   }
-
-                  line.populate([{ path: "item" }, { path: "children" }], err => {
-                    if (err) {
-                      console.log(err);
-                      res.status(500).send(err);
-                    } else {
-                      Line.getTreeTotals(line.movement)
-                        .then(lineTree => {
-                          console.log("before send responde");
-                          res.send({ line, lineTree });
-                        })
-                        .catch(err => {
-                          res.status(500).send(err);
-                        });
-                    }
-                  });
-                })
-                .catch(err => {
-                  console.log("err from updatePArenttotal");
-                  console.log(err);
                 });
-            }
-          });
+              }
+
+              line.populate([{ path: "item" }, { path: "children" }], err => {
+                if (err) {
+                  console.log(err);
+                  res.status(500).send(err);
+                } else {
+                  Line.getTreeTotals(line.movement)
+                    .then(lineTree => {
+                      console.log("before send responde");
+                      res.send({ line, lineTree });
+                    })
+                    .catch(err => {
+                      res.status(500).send(err);
+                    });
+                }
+              });
+            })
+            .catch(err => {
+              console.log("err from updatePArenttotal");
+              console.log(err);
+            });
+          // parentLine.save((err, parentLine) => {
+          //   if (err) {
+          //     res.status(500).send(err);
+          //   } else {
+          //     parentLine
+          //       .updateParentTotal()
+          //       .then(resp => {
+          //         console.log("resp from updatePArenttotal");
+          //         console.log(resp);
+          //       })
+          //       .catch(err => {
+          //         console.log("err from updatePArenttotal");
+          //         console.log(err);
+          //       });
+          //   }
+          // });
         }
       });
     }

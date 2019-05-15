@@ -66,6 +66,45 @@ lineSchema.methods.updateParentTotal = function() {
 
 const Line = mongoose.model("Line", lineSchema);
 
+Line.updateParentTotal = parentId => {
+  return new Promise((resolve, reject) => {
+    Line.findById(parentId, (err, parentLine) => {
+      // let thisParent = this.parent;
+      parentLine.populate([{ path: "children", select: "numbers" }], err => {
+        let sum = 0;
+        for (let child of parentLine.children) {
+          sum += child.numbers.price;
+        }
+        parentLine.numbers.price = sum;
+
+        parentLine.save();
+        if (parentLine.parent) {
+          Line.updateParentTotal(parentLine.parent);
+        } else {
+          resolve();
+        }
+
+        // parentLine.save((err, newLine) => {
+        //   if (err) return reject(err);
+        //   else {
+        //     if (newLine.parent) {
+        //       Line.findById(newLine.parent, (err, line) => {
+        //         if (err) return reject(err);
+        //         else if (line) {
+        //           // line.updateParentTotal();
+        //           Line.updateParentTotal(line._id);
+        //         }
+        //       });
+        //     } else {
+        //       resolve();
+        //     }
+        //   }
+        // });
+      });
+    });
+  });
+};
+
 Line.getTreeTotals = movementId => {
   return new Promise((resolve, reject) => {
     Line.find({ movement: movementId })
