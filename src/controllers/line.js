@@ -151,9 +151,11 @@ export function updateOne(req, res) {
             if (err) {
               res.status(500).send(err);
             } else {
+              console.log("//////////////////////////// before update totals");
               parentLine
                 .updateParentTotal()
                 .then(resp => {
+                  console.log("//////////////////////////// then");
                   if (typeof currency !== "undefined") {
                     Item.findById(line.item.toString()).exec((err, item) => {
                       if (err) {
