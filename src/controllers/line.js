@@ -135,7 +135,7 @@ export function updateOne(req, res) {
       console.log(err);
       res.status(500).send(err);
     } else if (line) {
-      Line.findById(req.body.parent, async (err, parentLine) => {
+      Line.findById(req.body.parent, (err, parentLine) => {
         if (err) {
           res.status(500).send(err);
         } else {
@@ -143,7 +143,7 @@ export function updateOne(req, res) {
             parentLine.children.push(line._id);
           }
 
-          await parentLine.save((err, parentLine) => {
+          parentLine.save((err, parentLine) => {
             if (err) {
               res.status(500).send(err);
             } else {
