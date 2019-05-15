@@ -149,6 +149,7 @@ export function updateOne(req, res) {
           }
           parentLine.save();
           Line.updateParentTotal(req.body.parent, () => {
+            console.log("after update parent total!!!!!!!!!!!");
             if (typeof currency !== "undefined") {
               Item.findById(line.item.toString()).exec((err, item) => {
                 if (err) {

@@ -87,9 +87,9 @@ Line.updateParentTotal = (parentId, callback) => {
 
       parentLine.save();
       if (parentLine.parent) {
-        Line.updateParentTotal(parentLine.parent);
+        Line.updateParentTotal(parentLine.parent, callback);
       } else {
-        callback();
+        if (callback) callback();
       }
 
       // parentLine.save((err, newLine) => {
