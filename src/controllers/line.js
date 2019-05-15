@@ -130,15 +130,16 @@ export function deleteMany(req, res) {
 export function updateOne(req, res) {
   let movementType = req.body.movementType === "income" ? "sell" : "buy";
   let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
-  // add total to movement
-  Movement.findByIdAndUpdate(line.movement, {
-    total: req.body.totalMovement
-  }).exec();
+
   Line.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, line) => {
     if (err) {
       console.log(err);
       res.status(500).send(err);
     } else if (line) {
+      // add total to movement
+      Movement.findByIdAndUpdate(line.movement, {
+        total: req.body.totalMovement
+      }).exec();
       Line.findById(req.body.parent, (err, parentLine) => {
         if (err) {
           res.status(500).send(err);
