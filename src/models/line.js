@@ -78,7 +78,7 @@ Line.updateParentTotal = (parentId, callback) => {
   // return new Promise((resolve, reject) => {
   Line.findById(parentId, (err, parentLine) => {
     // let thisParent = this.parent;
-    parentLine.populate([{ path: "children", select: "numbers" }], err => {
+    parentLine.populate([{ path: "children", select: "numbers quantity" }], err => {
       let sum = 0;
       for (let child of parentLine.children) {
         sum += child.numbers.price * child.quantity;
