@@ -169,15 +169,10 @@ export function updateOne(req, res) {
               if (err) {
                 res.status(500).send(err);
               } else {
-                console.log("/---------------item found");
-                console.log(item);
                 let index = item.global.map(i => i.currency.toString()).indexOf(currency);
-                console.log("/---------------index");
-                console.log(index);
+
                 item.global[index].lastPrice[movementType] = line.numbers.price;
                 item.save();
-                console.log("/---------------item.global[index]");
-                console.log(item.global[index]);
               }
             });
           }
