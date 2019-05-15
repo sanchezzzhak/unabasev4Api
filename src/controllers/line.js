@@ -143,7 +143,7 @@ export function updateOne(req, res) {
             parentLine.children.push(line._id);
           }
           parentLine.save();
-          Line.updateParentTotal(parantLine._id)
+          Line.updateParentTotal(req.body.parent)
             .then(resp => {
               console.log("resp from updatePArenttotal");
               console.log(resp);
