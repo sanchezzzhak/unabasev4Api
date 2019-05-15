@@ -130,6 +130,10 @@ export function deleteMany(req, res) {
 export function updateOne(req, res) {
   let movementType = req.body.movementType === "income" ? "sell" : "buy";
   let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
+  // add total to movement
+  Movement.findByIdAndUpdate(line.movement, {
+    total: req.body.totalMovement
+  }).exec();
   Line.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, line) => {
     if (err) {
       console.log(err);
@@ -143,63 +147,36 @@ export function updateOne(req, res) {
             parentLine.children.push(line._id);
           }
           parentLine.save();
-          Line.updateParentTotal(req.body.parent)
-            .then(resp => {
-              console.log("resp from updatePArenttotal");
-              console.log(resp);
-              Movement.findByIdAndUpdate(line.movement, {
-                total: req.body.totalMovement
-              }).exec();
-
-              if (typeof currency !== "undefined") {
-                Item.findById(line.item.toString()).exec((err, item) => {
-                  if (err) {
-                    res.status(500).send(err);
-                  } else {
-                    let index = item.global.map(i => i.currency.toString()).indexOf(currency);
-
-                    item.global[index].lastPrice[movementType] = line.numbers.price;
-                    item.save();
-                  }
-                });
-              }
-
-              line.populate([{ path: "item" }, { path: "children" }], err => {
+          Line.updateParentTotal(req.body.parent, () => {
+            if (typeof currency !== "undefined") {
+              Item.findById(line.item.toString()).exec((err, item) => {
                 if (err) {
-                  console.log(err);
                   res.status(500).send(err);
                 } else {
-                  Line.getTreeTotals(line.movement)
-                    .then(lineTree => {
-                      console.log("before send responde");
-                      res.send({ line, lineTree });
-                    })
-                    .catch(err => {
-                      res.status(500).send(err);
-                    });
+                  let index = item.global.map(i => i.currency.toString()).indexOf(currency);
+
+                  item.global[index].lastPrice[movementType] = line.numbers.price;
+                  item.save();
                 }
               });
-            })
-            .catch(err => {
-              console.log("err from updatePArenttotal");
-              console.log(err);
+            }
+
+            line.populate([{ path: "item" }, { path: "children" }], err => {
+              if (err) {
+                console.log(err);
+                res.status(500).send(err);
+              } else {
+                Line.getTreeTotals(line.movement)
+                  .then(lineTree => {
+                    console.log("before send responde");
+                    res.send({ line, lineTree });
+                  })
+                  .catch(err => {
+                    res.status(500).send(err);
+                  });
+              }
             });
-          // parentLine.save((err, parentLine) => {
-          //   if (err) {
-          //     res.status(500).send(err);
-          //   } else {
-          //     parentLine
-          //       .updateParentTotal()
-          //       .then(resp => {
-          //         console.log("resp from updatePArenttotal");
-          //         console.log(resp);
-          //       })
-          //       .catch(err => {
-          //         console.log("err from updatePArenttotal");
-          //         console.log(err);
-          //       });
-          //   }
-          // });
+          });
         }
       });
     }

@@ -35,7 +35,10 @@ lineSchema.methods.saveAsync = function() {
     });
   });
 };
-lineSchema.methods.updateParentTotal = function() {
+lineSchema.methods.updateParentTotal = function(data = null) {
+  if (!data) {
+    let data = [];
+  }
   return new Promise((resolve, reject) => {
     // let thisParent = this.parent;
     this.populate([{ path: "children", select: "numbers" }], err => {
@@ -48,15 +51,20 @@ lineSchema.methods.updateParentTotal = function() {
       this.save((err, newLine) => {
         if (err) return reject(err);
         else {
+          data.push({
+            _id: newLine._id,
+            parent: newLine.parent,
+            numbers: newLine.numbers
+          });
           if (newLine.parent) {
             Line.findById(newLine.parent, (err, line) => {
               if (err) return reject(err);
               else if (line) {
-                line.updateParentTotal();
+                line.updateParentTotal(data);
               }
             });
           } else {
-            resolve();
+            resolve(data);
           }
         }
       });
@@ -66,43 +74,43 @@ lineSchema.methods.updateParentTotal = function() {
 
 const Line = mongoose.model("Line", lineSchema);
 
-Line.updateParentTotal = parentId => {
-  return new Promise((resolve, reject) => {
-    Line.findById(parentId, (err, parentLine) => {
-      // let thisParent = this.parent;
-      parentLine.populate([{ path: "children", select: "numbers" }], err => {
-        let sum = 0;
-        for (let child of parentLine.children) {
-          sum += child.numbers.price;
-        }
-        parentLine.numbers.price = sum;
+Line.updateParentTotal = (parentId, callback) => {
+  // return new Promise((resolve, reject) => {
+  Line.findById(parentId, (err, parentLine) => {
+    // let thisParent = this.parent;
+    parentLine.populate([{ path: "children", select: "numbers" }], err => {
+      let sum = 0;
+      for (let child of parentLine.children) {
+        sum += child.numbers.price;
+      }
+      parentLine.numbers.price = sum;
 
-        parentLine.save();
-        if (parentLine.parent) {
-          Line.updateParentTotal(parentLine.parent);
-        } else {
-          resolve();
-        }
+      parentLine.save();
+      if (parentLine.parent) {
+        Line.updateParentTotal(parentLine.parent);
+      } else {
+        callback();
+      }
 
-        // parentLine.save((err, newLine) => {
-        //   if (err) return reject(err);
-        //   else {
-        //     if (newLine.parent) {
-        //       Line.findById(newLine.parent, (err, line) => {
-        //         if (err) return reject(err);
-        //         else if (line) {
-        //           // line.updateParentTotal();
-        //           Line.updateParentTotal(line._id);
-        //         }
-        //       });
-        //     } else {
-        //       resolve();
-        //     }
-        //   }
-        // });
-      });
+      // parentLine.save((err, newLine) => {
+      //   if (err) return reject(err);
+      //   else {
+      //     if (newLine.parent) {
+      //       Line.findById(newLine.parent, (err, line) => {
+      //         if (err) return reject(err);
+      //         else if (line) {
+      //           // line.updateParentTotal();
+      //           Line.updateParentTotal(line._id);
+      //         }
+      //       });
+      //     } else {
+      //       resolve();
+      //     }
+      //   }
+      // });
     });
   });
+  // });
 };
 
 Line.getTreeTotals = movementId => {
