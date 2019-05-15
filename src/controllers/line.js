@@ -190,7 +190,13 @@ export function updateOne(req, res) {
           console.log(err);
           res.status(500).send(err);
         } else {
-          res.send(line);
+          Line.getTreeTotals(line.movement)
+            .then(lineTree => {
+              res.send({ line, lineTree });
+            })
+            .catch(err => {
+              res.status(500).send(err);
+            });
         }
       });
     }
