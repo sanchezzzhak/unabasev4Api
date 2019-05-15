@@ -140,9 +140,6 @@ export function updateOne(req, res) {
       Movement.findByIdAndUpdate(line.movement, {
         total: req.body.totalMovement
       }).exec();
-      // Line.findByIdAndUpdate(req.body.parent, {
-      //   $addToSet: { children: ObjectId(line._id) }
-      // }).exec();
       Line.findById(req.body.parent, (err, parentLine) => {
         if (err) {
           res.status(500).send(err);
@@ -150,53 +147,51 @@ export function updateOne(req, res) {
           if (parentLine.children.indexOf(line._id) < 0) {
             parentLine.children.push(line._id);
           }
-          // parentLine.populate([{ path: "children", select: "numbers" }], err => {
-          //   let sum = 0;
-          //   for (let child of parentLine.children) {
-          //     sum += child.numbers.price;
-          //   }
-          //   parentLine.numbers.price = sum;
-          // });
           parentLine.save((err, parentLine) => {
             if (err) {
               res.status(500).send(err);
             } else {
-              parentLine.updateParentTotal();
+              parentLine
+                .updateParentTotal()
+                .then(resp => {
+                  if (typeof currency !== "undefined") {
+                    Item.findById(line.item.toString()).exec((err, item) => {
+                      if (err) {
+                        res.status(500).send(err);
+                      } else {
+                        console.log("/---------------item found");
+                        console.log(item);
+                        let index = item.global.map(i => i.currency.toString()).indexOf(currency);
+                        console.log("/---------------index");
+                        console.log(index);
+                        item.global[index].lastPrice[movementType] = line.numbers.price;
+                        item.save();
+                        console.log("/---------------item.global[index]");
+                        console.log(item.global[index]);
+                      }
+                    });
+                  }
+
+                  line.populate([{ path: "item" }, { path: "children" }], err => {
+                    if (err) {
+                      console.log(err);
+                      res.status(500).send(err);
+                    } else {
+                      Line.getTreeTotals(line.movement)
+                        .then(lineTree => {
+                          res.send({ line, lineTree });
+                        })
+                        .catch(err => {
+                          res.status(500).send(err);
+                        });
+                    }
+                  });
+                })
+                .catch(err => {
+                  res.status(500).send(err);
+                });
             }
           });
-        }
-      });
-
-      if (typeof currency !== "undefined") {
-        Item.findById(line.item.toString()).exec((err, item) => {
-          if (err) {
-            res.status(500).send(err);
-          } else {
-            console.log("/---------------item found");
-            console.log(item);
-            let index = item.global.map(i => i.currency.toString()).indexOf(currency);
-            console.log("/---------------index");
-            console.log(index);
-            item.global[index].lastPrice[movementType] = line.numbers.price;
-            item.save();
-            console.log("/---------------item.global[index]");
-            console.log(item.global[index]);
-          }
-        });
-      }
-
-      line.populate([{ path: "item" }, { path: "children" }], err => {
-        if (err) {
-          console.log(err);
-          res.status(500).send(err);
-        } else {
-          Line.getTreeTotals(line.movement)
-            .then(lineTree => {
-              res.send({ line, lineTree });
-            })
-            .catch(err => {
-              res.status(500).send(err);
-            });
         }
       });
     }
