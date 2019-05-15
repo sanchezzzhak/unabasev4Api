@@ -68,8 +68,9 @@ const Line = mongoose.model("Line", lineSchema);
 
 Line.getTreeTotals = movementId => {
   return new Promise((resolve, reject) => {
-    Line.find({ movement: movementId })
+    Line.find({ movement: movementId, parent: { $ne: null } })
       // .populate({'item', 'lastPrice global'})
+      .select("parent numbers")
       .populate([
         {
           path: "children",
