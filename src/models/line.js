@@ -78,7 +78,7 @@ Line.updateParentTotal = (parentId, callback) => {
   // return new Promise((resolve, reject) => {
   Line.findById(parentId, (err, parentLine) => {
     // let thisParent = this.parent;
-    parentLine.populate([{ path: "children", select: "name numbers" }], err => {
+    parentLine.populate([{ path: "children", select: "numbers" }], err => {
       let sum = 0;
       for (let child of parentLine.children) {
         sum += child.numbers.price;
@@ -116,7 +116,7 @@ Line.updateParentTotal = (parentId, callback) => {
 Line.getTreeTotals = movementId => {
   return new Promise((resolve, reject) => {
     Line.find({ movement: movementId })
-      .select("parent numbers")
+      .select("parent numbers name")
       .exec((err, lines) => {
         if (err) reject(err);
         else resolve(lines);
