@@ -177,7 +177,7 @@ export function updateOne(req, res) {
                 console.log(err);
                 res.status(500).send(err);
               } else {
-                Line.getTreeTotals()
+                Line.getTreeTotals(line.movement)
                   .then(lineTree => {
                     console.log("before send responde");
                     res.send({ line, lineTree });
