@@ -1,34 +1,34 @@
-import bool from 'normalize-bool';
-import Movement from '../models/movement';
-import Contact from '../models/contact';
-import { Types } from 'mongoose';
+import bool from "normalize-bool";
+import Movement from "../models/movement";
+import Contact from "../models/contact";
+import { Types } from "mongoose";
 const ObjectId = Types.ObjectId;
-import ntype from 'normalize-type';
-import Line from '../models/line';
-import { isEmpty } from '../lib/isEmpty';
-import { errorHandler } from '../lib/errorHandler';
+import ntype from "normalize-type";
+import Line from "../models/line";
+import { isEmpty } from "../lib/isEmpty";
+import { errorHandler } from "../lib/errorHandler";
 
 const routes = {};
 export const getPersonal = (req, res) => {
   // const state = req.params.state;
   let rquery = ntype(req.query);
   let options = {};
-  const sort = rquery.createdAt ? { createdAt: rquery.createdAt } : { createdAt: 'desc' };
+  const sort = rquery.createdAt ? { createdAt: rquery.createdAt } : { createdAt: "desc" };
   options.page = rquery.page || 1;
   options.limit = rquery.limit || 20;
-  options.select = 'name client responsable createdAt total state';
+  options.select = "name client responsable createdAt total state";
   options.populate = [
     {
-      path: 'client.data',
-      select: 'isActive name  email phone creator user imgUrl emails type'
+      path: "client.data",
+      select: "isActive name  email phone creator user imgUrl emails type"
     },
     {
-      path: 'responsable.data',
-      select: 'isActive name  email phone creator user imgUrl emails type'
+      path: "responsable.data",
+      select: "isActive name  email phone creator user imgUrl emails type"
     },
-    { path: 'creator', select: 'name google imgUrl emails.default' },
-    { path: 'lines' },
-    { path: 'currency' }
+    { path: "creator", select: "name google imgUrl emails.default" },
+    { path: "lines" },
+    { path: "currency" }
   ];
   options.sort = { ...sort };
   delete rquery.createdAt;
@@ -38,18 +38,18 @@ export const getPersonal = (req, res) => {
     ...rquery
   };
   switch (req.params.state) {
-    case 'in':
+    case "in":
       // query.responsable = {        data: ObjectId(`${req.user._id}`)      };
-      query.$or = [{ 'responsable.data': ObjectId(`${req.user._id}`) }];
+      query.$or = [{ "responsable.data": ObjectId(`${req.user._id}`) }];
       break;
-    case 'out':
+    case "out":
       // query.client = { data: ObjectId(`${req.user._id}`) };
 
-      query.$or = [{ 'client.data': ObjectId(`${req.user._id}`) }];
+      query.$or = [{ "client.data": ObjectId(`${req.user._id}`) }];
       break;
   }
 
-  console.log('query');
+  console.log("query");
   console.log(query);
   console.log(query.$or);
   Movement.paginate(query, options, async (err, movements) => {
@@ -72,20 +72,20 @@ export const getPersonal = (req, res) => {
 export const get = (req, res) => {
   let rquery = ntype(req.query);
   let options = {};
-  const sort = rquery.createdAt ? { createdAt: rquery.createdAt } : { createdAt: 'desc' };
+  const sort = rquery.createdAt ? { createdAt: rquery.createdAt } : { createdAt: "desc" };
   options.page = rquery.page || 1;
   options.limit = rquery.limit || 20;
-  options.select = 'name client responsable createdAt total state';
+  options.select = "name client responsable createdAt total state";
   options.populate = [
     {
-      path: 'client.data',
-      select: 'name phone email imgUrl emails type'
+      path: "client.data",
+      select: "name phone email imgUrl emails type"
     },
     {
-      path: 'responsable.data',
-      select: 'name phone email imgUrl emails type'
+      path: "responsable.data",
+      select: "name phone email imgUrl emails type"
     },
-    { path: 'creator', select: 'name imgUrl  emails' }
+    { path: "creator", select: "name imgUrl  emails" }
   ];
   options.sort = { ...sort };
   delete rquery.createdAt;
@@ -113,22 +113,22 @@ export const getBusiness = (req, res) => {
   // const state = req.params.state;
   let rquery = ntype(req.query);
   let options = {};
-  const sort = rquery.createdAt ? { createdAt: rquery.createdAt } : { createdAt: 'desc' };
+  const sort = rquery.createdAt ? { createdAt: rquery.createdAt } : { createdAt: "desc" };
   options.page = rquery.page || 1;
   options.limit = rquery.limit || 20;
-  options.select = 'name client responsable createdAt total state ';
+  options.select = "name client responsable createdAt total state ";
   options.populate = [
     {
-      path: 'client.data',
-      select: 'name imgUrl emails type'
+      path: "client.data",
+      select: "name imgUrl emails type"
     },
     {
-      path: 'responsable.data',
-      select: 'name imgUrl emails type'
+      path: "responsable.data",
+      select: "name imgUrl emails type"
     },
-    { path: 'creator', select: 'name  imgUrl emails' },
-    { path: 'lines' },
-    { path: 'currency' }
+    { path: "creator", select: "name  imgUrl emails" },
+    { path: "lines" },
+    { path: "currency" }
   ];
   options.sort = { ...sort };
   delete rquery.createdAt;
@@ -139,11 +139,11 @@ export const getBusiness = (req, res) => {
   };
 
   switch (req.params.state) {
-    case 'in':
-      query.$or = [{ 'responsable.data': ObjectId(`${req.params.id}`) }];
+    case "in":
+      query.$or = [{ "responsable.data": ObjectId(`${req.params.id}`) }];
       break;
-    case 'out':
-      query.$or = [{ 'client.data': ObjectId(`${req.params.id}`) }];
+    case "out":
+      query.$or = [{ "client.data": ObjectId(`${req.params.id}`) }];
       break;
   }
   Movement.paginate(query, options, (err, movements) => {
@@ -170,29 +170,29 @@ export const create = (req, res) => {
       errorHandler({
         err,
         res,
-        from: 'movement create',
+        from: "movement create",
         status: 500
       });
     } else {
       movement.populate(
         [
           {
-            path: 'client.data',
-            select: 'name  phone email imgUrl emails type'
+            path: "client.data",
+            select: "name  phone email imgUrl emails type"
           },
           {
-            path: 'responsable.data',
-            select: 'name  phone email imgUrl emails type'
+            path: "responsable.data",
+            select: "name  phone email imgUrl emails type"
           },
           {
-            path: 'creator',
-            select: 'name  imgUrl emails type'
+            path: "creator",
+            select: "name  imgUrl emails type"
           },
           {
-            path: 'contact'
+            path: "contact"
           },
           {
-            path: 'currency'
+            path: "currency"
           }
         ],
         err => {
@@ -213,24 +213,24 @@ export const getOne = (req, res) => {
     // .populate('client', 'name')
     .populate([
       // { path: 'lines' },
-      { path: 'contact' },
-      { path: 'comments', options: { sort: { createdAt: 'desc' } } },
-      { path: 'comments.creator' },
+      { path: "contact" },
+      { path: "comments", options: { sort: { createdAt: "desc" } } },
+      { path: "comments.creator" },
 
       {
-        path: 'client.data',
-        select: 'isActive name  email phone creator user imgUrl emails type'
+        path: "client.data",
+        select: "isActive name  email phone creator user imgUrl emails type"
       },
       {
-        path: 'responsable.data',
-        select: 'isActive name  email phone creator user imgUrl emails type'
+        path: "responsable.data",
+        select: "isActive name  email phone creator user imgUrl emails type"
       },
       {
-        path: 'creator',
-        select: 'name  imgUrl emails'
+        path: "creator",
+        select: "name  imgUrl emails"
       },
       {
-        path: 'currency'
+        path: "currency"
       }
     ])
     .exec((err, movement) => {
@@ -239,40 +239,40 @@ export const getOne = (req, res) => {
       } else if (movement) {
         Line.find({ movement: movement._id })
           // .populate({'item', 'lastPrice global'})
-          .populate([
-            {
-              path: 'children',
-              populate: [
-                {
-                  path: 'children',
-                  populate: [
-                    {
-                      path: 'children',
-                      populate: [
-                        { path: 'children', populate: 'children' },
-                        {
-                          path: 'item',
-                          select: 'lastPrice global'
-                        }
-                      ]
-                    },
-                    {
-                      path: 'item',
-                      select: 'lastPrice global'
-                    }
-                  ]
-                },
-                {
-                  path: 'item',
-                  select: 'lastPrice global'
-                }
-              ]
-            },
-            {
-              path: 'item',
-              select: 'lastPrice global'
-            }
-          ])
+          // .populate([
+          //   {
+          //     path: 'children',
+          //     populate: [
+          //       {
+          //         path: 'children',
+          //         populate: [
+          //           {
+          //             path: 'children',
+          //             populate: [
+          //               { path: 'children', populate: 'children' },
+          //               {
+          //                 path: 'item',
+          //                 select: 'lastPrice global'
+          //               }
+          //             ]
+          //           },
+          //           {
+          //             path: 'item',
+          //             select: 'lastPrice global'
+          //           }
+          //         ]
+          //       },
+          //       {
+          //         path: 'item',
+          //         select: 'lastPrice global'
+          //       }
+          //     ]
+          //   },
+          //   {
+          //     path: 'item',
+          //     select: 'lastPrice global'
+          //   }
+          // ])
           .exec((err, lines) => {
             if (err) {
               res.status(500).send(err);
@@ -282,7 +282,7 @@ export const getOne = (req, res) => {
             }
           });
       } else {
-        res.status(404).send('Not found');
+        res.status(404).send("Not found");
       }
     });
 };
@@ -292,17 +292,17 @@ export const findOne = (req, res) => {
   };
   Movement.findOne({ _id: req.params.id })
     .populate([
-      { path: 'lines' },
-      { path: 'comments' },
-      { path: 'comments.creator' },
-      { path: 'creator', select: 'name  imgUrl emails' },
+      { path: "lines" },
+      { path: "comments" },
+      { path: "comments.creator" },
+      { path: "creator", select: "name  imgUrl emails" },
       {
-        path: 'client.data',
-        select: 'isActive name  email phone creator user imgUrl emails type'
+        path: "client.data",
+        select: "isActive name  email phone creator user imgUrl emails type"
       },
       {
-        path: 'responsable.data',
-        select: 'isActive name  email phone creator user imgUrl emails type'
+        path: "responsable.data",
+        select: "isActive name  email phone creator user imgUrl emails type"
       }
     ])
     .exec((err, movement) => {
@@ -320,10 +320,10 @@ export const find = (req, res) => {
       {
         $or: [
           {
-            name: { $regex: req.params.q, $options: 'i' }
+            name: { $regex: req.params.q, $options: "i" }
           },
           {
-            description: { $regex: req.params.q, $options: 'i' }
+            description: { $regex: req.params.q, $options: "i" }
           }
         ]
       },
@@ -333,7 +333,7 @@ export const find = (req, res) => {
             creator: req.user._id
           },
           {
-            'responsable.data': ObjectId(`${req.user._id}`)
+            "responsable.data": ObjectId(`${req.user._id}`)
           }
         ]
       }
@@ -344,17 +344,17 @@ export const find = (req, res) => {
   Movement.paginate(
     query,
     {
-      path: 'client',
+      path: "client",
       match: { name: req.params.q },
 
       populate: [
         {
-          path: 'client.data',
-          select: 'isActive name  email phone creator user imgUrl emails type'
+          path: "client.data",
+          select: "isActive name  email phone creator user imgUrl emails type"
         },
         {
-          path: 'responsable.data',
-          select: 'isActive name  email phone creator user imgUrl emails type'
+          path: "responsable.data",
+          select: "isActive name  email phone creator user imgUrl emails type"
         }
       ]
     },
@@ -372,7 +372,7 @@ export const updateOne = (req, res) => {
   let data = req.body;
   let update = {};
   for (let i in data) {
-    if (data.hasOwnProperty(i) && typeof data[i] !== 'undefined' && data[i] !== null && i !== 'lines') {
+    if (data.hasOwnProperty(i) && typeof data[i] !== "undefined" && data[i] !== null && i !== "lines") {
       update[i] = data[i];
     }
   }
@@ -421,20 +421,20 @@ export const linkMovement = (email, user) => {
     } else {
       for (let contact of contacts) {
         let client = {
-          'client.type': 'Contact',
-          'client.data': contact._id
+          "client.type": "Contact",
+          "client.data": contact._id
         };
         let clientUpdate = {
-          'client.type': 'User',
-          'client.data': user._id
+          "client.type": "User",
+          "client.data": user._id
         };
         let responsable = {
-          'responsable.type': 'Contact',
-          'responsable.data': contact._id
+          "responsable.type": "Contact",
+          "responsable.data": contact._id
         };
         let responsableUpdate = {
-          'responsable.type': 'User',
-          'responsable.data': user._id
+          "responsable.type": "User",
+          "responsable.data": user._id
         };
         Movement.updateMany(client, clientUpdate, {}).exec();
         Movement.updateMany(responsable, responsableUpdate, {}).exec();
