@@ -36,33 +36,33 @@ lineSchema.methods.saveAsync = function() {
   });
 };
 
-lineSchema.post("save", function(doc, next) {
-  console.log("post has been saved++++++++++++++++++++++++");
-  console.log(doc.numbers);
-  console.log(doc.name);
-});
-lineSchema.pre("save", function(doc, next) {
-  console.log(doc);
-  console.log("post has been saved++++++++++++++++++++++++");
-  // console.log(doc.numbers);
-  // console.log(doc.name);
-});
-lineSchema.post("update", function(doc, next) {
-  console.log("post has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
-  console.log(doc);
-  // console.log(doc.numbers);
-  // console.log(doc.name);
+// lineSchema.post("save", function(doc, next) {
+//   console.log("post has been saved++++++++++++++++++++++++");
+//   console.log(doc.numbers);
+//   console.log(doc.name);
+// });
+// lineSchema.pre("save", function(doc, next) {
+//   console.log(doc);
+//   console.log("post has been saved++++++++++++++++++++++++");
+//   // console.log(doc.numbers);
+//   // console.log(doc.name);
+// });
+// lineSchema.post("update", function(doc, next) {
+//   console.log("post has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
+//   console.log(doc);
+//   // console.log(doc.numbers);
+//   // console.log(doc.name);
 
-  next();
-});
-lineSchema.pre("update", function(doc, next) {
-  console.log("pre has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
-  console.log(doc);
-  // console.log(doc.numbers);
-  // console.log(doc.name);
+//   next();
+// });
+// lineSchema.pre("update", function(doc, next) {
+//   console.log("pre has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
+//   console.log(doc);
+//   // console.log(doc.numbers);
+//   // console.log(doc.name);
 
-  next();
-});
+//   next();
+// });
 // lineSchema.post("find", function(doc, next) {
 //   console.log("post has been findd++++++++++++++++++++++++:::::::::::::::::::::::");
 //   console.log(doc);
