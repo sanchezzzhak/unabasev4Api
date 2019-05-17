@@ -148,7 +148,7 @@ export function updateOne(req, res) {
         if (err) {
           res.status(500).send(err);
         } else {
-          if (parentLine.children.indexOf(line._id) < 0) {
+          if (parent.children.length && parentLine.children.indexOf(line._id) < 0) {
             parentLine.children.push(line._id);
             parentLine.save();
           }
