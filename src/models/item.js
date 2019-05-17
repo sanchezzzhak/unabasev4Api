@@ -1,11 +1,11 @@
-import mongoose, { Schema, mongo } from 'mongoose';
+import mongoose, { Schema, mongo } from "mongoose";
 
-import mongoosePaginate from 'mongoose-paginate';
+import mongoosePaginate from "mongoose-paginate";
 const itemSchema = new Schema(
   {
     isActive: { type: Boolean, default: true },
     name: String,
-    creator: { type: Schema.Types.ObjectId, ref: 'User' },
+    creator: { type: Schema.Types.ObjectId, ref: "User" },
     quantity: {
       buy: {
         min: { type: Number },
@@ -18,7 +18,7 @@ const itemSchema = new Schema(
     },
     global: [
       {
-        currency: { type: Schema.Types.ObjectId, ref: 'Currency' },
+        currency: { type: Schema.Types.ObjectId, ref: "Currency" },
         estimate: {
           buy: {
             lock: { type: Boolean, default: true },
@@ -53,7 +53,7 @@ const itemSchema = new Schema(
             }
           }
         },
-        tax: Array({ type: Schema.Types.ObjectId, ref: 'Tax' }),
+        tax: Array({ type: Schema.Types.ObjectId, ref: "Tax" }),
 
         lastPrice: {
           buy: { type: Number },
@@ -67,5 +67,17 @@ const itemSchema = new Schema(
 
 // itemSchema.plugin(mongoosePaginate);
 itemSchema.plugin(mongoosePaginate);
-const Item = mongoose.model('Item', itemSchema);
+const Item = mongoose.model("Item", itemSchema);
+Item.updateLastPrice = (id, currency, movementType, princeToAdd) => {
+  Item.findById(id).exec((err, item) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      let index = item.global.map(i => i.currency.toString()).indexOf(currency);
+
+      item.global[index].lastPrice[movementType] = princeToAdd;
+      item.save();
+    }
+  });
+};
 export default Item;
