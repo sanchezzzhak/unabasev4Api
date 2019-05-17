@@ -37,7 +37,11 @@ lineSchema.methods.saveAsync = function() {
 };
 
 lineSchema.post("save", function(doc) {
-  console.log("has been saved++++++++++++++++++++++++");
+  console.log("post has been saved++++++++++++++++++++++++");
+  console.log(doc);
+});
+lineSchema.pre("save", function(doc) {
+  console.log("pre has been saved++++++++++++++++++++++++");
   console.log(doc);
 });
 // lineSchema.methods.updateParentTotal = function(data = null) {
