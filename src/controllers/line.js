@@ -142,7 +142,7 @@ export function updateOne(req, res) {
   //   ? { children: { $in: req.params.id }, _id: { $ne: req.body.parent } }
   //   : { children: { $in: req.params.id } };
 
-  Line.findByIdAndUpdate(req.params.id, req.body, (err, line) => {
+  Line.findOneAndUpdate({ _id: req.params.id }, req.body, (err, line) => {
     if (err) {
       console.log(err);
       res.status(500).send(err);
