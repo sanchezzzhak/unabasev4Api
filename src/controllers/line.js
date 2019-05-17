@@ -151,39 +151,39 @@ export function updateOne(req, res) {
       //   if (err) {
       //     res.status(500).send(err);
       //   } else {
-      if (req.body.parent) {
-        Line.updateParentTotal(line.parent, () => {
-          console.log("after update parent total!!!!!!!!!!!");
-          // if (typeof currency !== "undefined") {
-          //   Item.findById(line.item.toString()).exec((err, item) => {
-          //     if (err) {
-          //       res.status(500).send(err);
-          //     } else {
-          //       let index = item.global.map(i => i.currency.toString()).indexOf(currency);
+      // if (req.body.parent) {
+      //   Line.updateParentTotal(line.parent, () => {
+      //     console.log("after update parent total!!!!!!!!!!!");
+      //     // if (typeof currency !== "undefined") {
+      //     //   Item.findById(line.item.toString()).exec((err, item) => {
+      //     //     if (err) {
+      //     //       res.status(500).send(err);
+      //     //     } else {
+      //     //       let index = item.global.map(i => i.currency.toString()).indexOf(currency);
 
-          //       item.global[index].lastPrice[movementType] = line.numbers.price;
-          //       item.save();
-          //     }
-          //   });
-          // }
+      //     //       item.global[index].lastPrice[movementType] = line.numbers.price;
+      //     //       item.save();
+      //     //     }
+      //     //   });
+      //     // }
 
-          // line.populate([{ path: "item" }, { path: "children" }], err => {
-          //   if (err) {
-          //     console.log(err);
-          //     res.status(500).send(err);
-          //   } else {
-          //     Line.getTreeTotals(line.movement)
-          //       .then(lineTree => {
-          //         console.log("before send responde");
-          //         res.send({ line, lineTree });
-          //       })
-          //       .catch(err => {
-          //         res.status(500).send(err);
-          //       });
-          //   }
-          // });
-        });
-      }
+      //     // line.populate([{ path: "item" }, { path: "children" }], err => {
+      //     //   if (err) {
+      //     //     console.log(err);
+      //     //     res.status(500).send(err);
+      //     //   } else {
+      //     //     Line.getTreeTotals(line.movement)
+      //     //       .then(lineTree => {
+      //     //         console.log("before send responde");
+      //     //         res.send({ line, lineTree });
+      //     //       })
+      //     //       .catch(err => {
+      //     //         res.status(500).send(err);
+      //     //       });
+      //     //   }
+      //     // });
+      //   });
+      // }
 
       line.populate([{ path: "item" }, { path: "children" }], err => {
         if (err) {
