@@ -54,29 +54,21 @@ lineSchema.post("update", function(doc, next) {
   console.log("post has been updated++++++++++++++++++++++++");
   console.log(doc.numbers);
   console.log(doc.name);
-
-  next();
 });
 lineSchema.pre("update", function(doc, next) {
   console.log("post has been updated++++++++++++++++++++++++");
   console.log(doc.numbers);
   console.log(doc.name);
-
-  next();
 });
 lineSchema.post("find", function(doc, next) {
   console.log("post has been findd++++++++++++++++++++++++");
   console.log(doc.numbers);
   console.log(doc.name);
-
-  next();
 });
 lineSchema.pre("find", function(doc, next) {
   console.log("post has been findd++++++++++++++++++++++++");
   console.log(doc.numbers);
   console.log(doc.name);
-
-  next();
 });
 // lineSchema.methods.updateParentTotal = function(data = null) {
 //   if (!data) {
