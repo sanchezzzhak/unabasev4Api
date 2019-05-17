@@ -40,16 +40,12 @@ lineSchema.post("save", function(doc, next) {
   console.log("post has been saved++++++++++++++++++++++++");
   console.log(doc.numbers);
   console.log(doc.name);
-
-  next();
 });
 lineSchema.pre("save", function(doc, next) {
   console.log(doc);
   console.log("post has been saved++++++++++++++++++++++++");
   // console.log(doc.numbers);
   // console.log(doc.name);
-
-  next();
 });
 lineSchema.post("update", function(doc, next) {
   console.log("post has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
