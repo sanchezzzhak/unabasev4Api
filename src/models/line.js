@@ -36,21 +36,19 @@ lineSchema.methods.saveAsync = function() {
   });
 };
 
-lineSchema.post("save", async function(doc) {
-  const print = () => {
-    console.log("post has been saved++++++++++++++++++++++++");
-    console.log(doc.numbers);
-    console.log(doc.name);
-  };
-  await print();
+lineSchema.post("save", function(doc) {
+  console.log("post has been saved++++++++++++++++++++++++");
+  console.log(doc.numbers);
+  console.log(doc.name);
+
+  next();
 });
-lineSchema.pre("save", async function(doc) {
-  const print = () => {
-    console.log("post has been saved++++++++++++++++++++++++");
-    console.log(doc.numbers);
-    console.log(doc.name);
-  };
-  await print();
+lineSchema.pre("save", function(doc) {
+  console.log("post has been saved++++++++++++++++++++++++");
+  console.log(doc.numbers);
+  console.log(doc.name);
+
+  next();
 });
 // lineSchema.methods.updateParentTotal = function(data = null) {
 //   if (!data) {
