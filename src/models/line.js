@@ -40,11 +40,13 @@ lineSchema.post("save", function(doc) {
   console.log("post has been saved++++++++++++++++++++++++");
   console.log(doc.numbers);
   console.log(doc.name);
+  return next();
 });
 lineSchema.pre("save", function(doc) {
   console.log("pre has been saved++++++++++++++++++++++++");
   console.log(doc.numbers);
   console.log(doc.name);
+  return next();
 });
 // lineSchema.methods.updateParentTotal = function(data = null) {
 //   if (!data) {
