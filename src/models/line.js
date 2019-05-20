@@ -78,7 +78,7 @@ lineSchema.post("find", function(doc, next) {
   // console.log(doc.numbers);
   // console.log(doc.name);
 
-  doc();
+  next();
 });
 // lineSchema.pre("find", function(doc, next) {
 //   console.log("pre has been findd++++++++++++++++++++++++:::::::::::::::::::::::");
