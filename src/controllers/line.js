@@ -79,28 +79,30 @@ export function create(req, res) {
     if (err) {
       res.status(500).send(err);
     } else {
-      Item.findOne({ _id: req.body.item }).exec((err, item) => {
-        if (err) {
-          res.status(500).send(err);
-        } else {
-          if (item.global.length) {
-            let index = item.global.map(i => i.currency.toString()).indexOf(currency);
-            item.global[index].lastPrice[movementType] = line.price;
-          }
+      Item.updateLastPrice(req.body.item, currency, movementType, req.body.numbers.price);
+      // Item.findOne({ _id: req.body.item }).exec((err, item) => {
+      //   if (err) {
+      //     res.status(500).send(err);
+      //   } else {
+      //     if (item.global.length) {
+      //       let index = item.global.map(i => i.currency.toString()).indexOf(currency);
+      //       item.global[index].lastPrice[movementType] = line.price;
+      //     }
 
-          Line.findByIdAndUpdate(req.body.parent, {
-            $addToSet: { children: line._id }
-          }).exec();
-          item.save((err, newItem) => {
-            if (err) {
-              res.status(500).send(err);
-            } else {
-              line.item = newItem;
-              res.send(line);
-            }
-          });
-        }
-      });
+      //     Line.findByIdAndUpdate(req.body.parent, {
+      //       $addToSet: { children: line._id }
+      //     }).exec();
+      //     item.save((err, newItem) => {
+      //       if (err) {
+      //         res.status(500).send(err);
+      //       } else {
+      //         line.item = newItem;
+      //         res.send(line);
+      //       }
+      //     });
+      //   }
+      // });
+      res.send(line);
     }
   });
 }
@@ -110,9 +112,9 @@ export function updateMany(req, res) {
       console.log(err);
       res.status(500).send(err);
     } else {
-      // Line.findByIdAndUpdate(req.body.lines[0].parent, {
-      //   $addToSet: { children: lines.map(line => line._id) }
-      // }).exec();
+      Line.findByIdAndUpdate(req.body.lines[0].parent, {
+        $addToSet: { children: lines.map(line => line._id) }
+      }).exec();
       await Line.populate(lines, [{ path: "parent" }]);
       res.send(lines);
     }

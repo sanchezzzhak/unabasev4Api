@@ -73,10 +73,12 @@ Item.updateLastPrice = (id, currency, movementType, princeToAdd) => {
     if (err) {
       res.status(500).send(err);
     } else {
-      let index = item.global.map(i => i.currency.toString()).indexOf(currency);
+      if (item.global.length) {
+        let index = item.global.map(i => i.currency.toString()).indexOf(currency);
 
-      item.global[index].lastPrice[movementType] = princeToAdd;
-      item.save();
+        item.global[index].lastPrice[movementType] = princeToAdd;
+        item.save();
+      }
     }
   });
 };

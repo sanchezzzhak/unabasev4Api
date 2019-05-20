@@ -71,9 +71,9 @@ lineSchema.pre("update", function(doc, next) {
 });
 lineSchema.post("find", function(doc, next) {
   console.log("post has been findd++++++++++++++++++++++++:::::::::::::::::::::::");
-  console.log("this");
-  console.log(this.populate("parent"));
-  console.log(this.parent);
+  // console.log("this");
+  // console.log(this.populate("parent"));
+  // console.log(this.parent);
   // console.log(this);
   // console.log(doc.numbers);
   // console.log(doc.name);
