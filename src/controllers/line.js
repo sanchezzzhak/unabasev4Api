@@ -110,6 +110,12 @@ export function create(req, res) {
   });
 }
 export function updateMany(req, res) {
+  if (req.body.totalMovement) {
+    Movement.findByIdAndUpdate(req.body.lines[0].movement, {
+      total: req.body.totalMovement
+    }).exec();
+  }
+
   Line.updateMany({ _id: { $in: req.body.lines } }, { $set: req.body.data }, async (err, lines) => {
     if (err) {
       console.log(err);
@@ -124,6 +130,11 @@ export function updateMany(req, res) {
   });
 }
 export function deleteMany(req, res) {
+  if (req.body.totalMovement) {
+    Movement.findByIdAndUpdate(req.body.lines[0].movement, {
+      total: req.body.totalMovement
+    }).exec();
+  }
   Line.deleteMany({ _id: { $in: req.body.lines.map(i => i._id) } }, (err, resp) => {
     if (err) {
       res.status(500).send(err);
@@ -131,7 +142,15 @@ export function deleteMany(req, res) {
       for (let line of req.body.lines) {
         Line.findByIdAndUpdate(line.parent, { $pull: { children: { $in: line._id } } }).exec();
       }
-      res.send(resp);
+
+      Line.getTreeTotals(req.body.lines[0].movement || "")
+        .then(lineTree => {
+          console.log("before send responde");
+          res.send({ lineTree });
+        })
+        .catch(err => {
+          res.status(500).send(err);
+        });
     }
   });
 }
@@ -189,13 +208,25 @@ export function updateOne(req, res) {
 }
 
 export function deleteOne(req, res) {
+  if (req.body.totalMovement) {
+    Movement.findByIdAndUpdate(req.body.movement, {
+      total: req.body.totalMovement
+    }).exec();
+  }
   Line.findOneAndUpdate({ children: { $in: req.params.id } }, { $pull: { children: { $in: req.params.id } } }).exec();
   Line.findByIdAndRemove(req.params.id, (err, item) => {
     if (err) {
       console.log(err);
       res.status(500).send(err);
     } else {
-      res.send(item);
+      Line.getTreeTotals(req.body.movement || "")
+        .then(lineTree => {
+          console.log("before send responde");
+          res.send({ lineTree });
+        })
+        .catch(err => {
+          res.status(500).send(err);
+        });
     }
   });
 }
