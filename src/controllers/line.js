@@ -142,9 +142,11 @@ export function updateOne(req, res) {
   let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
   if (req.body.parent) Line.findByIdAndUpdate(req.body.parent, { $addToSet: { children: req.params.id } }).exec();
   // add total to movement
-  Movement.findByIdAndUpdate(req.body.movement, {
-    total: req.body.totalMovement
-  }).exec();
+  if (req.body.totalMovement) {
+    Movement.findByIdAndUpdate(req.body.movement, {
+      total: req.body.totalMovement
+    }).exec();
+  }
   if (currency) {
     Item.updateLastPrice(req.body.item, currency, movementType, req.body.numbers.price);
   }
@@ -160,10 +162,6 @@ export function updateOne(req, res) {
           console.log(err);
           res.status(500).send(err);
         } else if (line) {
-          // Line.findById(req.body.parent, (err, parentLine) => {
-          //   if (err) {
-          //     res.status(500).send(err);
-          //   } else {
           if (req.body.parent || oldParent) {
             const parentToUpdate = req.body.parent || oldParent || "";
             Line.updateParentTotal(parentToUpdate, () => {
