@@ -51,6 +51,9 @@ export function get(req, res) {
   });
 }
 export function createMany(req, res) {
+  for (let line of req.body) {
+    line.creator = req.user._id;
+  }
   Line.insertMany(req.body, async (err, lines) => {
     if (err) {
       res.status(500).send(err);
@@ -129,6 +132,7 @@ export function deleteMany(req, res) {
 }
 
 export function updateOne(req, res) {
+  console.log("-------------start updateOne");
   let movementType = req.body.movementType === "income" ? "sell" : "buy";
   let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
   // add total to movement
@@ -153,7 +157,6 @@ export function updateOne(req, res) {
       //   } else {
       if (req.body.parent) {
         Line.updateParentTotal(line.parent, () => {
-          console.log("after update parent total!!!!!!!!!!!");
           // if (typeof currency !== "undefined") {
           //   Item.findById(line.item.toString()).exec((err, item) => {
           //     if (err) {

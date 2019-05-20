@@ -36,44 +36,58 @@ lineSchema.methods.saveAsync = function() {
   });
 };
 
-// lineSchema.post("save", function(doc, next) {
-//   console.log("post has been saved++++++++++++++++++++++++");
-//   console.log(doc.numbers);
-//   console.log(doc.name);
-// });
-// lineSchema.pre("save", function(doc, next) {
-//   console.log(doc);
-//   console.log("post has been saved++++++++++++++++++++++++");
-//   // console.log(doc.numbers);
-//   // console.log(doc.name);
-// });
-// lineSchema.post("update", function(doc, next) {
-//   console.log("post has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
-//   console.log(doc);
-//   // console.log(doc.numbers);
-//   // console.log(doc.name);
-
+lineSchema.post("save", function(doc, next) {
+  console.log("post has been saved++++++++++++++++++++++++");
+  console.log(doc.numbers);
+  console.log(doc.name);
+});
+lineSchema.pre("save", function(doc, next) {
+  console.log("pre has been saved++++++++++++++++++++++++");
+});
+// lineSchema.post("insertMany", function(next, name) {
+//   console.log("post has been insertManyd++++++++++++++++++++++++");
 //   next();
 // });
-// lineSchema.pre("update", function(doc, next) {
-//   console.log("pre has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
-//   console.log(doc);
-//   // console.log(doc.numbers);
-//   // console.log(doc.name);
-
+// lineSchema.pre("insertMany", function(next, name) {
+//   console.log("pre has been insertManyd++++++++++++++++++++++++");
+//   console.log(name);
 //   next();
 // });
-// lineSchema.post("find", function(doc, next) {
-//   console.log("post has been findd++++++++++++++++++++++++:::::::::::::::::::::::");
-//   console.log(doc);
-//   // console.log(doc.numbers);
-//   // console.log(doc.name);
+lineSchema.post("update", function(doc, next) {
+  console.log("post has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
+  console.log(doc);
+  // console.log(doc.numbers);
+  // console.log(doc.name);
 
-//   next();
-// });
+  next();
+});
+lineSchema.pre("update", function(doc, next) {
+  console.log("pre has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
+  console.log(doc);
+  // console.log(doc.numbers);
+  // console.log(doc.name);
+
+  next();
+});
+lineSchema.post("find", function(doc, next) {
+  console.log("post has been findd++++++++++++++++++++++++:::::::::::::::::::::::");
+  console.log("this");
+  console.log(this.populate("parent"));
+  console.log(this.parent);
+  // console.log(this);
+  // console.log(doc.numbers);
+  // console.log(doc.name);
+
+  doc();
+});
 // lineSchema.pre("find", function(doc, next) {
 //   console.log("pre has been findd++++++++++++++++++++++++:::::::::::::::::::::::");
-//   console.log(doc);
+//   console.log("doc");
+//   console.log(doc());
+//   console.log("next");
+//   console.log(next());
+//   // console.log("this");
+//   // console.log(this);
 //   // console.log(doc.numbers);
 //   // console.log(doc.name);
 
@@ -119,24 +133,37 @@ lineSchema.methods.saveAsync = function() {
 const Line = mongoose.model("Line", lineSchema);
 
 Line.updateParentTotal = (parentId, callback) => {
-  // return new Promise((resolve, reject) => {
-  Line.findById(parentId, (err, parentLine) => {
-    // let thisParent = this.parent;
-    parentLine.populate([{ path: "children", select: "numbers quantity" }], err => {
-      let sum = 0;
-      for (let child of parentLine.children) {
-        sum += child.numbers.price * child.quantity;
-      }
-      parentLine.numbers.price = sum;
-
-      parentLine.save();
-      if (parentLine.parent) {
-        Line.updateParentTotal(parentLine.parent, callback);
+  Line.find({ parent: parentId }, (err, lines) => {
+    let sum;
+    for (let line of lines) {
+      sum += line.numbers.price;
+    }
+    Line.findOneById(parentId, (err, parent) => {
+      parent.numbers.price = sum;
+      if (parent.parent) {
+        Line.updateParentTotal(parent.parent, callback);
       } else {
-        if (callback) callback(parentLine._id);
+        if (callback) callback(parent._id);
       }
     });
   });
+  // return new Promise((resolve, reject) => {
+  // Line.findById(parentId, (err, parentLine) => {
+  //   // let thisParent = this.parent;
+  //   parentLine.populate([{ path: "children", select: "numbers quantity" }], err => {
+  //     let sum = 0;
+  //     for (let child of parentLine.children) {
+  //       sum += child.numbers.price * child.quantity;
+  //     }
+  //     parentLine.numbers.price = sum;
+
+  //     parentLine.save();
+  //     if (parentLine.parent) {
+  //       Line.updateParentTotal(parentLine.parent, callback);
+  //     } else {
+  //       if (callback) callback(parentLine._id);
+  //     }
+  //   });
   // });
 };
 
