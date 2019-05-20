@@ -102,7 +102,7 @@ export function updateMany(req, res) {
       console.log("////////////////////lines");
       console.log(lines);
       Line.findByIdAndUpdate(req.body.lines[0].parent, {
-        $addToSet: { children: lines.map(line => line._id) }
+        $addToSet: { children: req.body.lines.map(line => line._id) }
       }).exec();
       await Line.populate(lines, [{ path: "parent" }]);
       res.send(lines);
