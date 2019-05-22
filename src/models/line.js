@@ -138,7 +138,7 @@ Line.updateParentTotal = (parentId, callback) => {
     for (let line of lines) {
       sum += line.numbers.price;
     }
-    Line.findOneById(parentId, (err, parent) => {
+    Line.findById(parentId, (err, parent) => {
       parent.numbers.price = sum;
       if (parent.parent) {
         Line.updateParentTotal(parent.parent, callback);
