@@ -37,8 +37,8 @@ export default {
         console.log("envar:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
         // console.log(envar);
         console.log("err");
-        console.log(err);
-        res.status(500).send(err);
+        console.log(err.Error);
+        res.status(500).send(err.Error);
       });
   }
 };
