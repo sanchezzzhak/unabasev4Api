@@ -403,14 +403,16 @@ export const updateOne = (req, res) => {
   //       console.log(err);
   //     });
   // } else {
-  Movement.findOneAndUpdate({ _id: req.params.id }, update, { new: true }, (err, movement) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send(err);
-    } else {
-      res.send(movement);
-    }
-  });
+  Movement.findOneAndUpdate({ _id: req.params.id }, update, { new: true })
+    .populate("client.data")
+    .exec((err, movement) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send(err);
+      } else {
+        res.send(movement);
+      }
+    });
   // }
 };
 export const linkMovement = (email, user) => {
