@@ -117,6 +117,7 @@ export function deleteMany(req, res) {
   }
   Line.deleteMany({ _id: { $in: req.body.lines.map(i => i._id) } }, (err, resp) => {
     if (err) {
+      console.log(err);
       res.status(500).send(err);
     } else {
       for (let line of req.body.lines) {
