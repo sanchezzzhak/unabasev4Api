@@ -187,6 +187,15 @@ export function updateOne(req, res) {
                 });
               }
             });
+          } else {
+            line.populate([{ path: "item" }], err => {
+              if (err) {
+                console.log(err);
+                res.status(500).send(err);
+              } else {
+                res.send({ line });
+              }
+            });
           }
         }
       });
