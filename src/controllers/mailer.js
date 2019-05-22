@@ -34,7 +34,7 @@ export default {
         res.send(resp.data);
       })
       .catch(err => {
-        console.log("envar");
+        console.log("envar:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
         // console.log(envar);
         console.log("err");
         console.log(err);
