@@ -111,7 +111,7 @@ export function updateMany(req, res) {
 }
 export function deleteMany(req, res) {
   if (req.body.totalMovement) {
-    Movement.findByIdAndUpdate(req.body.lines[0].movement, {
+    Movement.findByIdAndUpdate(req.body.movement, {
       total: req.body.totalMovement
     }).exec();
   }
@@ -124,12 +124,13 @@ export function deleteMany(req, res) {
         Line.findByIdAndUpdate(line.parent, { $pull: { children: { $in: line._id } } }).exec();
       }
 
-      Line.getTreeTotals(req.body.lines[0].movement || "")
+      Line.getTreeTotals(req.body.movement || "")
         .then(lineTree => {
           console.log("before send responde");
           res.send({ lineTree });
         })
         .catch(err => {
+          console.log(err);
           res.status(500).send(err);
         });
     }
