@@ -69,12 +69,15 @@ const itemSchema = new Schema(
 itemSchema.plugin(mongoosePaginate);
 const Item = mongoose.model("Item", itemSchema);
 Item.updateLastPrice = (id, currency, movementType, princeToAdd) => {
-  Item.findById(id).exec((err, item) => {
+  let _currency = currency;
+
+  Item.findById(id, (err, item) => {
     if (err) {
       res.status(500).send(err);
     } else {
       if (item.global.length) {
-        let index = item.global.map(i => i.currency.toString()).indexOf(currency);
+        let currencies = item.global.map(i => i.currency.toString());
+        let index = currencies.indexOf(_currency);
 
         item.global[index].lastPrice[movementType] = princeToAdd;
         item.save();

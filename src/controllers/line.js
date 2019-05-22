@@ -149,7 +149,7 @@ export function updateOne(req, res) {
     }).exec();
   }
   if (currency) {
-    Item.updateLastPrice(req.body.item, currency, movementType, req.body.numbers.price);
+    Item.updateLastPrice(req.body.item.toString(), currency, movementType, req.body.numbers.price);
   }
   const queryUpdateChildren = req.body.parent
     ? { children: { $in: req.params.id }, _id: { $ne: req.body.parent } }
