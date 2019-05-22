@@ -158,7 +158,7 @@ export function updateOne(req, res) {
     if (err) {
       res.status(500).send(err);
     } else {
-      Line.findOneAndUpdate({ _id: req.params.id }, req.body, (err, line) => {
+      Line.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (err, line) => {
         if (err) {
           console.log(err);
           res.status(500).send(err);
