@@ -165,22 +165,27 @@ export function updateOne(req, res) {
         } else if (line) {
           if (req.body.parent || oldParent) {
             const parentToUpdate = req.body.parent || oldParent || "";
-            Line.updateParentTotal(parentToUpdate, () => {
-              line.populate([{ path: "item" }], err => {
-                if (err) {
-                  console.log(err);
-                  res.status(500).send(err);
-                } else {
-                  Line.getTreeTotals(line.movement)
-                    .then(lineTree => {
-                      console.log("before send responde");
-                      res.send({ line, lineTree });
-                    })
-                    .catch(err => {
-                      res.status(500).send(err);
-                    });
-                }
-              });
+            Line.updateParentTotal(parentToUpdate, err => {
+              if (err) {
+                console.log(err);
+                res.status(500).send(err);
+              } else {
+                line.populate([{ path: "item" }], err => {
+                  if (err) {
+                    console.log(err);
+                    res.status(500).send(err);
+                  } else {
+                    Line.getTreeTotals(line.movement)
+                      .then(lineTree => {
+                        console.log("before send responde");
+                        res.send({ line, lineTree });
+                      })
+                      .catch(err => {
+                        res.status(500).send(err);
+                      });
+                  }
+                });
+              }
             });
           }
         }

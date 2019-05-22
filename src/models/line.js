@@ -134,18 +134,27 @@ const Line = mongoose.model("Line", lineSchema);
 
 Line.updateParentTotal = (parentId, callback) => {
   Line.find({ parent: parentId }, (err, lines) => {
-    let sum;
-    for (let line of lines) {
-      sum += line.numbers.price;
-    }
-    Line.findById(parentId, (err, parent) => {
-      parent.numbers.price = sum;
-      if (parent.parent) {
-        Line.updateParentTotal(parent.parent, callback);
-      } else {
-        if (callback) callback(parent._id);
+    if (err) {
+      callback(err);
+    } else {
+      let sum;
+      for (let line of lines) {
+        sum += line.numbers.price;
       }
-    });
+      Line.findById(parentId, (err, parent) => {
+        if (err) {
+          callback(err);
+        } else {
+          parent.numbers.price = sum;
+          if (parent.parent) {
+            Line.updateParentTotal(parent.parent, callback);
+          } else {
+            console.log("End of updatePArentTotal/////////////////////////");
+            if (callback) callback(null);
+          }
+        }
+      });
+    }
   });
   // return new Promise((resolve, reject) => {
   // Line.findById(parentId, (err, parentLine) => {
