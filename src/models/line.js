@@ -137,15 +137,14 @@ Line.updateParentTotal = (parentId, callback) => {
     if (err) {
       callback(err);
     } else {
-      let sum;
+      let sum = 0;
       for (let line of lines) {
         sum += line.numbers.price;
       }
-      Line.findById(parentId, (err, parent) => {
+      Line.findByIdAndUpdate(parentId, { "numbers.price": sum }, { new: true }, (err, parent) => {
         if (err) {
           callback(err);
         } else {
-          parent.numbers.price = sum;
           if (parent.parent) {
             Line.updateParentTotal(parent.parent, callback);
           } else {
@@ -154,6 +153,21 @@ Line.updateParentTotal = (parentId, callback) => {
           }
         }
       });
+      // Line.findById(parentId, (err, parent) => {
+      //   if (err) {
+      //     callback(err);
+      //   } else {
+      //     parent.numbers.price = sum;
+      //     if (parent.parent) {
+      //       parent.save();
+      //       Line.updateParentTotal(parent.parent, callback);
+      //     } else {
+      //       console.log("End of updatePArentTotal/////////////////////////");
+      //       parent.save();
+      //       if (callback) callback(null);
+      //     }
+      //   }
+      // });
     }
   });
   // return new Promise((resolve, reject) => {

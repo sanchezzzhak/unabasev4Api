@@ -152,8 +152,8 @@ export function updateOne(req, res) {
     Item.updateLastPrice(req.body.item.toString(), currency, movementType, req.body.numbers.price);
   }
   const queryUpdateChildren = req.body.parent
-    ? { children: { $in: req.params.id }, _id: { $ne: req.body.parent } }
-    : { children: { $in: req.params.id } };
+    ? { children: { $in: [ObjectId(req.params.id)] }, _id: { $ne: req.body.parent } }
+    : { children: { $in: [ObjectId(req.params.id)] } };
   Line.findOneAndUpdate(queryUpdateChildren, { $pull: { children: { $in: req.params.id } } }).exec((err, oldParent) => {
     if (err) {
       res.status(500).send(err);
