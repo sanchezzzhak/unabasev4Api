@@ -149,58 +149,68 @@ export function updateOne(req, res) {
     }).exec();
   }
   if (currency) {
-    Item.updateLastPrice(req.body.item.toString(), currency, movementType, req.body.numbers.price);
-  }
-  const queryUpdateChildren = req.body.parent
-    ? { children: { $in: [ObjectId(req.params.id)] }, _id: { $ne: req.body.parent } }
-    : { children: { $in: [ObjectId(req.params.id)] } };
-  Line.findOneAndUpdate(queryUpdateChildren, { $pull: { children: { $in: req.params.id } } }).exec((err, oldParent) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      Line.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (err, line) => {
-        if (err) {
-          console.log(err);
-          res.status(500).send(err);
-        } else if (line) {
-          if (req.body.parent || oldParent) {
-            const parentToUpdate = req.body.parent || oldParent || "";
-            Line.updateParentTotal(parentToUpdate, err => {
-              if (err) {
-                console.log(err);
-                res.status(500).send(err);
-              } else {
-                line.populate([{ path: "item" }], err => {
-                  if (err) {
-                    console.log(err);
-                    res.status(500).send(err);
-                  } else {
-                    Line.getTreeTotals(line.movement)
-                      .then(lineTree => {
-                        console.log("before send responde");
-                        res.send({ line, lineTree });
-                      })
-                      .catch(err => {
+    Item.updateLastPrice(req.body.item.toString(), currency, movementType, req.body.numbers.price)
+      .then(resp => {
+        console.log("item last price updated");
+        const queryUpdateChildren = req.body.parent
+          ? { children: { $in: [ObjectId(req.params.id)] }, _id: { $ne: req.body.parent } }
+          : { children: { $in: [ObjectId(req.params.id)] } };
+        Line.findOneAndUpdate(queryUpdateChildren, { $pull: { children: { $in: req.params.id } } }).exec(
+          (err, oldParent) => {
+            if (err) {
+              res.status(500).send(err);
+            } else {
+              Line.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (err, line) => {
+                if (err) {
+                  console.log(err);
+                  res.status(500).send(err);
+                } else if (line) {
+                  if (req.body.parent || oldParent) {
+                    const parentToUpdate = req.body.parent || oldParent || "";
+                    Line.updateParentTotal(parentToUpdate, err => {
+                      if (err) {
+                        console.log(err);
                         res.status(500).send(err);
-                      });
+                      } else {
+                        line.populate([{ path: "item" }], err => {
+                          if (err) {
+                            console.log(err);
+                            res.status(500).send(err);
+                          } else {
+                            Line.getTreeTotals(line.movement)
+                              .then(lineTree => {
+                                console.log("before send responde");
+                                res.send({ line, lineTree });
+                              })
+                              .catch(err => {
+                                res.status(500).send(err);
+                              });
+                          }
+                        });
+                      }
+                    });
+                  } else {
+                    line.populate([{ path: "item" }], err => {
+                      if (err) {
+                        console.log(err);
+                        res.status(500).send(err);
+                      } else {
+                        res.send({ line });
+                      }
+                    });
                   }
-                });
-              }
-            });
-          } else {
-            line.populate([{ path: "item" }], err => {
-              if (err) {
-                console.log(err);
-                res.status(500).send(err);
-              } else {
-                res.send({ line });
-              }
-            });
+                } else {
+                  res.status(500).send({ msg: "Line not found" });
+                }
+              });
+            }
           }
-        }
+        );
+      })
+      .catch(err => {
+        res.status(500).send(err);
       });
-    }
-  });
+  }
 }
 
 export function deleteOne(req, res) {
