@@ -85,8 +85,8 @@ export function create(req, res) {
         }).exec();
       }
       if (req.body.children) {
-        for (let lineId in req.body.children) {
-          Line.findByIdAndUpdate(line._id.toString(), { parent: line.parent }).exec();
+        for (let lineId of req.body.children) {
+          Line.findByIdAndUpdate(lineId, { parent: line._id.toString() }).exec();
         }
       }
       res.send(line);
