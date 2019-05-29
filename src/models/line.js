@@ -9,9 +9,9 @@ const lineSchema = new Schema(
     quantity: { type: Number },
     price: { type: Number },
     numbers: {
-      price: Number,
-      budget: Number,
-      cost: Number
+      price: { type: Number, default: 0 },
+      budget: { type: Number, default: 0 },
+      cost: { type: Number, default: 0 }
     },
     children: Array({ type: Schema.Types.ObjectId, ref: "Line" }),
     listIndex: Number,
