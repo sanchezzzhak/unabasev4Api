@@ -36,7 +36,7 @@ lineSchema.methods.saveAsync = function() {
   });
 };
 
-lineSchema.post("save", function(doc) {
+lineSchema.post("save", function(next) {
   console.log("post has been saved++++++++++++++++++++++++");
   console.log(doc.numbers);
   console.log(doc.name);
