@@ -70,8 +70,9 @@ export function createMany(req, res) {
 }
 export function create(req, res) {
   let line = new Line(req.body);
-  let movementType = req.body.movementType === "income" ? "sell" : "buy";
-  let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
+
+  // let movementType = req.body.movementType === "income" ? "sell" : "buy";
+  // let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
   line.creator = req.user._id;
   line.save((err, line) => {
     if (err) {
@@ -82,7 +83,11 @@ export function create(req, res) {
           $addToSet: { children: line._id }
         }).exec();
       }
-
+      if (req.body.children) {
+        for (let lineId in children) {
+          Line.findByIdAndUpdate(lineId, { parent: line.parent }).exec();
+        }
+      }
       res.send(line);
     }
   });
