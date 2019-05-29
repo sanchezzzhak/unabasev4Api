@@ -41,8 +41,9 @@ lineSchema.post("save", function(doc, next) {
   console.log(doc.numbers);
   console.log(doc.name);
 });
-lineSchema.pre("save", function(doc, next) {
+lineSchema.pre("save", function(next) {
   console.log("pre has been saved++++++++++++++++++++++++");
+  next();
 });
 // lineSchema.post("insertMany", function(next, name) {
 //   console.log("post has been insertManyd++++++++++++++++++++++++");
