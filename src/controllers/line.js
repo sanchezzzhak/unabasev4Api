@@ -76,6 +76,7 @@ export function create(req, res) {
   line.creator = req.user._id;
   line.save((err, line) => {
     if (err) {
+      console.log(err);
       res.status(500).send(err);
     } else {
       if (line.parent) {
@@ -84,7 +85,7 @@ export function create(req, res) {
         }).exec();
       }
       if (req.body.children) {
-        for (let lineId in children) {
+        for (let lineId in req.body.children) {
           Line.findByIdAndUpdate(lineId, { parent: line.parent }).exec();
         }
       }
