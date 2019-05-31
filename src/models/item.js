@@ -16,6 +16,7 @@ const itemSchema = new Schema(
         max: { type: Number }
       }
     },
+    isParent: { type: Boolean, default: false },
     global: [
       {
         currency: { type: Schema.Types.ObjectId, ref: "Currency" },

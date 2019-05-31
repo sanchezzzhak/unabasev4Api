@@ -15,6 +15,7 @@ const lineSchema = new Schema(
     },
     children: Array({ type: Schema.Types.ObjectId, ref: "Line" }),
     listIndex: Number,
+    isParent: { type: Boolean, default: false },
     parent: { type: Schema.Types.ObjectId, ref: "Line" },
 
     // quantity: Array({}),
