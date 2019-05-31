@@ -80,7 +80,10 @@ export function create(req, res) {
       res.status(500).send(err);
     } else {
       if (line.parent) {
-        Line.findByIdAndUpdate(req.body.lines[0].parent, {
+        // Line.findByIdAndUpdate(req.body.lines[0].parent, {
+        //   $addToSet: { children: line._id }
+        // }).exec();
+        Line.findByIdAndUpdate(line.parent, {
           $addToSet: { children: line._id }
         }).exec();
       }
