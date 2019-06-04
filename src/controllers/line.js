@@ -70,7 +70,6 @@ export function createMany(req, res) {
 }
 export function create(req, res) {
   let createLine = () => {
-
     let line = new Line(req.body);
 
     // let movementType = req.body.movementType === "income" ? "sell" : "buy";
@@ -97,28 +96,28 @@ export function create(req, res) {
         res.send(line);
       }
     });
-  }
-  if(!req.body.item){
-    Item.findOne({ name: { $regex: req.body.name, $options: 'i' }  }).exec((err, item) => {
+  };
+  if (!req.body.item) {
+    Item.findOne({ name: { $regex: req.body.name, $options: "i" } }).exec((err, item) => {
       if (err) {
         console.log(err);
         res.status(500).send(err);
-      } else if(item){
+      } else if (item) {
         req.body.item = item._id;
         createLine();
-      }else{
-        let item = new Item({name: req.body.name});
-        item.save((err, item) => { 
+      } else {
+        let item = new Item({ name: req.body.name });
+        item.save((err, item) => {
           if (err) {
             console.log(err);
             res.status(500).send(err);
-          }else{
+          } else {
             req.body.item = item._id;
-            createLine()
+            createLine();
           }
-        })
+        });
       }
-    })
+    });
   }
 }
 export function updateMany(req, res) {
