@@ -65,3 +65,5 @@ src/config/main.js
 .prettierrc.json
 
 build/
+
+.directory

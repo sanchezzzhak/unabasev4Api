@@ -69,32 +69,57 @@ export function createMany(req, res) {
   });
 }
 export function create(req, res) {
-  let line = new Line(req.body);
+  let createLine = () => {
 
-  // let movementType = req.body.movementType === "income" ? "sell" : "buy";
-  // let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
-  line.creator = req.user._id;
-  line.save((err, line) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send(err);
-    } else {
-      if (line.parent) {
-        // Line.findByIdAndUpdate(req.body.lines[0].parent, {
-        //   $addToSet: { children: line._id }
-        // }).exec();
-        Line.findByIdAndUpdate(line.parent, {
-          $addToSet: { children: line._id }
-        }).exec();
-      }
-      if (req.body.children) {
-        for (let lineId of req.body.children) {
-          Line.findByIdAndUpdate(lineId, { parent: line._id.toString() }).exec();
+    let line = new Line(req.body);
+
+    // let movementType = req.body.movementType === "income" ? "sell" : "buy";
+    // let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
+    line.creator = req.user._id;
+    line.save((err, line) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send(err);
+      } else {
+        if (line.parent) {
+          // Line.findByIdAndUpdate(req.body.lines[0].parent, {
+          //   $addToSet: { children: line._id }
+          // }).exec();
+          Line.findByIdAndUpdate(line.parent, {
+            $addToSet: { children: line._id }
+          }).exec();
         }
+        if (req.body.children) {
+          for (let lineId of req.body.children) {
+            Line.findByIdAndUpdate(lineId, { parent: line._id.toString() }).exec();
+          }
+        }
+        res.send(line);
       }
-      res.send(line);
-    }
-  });
+    });
+  }
+  if(!req.body.item){
+    Item.findOne({ name: { $regex: req.body.name, $options: 'i' }  }).exec((err, item) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send(err);
+      } else if(item){
+        req.body.item = item._id;
+        createLine();
+      }else{
+        let item = new Item({name: req.body.name});
+        item.save((err, item) => { 
+          if (err) {
+            console.log(err);
+            res.status(500).send(err);
+          }else{
+            req.body.item = item._id;
+            createLine()
+          }
+        })
+      }
+    })
+  }
 }
 export function updateMany(req, res) {
   if (req.body.data.totalMovement) {
