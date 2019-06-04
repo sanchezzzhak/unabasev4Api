@@ -118,6 +118,8 @@ export function create(req, res) {
         });
       }
     });
+  }else{
+    createLine();
   }
 }
 export function updateMany(req, res) {
