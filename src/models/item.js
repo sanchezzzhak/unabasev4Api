@@ -4,6 +4,7 @@ import mongoosePaginate from "mongoose-paginate";
 const itemSchema = new Schema(
   {
     isActive: { type: Boolean, default: true },
+    children: Array({ type: Schema.Types.ObjectId, ref: "Item" }),
     name: String,
     creator: { type: Schema.Types.ObjectId, ref: "User" },
     quantity: {
