@@ -69,6 +69,7 @@ export function createMany(req, res) {
   });
 }
 export function create(req, res) {
+  let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
   let createLine = () => {
     let line = new Line(req.body);
 
@@ -128,6 +129,9 @@ export function create(req, res) {
         createLine();
       } else {
         let item = new Item({ name: req.body.name });
+        item.global.push({
+          currency
+        });
         item.save((err, item) => {
           if (err) {
             console.log(err);

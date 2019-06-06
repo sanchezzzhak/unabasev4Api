@@ -76,6 +76,8 @@ Item.updateLastPrice = (id, currency, movementType, princeToAdd) => {
 
     Item.findById(id, (err, item) => {
       if (err) {
+        console.log("err from update last price");
+        console.log(err);
         reject(err);
       } else if (item) {
         if (item.global.length) {
@@ -84,8 +86,8 @@ Item.updateLastPrice = (id, currency, movementType, princeToAdd) => {
 
           item.global[index].lastPrice[movementType] = princeToAdd;
           item.save();
-          resolve();
         }
+        resolve();
       } else {
         reject({ msg: "Item not found" });
       }
