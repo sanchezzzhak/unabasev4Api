@@ -197,6 +197,7 @@ export function updateOne(req, res) {
   console.log("-------------start updateOne");
   let movementType = req.body.movementType === "income" ? "sell" : "buy";
   let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
+  let item = typeof req.body.item === "object" ? req.body.item._id : req.body.item;
   if (req.body.parent) Line.findByIdAndUpdate(req.body.parent, { $addToSet: { children: req.params.id } }).exec();
   // add total to movement
   if (req.body.totalMovement) {
@@ -205,7 +206,7 @@ export function updateOne(req, res) {
     }).exec();
   }
   if (currency) {
-    Item.updateLastPrice(req.body.item.toString(), currency, movementType, req.body.numbers.price)
+    Item.updateLastPrice(item, currency, movementType, req.body.numbers.price)
       .then(resp => {
         console.log("item last price updated");
         const queryUpdateChildren = req.body.parent
@@ -264,6 +265,7 @@ export function updateOne(req, res) {
         );
       })
       .catch(err => {
+        console.log(err);
         res.status(500).send(err);
       });
   }
