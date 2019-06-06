@@ -93,7 +93,15 @@ export function create(req, res) {
             Line.findByIdAndUpdate(lineId, { parent: line._id.toString() }).exec();
           }
         }
-        res.send(line);
+
+        Line.getTreeTotals(req.body.movement)
+          .then(lineTree => {
+            console.log("before send responde");
+            res.send({ line, lineTree });
+          })
+          .catch(err => {
+            res.status(500).send(err);
+          });
       }
     });
   };
@@ -118,7 +126,7 @@ export function create(req, res) {
         });
       }
     });
-  }else{
+  } else {
     createLine();
   }
 }
