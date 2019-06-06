@@ -1,5 +1,5 @@
-import Item from '../models/item';
-import ntype from 'normalize-type';
+import Item from "../models/item";
+import ntype from "normalize-type";
 const routes = {
   get(req, res) {
     let rquery = ntype(req.query);
@@ -10,8 +10,8 @@ const routes = {
 
     options.populate = [
       {
-        path: 'tax',
-        select: 'number name'
+        path: "tax",
+        select: "number name"
       }
     ];
     delete rquery.page;
@@ -27,7 +27,7 @@ const routes = {
   },
   getOne(req, res) {
     Item.findById(req.params.id)
-      .populate({ path: 'tax' })
+      .populate({ path: "tax" })
       .exec((err, item) => {
         if (err) {
           console.log(err);
@@ -36,7 +36,7 @@ const routes = {
           item.populate(
             [
               {
-                path: 'global.tax'
+                path: "global.tax"
               }
             ],
             err => {
@@ -54,46 +54,41 @@ const routes = {
       });
   },
   create(req, res) {
-    Item.findOne(
-      { name: { $regex: new RegExp(`^${req.body.name}$`, 'i') } },
-      (err, itemFound) => {
-        if (err) {
-          console.log(err);
-          res.status(500).end({ err });
-        } else if (itemFound) {
-          res.send(itemFound);
-        } else {
-          let item = new Item(req.body);
-          item.creator = req.user._id;
-          item.save((err, itemSaved) => {
-            if (err) {
-              console.log(err);
-              res.status(500).end({ err });
-            } else {
-              res.send(itemSaved);
-            }
-          });
-        }
+    Item.findOne({ name: { $regex: new RegExp(`^${req.body.name}$`, "i") } }, (err, itemFound) => {
+      if (err) {
+        console.log(err);
+        res.status(500).end({ err });
+      } else if (itemFound) {
+        res.send(itemFound);
+      } else {
+        let item = new Item(req.body);
+        item.creator = req.user._id;
+        item.save((err, itemSaved) => {
+          if (err) {
+            console.log(err);
+            res.status(500).end({ err });
+          } else {
+            res.send(itemSaved);
+          }
+        });
       }
-    );
+    });
   },
   updateOne(req, res) {
-    Item.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true },
-      (err, item) => {
-        if (err) {
-          res.status(500).end(err);
-        } else {
-          res.send(item);
-        }
+    Item.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, item) => {
+      if (err) {
+        res.status(500).end(err);
+      } else {
+        res.send(item);
       }
-    );
+    });
   },
   find: (req, res) => {
+    let rquery = ntype(req.query);
+
     let query = {
-      name: { $regex: req.params.q, $options: 'i' }
+      name: { $regex: req.params.q, $options: "i" },
+      ...rquery
     };
     Item.paginate(query, {}, (err, items) => {
       if (err) {
