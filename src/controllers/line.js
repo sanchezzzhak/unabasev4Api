@@ -93,15 +93,28 @@ export function create(req, res) {
             Line.findByIdAndUpdate(lineId, { parent: line._id.toString() }).exec();
           }
         }
-
-        Line.getTreeTotals(req.body.movement)
-          .then(lineTree => {
-            console.log("before send responde");
-            res.send({ line, lineTree });
-          })
-          .catch(err => {
+        Line.updateParentTotal(line._id, err => {
+          if (err) {
+            console.log(err);
             res.status(500).send(err);
-          });
+          } else {
+            line.populate([{ path: "item" }], err => {
+              if (err) {
+                console.log(err);
+                res.status(500).send(err);
+              } else {
+                Line.getTreeTotals(line.movement)
+                  .then(lineTree => {
+                    console.log("before send responde");
+                    res.send({ line, lineTree });
+                  })
+                  .catch(err => {
+                    res.status(500).send(err);
+                  });
+              }
+            });
+          }
+        });
       }
     });
   };
