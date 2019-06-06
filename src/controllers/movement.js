@@ -56,6 +56,8 @@ export const getPersonal = (req, res) => {
     if (err) {
       res.status(500).end();
     } else {
+      console.log("----------------after paginate");
+      console.log(movements.docs.length);
       // let newMovements = {};
       // Object.assign(newMovements, movements);
       // newMovements.docs = [];
