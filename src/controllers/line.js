@@ -206,6 +206,8 @@ export function updateOne(req, res) {
     }).exec();
   }
   if (currency) {
+    console.log("before update last price");
+    console.log(item, currency, movementType, req.body.numbers.price);
     Item.updateLastPrice(item, currency, movementType, req.body.numbers.price)
       .then(resp => {
         console.log("item last price updated");
