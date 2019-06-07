@@ -146,103 +146,83 @@ export function group(req, res) {
 }
 export function create(req, res) {
   let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
-  let createLine = () => {
-    let line = new Line(req.body);
 
-    // let movementType = req.body.movementType === "income" ? "sell" : "buy";
-    // let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
-    line.creator = req.user._id;
-    line.save((err, line) => {
-      if (err) {
-        console.log(err);
-        res.status(500).send(err);
-      } else {
-        if (line.parent) {
-          // Line.findByIdAndUpdate(req.body.lines[0].parent, {
-          //   $addToSet: { children: line._id }
-          // }).exec();
-          Line.findByIdAndUpdate(line.parent, {
-            $addToSet: {
-              children: line._id
-            }
-          }).exec();
-        }
-        if (req.body.children) {
-          for (let lineId of req.body.children) {
-            Line.findByIdAndUpdate(lineId, {
-              parent: line._id.toString()
-            }).exec();
+  let line = new Line(req.body);
+  // let movementType = req.body.movementType === "income" ? "sell" : "buy";
+  // let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
+  line.creator = req.user._id;
+  line.save((err, line) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+    } else {
+      if (line.parent) {
+        Line.findByIdAndUpdate(line.parent, {
+          $addToSet: {
+            children: line._id
           }
-        }
-        Line.updateParentTotal(line._id, err => {
+        }).exec();
+      }
+
+      line.populate(
+        [
+          {
+            path: "item"
+          }
+        ],
+        err => {
           if (err) {
             console.log(err);
             res.status(500).send(err);
           } else {
-            line.populate(
-              [
-                {
-                  path: "item"
-                }
-              ],
-              err => {
-                if (err) {
-                  console.log(err);
-                  res.status(500).send(err);
-                } else {
-                  Line.getTreeTotals(line.movement)
-                    .then(lineTree => {
-                      console.log("before send responde");
-                      res.send({
-                        line,
-                        lineTree
-                      });
-                    })
-                    .catch(err => {
-                      res.status(500).send(err);
-                    });
-                }
-              }
-            );
+            Line.getTreeTotals(line.movement)
+              .then(lineTree => {
+                console.log("before send responde");
+                res.send({
+                  line,
+                  lineTree
+                });
+              })
+              .catch(err => {
+                res.status(500).send(err);
+              });
           }
-        });
-      }
-    });
-  };
-  if (!req.body.item) {
-    Item.findOne({
-      name: {
-        $regex: req.body.name,
-        $options: "i"
-      }
-    }).exec((err, item) => {
-      if (err) {
-        console.log(err);
-        res.status(500).send(err);
-      } else if (item) {
-        req.body.item = item._id;
-        createLine();
-      } else {
-        let item = new Item({
-          name: req.body.name
-        });
-        item.global.push({
-          currency
-        });
-        item.save((err, item) => {
-          if (err) {
-            console.log(err);
-            res.status(500).send(err);
-          } else {
-            req.body.item = item._id;
-            createLine();
-          }
-        });
-      }
-    });
-  } else {
-    createLine();
-  }
+        }
+      );
+      // Line.updateParentTotal(line._id, err => {
+      //   if (err) {
+      //     console.log(err);
+      //     res.status(500).send(err);
+      //   } else {
+      //     line.populate(
+      //       [
+      //         {
+      //           path: "item"
+      //         }
+      //       ],
+      //       err => {
+      //         if (err) {
+      //           console.log(err);
+      //           res.status(500).send(err);
+      //         } else {
+      //           Line.getTreeTotals(line.movement)
+      //             .then(lineTree => {
+      //               console.log("before send responde");
+      //               res.send({
+      //                 line,
+      //                 lineTree
+      //               });
+      //             })
+      //             .catch(err => {
+      //               res.status(500).send(err);
+      //             });
+      //         }
+      //       }
+      //     );
+      //   }
+      // });
+    }
+  });
 }
 export function updateMany(req, res) {
   if (req.body.data.totalMovement) {
