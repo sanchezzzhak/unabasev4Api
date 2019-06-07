@@ -300,31 +300,37 @@ export function deleteMany(req, res) {
 }
 export function move(req, res) {
   const oldParent = req.body.children[0].parent;
-
-  Line.updateMany({ _id: { $in: req.body.children } }, { parent: req.body.parent }, (err, resp) => {
-    Line.updateParentTotal(oldParent, (err, oldParent) => {
+  const updateNewParent = () => {
+    Line.updateParentTotal(req.body.parent, (err, parent) => {
       if (err) {
         res.status(500).send(err);
       } else {
-        Line.updateParentTotal(req.body.parent, (err, parent) => {
-          if (err) {
+        Line.getTreeTotals(parent.movement)
+          .then(lineTree => {
+            console.log("before send responde");
+            res.send({
+              line,
+              lineTree
+            });
+          })
+          .catch(err => {
             res.status(500).send(err);
-          } else {
-            Line.getTreeTotals(parent.movement)
-              .then(lineTree => {
-                console.log("before send responde");
-                res.send({
-                  line,
-                  lineTree
-                });
-              })
-              .catch(err => {
-                res.status(500).send(err);
-              });
-          }
-        });
+          });
       }
     });
+  };
+  Line.updateMany({ _id: { $in: req.body.children } }, { parent: req.body.parent }, (err, resp) => {
+    if (oldParent) {
+      Line.updateParentTotal(oldParent, (err, oldParent) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          updateNewParent();
+        }
+      });
+    } else {
+      updateNewParent();
+    }
   });
 }
 export function updateOne(req, res) {
