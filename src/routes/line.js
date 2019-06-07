@@ -38,7 +38,7 @@ lines.post(
   }),
   create
 );
-lines.post(
+lines.put(
   "/move",
   logger({
     name: "create line",
