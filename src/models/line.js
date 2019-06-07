@@ -151,7 +151,7 @@ Line.updateParentTotal = (parentId, callback) => {
             Line.updateParentTotal(parent.parent, callback);
           } else {
             console.log("End of updatePArentTotal/////////////////////////");
-            if (callback) callback(null);
+            if (callback) callback(null, parent);
           }
         }
       });

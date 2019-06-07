@@ -299,11 +299,33 @@ export function deleteMany(req, res) {
   );
 }
 export function move(req, res) {
-  // const oldParents =
-  // for (let child in req.body.children) {
-  //   Line.updateOne({})
-  // }
-  Line.updateMany({ _id: { $in: req.body.children } }, { parent: req.body.parent });
+  const oldParent = req.body.children[0].parent;
+
+  Line.updateMany({ _id: { $in: req.body.children } }, { parent: req.body.parent }, (err, resp) => {
+    Line.updateParentTotal(oldParent, (err, oldParent) => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        Line.updateParentTotal(req.body.parent, (err, parent) => {
+          if (err) {
+            res.status(500).send(err);
+          } else {
+            Line.getTreeTotals(parent.movement)
+              .then(lineTree => {
+                console.log("before send responde");
+                res.send({
+                  line,
+                  lineTree
+                });
+              })
+              .catch(err => {
+                res.status(500).send(err);
+              });
+          }
+        });
+      }
+    });
+  });
 }
 export function updateOne(req, res) {
   console.log("-------------start updateOne");
