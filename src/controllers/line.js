@@ -310,7 +310,6 @@ export function move(req, res) {
           .then(lineTree => {
             console.log("before send responde");
             res.send({
-              line,
               lineTree
             });
           })
