@@ -7,8 +7,12 @@ import { Types } from "mongoose";
 const ObjectId = Types.ObjectId;
 
 export const getOne = (req, res) => {
-  Line.findOne({ _id: req.params.id })
-    .populate({ path: "children" })
+  Line.findOne({
+    _id: req.params.id
+  })
+    .populate({
+      path: "children"
+    })
     .exec((err, line) => {
       if (err) {
         res.status(500).send(err);
@@ -25,13 +29,24 @@ export function get(req, res) {
   options.limit = rquery.limit || 20;
 
   options.populate = [
-    { path: "tax", select: "name number" },
-    { path: "item" },
+    {
+      path: "tax",
+      select: "name number"
+    },
+    {
+      path: "item"
+    },
     {
       path: "children",
       populate: {
         path: "children",
-        populate: { path: "children", populate: { path: "children", populate: "children" } }
+        populate: {
+          path: "children",
+          populate: {
+            path: "children",
+            populate: "children"
+          }
+        }
       }
     }
   ];
@@ -58,13 +73,74 @@ export function createMany(req, res) {
     if (err) {
       res.status(500).send(err);
     } else {
-      await Line.populate(lines, [{ path: "item" }]);
+      await Line.populate(lines, [
+        {
+          path: "item"
+        }
+      ]);
       console.log("parent");
       console.log(req.body);
       Line.findByIdAndUpdate(req.body[0].parent, {
-        $addToSet: { children: lines.map(line => line._id) }
+        $addToSet: {
+          children: lines.map(line => line._id)
+        }
       }).exec();
       res.send(lines);
+    }
+  });
+}
+
+export function group(req, res) {
+  let line = new Line(req.body);
+  line.creator = req.user._id;
+  line.save((err, line) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+    } else {
+      if (req.body.parent) {
+        Line.findByIdAndUpdate(line.parent, {
+          $addToSet: {
+            children: line._id
+          }
+        }).exec();
+      }
+      Line.addParent(req.body.children, line._id.toString())
+        .then(resp => {
+          Line.updateParentTotal(line._id, err => {
+            if (err) {
+              console.log(err);
+              res.status(500).send(err);
+            } else {
+              line.populate(
+                [
+                  {
+                    path: "item"
+                  }
+                ],
+                err => {
+                  if (err) {
+                    console.log(err);
+                    res.status(500).send(err);
+                  } else {
+                    Line.getTreeTotals(line.movement)
+                      .then(lineTree => {
+                        console.log("before send responde");
+                        res.send({
+                          line,
+                          lineTree
+                        });
+                      })
+                      .catch(err => {
+                        res.status(500).send(err);
+                      });
+                  }
+                }
+              );
+            }
+          });
+        })
+        .catch(err => {});
     }
   });
 }
@@ -86,12 +162,16 @@ export function create(req, res) {
           //   $addToSet: { children: line._id }
           // }).exec();
           Line.findByIdAndUpdate(line.parent, {
-            $addToSet: { children: line._id }
+            $addToSet: {
+              children: line._id
+            }
           }).exec();
         }
         if (req.body.children) {
           for (let lineId of req.body.children) {
-            Line.findByIdAndUpdate(lineId, { parent: line._id.toString() }).exec();
+            Line.findByIdAndUpdate(lineId, {
+              parent: line._id.toString()
+            }).exec();
           }
         }
         Line.updateParentTotal(line._id, err => {
@@ -99,28 +179,43 @@ export function create(req, res) {
             console.log(err);
             res.status(500).send(err);
           } else {
-            line.populate([{ path: "item" }], err => {
-              if (err) {
-                console.log(err);
-                res.status(500).send(err);
-              } else {
-                Line.getTreeTotals(line.movement)
-                  .then(lineTree => {
-                    console.log("before send responde");
-                    res.send({ line, lineTree });
-                  })
-                  .catch(err => {
-                    res.status(500).send(err);
-                  });
+            line.populate(
+              [
+                {
+                  path: "item"
+                }
+              ],
+              err => {
+                if (err) {
+                  console.log(err);
+                  res.status(500).send(err);
+                } else {
+                  Line.getTreeTotals(line.movement)
+                    .then(lineTree => {
+                      console.log("before send responde");
+                      res.send({
+                        line,
+                        lineTree
+                      });
+                    })
+                    .catch(err => {
+                      res.status(500).send(err);
+                    });
+                }
               }
-            });
+            );
           }
         });
       }
     });
   };
   if (!req.body.item) {
-    Item.findOne({ name: { $regex: req.body.name, $options: "i" } }).exec((err, item) => {
+    Item.findOne({
+      name: {
+        $regex: req.body.name,
+        $options: "i"
+      }
+    }).exec((err, item) => {
       if (err) {
         console.log(err);
         res.status(500).send(err);
@@ -128,7 +223,9 @@ export function create(req, res) {
         req.body.item = item._id;
         createLine();
       } else {
-        let item = new Item({ name: req.body.name });
+        let item = new Item({
+          name: req.body.name
+        });
         item.global.push({
           currency
         });
@@ -154,20 +251,36 @@ export function updateMany(req, res) {
     }).exec();
   }
 
-  Line.updateMany({ _id: { $in: req.body.lines } }, { $set: req.body.data }, async (err, lines) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send(err);
-    } else {
-      console.log("////////////////////lines");
-      console.log(lines);
-      Line.findByIdAndUpdate(req.body.lines[0].parent, {
-        $addToSet: { children: req.body.lines.map(line => line._id) }
-      }).exec();
-      await Line.populate(lines, [{ path: "parent" }]);
-      res.send(lines);
+  Line.updateMany(
+    {
+      _id: {
+        $in: req.body.lines
+      }
+    },
+    {
+      $set: req.body.data
+    },
+    async (err, lines) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send(err);
+      } else {
+        console.log("////////////////////lines");
+        console.log(lines);
+        Line.findByIdAndUpdate(req.body.lines[0].parent, {
+          $addToSet: {
+            children: req.body.lines.map(line => line._id)
+          }
+        }).exec();
+        await Line.populate(lines, [
+          {
+            path: "parent"
+          }
+        ]);
+        res.send(lines);
+      }
     }
-  });
+  );
 }
 export function deleteMany(req, res) {
   if (req.body.totalMovement) {
@@ -175,26 +288,41 @@ export function deleteMany(req, res) {
       total: req.body.totalMovement
     }).exec();
   }
-  Line.deleteMany({ _id: { $in: req.body.lines.map(i => i._id) } }, (err, resp) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send(err);
-    } else {
-      for (let line of req.body.lines) {
-        Line.findByIdAndUpdate(line.parent, { $pull: { children: { $in: line._id } } }).exec();
+  Line.deleteMany(
+    {
+      _id: {
+        $in: req.body.lines.map(i => i._id)
       }
+    },
+    (err, resp) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send(err);
+      } else {
+        for (let line of req.body.lines) {
+          Line.findByIdAndUpdate(line.parent, {
+            $pull: {
+              children: {
+                $in: line._id
+              }
+            }
+          }).exec();
+        }
 
-      Line.getTreeTotals(req.body.movement || "")
-        .then(lineTree => {
-          console.log("before send responde");
-          res.send({ lineTree });
-        })
-        .catch(err => {
-          console.log(err);
-          res.status(500).send(err);
-        });
+        Line.getTreeTotals(req.body.movement || "")
+          .then(lineTree => {
+            console.log("before send responde");
+            res.send({
+              lineTree
+            });
+          })
+          .catch(err => {
+            console.log(err);
+            res.status(500).send(err);
+          });
+      }
     }
-  });
+  );
 }
 
 export function updateOne(req, res) {
@@ -202,7 +330,12 @@ export function updateOne(req, res) {
   let movementType = req.body.movementType === "income" ? "sell" : "buy";
   let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
   let item = typeof req.body.item === "object" ? req.body.item._id : req.body.item;
-  if (req.body.parent) Line.findByIdAndUpdate(req.body.parent, { $addToSet: { children: req.params.id } }).exec();
+  if (req.body.parent)
+    Line.findByIdAndUpdate(req.body.parent, {
+      $addToSet: {
+        children: req.params.id
+      }
+    }).exec();
   // add total to movement
   if (req.body.totalMovement) {
     Movement.findByIdAndUpdate(req.body.movement, {
@@ -216,14 +349,38 @@ export function updateOne(req, res) {
       .then(resp => {
         console.log("item last price updated");
         const queryUpdateChildren = req.body.parent
-          ? { children: { $in: [ObjectId(req.params.id)] }, _id: { $ne: req.body.parent } }
-          : { children: { $in: [ObjectId(req.params.id)] } };
-        Line.findOneAndUpdate(queryUpdateChildren, { $pull: { children: { $in: req.params.id } } }).exec(
-          (err, oldParent) => {
-            if (err) {
-              res.status(500).send(err);
-            } else {
-              Line.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (err, line) => {
+          ? {
+              children: {
+                $in: [ObjectId(req.params.id)]
+              },
+              _id: {
+                $ne: req.body.parent
+              }
+            }
+          : {
+              children: {
+                $in: [ObjectId(req.params.id)]
+              }
+            };
+        Line.findOneAndUpdate(queryUpdateChildren, {
+          $pull: {
+            children: {
+              $in: req.params.id
+            }
+          }
+        }).exec((err, oldParent) => {
+          if (err) {
+            res.status(500).send(err);
+          } else {
+            Line.findOneAndUpdate(
+              {
+                _id: req.params.id
+              },
+              req.body,
+              {
+                new: true
+              },
+              (err, line) => {
                 if (err) {
                   console.log(err);
                   res.status(500).send(err);
@@ -235,40 +392,61 @@ export function updateOne(req, res) {
                         console.log(err);
                         res.status(500).send(err);
                       } else {
-                        line.populate([{ path: "item" }], err => {
-                          if (err) {
-                            console.log(err);
-                            res.status(500).send(err);
-                          } else {
-                            Line.getTreeTotals(line.movement)
-                              .then(lineTree => {
-                                console.log("before send responde");
-                                res.send({ line, lineTree });
-                              })
-                              .catch(err => {
-                                res.status(500).send(err);
-                              });
+                        line.populate(
+                          [
+                            {
+                              path: "item"
+                            }
+                          ],
+                          err => {
+                            if (err) {
+                              console.log(err);
+                              res.status(500).send(err);
+                            } else {
+                              Line.getTreeTotals(line.movement)
+                                .then(lineTree => {
+                                  console.log("before send responde");
+                                  res.send({
+                                    line,
+                                    lineTree
+                                  });
+                                })
+                                .catch(err => {
+                                  res.status(500).send(err);
+                                });
+                            }
                           }
-                        });
+                        );
                       }
                     });
                   } else {
-                    line.populate([{ path: "item" }], err => {
-                      if (err) {
-                        console.log(err);
-                        res.status(500).send(err);
-                      } else {
-                        res.send({ line });
+                    line.populate(
+                      [
+                        {
+                          path: "item"
+                        }
+                      ],
+                      err => {
+                        if (err) {
+                          console.log(err);
+                          res.status(500).send(err);
+                        } else {
+                          res.send({
+                            line
+                          });
+                        }
                       }
-                    });
+                    );
                   }
                 } else {
-                  res.status(500).send({ msg: "Line not found" });
+                  res.status(500).send({
+                    msg: "Line not found"
+                  });
                 }
-              });
-            }
+              }
+            );
           }
-        );
+        });
       })
       .catch(err => {
         console.log(err);
@@ -283,7 +461,20 @@ export function deleteOne(req, res) {
       total: req.body.totalMovement
     }).exec();
   }
-  Line.findOneAndUpdate({ children: { $in: req.params.id } }, { $pull: { children: { $in: req.params.id } } }).exec();
+  Line.findOneAndUpdate(
+    {
+      children: {
+        $in: req.params.id
+      }
+    },
+    {
+      $pull: {
+        children: {
+          $in: req.params.id
+        }
+      }
+    }
+  ).exec();
   Line.findByIdAndRemove(req.params.id, (err, item) => {
     if (err) {
       console.log(err);
@@ -292,7 +483,9 @@ export function deleteOne(req, res) {
       Line.getTreeTotals(req.body.movement || "")
         .then(lineTree => {
           console.log("before send responde");
-          res.send({ lineTree });
+          res.send({
+            lineTree
+          });
         })
         .catch(err => {
           res.status(500).send(err);

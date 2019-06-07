@@ -143,7 +143,7 @@ Line.updateParentTotal = (parentId, callback) => {
       for (let line of lines) {
         sum += line.numbers.price;
       }
-      Line.findByIdAndUpdate(parentId, { "numbers.price": sum }, { new: true }, (err, parent) => {
+      Line.findByIdAndUpdate(parentId.toString(), { "numbers.price": sum }, { new: true }, (err, parent) => {
         if (err) {
           callback(err);
         } else {
@@ -155,43 +155,29 @@ Line.updateParentTotal = (parentId, callback) => {
           }
         }
       });
-      // Line.findById(parentId, (err, parent) => {
-      //   if (err) {
-      //     callback(err);
-      //   } else {
-      //     parent.numbers.price = sum;
-      //     if (parent.parent) {
-      //       parent.save();
-      //       Line.updateParentTotal(parent.parent, callback);
-      //     } else {
-      //       console.log("End of updatePArentTotal/////////////////////////");
-      //       parent.save();
-      //       if (callback) callback(null);
-      //     }
-      //   }
-      // });
     }
   });
-  // return new Promise((resolve, reject) => {
-  // Line.findById(parentId, (err, parentLine) => {
-  //   // let thisParent = this.parent;
-  //   parentLine.populate([{ path: "children", select: "numbers quantity" }], err => {
-  //     let sum = 0;
-  //     for (let child of parentLine.children) {
-  //       sum += child.numbers.price * child.quantity;
-  //     }
-  //     parentLine.numbers.price = sum;
-
-  //     parentLine.save();
-  //     if (parentLine.parent) {
-  //       Line.updateParentTotal(parentLine.parent, callback);
-  //     } else {
-  //       if (callback) callback(parentLine._id);
-  //     }
-  //   });
-  // });
 };
-
+Line.addParent = (children, parentId) => {
+  return new Promise((resolve, reject) => {
+    for (let child of children) {
+      Line.updateMany(
+        { _id: { $in: children } },
+        {
+          parent: parentId
+        },
+        (err, resp) => {
+          if (err) {
+            console.log(err);
+            reject(err);
+          } else {
+            resolve();
+          }
+        }
+      );
+    }
+  });
+};
 Line.getTreeTotals = movementId => {
   return new Promise((resolve, reject) => {
     Line.find({ movement: movementId })

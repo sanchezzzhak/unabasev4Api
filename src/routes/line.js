@@ -1,6 +1,7 @@
 import { Router } from "express";
 const lines = Router();
-import { create, get, updateOne, deleteOne, createMany, updateMany, deleteMany } from "../controllers/line";
+import { create, get, updateOne, deleteOne, createMany, updateMany, deleteMany, group } from "../controllers/line";
+import { checkItem } from "../middleware/line";
 
 import auth from "../config/lib/auth";
 import logger from "../lib/logger";
@@ -26,6 +27,18 @@ lines.post(
     module
   }),
   create
+);
+lines.post(
+  "/group",
+  [
+    logger({
+      name: "create line",
+      description: "create line",
+      module
+    }),
+    checkItem
+  ],
+  group
 );
 lines.post(
   "/many",
