@@ -303,6 +303,7 @@ export function move(req, res) {
   const updateNewParent = () => {
     Line.updateParentTotal(req.body.parent, (err, parent) => {
       if (err) {
+        console.log(err);
         res.status(500).send(err);
       } else {
         Line.getTreeTotals(parent.movement)
@@ -314,6 +315,7 @@ export function move(req, res) {
             });
           })
           .catch(err => {
+            console.log(err);
             res.status(500).send(err);
           });
       }
@@ -323,6 +325,7 @@ export function move(req, res) {
     if (oldParent) {
       Line.updateParentTotal(oldParent, (err, oldParent) => {
         if (err) {
+          console.log(err);
           res.status(500).send(err);
         } else {
           updateNewParent();
