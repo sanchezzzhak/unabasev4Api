@@ -40,3 +40,20 @@ export function checkItem(req, res, next) {
     next();
   }
 }
+
+export function updateOldParent(req, res, next) {
+  Line.findById(req.body.children[0]._id, (err, line) => {
+    if (line.parent) {
+      Line.updateParentTotal(line._id, err => {
+        if (err) {
+          console.log(err);
+          res.status(500).send(err);
+        } else {
+          next();
+        }
+      });
+    } else {
+      next();
+    }
+  });
+}

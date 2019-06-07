@@ -158,6 +158,7 @@ Line.updateParentTotal = (parentId, callback) => {
     }
   });
 };
+
 Line.addParent = (children, parentId) => {
   return new Promise((resolve, reject) => {
     for (let child of children) {

@@ -98,15 +98,9 @@ export function group(req, res) {
       console.log(err);
       res.status(500).send(err);
     } else {
-      if (req.body.parent) {
-        Line.findByIdAndUpdate(line.parent, {
-          $addToSet: {
-            children: line._id
-          }
-        }).exec();
-      }
-      Line.addParent(req.body.children, line._id.toString())
-        .then(resp => {
+      Line.updateMany({ _id: { $in: req.body.children } }, { parent: line._id }).exec((err, lines) => {
+        if (err) {
+        } else {
           Line.updateParentTotal(line._id, err => {
             if (err) {
               console.log(err);
@@ -139,8 +133,8 @@ export function group(req, res) {
               );
             }
           });
-        })
-        .catch(err => {});
+        }
+      });
     }
   });
 }
@@ -304,7 +298,13 @@ export function deleteMany(req, res) {
     }
   );
 }
-
+export function move(req, res) {
+  // const oldParents =
+  // for (let child in req.body.children) {
+  //   Line.updateOne({})
+  // }
+  Line.updateMany({ _id: { $in: req.body.children } }, { parent: req.body.parent });
+}
 export function updateOne(req, res) {
   console.log("-------------start updateOne");
   let movementType = req.body.movementType === "income" ? "sell" : "buy";
