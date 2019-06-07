@@ -310,6 +310,8 @@ export function updateOne(req, res) {
   let movementType = req.body.movementType === "income" ? "sell" : "buy";
   let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
   let item = typeof req.body.item === "object" ? req.body.item._id : req.body.item;
+  console.log("before  update parent");
+
   if (req.body.parent)
     Line.findByIdAndUpdate(req.body.parent, {
       $addToSet: {
@@ -317,11 +319,14 @@ export function updateOne(req, res) {
       }
     }).exec();
   // add total to movement
+
+  console.log("before  update totalmovement");
   if (req.body.totalMovement) {
     Movement.findByIdAndUpdate(req.body.movement, {
       total: req.body.totalMovement
     }).exec();
   }
+  console.log("before currency update last price");
   if (currency) {
     console.log("before update last price");
     console.log(item, currency, movementType, req.body.numbers.price);
