@@ -246,10 +246,10 @@ export const relationsFind = (req, res) => {
   });
 };
 export const lastItems = (req, res) => {
-  Line.find({ creator: req.user._id })
+  Line.find({ creator: req.user._id, isParent: false })
     .sort({ updatedAt: -1 })
     .limit(100)
-    .populate([{ path: "item" },{ path: "children" }])
+    .populate([{ path: "item" }, { path: "children" }])
     .exec((err, lines) => {
       if (err) {
         res.status(500).end();
