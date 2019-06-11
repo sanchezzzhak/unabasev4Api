@@ -272,3 +272,30 @@ export const lastItems = (req, res) => {
       }
     });
 };
+export const lastParent = (req, res) => {
+  Line.find({ creator: req.user._id, isParent: true })
+    .sort({ updatedAt: -1 })
+    .limit(100)
+    .populate([{ path: "item" }, { path: "children" }])
+    .exec((err, lines) => {
+      if (err) {
+        res.status(500).end();
+      } else if (lines) {
+        let docs = [];
+        for (let line of lines) {
+          if (line.item) {
+            if (docs.filter(i => i._id === line.item._id).length === 0) {
+              docs.push(line.item);
+            }
+          }
+        }
+        // res.send({
+        //   docs,
+        //   total: docs.length
+        // });
+        res.send(docs);
+      } else {
+        res.status(404).end({ msg: "not found" });
+      }
+    });
+};
