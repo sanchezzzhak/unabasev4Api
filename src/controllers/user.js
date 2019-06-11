@@ -272,7 +272,7 @@ export const lastItems = (req, res) => {
       }
     });
 };
-export const lastParent = (req, res) => {
+export const lastParents = (req, res) => {
   Line.find({ creator: req.user._id, isParent: true })
     .sort({ updatedAt: -1 })
     .limit(100)

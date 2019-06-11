@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router } from "express";
 const users = Router();
 
 import {
@@ -14,10 +14,11 @@ import {
   user,
   restart,
   relationsFind,
-  lastItems
-} from '../controllers/user';
+  lastItems,
+  lastParents
+} from "../controllers/user";
 
-import auth from '../config/lib/auth';
+import auth from "../config/lib/auth";
 users.use(auth.sToken);
 
 /*
@@ -29,18 +30,19 @@ users.use(auth.sToken);
 }
 
 */
-users.post('/', create);
-users.get('/', get);
-users.get('/lastItems', lastItems);
-users.get('/logout', logout);
-users.get('/find/:q', find);
-users.get('/relations/:q', relationsFind);
-users.get('/:id', getOne);
-users.put('/:id', update);
-users.put('/password/:id', password);
-users.post('/restart/:q', restart);
-users.put('/business/:id', business);
-users.put('/user/:id', user);
-users.put('/scope/:id', scope);
+users.post("/", create);
+users.get("/", get);
+users.get("/lastItems", lastItems);
+users.get("/lastParents", lastParents);
+users.get("/logout", logout);
+users.get("/find/:q", find);
+users.get("/relations/:q", relationsFind);
+users.get("/:id", getOne);
+users.put("/:id", update);
+users.put("/password/:id", password);
+users.post("/restart/:q", restart);
+users.put("/business/:id", business);
+users.put("/user/:id", user);
+users.put("/scope/:id", scope);
 
 export default users;
