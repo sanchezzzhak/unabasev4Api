@@ -20,7 +20,8 @@ export function checkItem(req, res, next) {
         req.body.item = item._id;
       } else {
         let item = new Item({
-          name: req.body.name
+          name: req.body.name,
+          isParent: true
         });
         item.global.push({
           currency
