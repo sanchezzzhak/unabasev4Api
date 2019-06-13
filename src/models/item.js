@@ -18,6 +18,7 @@ const itemSchema = new Schema(
       }
     },
     isParent: { type: Boolean, default: false },
+    parent: { type: Schema.Types.ObjectId, ref: "Item" },
     global: [
       {
         currency: { type: Schema.Types.ObjectId, ref: "Currency" },
