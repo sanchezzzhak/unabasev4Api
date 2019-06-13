@@ -84,11 +84,13 @@ Line.updateParentTotal = (parentId, callback) => {
     if (err) {
       callback(err);
     } else {
-      let sum = 0;
+      let priceSum = 0;
+      let budgetSum = 0;
       for (let line of lines) {
-        sum += line.numbers.price;
+        priceSum += line.numbers.price;
+        budgetSum += line.numbers.budget;
       }
-      Line.findByIdAndUpdate(parentId.toString(), { "numbers.price": sum }, { new: true }, (err, parent) => {
+      Line.findByIdAndUpdate(parentId.toString(), { "numbers.price": priceSum , "numbers.budget": budgetSum }, { new: true }, (err, parent) => {
         if (err) {
           callback(err);
         } else {
