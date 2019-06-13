@@ -66,71 +66,16 @@ lineSchema.post("update", function(doc, next) {
 lineSchema.pre("update", function(doc, next) {
   console.log("pre has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
   console.log(doc);
-  // console.log(doc.numbers);
-  // console.log(doc.name);
 
   next();
 });
 lineSchema.post("find", function(doc, next) {
   console.log("post has been findd++++++++++++++++++++++++:::::::::::::::::::::::");
-  // console.log("this");
-  // console.log(this.populate("parent"));
-  // console.log(this.parent);
-  // console.log(this);
-  // console.log(doc.numbers);
-  // console.log(doc.name);
+
 
   next();
 });
-// lineSchema.pre("find", function(doc, next) {
-//   console.log("pre has been findd++++++++++++++++++++++++:::::::::::::::::::::::");
-//   console.log("doc");
-//   console.log(doc());
-//   console.log("next");
-//   console.log(next());
-//   // console.log("this");
-//   // console.log(this);
-//   // console.log(doc.numbers);
-//   // console.log(doc.name);
 
-//   next();
-// });
-// lineSchema.methods.updateParentTotal = function(data = null) {
-//   if (!data) {
-//     let data = [];
-//   }
-//   return new Promise((resolve, reject) => {
-//     // let thisParent = this.parent;
-//     this.populate([{ path: "children", select: "numbers" }], err => {
-//       let sum = 0;
-//       for (let child of this.children) {
-//         sum += child.numbers.price;
-//       }
-//       this.numbers.price = sum;
-
-//       this.save((err, newLine) => {
-//         if (err) return reject(err);
-//         else {
-//           data.push({
-//             _id: newLine._id,
-//             parent: newLine.parent,
-//             numbers: newLine.numbers
-//           });
-//           if (newLine.parent) {
-//             Line.findById(newLine.parent, (err, line) => {
-//               if (err) return reject(err);
-//               else if (line) {
-//                 line.updateParentTotal(data);
-//               }
-//             });
-//           } else {
-//             resolve(data);
-//           }
-//         }
-//       });
-//     });
-//   });
-// };
 
 const Line = mongoose.model("Line", lineSchema);
 
