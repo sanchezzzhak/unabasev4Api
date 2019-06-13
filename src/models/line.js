@@ -1,34 +1,77 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-const lineSchema = new Schema(
-  {
-    name: { type: String, required: true },
-    tax: { type: Schema.Types.ObjectId, ref: "Tax" },
-    number: { type: Number, default: 0 },
-    quantity: { type: Number, default: 0 },
-    price: { type: Number },
-    numbers: {
-      price: { type: Number, default: 0 },
-      budget: { type: Number, default: 0 },
-      cost: { type: Number, default: 0 }
-    },
-    children: Array({ type: Schema.Types.ObjectId, ref: "Line" }),
-    listIndex: Number,
-    isParent: { type: Boolean, default: false },
-    parent: { type: Schema.Types.ObjectId, ref: "Line" },
-
-    // quantity: Array({}),
-
-    item: { type: Schema.Types.ObjectId, ref: "Item" },
-    movement: { type: Schema.Types.ObjectId, ref: "Movement" },
-    comments: Array({ type: Schema.Types.ObjectId, ref: "Comment" }),
-    creator: { type: Schema.Types.ObjectId, ref: "User" }
+const lineSchema = new Schema({
+  name: {
+    type: String,
+    required: true
   },
-  { timestamps: true }
-);
+  tax: {
+    type: Schema.Types.ObjectId,
+    ref: "Tax"
+  },
+  number: {
+    type: Number,
+    default: 0
+  },
+  quantity: {
+    type: Number,
+    default: 0
+  },
+  price: {
+    type: Number
+  },
+  numbers: {
+    price: {
+      type: Number,
+      default: 0
+    },
+    budget: {
+      type: Number,
+      default: 0
+    },
+    cost: {
+      type: Number,
+      default: 0
+    }
+  },
+  children: Array({
+    type: Schema.Types.ObjectId,
+    ref: "Line"
+  }),
+  listIndex: Number,
+  isParent: {
+    type: Boolean,
+    default: false
+  },
+  parent: {
+    type: Schema.Types.ObjectId,
+    ref: "Line"
+  },
 
-lineSchema.methods.saveAsync = function() {
+  // quantity: Array({}),
+
+  item: {
+    type: Schema.Types.ObjectId,
+    ref: "Item"
+  },
+  movement: {
+    type: Schema.Types.ObjectId,
+    ref: "Movement"
+  },
+  comments: Array({
+    type: Schema.Types.ObjectId,
+    ref: "Comment"
+  }),
+  creator: {
+    type: Schema.Types.ObjectId,
+    ref: "User"
+  }
+}, {
+  timestamps: true
+});
+
+lineSchema.methods.saveAsync = function () {
   return new Promise((resolve, reject) => {
     this.save((err, line) => {
       if (err) return reject(err);
@@ -37,12 +80,12 @@ lineSchema.methods.saveAsync = function() {
   });
 };
 
-lineSchema.post("save", function(doc, next) {
+lineSchema.post("save", function (doc, next) {
   console.log("post has been saved++++++++++++++++++++++++");
 
   next();
 });
-lineSchema.pre("save", function(next) {
+lineSchema.pre("save", function (next) {
   console.log("pre has been saved++++++++++++++++++++++++");
   next();
 });
@@ -55,7 +98,7 @@ lineSchema.pre("save", function(next) {
 //   console.log(name);
 //   next();
 // });
-lineSchema.post("update", function(doc, next) {
+lineSchema.post("update", function (doc, next) {
   console.log("post has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
   console.log(doc);
   // console.log(doc.numbers);
@@ -63,13 +106,13 @@ lineSchema.post("update", function(doc, next) {
 
   next();
 });
-lineSchema.pre("update", function(doc, next) {
+lineSchema.pre("update", function (doc, next) {
   console.log("pre has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
   console.log(doc);
 
   next();
 });
-lineSchema.post("find", function(doc, next) {
+lineSchema.post("find", function (doc, next) {
   console.log("post has been findd++++++++++++++++++++++++:::::::::::::::::::::::");
 
 
@@ -80,7 +123,9 @@ lineSchema.post("find", function(doc, next) {
 const Line = mongoose.model("Line", lineSchema);
 
 Line.updateParentTotal = (parentId, callback) => {
-  Line.find({ parent: parentId }, (err, lines) => {
+  Line.find({
+    parent: parentId
+  }, (err, lines) => {
     if (err) {
       callback(err);
     } else {
@@ -90,7 +135,12 @@ Line.updateParentTotal = (parentId, callback) => {
         priceSum += line.numbers.price;
         budgetSum += line.numbers.budget;
       }
-      Line.findByIdAndUpdate(parentId.toString(), { "numbers.price": priceSum , "numbers.budget": budgetSum }, { new: true }, (err, parent) => {
+      Line.findByIdAndUpdate(parentId.toString(), {
+        "numbers.price": priceSum,
+        "numbers.budget": budgetSum
+      }, {
+        new: true
+      }, (err, parent) => {
         if (err) {
           callback(err);
         } else {
@@ -109,9 +159,11 @@ Line.updateParentTotal = (parentId, callback) => {
 Line.addParent = (children, parentId) => {
   return new Promise((resolve, reject) => {
     for (let child of children) {
-      Line.updateMany(
-        { _id: { $in: children } },
-        {
+      Line.updateMany({
+          _id: {
+            $in: children
+          }
+        }, {
           parent: parentId
         },
         (err, resp) => {
@@ -128,7 +180,9 @@ Line.addParent = (children, parentId) => {
 };
 Line.getTreeTotals = movementId => {
   return new Promise((resolve, reject) => {
-    Line.find({ movement: movementId })
+    Line.find({
+        movement: movementId
+      })
       .select("parent numbers name")
       .exec((err, lines) => {
         if (err) reject(err);
@@ -171,7 +225,9 @@ Line.updateManyMod = items => {
     };
     items.forEach(i => {
       if (i._id) {
-        Line.findByIdAndUpdate(i._id, i, { new: true }, (err, line) => {
+        Line.findByIdAndUpdate(i._id, i, {
+          new: true
+        }, (err, line) => {
           if (err) {
             errorLines.push({
               _id: i._id,
