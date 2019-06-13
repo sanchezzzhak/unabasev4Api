@@ -262,10 +262,6 @@ export const lastItems = (req, res) => {
             }
           }
         }
-        // res.send({
-        //   docs,
-        //   total: docs.length
-        // });
         res.send(docs);
       } else {
         res.status(404).end({ msg: "not found" });
@@ -289,10 +285,7 @@ export const lastParents = (req, res) => {
             }
           }
         }
-        // res.send({
-        //   docs,
-        //   total: docs.length
-        // });
+ 
         res.send(docs);
       } else {
         res.status(404).end({ msg: "not found" });
