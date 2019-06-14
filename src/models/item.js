@@ -107,7 +107,8 @@ Item.getWithChildren = data => {
         doc.children = allChildren.filter(child => child.parent == doc._id.toString());
         items.push(doc);
       }
-      resolve(items);
+      data.docs = items;
+      resolve(data);
     });
   });
 };
