@@ -102,7 +102,7 @@ Item.getWithChildren = docs => {
       if (err) {
         reject(err);
       }
-      let childs;
+      let items;
       for (let doc of docs) {
         doc.children = allChildren.filter(child => child.parent == doc._id.toString());
         items.push(doc);
