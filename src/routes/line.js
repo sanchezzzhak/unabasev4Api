@@ -40,7 +40,7 @@ lines.post(
   create
 );
 lines.post(
-  "/createParent",
+  "/parent",
   logger({
     name: "create line",
     description: "create line",
