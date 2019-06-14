@@ -94,7 +94,7 @@ const routes = {
       if (err) {
         res.status(500).end();
       } else if (items.docs) {
-        Item.getWithChildren(items.docs)
+        Item.getWithChildren(items)
           .then(resp => {
             res.send(resp);
           })
