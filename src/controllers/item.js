@@ -93,8 +93,21 @@ const routes = {
     Item.paginate(query, {}, (err, items) => {
       if (err) {
         res.status(500).end();
-      } else {
-        res.send(items);
+      } else if (items.docs) {
+        // let itemsFound = [];
+        // for (let item of items.docs) {
+        //   Item.find({ parent: item._id.toString() }, (err, children) => {
+        //     item.children = children;
+        //     itemsFound.push(item);
+        //   });
+        // }
+        Item.getWithChildren(items.docs)
+          .then(resp => {
+            res.send(resp);
+          })
+          .catch(err => {
+            res.status(500).end();
+          });
       }
     });
   }
