@@ -96,19 +96,18 @@ Item.updateLastPrice = (id, currency, movementType, princeToAdd) => {
   });
 };
 
-Item.getWithChildren = data => {
+Item.getWithChildren = docs => {
   return new Promise((resolve, reject) => {
-    Item.find({ parent: { $in: data.docs } }, (err, allChildren) => {
+    Item.find({ parent: { $in: docs } }, (err, allChildren) => {
       if (err) {
         reject(err);
       }
       let items = [];
-      for (let doc of data.docs) {
+      for (let doc of docs) {
         doc.children = allChildren.filter(child => child.parent == doc._id.toString());
         items.push(doc);
       }
-      data.docs = items;
-      resolve(data);
+      resolve(items);
     });
   });
 };
