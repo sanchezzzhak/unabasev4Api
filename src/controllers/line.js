@@ -164,18 +164,6 @@ export function createParent(req, res) {
           res.send({ parent, children: lines });
         }
       });
-
-      //  Line.getTreeTotals(line.movement)
-      //    .then(lineTree => {
-      //      console.log("before send responde");
-      //      res.send({
-      //        line,
-      //        lineTree
-      //      });
-      //    })
-      //    .catch(err => {
-      //      res.status(500).send(err);
-      //    });
     }
   });
 }
