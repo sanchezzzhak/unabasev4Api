@@ -9,7 +9,8 @@ import {
   updateMany,
   deleteMany,
   group,
-  move
+  move,
+  createParent
 } from "../controllers/line";
 import { checkItem } from "../middleware/line";
 
@@ -37,6 +38,15 @@ lines.post(
     module
   }),
   create
+);
+lines.post(
+  "/createParent",
+  logger({
+    name: "create line",
+    description: "create line",
+    module
+  }),
+  createParent
 );
 lines.put(
   "/move",

@@ -138,6 +138,47 @@ export function group(req, res) {
     }
   });
 }
+export function createParent(req, res) {
+  let parent = new Line(req.body.parent);
+  parent.creator = req.user._id;
+  parent.save((err, line) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+    } else {
+      for (let child of req.body.children) {
+        child.creator = req.user._id;
+        child.parent = line._id;
+      }
+      Line.insertMany(req.body, async (err, lines) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          await Line.populate(lines, [
+            {
+              path: "item"
+            }
+          ]);
+
+          res.send(lines);
+        }
+      });
+
+      //  Line.getTreeTotals(line.movement)
+      //    .then(lineTree => {
+      //      console.log("before send responde");
+      //      res.send({
+      //        line,
+      //        lineTree
+      //      });
+      //    })
+      //    .catch(err => {
+      //      res.status(500).send(err);
+      //    });
+    }
+  });
+}
+
 export function create(req, res) {
   let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
 
@@ -157,7 +198,6 @@ export function create(req, res) {
           }
         }).exec();
       }
-
       line.populate(
         [
           {
@@ -183,38 +223,6 @@ export function create(req, res) {
           }
         }
       );
-      // Line.updateParentTotal(line._id, err => {
-      //   if (err) {
-      //     console.log(err);
-      //     res.status(500).send(err);
-      //   } else {
-      //     line.populate(
-      //       [
-      //         {
-      //           path: "item"
-      //         }
-      //       ],
-      //       err => {
-      //         if (err) {
-      //           console.log(err);
-      //           res.status(500).send(err);
-      //         } else {
-      //           Line.getTreeTotals(line.movement)
-      //             .then(lineTree => {
-      //               console.log("before send responde");
-      //               res.send({
-      //                 line,
-      //                 lineTree
-      //               });
-      //             })
-      //             .catch(err => {
-      //               res.status(500).send(err);
-      //             });
-      //         }
-      //       }
-      //     );
-      //   }
-      // });
     }
   });
 }
