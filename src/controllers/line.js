@@ -150,7 +150,7 @@ export function createParent(req, res) {
         child.creator = req.user._id;
         child.parent = line._id;
       }
-      Line.insertMany(req.body, async (err, lines) => {
+      Line.insertMany(req.body.children, async (err, lines) => {
         if (err) {
           console.log(err);
           res.status(500).send(err);
