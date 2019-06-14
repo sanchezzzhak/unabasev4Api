@@ -152,6 +152,7 @@ export function createParent(req, res) {
       }
       Line.insertMany(req.body, async (err, lines) => {
         if (err) {
+          console.log(err);
           res.status(500).send(err);
         } else {
           await Line.populate(lines, [
