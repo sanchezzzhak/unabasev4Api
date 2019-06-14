@@ -160,7 +160,7 @@ export function createParent(req, res) {
             }
           ]);
 
-          res.send(lines);
+          res.send({ parent, children: lines });
         }
       });
 
