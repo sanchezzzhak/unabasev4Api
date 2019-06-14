@@ -160,8 +160,8 @@ export function createParent(req, res) {
               path: "item"
             }
           ]);
-
-          res.send({ parent, children: lines });
+          lines.push(parent);
+          res.send(lines);
         }
       });
     }
