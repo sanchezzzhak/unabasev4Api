@@ -98,17 +98,17 @@ Item.updateLastPrice = (id, currency, movementType, princeToAdd) => {
 
 Item.getWithChildren = docs => {
   return new Promise((resolve, reject) => {
-    let items = [];
-    for (let item of docs) {
-      Item.find({ parent: item._id.toString() }, (err, children) => {
-        if (err) {
-          reject(err);
-        }
-        item.children = children;
-        items.push(item);
-      });
-    }
-    resolve(items);
+    Item.find({ parent: { $in: docs } }, (err, allChildren) => {
+      if (err) {
+        reject(err);
+      }
+      let childs;
+      for (let doc of docs) {
+        doc.children = allChildren.filter(child => child.parent == doc._id.toString());
+        items.push(doc);
+      }
+      resolve(items);
+    });
   });
 };
 export default Item;

@@ -94,13 +94,6 @@ const routes = {
       if (err) {
         res.status(500).end();
       } else if (items.docs) {
-        // let itemsFound = [];
-        // for (let item of items.docs) {
-        //   Item.find({ parent: item._id.toString() }, (err, children) => {
-        //     item.children = children;
-        //     itemsFound.push(item);
-        //   });
-        // }
         Item.getWithChildren(items.docs)
           .then(resp => {
             res.send(resp);
