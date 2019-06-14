@@ -285,8 +285,16 @@ export const lastParents = (req, res) => {
             }
           }
         }
- 
-        res.send(docs);
+
+        Item.getWithChildren(docs)
+          .then(resp => {
+            res.send(resp);
+          })
+          .catch(err => {
+            res.status(500).end();
+          });
+
+        // res.send(docs);
       } else {
         res.status(404).end({ msg: "not found" });
       }
