@@ -1,5 +1,6 @@
 import User from "../models/user";
 import Line from "../models/line";
+import Item from "../models/item";
 import { send } from "../config/mailer";
 import template from "../lib/mails";
 import ntype from "normalize-type";
