@@ -95,4 +95,20 @@ Item.updateLastPrice = (id, currency, movementType, princeToAdd) => {
     });
   });
 };
+
+Item.getWithChildren = docs => {
+  return new Promise((resolve, reject) => {
+    let items = [];
+    for (let item of docs) {
+      Item.find({ parent: item._id.toString() }, (err, children) => {
+        if (err) {
+          reject(err);
+        }
+        item.children = children;
+        items.push(item);
+      });
+    }
+    resolve(items);
+  });
+};
 export default Item;
