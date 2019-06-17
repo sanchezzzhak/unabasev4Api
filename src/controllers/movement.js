@@ -16,7 +16,7 @@ export const getPersonal = (req, res) => {
   const sort = rquery.createdAt ? { createdAt: rquery.createdAt } : { createdAt: "desc" };
   options.page = rquery.page || 1;
   options.limit = rquery.limit || 20;
-  options.select = "name client responsable createdAt total state";
+  options.select = "name client responsable createdAt total state isActive";
   options.populate = [
     {
       path: "client.data",
