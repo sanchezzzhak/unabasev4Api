@@ -36,6 +36,7 @@ const movementSchema = new Schema(
     lines: Array({ type: Schema.Types.ObjectId, ref: "Line" }),
     comments: Array({ type: Schema.Types.ObjectId, ref: "Comment" }),
     total: {
+      opportunity: { type: Number, default: 0 },
       net: { type: Number, default: 0 },
       tax: { type: Number, default: 0 },
       budget: { type: Number, default: 0 },
