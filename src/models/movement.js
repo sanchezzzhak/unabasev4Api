@@ -7,7 +7,14 @@ const movementSchema = new Schema(
     name: String,
     description: String,
     dates: {
-      expiration: Date
+      expiration: Date,
+      schedule: Date,
+      reminders: [
+        {
+          name: String,
+          date: Date
+        }
+      ]
     },
     // client: { type: Schema.Types.ObjectId, ref: 'User' },
     client: {
