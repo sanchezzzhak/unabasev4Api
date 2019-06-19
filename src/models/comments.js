@@ -8,7 +8,7 @@ const commentSchema = new Schema(
       id: { type: Schema.Types.ObjectId, refPath: "from.name" },
       name: { type: String }
     },
-    isPrivate: Boolean,
+    isPrivate: { type: Boolean },
     text: { type: String, maxlength: 2000 },
     parent: { type: Schema.Types.ObjectId, ref: "Comment" },
     users: Array({ type: Schema.Types.ObjectId, ref: "User" })
