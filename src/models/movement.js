@@ -52,7 +52,7 @@ const movementSchema = new Schema(
         percentage: { type: Number, default: 0 }
       }
     },
-    state: { type: String, default: "opportunity", enum: ["draft", "success", "budget", "opportunity"] },
+    state: { type: String, default: "opportunity", enum: ["draft", "business", "budget", "opportunity"] },
     isActive: { type: Boolean, default: true },
     currency: { type: Schema.Types.ObjectId, ref: "Currency" }
     // contact: { type: Schema.Types.ObjectId, ref: 'Contact' },
