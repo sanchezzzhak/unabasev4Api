@@ -58,3 +58,17 @@ export function updateOldParent(req, res, next) {
     }
   });
 }
+
+export function updateMovementState(req, res, next) {
+  if (req.body.movement) {
+    Movement.update({ _id: req.body.movement }, { state: "budget" }).exec((err, movement) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send(err);
+      }
+      next();
+    });
+  } else {
+    next();
+  }
+}

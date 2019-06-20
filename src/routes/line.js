@@ -12,7 +12,7 @@ import {
   move,
   createParent
 } from "../controllers/line";
-import { checkItem } from "../middleware/line";
+import { checkItem, updateMovementState } from "../middleware/line";
 
 import auth from "../config/lib/auth";
 import logger from "../lib/logger";
@@ -32,20 +32,26 @@ lines.get(
 );
 lines.post(
   "/",
-  logger({
-    name: "create line",
-    description: "create line",
-    module
-  }),
+  [
+    logger({
+      name: "create line",
+      description: "create line",
+      module
+    }),
+    updateMovementState
+  ],
   create
 );
 lines.post(
   "/parent",
-  logger({
-    name: "create line",
-    description: "create line",
-    module
-  }),
+  [
+    logger({
+      name: "create line",
+      description: "create line",
+      module
+    }),
+    updateMovementState
+  ],
   createParent
 );
 lines.put(
@@ -71,11 +77,14 @@ lines.post(
 );
 lines.post(
   "/many",
-  logger({
-    name: "create line",
-    description: "create line",
-    module
-  }),
+  [
+    logger({
+      name: "create line",
+      description: "create line",
+      module
+    }),
+    updateMovementState
+  ],
   createMany
 );
 lines.put(
