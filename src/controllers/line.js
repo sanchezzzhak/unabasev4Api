@@ -365,111 +365,108 @@ export function updateOne(req, res) {
   // add total to movement
 
   console.log("before currency update last price");
-  if (currency) {
-    console.log("before update last price");
-    console.log(item, currency, movementType, req.body.numbers.price);
 
-    console.log("item last price updated");
-    const queryUpdateChildren = req.body.parent
-      ? {
-          children: {
-            $in: [ObjectId(req.params.id)]
-          },
-          _id: {
-            $ne: req.body.parent
-          }
-        }
-      : {
-          children: {
-            $in: [ObjectId(req.params.id)]
-          }
-        };
-    Line.findOneAndUpdate(queryUpdateChildren, {
-      $pull: {
-        children: {
-          $in: req.params.id
-        }
-      }
-    }).exec((err, oldParent) => {
+  console.log(item, movementType, req.body.numbers.price);
+
+  console.log("item last price updated");
+  // const queryUpdateChildren = req.body.parent
+  //   ? {
+  //       children: {
+  //         $in: [ObjectId(req.params.id)]
+  //       },
+  //       _id: {
+  //         $ne: req.body.parent
+  //       }
+  //     }
+  //   : {
+  //       children: {
+  //         $in: [ObjectId(req.params.id)]
+  //       }
+  //     };
+  // Line.findOneAndUpdate(queryUpdateChildren, {
+  //   $pull: {
+  //     children: {
+  //       $in: req.params.id
+  //     }
+  //   }
+  // }).exec((err, oldParent) => {
+  //   if (err) {
+  //     res.status(500).send(err);
+  //   } else {
+  //   }
+  // });
+
+  Line.findOneAndUpdate(
+    {
+      _id: req.params.id
+    },
+    req.body,
+    { new: true },
+    (err, line) => {
       if (err) {
+        console.log(err);
         res.status(500).send(err);
-      } else {
-        Line.findOneAndUpdate(
-          {
-            _id: req.params.id
-          },
-          req.body,
-          {
-            new: true
-          },
-          (err, line) => {
+      } else if (line) {
+        if (req.body.parent) {
+          // const parentToUpdate = req.body.parent || line.parent || "";
+          Line.updateParentTotal(req.body.parent, err => {
             if (err) {
               console.log(err);
               res.status(500).send(err);
-            } else if (line) {
-              if (req.body.parent || oldParent) {
-                const parentToUpdate = req.body.parent || oldParent || "";
-                Line.updateParentTotal(parentToUpdate, err => {
+            } else {
+              line.populate(
+                [
+                  {
+                    path: "item"
+                  }
+                ],
+                err => {
                   if (err) {
                     console.log(err);
                     res.status(500).send(err);
                   } else {
-                    line.populate(
-                      [
-                        {
-                          path: "item"
-                        }
-                      ],
-                      err => {
-                        if (err) {
-                          console.log(err);
-                          res.status(500).send(err);
-                        } else {
-                          Line.getTreeTotals(line.movement)
-                            .then(lineTree => {
-                              console.log("before send responde");
-                              res.send({
-                                line,
-                                lineTree
-                              });
-                            })
-                            .catch(err => {
-                              res.status(500).send(err);
-                            });
-                        }
-                      }
-                    );
-                  }
-                });
-              } else {
-                line.populate(
-                  [
-                    {
-                      path: "item"
-                    }
-                  ],
-                  err => {
-                    if (err) {
-                      console.log(err);
-                      res.status(500).send(err);
-                    } else {
-                      res.send({
-                        line
+                    Line.getTreeTotals(line.movement)
+                      .then(lineTree => {
+                        console.log("before send responde");
+                        res.send({
+                          line,
+                          lineTree
+                        });
+                      })
+                      .catch(err => {
+                        res.status(500).send(err);
                       });
-                    }
                   }
-                );
-              }
-            } else {
-              res.status(500).send({
-                msg: "Line not found"
-              });
+                }
+              );
             }
-          }
-        );
+          });
+        } else {
+          line.populate(
+            [
+              {
+                path: "item"
+              }
+            ],
+            err => {
+              if (err) {
+                console.log(err);
+                res.status(500).send(err);
+              } else {
+                res.send({
+                  line
+                });
+              }
+            }
+          );
+        }
+      } else {
+        res.status(500).send({
+          msg: "Line not found"
+        });
       }
-    });
-  }
+    }
+  );
 }
 
 export function deleteOne(req, res) {
