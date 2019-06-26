@@ -107,11 +107,14 @@ lines.delete(
 );
 lines.put(
   "/:id",
-  logger({
-    name: "updateOne lines",
-    description: "updateOne line",
-    module
-  }),
+  [
+    logger({
+      name: "updateOne lines",
+      description: "updateOne line",
+      module
+    }),
+    updateTotalMovement
+  ],
   updateOne
 );
 lines.delete(

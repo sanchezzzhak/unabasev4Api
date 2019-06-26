@@ -90,3 +90,20 @@ export function updateTotalMovement(req, res, next) {
     next();
   }
 }
+
+export function updateItemLastPrice(req, res, next) {
+  let movementType = req.body.movementType === "income" ? "sell" : "buy";
+  let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
+  let item = typeof req.body.item === "object" ? req.body.item._id : req.body.item;
+
+  if (currency) {
+    Item.updateLastPrice(item, currency, movementType, req.body.numbers.price)
+      .then(resp => {
+        next();
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).send(err);
+      });
+  }
+}
