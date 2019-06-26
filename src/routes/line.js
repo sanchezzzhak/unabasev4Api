@@ -113,7 +113,8 @@ lines.put(
       description: "updateOne line",
       module
     }),
-    updateTotalMovement
+    updateTotalMovement,
+    updateItemLastPrice
   ],
   updateOne
 );
