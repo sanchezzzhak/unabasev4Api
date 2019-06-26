@@ -73,3 +73,20 @@ export function updateMovementState(req, res, next) {
     next();
   }
 }
+
+export function updateTotalMovement(req, res, next) {
+  console.log("before  update totalmovement");
+  if (req.body.totalMovement) {
+    Movement.findByIdAndUpdate(req.body.movement, {
+      total: req.body.totalMovement
+    }).exec((err, movement) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send(err);
+      }
+      next();
+    });
+  } else {
+    next();
+  }
+}
