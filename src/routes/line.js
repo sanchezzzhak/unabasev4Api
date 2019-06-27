@@ -89,9 +89,7 @@ lines.post(
       name: "create line",
       description: "create line",
       module
-    }),
-    updateMovementState,
-    checkParent
+    })
   ],
   createMany
 );
