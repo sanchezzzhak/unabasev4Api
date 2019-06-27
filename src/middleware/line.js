@@ -132,6 +132,7 @@ export function checkParent(req, res, next) {
         next();
       }
     );
+  } else {
+    next();
   }
-  next();
 }
