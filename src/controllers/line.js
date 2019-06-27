@@ -374,46 +374,6 @@ export function updateOne(req, res) {
   let item = typeof req.body.item === "object" ? req.body.item._id : req.body.item;
   console.log("before  update parent");
 
-  // if (req.body.parent)
-  //   Line.findByIdAndUpdate(req.body.parent, {
-  //     $addToSet: {
-  //       children: req.params.id
-  //     }
-  //   }).exec();
-  // add total to movement
-
-  console.log("before currency update last price");
-
-  console.log(item, movementType, req.body.numbers.price);
-
-  console.log("item last price updated");
-  // const queryUpdateChildren = req.body.parent
-  //   ? {
-  //       children: {
-  //         $in: [ObjectId(req.params.id)]
-  //       },
-  //       _id: {
-  //         $ne: req.body.parent
-  //       }
-  //     }
-  //   : {
-  //       children: {
-  //         $in: [ObjectId(req.params.id)]
-  //       }
-  //     };
-  // Line.findOneAndUpdate(queryUpdateChildren, {
-  //   $pull: {
-  //     children: {
-  //       $in: req.params.id
-  //     }
-  //   }
-  // }).exec((err, oldParent) => {
-  //   if (err) {
-  //     res.status(500).send(err);
-  //   } else {
-  //   }
-  // });
-
   Line.findOneAndUpdate(
     {
       _id: req.params.id
