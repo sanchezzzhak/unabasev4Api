@@ -304,25 +304,43 @@ export function deleteMany(req, res) {
 }
 export function move(req, res) {
   const oldParent = req.body.children[0].parent;
-  const updateNewParent = () => {
-    Line.updateParentTotal(req.body.parent, (err, parent) => {
-      if (err) {
+  const getLineTree = movement => {
+    Line.getTreeTotals(movement)
+      .then(lineTree => {
+        console.log("before send responde");
+        res.send({
+          lineTree
+        });
+      })
+      .catch(err => {
         console.log(err);
         res.status(500).send(err);
-      } else {
-        Line.getTreeTotals(parent.movement)
-          .then(lineTree => {
-            console.log("before send responde");
-            res.send({
-              lineTree
-            });
-          })
-          .catch(err => {
-            console.log(err);
-            res.status(500).send(err);
-          });
-      }
-    });
+      });
+  };
+  const updateNewParent = () => {
+    if (req.body.parent) {
+      Line.updateParentTotal(req.body.parent, (err, parent) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send(err);
+        } else {
+          getLineTree(parent.movement);
+          // Line.getTreeTotals(parent.movement)
+          //   .then(lineTree => {
+          //     console.log("before send responde");
+          //     res.send({
+          //       lineTree
+          //     });
+          //   })
+          //   .catch(err => {
+          //     console.log(err);
+          //     res.status(500).send(err);
+          //   });
+        }
+      });
+    } else {
+      getLineTree(req.body.children[0].movement);
+    }
   };
   Line.updateMany(
     {
