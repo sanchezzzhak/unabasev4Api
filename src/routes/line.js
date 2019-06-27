@@ -44,7 +44,8 @@ lines.post(
       description: "create line",
       module
     }),
-    updateMovementState
+    updateMovementState,
+    checkParent
   ],
   create
 );
@@ -89,7 +90,8 @@ lines.post(
       description: "create line",
       module
     }),
-    updateMovementState
+    updateMovementState,
+    checkParent
   ],
   createMany
 );
