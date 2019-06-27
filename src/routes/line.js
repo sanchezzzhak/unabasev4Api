@@ -12,7 +12,13 @@ import {
   move,
   createParent
 } from "../controllers/line";
-import { checkItem, updateMovementState, updateTotalMovement, updateItemLastPrice } from "../middleware/line";
+import {
+  checkItem,
+  updateMovementState,
+  updateTotalMovement,
+  updateItemLastPrice,
+  checkParent
+} from "../middleware/line";
 
 import auth from "../config/lib/auth";
 import logger from "../lib/logger";
@@ -114,7 +120,8 @@ lines.put(
       module
     }),
     updateTotalMovement,
-    updateItemLastPrice
+    updateItemLastPrice,
+    checkParent
   ],
   updateOne
 );
