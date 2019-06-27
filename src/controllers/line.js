@@ -78,11 +78,12 @@ export function createMany(req, res) {
           path: "item"
         }
       ]);
-      Line.findByIdAndUpdate(req.body.lines[0].parent, {
-        $addToSet: {
-          children: lines.map(line => line._id)
-        }
-      }).exec();
+      // Line.findByIdAndUpdate(req.body.lines[0].parent, {
+      //   $addToSet: {
+      //     children: lines.map(line => line._id)
+      //   }
+      // }).exec();
+
       res.send(lines);
     }
   });
