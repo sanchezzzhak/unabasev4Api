@@ -373,13 +373,22 @@ export function updateOne(req, res) {
       _id: req.params.id
     },
     req.body,
-    { new: true },
+    // { new: true },
     (err, line) => {
       if (err) {
         console.log(err);
         res.status(500).send(err);
       } else if (line) {
-        if (req.body.parent) {
+        if (req.body.parent || line.parent) {
+          const updateOldParent = (oldParent, callback) => {
+            Line.updateParentTotal(line.parent, err => {
+              if (err) {
+                console.log(err);
+                res.status(500).send(err);
+              } else {
+              }
+            });
+          };
           // const parentToUpdate = req.body.parent || line.parent || "";
           Line.updateParentTotal(req.body.parent, err => {
             if (err) {
@@ -397,17 +406,34 @@ export function updateOne(req, res) {
                     console.log(err);
                     res.status(500).send(err);
                   } else {
-                    Line.getTreeTotals(line.movement)
-                      .then(lineTree => {
-                        console.log("before send responde");
-                        res.send({
-                          line,
-                          lineTree
+                    if (line.parent) {
+                      updateOldParent(
+                        line.parent,
+                        Line.getTreeTotals(line.movement)
+                          .then(lineTree => {
+                            console.log("before send responde");
+                            res.send({
+                              line,
+                              lineTree
+                            });
+                          })
+                          .catch(err => {
+                            res.status(500).send(err);
+                          })
+                      );
+                    } else {
+                      Line.getTreeTotals(line.movement)
+                        .then(lineTree => {
+                          console.log("before send responde");
+                          res.send({
+                            line,
+                            lineTree
+                          });
+                        })
+                        .catch(err => {
+                          res.status(500).send(err);
                         });
-                      })
-                      .catch(err => {
-                        res.status(500).send(err);
-                      });
+                    }
                   }
                 }
               );
