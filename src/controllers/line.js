@@ -408,8 +408,7 @@ export function updateOne(req, res) {
                     res.status(500).send(err);
                   } else {
                     if (line.parent) {
-                      updateOldParent(
-                        line.parent,
+                      updateOldParent(line.parent, () => {
                         Line.getTreeTotals(line.movement)
                           .then(lineTree => {
                             console.log("before send responde");
@@ -420,8 +419,8 @@ export function updateOne(req, res) {
                           })
                           .catch(err => {
                             res.status(500).send(err);
-                          })
-                      );
+                          });
+                      });
                     } else {
                       Line.getTreeTotals(line.movement)
                         .then(lineTree => {
