@@ -61,15 +61,15 @@ lines.post(
   ],
   createParent
 );
-lines.put(
-  "/move",
-  logger({
-    name: "create line",
-    description: "create line",
-    module
-  }),
-  move
-);
+// lines.put(
+//   "/move",
+//   logger({
+//     name: "create line",
+//     description: "create line",
+//     module
+//   }),
+//   move
+// );
 lines.post(
   "/group",
   [
