@@ -304,71 +304,63 @@ export function deleteMany(req, res) {
     }
   );
 }
-export function move(req, res) {
-  const oldParent = req.body.children[0].parent;
-  const getLineTree = movement => {
-    Line.getTreeTotals(movement)
-      .then(lineTree => {
-        console.log("before send responde");
-        res.send({
-          lineTree
-        });
-      })
-      .catch(err => {
-        console.log(err);
-        res.status(500).send(err);
-      });
-  };
-  const updateNewParent = () => {
-    if (req.body.parent) {
-      Line.updateParentTotal(req.body.parent, (err, parent) => {
-        if (err) {
-          console.log(err);
-          res.status(500).send(err);
-        } else {
-          getLineTree(parent.movement);
-          // Line.getTreeTotals(parent.movement)
-          //   .then(lineTree => {
-          //     console.log("before send responde");
-          //     res.send({
-          //       lineTree
-          //     });
-          //   })
-          //   .catch(err => {
-          //     console.log(err);
-          //     res.status(500).send(err);
-          //   });
-        }
-      });
-    } else {
-      getLineTree(req.body.children[0].movement);
-    }
-  };
-  Line.updateMany(
-    {
-      _id: {
-        $in: req.body.children
-      }
-    },
-    {
-      parent: req.body.parent
-    },
-    (err, resp) => {
-      if (oldParent) {
-        Line.updateParentTotal(oldParent, (err, oldParent) => {
-          if (err) {
-            console.log(err);
-            res.status(500).send(err);
-          } else {
-            updateNewParent();
-          }
-        });
-      } else {
-        updateNewParent();
-      }
-    }
-  );
-}
+
+//deprecated
+// export function move(req, res) {
+//   const oldParent = req.body.children[0].parent;
+//   const getLineTree = movement => {
+//     Line.getTreeTotals(movement)
+//       .then(lineTree => {
+//         console.log("before send responde");
+//         res.send({
+//           lineTree
+//         });
+//       })
+//       .catch(err => {
+//         console.log(err);
+//         res.status(500).send(err);
+//       });
+//   };
+//   const updateNewParent = () => {
+//     if (req.body.parent) {
+//       Line.updateParentTotal(req.body.parent, (err, parent) => {
+//         if (err) {
+//           console.log(err);
+//           res.status(500).send(err);
+//         } else {
+//           getLineTree(parent.movement);
+
+//         }
+//       });
+//     } else {
+//       getLineTree(req.body.children[0].movement);
+//     }
+//   };
+//   Line.updateMany(
+//     {
+//       _id: {
+//         $in: req.body.children
+//       }
+//     },
+//     {
+//       parent: req.body.parent
+//     },
+//     (err, resp) => {
+//       if (oldParent) {
+//         Line.updateParentTotal(oldParent, (err, oldParent) => {
+//           if (err) {
+//             console.log(err);
+//             res.status(500).send(err);
+//           } else {
+//             updateNewParent();
+//           }
+//         });
+//       } else {
+//         updateNewParent();
+//       }
+//     }
+//   );
+// }
 export function updateOne(req, res) {
   console.log("-------------start updateOne");
   let movementType = req.body.movementType === "income" ? "sell" : "buy";
