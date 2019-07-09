@@ -381,7 +381,7 @@ export function updateOne(req, res) {
       } else if (line) {
         if (req.body.parent || line.parent) {
           const updateOldParent = (oldParent, callback) => {
-            Line.updateParentTotal(line.parent, err => {
+            Line.updateParentTotal(oldParent, err => {
               if (err) {
                 console.log(err);
                 res.status(500).send(err);
