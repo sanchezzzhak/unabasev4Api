@@ -305,6 +305,31 @@ export function deleteMany(req, res) {
   );
 }
 
+export async function move(req, res) {
+  for await (let child of req.body.children) {
+    Line.findByIdAndUpdate(child._id, child).exec();
+  }
+
+  Line.updateParentTotal(req.body.parent, err => {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+    } else {
+      Line.getTreeTotals(req.body.children[0].movement)
+        .then(lineTree => {
+          console.log("before send responde");
+          res.send({
+            lineTree
+          });
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(500).send(err);
+        });
+    }
+  });
+}
+
 //deprecated
 // export function move(req, res) {
 //   const oldParent = req.body.children[0].parent;
