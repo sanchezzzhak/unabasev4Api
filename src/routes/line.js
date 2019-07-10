@@ -17,7 +17,8 @@ import {
   updateMovementState,
   updateTotalMovement,
   updateItemLastPrice,
-  checkParent
+  checkParent,
+  updateOldParent
 } from "../middleware/line";
 
 import auth from "../config/lib/auth";
@@ -61,15 +62,18 @@ lines.post(
   ],
   createParent
 );
-// lines.put(
-//   "/move",
-//   logger({
-//     name: "create line",
-//     description: "create line",
-//     module
-//   }),
-//   move
-// );
+lines.put(
+  "/move",
+  [
+    logger({
+      name: "create line",
+      description: "create line",
+      module
+    }),
+    updateOldParent
+  ],
+  move
+);
 lines.post(
   "/group",
   [
