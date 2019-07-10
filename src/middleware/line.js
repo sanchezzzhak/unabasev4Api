@@ -42,22 +42,22 @@ export function checkItem(req, res, next) {
   }
 }
 
-export function updateOldParent(req, res, next) {
-  Line.findById(req.body.children[0]._id, (err, line) => {
-    if (line.parent) {
-      Line.updateParentTotal(line._id, err => {
-        if (err) {
-          console.log(err);
-          res.status(500).send(err);
-        } else {
-          next();
-        }
-      });
-    } else {
-      next();
-    }
-  });
-}
+// export function updateOldParent(req, res, next) {
+//   Line.findById(req.body.children[0]._id, (err, line) => {
+//     if (line.parent) {
+//       Line.updateParentTotal(line._id, err => {
+//         if (err) {
+//           console.log(err);
+//           res.status(500).send(err);
+//         } else {
+//           next();
+//         }
+//       });
+//     } else {
+//       next();
+//     }
+//   });
+// }
 
 export function updateMovementState(req, res, next) {
   if (req.body.movement) {
@@ -132,6 +132,21 @@ export function checkParent(req, res, next) {
         next();
       }
     );
+  } else {
+    next();
+  }
+}
+
+export function updateOldParent(req, res, next) {
+  if (req.body.oldParent) {
+    Line.updateParentTotal(req.body.oldParent, err => {
+      if (err) {
+        console.log(err);
+        res.status(500).send(err);
+      } else {
+        next();
+      }
+    });
   } else {
     next();
   }
