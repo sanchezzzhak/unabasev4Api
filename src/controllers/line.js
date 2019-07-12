@@ -306,9 +306,6 @@ export function deleteMany(req, res) {
 }
 
 export async function move(req, res) {
-  for await (let child of req.body.children) {
-    Line.findByIdAndUpdate(child._id, child).exec();
-  }
   const getTreeTotals = () => {
     Line.getTreeTotals(req.body.children[0].movement)
       .then(lineTree => {
@@ -322,17 +319,50 @@ export async function move(req, res) {
         res.status(500).send(err);
       });
   };
-  if (req.body.parent) {
-    Line.updateParentTotal(req.body.parent, err => {
+
+  const updateParent = () => {
+    return new Promise((resolve, reject) => {
+      if (req.body.parent) {
+        Line.updateParentTotal(req.body.parent, err => {
+          if (err) {
+            console.log(err);
+            // res.status(500).send(err);
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      } else {
+        resolve();
+      }
+    });
+  };
+  for await (let child of req.body.children) {
+    Line.findByIdAndUpdate(child._id, { ...child, parent: req.body.parent }).exec();
+  }
+  if (req.body.oldParent) {
+    Line.updateParentTotal(req.body.oldParent, err => {
       if (err) {
         console.log(err);
         res.status(500).send(err);
       } else {
-        getTreeTotals();
+        updateParent()
+          .then(resp => {
+            getTreeTotals();
+          })
+          .catch(err => {
+            res.status(500).send(err);
+          });
       }
     });
   } else {
-    getTreeTotals();
+    updateParent()
+      .then(resp => {
+        getTreeTotals();
+      })
+      .catch(err => {
+        res.status(500).send(err);
+      });
   }
 }
 
