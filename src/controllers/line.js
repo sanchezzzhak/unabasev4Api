@@ -338,7 +338,7 @@ export async function move(req, res) {
     });
   };
   for await (let child of req.body.children) {
-    Line.findByIdAndUpdate(child._id, { ...child, parent: req.body.parent }).exec();
+    Line.findByIdAndUpdate(child._id, { ...child, parent: req.body.parent || null }).exec();
   }
   if (req.body.oldParent) {
     Line.updateParentTotal(req.body.oldParent, err => {
