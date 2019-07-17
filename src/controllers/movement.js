@@ -16,6 +16,8 @@ export const getPersonal = (req, res) => {
   const sort = {};
   sort.createdAt = rquery.createdAtSort || "desc";
   sort.updatedAt = rquery.updatedAtSort || "desc";
+  // sort.dates = {};
+  // sort.dates.schedule = rquery.scheduleSort || "desc";
   options.page = rquery.page || 1;
   options.limit = rquery.limit || 20;
   options.select = "name client responsable createdAt updatedAt total state isActive dates";
@@ -44,6 +46,7 @@ export const getPersonal = (req, res) => {
   };
   delete rquery.createdAtSort;
   delete rquery.updatedAtSort;
+  delete rquery.scheduleSort;
   delete rquery.page;
   delete rquery.limit;
   let query = {
