@@ -11,7 +11,9 @@ const commentSchema = new Schema(
     isPrivate: { type: Boolean },
     text: { type: String, maxlength: 2000 },
     parent: { type: Schema.Types.ObjectId, ref: "Comment" },
-    users: Array({ type: Schema.Types.ObjectId, ref: "User" })
+    users: Array({ type: Schema.Types.ObjectId, ref: "User" }),
+    value: { type: Number },
+    type: { type: String, enum: ["call", "meeting", "email", "task", "schedule"] }
   },
   { timestamps: true }
 );
