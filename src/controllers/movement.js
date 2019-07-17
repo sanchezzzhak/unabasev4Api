@@ -42,7 +42,8 @@ export const getPersonal = (req, res) => {
   options.sort = {
     ...sort
   };
-  delete rquery.createdAt;
+  delete rquery.createdAtSort;
+  delete rquery.updatedAtSort;
   delete rquery.page;
   delete rquery.limit;
   let query = {
