@@ -1,33 +1,26 @@
 import bool from "normalize-bool";
 import Movement from "../models/movement";
 import Contact from "../models/contact";
-import {
-  Types
-} from "mongoose";
+import { Types } from "mongoose";
 const ObjectId = Types.ObjectId;
 import ntype from "normalize-type";
 import Line from "../models/line";
-import {
-  isEmpty
-} from "../lib/isEmpty";
-import {
-  errorHandler
-} from "../lib/errorHandler";
+import { isEmpty } from "../lib/isEmpty";
+import { errorHandler } from "../lib/errorHandler";
 
 const routes = {};
 export const getPersonal = (req, res) => {
   // const state = req.params.state;
   let rquery = ntype(req.query);
   let options = {};
-  const sort = rquery.createdAt ? {
-    createdAt: rquery.createdAt
-  } : {
-    createdAt: "desc"
-  };
+  const sort = {};
+  sort.createdAt = rquery.createdAtSort || "desc";
+  sort.updatedAt = rquery.updatedAtSort || "desc";
   options.page = rquery.page || 1;
   options.limit = rquery.limit || 20;
   options.select = "name client responsable createdAt total state isActive dates";
-  options.populate = [{
+  options.populate = [
+    {
       path: "client.data",
       select: "isActive name  email phone creator user imgUrl emails type"
     },
@@ -58,16 +51,20 @@ export const getPersonal = (req, res) => {
   switch (req.params.state) {
     case "in":
       // query.responsable = {        data: ObjectId(`${req.user._id}`)      };
-      query.$or = [{
-        "responsable.data": ObjectId(`${req.user._id}`)
-      }];
+      query.$or = [
+        {
+          "responsable.data": ObjectId(`${req.user._id}`)
+        }
+      ];
       break;
     case "out":
       // query.client = { data: ObjectId(`${req.user._id}`) };
 
-      query.$or = [{
-        "client.data": ObjectId(`${req.user._id}`)
-      }];
+      query.$or = [
+        {
+          "client.data": ObjectId(`${req.user._id}`)
+        }
+      ];
       break;
   }
 
@@ -96,15 +93,18 @@ export const getPersonal = (req, res) => {
 export const get = (req, res) => {
   let rquery = ntype(req.query);
   let options = {};
-  const sort = rquery.createdAt ? {
-    createdAt: rquery.createdAt
-  } : {
-    createdAt: "desc"
-  };
+  const sort = rquery.createdAt
+    ? {
+        createdAt: rquery.createdAt
+      }
+    : {
+        createdAt: "desc"
+      };
   options.page = rquery.page || 1;
   options.limit = rquery.limit || 20;
   options.select = "name client responsable createdAt total state";
-  options.populate = [{
+  options.populate = [
+    {
       path: "client.data",
       select: "name phone email imgUrl emails type"
     },
@@ -145,15 +145,18 @@ export const getBusiness = (req, res) => {
   // const state = req.params.state;
   let rquery = ntype(req.query);
   let options = {};
-  const sort = rquery.createdAt ? {
-    createdAt: rquery.createdAt
-  } : {
-    createdAt: "desc"
-  };
+  const sort = rquery.createdAt
+    ? {
+        createdAt: rquery.createdAt
+      }
+    : {
+        createdAt: "desc"
+      };
   options.page = rquery.page || 1;
   options.limit = rquery.limit || 20;
   options.select = "name client responsable createdAt total state ";
-  options.populate = [{
+  options.populate = [
+    {
       path: "client.data",
       select: "name imgUrl emails type"
     },
@@ -184,14 +187,18 @@ export const getBusiness = (req, res) => {
 
   switch (req.params.state) {
     case "in":
-      query.$or = [{
-        "responsable.data": ObjectId(`${req.params.id}`)
-      }];
+      query.$or = [
+        {
+          "responsable.data": ObjectId(`${req.params.id}`)
+        }
+      ];
       break;
     case "out":
-      query.$or = [{
-        "client.data": ObjectId(`${req.params.id}`)
-      }];
+      query.$or = [
+        {
+          "client.data": ObjectId(`${req.params.id}`)
+        }
+      ];
       break;
   }
   Movement.paginate(query, options, (err, movements) => {
@@ -203,18 +210,7 @@ export const getBusiness = (req, res) => {
   });
 };
 export const create = (req, res) => {
-  const {
-    name,
-    dates,
-    client,
-    contact,
-    state,
-    lines,
-    description,
-    responsable,
-    personal,
-    total
-  } = req.body;
+  const { name, dates, client, contact, state, lines, description, responsable, personal, total } = req.body;
   let errorOnItem = {
     state: false
   };
@@ -236,7 +232,8 @@ export const create = (req, res) => {
       });
     } else {
       movement.populate(
-        [{
+        [
+          {
             path: "client.data",
             select: "name  phone email imgUrl emails type"
           },
@@ -265,8 +262,8 @@ export const create = (req, res) => {
 };
 export const getOne = (req, res) => {
   Movement.findOne({
-      _id: req.params.id
-    })
+    _id: req.params.id
+  })
 
     // .populate('lines creator', 'creator.name')
     // .populate('creator', 'name')
@@ -311,8 +308,8 @@ export const getOne = (req, res) => {
         res.status(500).send(err);
       } else if (movement) {
         Line.find({
-            movement: movement._id
-          })
+          movement: movement._id
+        })
           // .populate({'item', 'lastPrice global'})
           // .populate([
           //   {
@@ -363,14 +360,17 @@ export const getOne = (req, res) => {
 };
 export const findOne = (req, res) => {
   let query = {
-    $or: [{
-      name: req.query.name || null
-    }]
+    $or: [
+      {
+        name: req.query.name || null
+      }
+    ]
   };
   Movement.findOne({
-      _id: req.params.id
-    })
-    .populate([{
+    _id: req.params.id
+  })
+    .populate([
+      {
         path: "lines"
       },
       {
@@ -403,8 +403,10 @@ export const findOne = (req, res) => {
 export const find = (req, res) => {
   let rquery = ntype(req.query);
   let query = {
-    $and: [{
-        $or: [{
+    $and: [
+      {
+        $or: [
+          {
             name: {
               $regex: req.params.q,
               $options: "i"
@@ -419,7 +421,8 @@ export const find = (req, res) => {
         ]
       },
       {
-        $or: [{
+        $or: [
+          {
             creator: req.user._id
           },
           {
@@ -432,13 +435,15 @@ export const find = (req, res) => {
   Object.assign(query, rquery);
 
   Movement.paginate(
-    query, {
+    query,
+    {
       path: "client",
       match: {
         name: req.params.q
       },
 
-      populate: [{
+      populate: [
+        {
           path: "client.data",
           select: "isActive name  email phone creator user imgUrl emails type"
         },
@@ -493,11 +498,15 @@ export const updateOne = (req, res) => {
   //       console.log(err);
   //     });
   // } else {
-  Movement.findOneAndUpdate({
+  Movement.findOneAndUpdate(
+    {
       _id: req.params.id
-    }, update, {
+    },
+    update,
+    {
       new: true
-    })
+    }
+  )
     .populate("client.data")
     .exec((err, movement) => {
       if (err) {
@@ -510,33 +519,36 @@ export const updateOne = (req, res) => {
   // }
 };
 export const linkMovement = (email, user) => {
-  Contact.find({
-    email
-  }, (err, contacts) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send(err);
-    } else {
-      for (let contact of contacts) {
-        let client = {
-          "client.type": "Contact",
-          "client.data": contact._id
-        };
-        let clientUpdate = {
-          "client.type": "User",
-          "client.data": user._id
-        };
-        let responsable = {
-          "responsable.type": "Contact",
-          "responsable.data": contact._id
-        };
-        let responsableUpdate = {
-          "responsable.type": "User",
-          "responsable.data": user._id
-        };
-        Movement.updateMany(client, clientUpdate, {}).exec();
-        Movement.updateMany(responsable, responsableUpdate, {}).exec();
+  Contact.find(
+    {
+      email
+    },
+    (err, contacts) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send(err);
+      } else {
+        for (let contact of contacts) {
+          let client = {
+            "client.type": "Contact",
+            "client.data": contact._id
+          };
+          let clientUpdate = {
+            "client.type": "User",
+            "client.data": user._id
+          };
+          let responsable = {
+            "responsable.type": "Contact",
+            "responsable.data": contact._id
+          };
+          let responsableUpdate = {
+            "responsable.type": "User",
+            "responsable.data": user._id
+          };
+          Movement.updateMany(client, clientUpdate, {}).exec();
+          Movement.updateMany(responsable, responsableUpdate, {}).exec();
+        }
       }
     }
-  });
+  );
 };
