@@ -42,6 +42,7 @@ const movementSchema = new Schema(
     isBusiness: { type: Boolean, default: false },
     lines: Array({ type: Schema.Types.ObjectId, ref: "Line" }),
     comments: Array({ type: Schema.Types.ObjectId, ref: "Comment" }),
+    successPercentage: { type: Number },
     total: {
       opportunity: { type: Number, default: 0 },
       net: { type: Number, default: 0 },
