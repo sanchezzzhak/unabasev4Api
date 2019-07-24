@@ -12,7 +12,8 @@ export function updateSuccessPercentage(comment) {
       } else {
         const arraySum = array => array.reduce((a, b) => a + b, 0);
         let valueArray = comments.map(comment => comment.value);
-        const successPercentage = Math.round(arraySum(valueArray) / (valueArray.length / 100));
+        let successPercentage = Math.round(arraySum(valueArray) / (valueArray.length / 100));
+        successPercentage = successPercentage >= 0 ? successPercentage : 0;
         Movement.findByIdAndUpdate(comment.from.id, { successPercentage }).exec();
       }
     });
