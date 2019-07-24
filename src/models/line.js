@@ -135,8 +135,8 @@ Line.updateParentTotal = (parentId, callback) => {
         let priceSum = 0;
         let budgetSum = 0;
         for (let line of lines) {
-          priceSum += line.numbers.price;
-          budgetSum += line.numbers.budget;
+          priceSum += line.numbers.price * line.quantity;
+          budgetSum += line.numbers.budget * line.quantity;
         }
         Line.findByIdAndUpdate(
           parentId.toString(),
