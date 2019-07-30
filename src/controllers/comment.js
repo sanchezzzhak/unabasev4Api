@@ -25,6 +25,7 @@ export const updateOne = (req, res) => {
       console.log(err);
       res.status(500).send(err);
     } else {
+      console.log(comment);
       res.send(comment);
     }
   });
