@@ -20,7 +20,7 @@ export const create = (req, res) => {
   });
 };
 export const updateOne = (req, res) => {
-  Comment.findByIdAndUpdate(req.params.id, req.body, (err, comment) => {
+  Comment.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, comment) => {
     if (err) {
       console.log(err);
       res.status(500).send(err);
