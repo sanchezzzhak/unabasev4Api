@@ -10,6 +10,7 @@ const commentSchema = new Schema(
       id: { type: Schema.Types.ObjectId, refPath: "from.name" },
       name: { type: String }
     },
+    schedule: { type: Date },
     isPrivate: { type: Boolean },
     text: { type: String, maxlength: 2000 },
     parent: { type: Schema.Types.ObjectId, ref: "Comment" },
