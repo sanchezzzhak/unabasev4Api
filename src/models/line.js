@@ -195,7 +195,7 @@ Line.getTreeTotals = movementId => {
     Line.find({
       movement: movementId
     })
-      .select("parent numbers name")
+      .select("parent numbers name isParent")
       .exec((err, lines) => {
         if (err) reject(err);
         else resolve(lines);
