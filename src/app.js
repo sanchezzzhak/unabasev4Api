@@ -1,23 +1,23 @@
 // import mongoose from 'mongoose';
-import * as path from 'path';
-import express, { Router } from 'express';
-import bodyParser, { urlencoded, json } from 'body-parser';
-import xmlparser from 'express-xml-bodyparser';
+import * as path from "path";
+import express, { Router } from "express";
+import bodyParser, { urlencoded, json } from "body-parser";
+import xmlparser from "express-xml-bodyparser";
 
-import cookieParser from 'cookie-parser';
+import cookieParser from "cookie-parser";
 // import passport from 'passport';
-import dbConfig from './config/database.js';
-import logger from './lib/logger';
+import dbConfig from "./config/database.js";
+import logger from "./lib/logger";
 const port = process.env.PORT || 3000;
-import favicon from 'serve-favicon';
-import session from 'express-session';
-import cors from 'cors';
-import morgan from 'morgan';
-import localeMiddleware from 'express-locale';
-import db from './db';
-const env = process.env.NODE_ENV || '';
+import favicon from "serve-favicon";
+import session from "express-session";
+import cors from "cors";
+import morgan from "morgan";
+import localeMiddleware from "express-locale";
+import db from "./db";
+const env = process.env.NODE_ENV || "";
 /// database
-console.log('env');
+console.log("env");
 
 console.log(env);
 
@@ -33,22 +33,20 @@ console.log(env);
 // let db = mongoose.connection;
 
 //check connection
-db.once('open', () => {
-  console.log(
-    `Connnected to mongodb  ${process.env.NODE_ENV} ${dbConfig[env]}`
-  );
+db.once("open", () => {
+  console.log(`Connnected to mongodb  ${process.env.NODE_ENV} ${dbConfig[env]}`);
 });
 
 //check for DB erros
-db.on('error', err => {
+db.on("error", err => {
   console.log(dbConfig[env]);
   console.log(err);
 });
 
 //init app
 const app = express();
-import templates from './lib/mails';
-console.log('template');
+import templates from "./lib/mails";
+console.log("template");
 console.log(templates().register({}).subject);
 
 const router = Router();
@@ -65,12 +63,12 @@ app.use(cookieParser());
 app.use(cors());
 app.use(localeMiddleware());
 //load view engine
-app.set('views', path.join(__dirname, './views'));
-app.set('view engine', 'pug');
+app.set("views", path.join(__dirname, "./views"));
+app.set("view engine", "pug");
 
 // app.options('*', cors());
 //set public folder
-app.use(express.static(path.join(__dirname, './public')));
+app.use(express.static(path.join(__dirname, "./public")));
 
 // app.use(flash());
 // app.use(
@@ -85,17 +83,17 @@ app.use(express.static(path.join(__dirname, './public')));
 
 // app.use(passport.initialize());
 // app.use(passport.session());
-if (env === 'test' || env === 'dev') {
-  console.log('using morgan');
-  app.use(morgan('dev'));
+if (env === "test" || env === "dev") {
+  console.log("using morgan");
+  app.use(morgan("dev"));
 }
 //global var
 let allowedOrigins = [
-  'https://unabase1.firebaseapp.com',
-  'http://localhost:8080',
-  'https://unabase.net',
-  'https://www.unabase.net',
-  'http://localhost:8081'
+  "https://unabase1.firebaseapp.com",
+  "http://localhost:8080",
+  "https://unabase.net",
+  "https://www.unabase.net",
+  "http://localhost:8081"
 ];
 app.use(function(req, res, next) {
   res.locals.activeUser = req.user || null;
@@ -106,32 +104,21 @@ app.use(function(req, res, next) {
   //   res.header('Access-Control-Allow-Origin', origin);
   // }
   // res.header('Access-Control-Allow-Origin', true);
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header("Access-Control-Allow-Origin", "*");
   // res.header('Access-Control-Allow-Origin', mainConfig.web);
   // res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Methods', [
-    'POST',
-    'GET',
-    'PUT',
-    'DELETE',
-    'PATCH',
-    'HEAD',
-    'OPTIONS'
-  ]);
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Authorization, Origin, X-Requested-With, Content-Type, Accept'
-  );
+  res.header("Access-Control-Allow-Methods", ["POST", "GET", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]);
+  res.header("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
 
   next();
 });
 
-import routes from './routes';
-import axios from 'axios';
+import routes from "./routes";
+import axios from "axios";
 
 // console.log(process.env);
 
-app.use('/', routes);
+app.use("/", routes);
 
 // const schema = makeExecutableSchema({
 //   typeDefs,
@@ -142,7 +129,7 @@ app.use('/', routes);
 
 //start server
 app.listen(port, () => {
-  console.log('Server started on port ' + port + ' env: ' + env);
+  console.log("Server started on port " + port + " env: " + env);
 });
 
 export default app;

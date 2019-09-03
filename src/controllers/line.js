@@ -8,10 +8,10 @@ const ObjectId = Types.ObjectId;
 
 export const getOne = (req, res) => {
   Line.findOne({
-    _id: req.params.id,
+    _id: req.params.id
   })
     .populate({
-      path: "children",
+      path: "children item"
     })
     .exec((err, line) => {
       if (err) {
@@ -31,10 +31,10 @@ export function get(req, res) {
   options.populate = [
     {
       path: "tax",
-      select: "name number",
+      select: "name number"
     },
     {
-      path: "item",
+      path: "item"
     },
     {
       path: "children",
@@ -44,16 +44,16 @@ export function get(req, res) {
           path: "children",
           populate: {
             path: "children",
-            populate: "children",
-          },
-        },
-      },
-    },
+            populate: "children"
+          }
+        }
+      }
+    }
   ];
   delete rquery.page;
   delete rquery.limit;
   let query = {
-    ...rquery,
+    ...rquery
   };
   console.log("query");
   console.log(query);
@@ -76,8 +76,8 @@ export function createMany(req, res) {
     } else {
       await Line.populate(lines, [
         {
-          path: "item",
-        },
+          path: "item"
+        }
       ]);
       // Line.findByIdAndUpdate(req.body.lines[0].parent, {
       //   $addToSet: {
@@ -101,11 +101,11 @@ export function group(req, res) {
       Line.updateMany(
         {
           _id: {
-            $in: req.body.children,
-          },
+            $in: req.body.children
+          }
         },
         {
-          parent: line._id,
+          parent: line._id
         }
       ).exec((err, lines) => {
         if (err) {
@@ -118,8 +118,8 @@ export function group(req, res) {
               line.populate(
                 [
                   {
-                    path: "item",
-                  },
+                    path: "item"
+                  }
                 ],
                 err => {
                   if (err) {
@@ -131,7 +131,7 @@ export function group(req, res) {
                         console.log("before send responde");
                         res.send({
                           line,
-                          lineTree,
+                          lineTree
                         });
                       })
                       .catch(err => {
@@ -166,8 +166,8 @@ export function createParent(req, res) {
         } else {
           await Line.populate(lines, [
             {
-              path: "item",
-            },
+              path: "item"
+            }
           ]);
           lines.push(parent);
           res.send(lines);
@@ -192,15 +192,15 @@ export function create(req, res) {
       if (line.parent) {
         Line.findByIdAndUpdate(line.parent, {
           $addToSet: {
-            children: line._id,
-          },
+            children: line._id
+          }
         }).exec();
       }
       line.populate(
         [
           {
-            path: "item",
-          },
+            path: "item"
+          }
         ],
         err => {
           if (err) {
@@ -212,7 +212,7 @@ export function create(req, res) {
                 console.log("before send responde");
                 res.send({
                   line,
-                  lineTree,
+                  lineTree
                 });
               })
               .catch(err => {
@@ -227,18 +227,18 @@ export function create(req, res) {
 export function updateMany(req, res) {
   if (req.body.data.totalMovement) {
     Movement.findByIdAndUpdate(req.body.lines[0].movement, {
-      total: req.body.data.totalMovement,
+      total: req.body.data.totalMovement
     }).exec();
   }
 
   Line.updateMany(
     {
       _id: {
-        $in: req.body.lines,
-      },
+        $in: req.body.lines
+      }
     },
     {
-      $set: req.body.data,
+      $set: req.body.data
     },
     async (err, lines) => {
       if (err) {
@@ -249,13 +249,13 @@ export function updateMany(req, res) {
         console.log(lines);
         Line.findByIdAndUpdate(req.body.lines[0].parent, {
           $addToSet: {
-            children: req.body.lines.map(line => line._id),
-          },
+            children: req.body.lines.map(line => line._id)
+          }
         }).exec();
         await Line.populate(lines, [
           {
-            path: "parent",
-          },
+            path: "parent"
+          }
         ]);
         res.send(lines);
       }
@@ -265,14 +265,14 @@ export function updateMany(req, res) {
 export function deleteMany(req, res) {
   if (req.body.totalMovement) {
     Movement.findByIdAndUpdate(req.body.movement, {
-      total: req.body.totalMovement,
+      total: req.body.totalMovement
     }).exec();
   }
   Line.deleteMany(
     {
       _id: {
-        $in: req.body.lines.map(i => i._id),
-      },
+        $in: req.body.lines.map(i => i._id)
+      }
     },
     (err, resp) => {
       if (err) {
@@ -283,9 +283,9 @@ export function deleteMany(req, res) {
           Line.findByIdAndUpdate(line.parent, {
             $pull: {
               children: {
-                $in: line._id,
-              },
-            },
+                $in: line._id
+              }
+            }
           }).exec();
         }
 
@@ -293,7 +293,7 @@ export function deleteMany(req, res) {
           .then(lineTree => {
             console.log("before send responde");
             res.send({
-              lineTree,
+              lineTree
             });
           })
           .catch(err => {
@@ -311,7 +311,7 @@ export async function move(req, res) {
       .then(lineTree => {
         console.log("before send responde");
         res.send({
-          lineTree,
+          lineTree
         });
       })
       .catch(err => {
@@ -431,7 +431,7 @@ export function updateOne(req, res) {
 
   Line.findOneAndUpdate(
     {
-      _id: req.params.id,
+      _id: req.params.id
     },
     req.body,
     // { new: true },
@@ -460,8 +460,8 @@ export function updateOne(req, res) {
               line.populate(
                 [
                   {
-                    path: "item",
-                  },
+                    path: "item"
+                  }
                 ],
                 err => {
                   if (err) {
@@ -475,7 +475,7 @@ export function updateOne(req, res) {
                             console.log("before send responde");
                             res.send({
                               line,
-                              lineTree,
+                              lineTree
                             });
                           })
                           .catch(err => {
@@ -488,7 +488,7 @@ export function updateOne(req, res) {
                           console.log("before send responde");
                           res.send({
                             line,
-                            lineTree,
+                            lineTree
                           });
                         })
                         .catch(err => {
@@ -504,8 +504,8 @@ export function updateOne(req, res) {
           line.populate(
             [
               {
-                path: "item",
-              },
+                path: "item"
+              }
             ],
             err => {
               if (err) {
@@ -513,7 +513,7 @@ export function updateOne(req, res) {
                 res.status(500).send(err);
               } else {
                 res.send({
-                  line,
+                  line
                 });
               }
             }
@@ -521,7 +521,7 @@ export function updateOne(req, res) {
         }
       } else {
         res.status(500).send({
-          msg: "Line not found",
+          msg: "Line not found"
         });
       }
     }
@@ -531,21 +531,21 @@ export function updateOne(req, res) {
 export function deleteOne(req, res) {
   if (req.body.totalMovement) {
     Movement.findByIdAndUpdate(req.body.movement, {
-      total: req.body.totalMovement,
+      total: req.body.totalMovement
     }).exec();
   }
   Line.findOneAndUpdate(
     {
       children: {
-        $in: req.params.id,
-      },
+        $in: req.params.id
+      }
     },
     {
       $pull: {
         children: {
-          $in: req.params.id,
-        },
-      },
+          $in: req.params.id
+        }
+      }
     }
   ).exec();
   Line.findByIdAndRemove(req.params.id, (err, item) => {
@@ -557,7 +557,7 @@ export function deleteOne(req, res) {
         .then(lineTree => {
           console.log("before send responde");
           res.send({
-            lineTree,
+            lineTree
           });
         })
         .catch(err => {
