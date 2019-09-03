@@ -316,6 +316,7 @@ export const getOne = (req, res) => {
         Line.find({
           movement: movement._id
         })
+          .populate("item")
           // .populate({'item', 'lastPrice global'})
           // .populate([
           //   {

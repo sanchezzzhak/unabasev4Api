@@ -11,7 +11,7 @@ export const getOne = (req, res) => {
     _id: req.params.id
   })
     .populate({
-      path: "children item"
+      path: "children"
     })
     .exec((err, line) => {
       if (err) {
