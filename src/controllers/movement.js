@@ -315,9 +315,7 @@ export const getOne = (req, res) => {
       } else if (movement) {
         Line.find({
           movement: movement._id
-        })
-          .populate("item")
-          // .populate({'item', 'lastPrice global'})
+        }).populate({'item', 'lastPrice global'})
           // .populate([
           //   {
           //     path: 'children',
