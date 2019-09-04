@@ -122,7 +122,13 @@ export function checkParent(req, res, next) {
     Line.findByIdAndUpdate(
       req.body.parent,
       {
-        isParent: true
+        isParent: true,
+        numbers: {
+          price: 0,
+          cost: 0,
+          budget: 0
+        },
+        quantity: 0
       },
       (err, parent) => {
         if (err) {
