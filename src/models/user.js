@@ -48,6 +48,7 @@ let userSchema = Schema(
       country: String,
       number: String,
       district: String,
+      street: String,
       mapUrl: String
     },
     lastLogin: Date,
