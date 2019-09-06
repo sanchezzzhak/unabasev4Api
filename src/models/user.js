@@ -1,7 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-import mongoosePaginate from 'mongoose-paginate';
-import bcrypt from 'bcryptjs';
+import mongoosePaginate from "mongoose-paginate";
+import bcrypt from "bcryptjs";
 const Schema = mongoose.Schema;
 const salt = bcrypt.genSaltSync(10);
 let userSchema = Schema(
@@ -9,7 +9,7 @@ let userSchema = Schema(
     isActive: { type: Boolean, default: true },
     name: String,
     username: { type: String },
-    language: { type: String, default: 'es' },
+    language: { type: String, default: "es" },
     // password: String,
     password: {
       hash: String,
@@ -25,29 +25,35 @@ let userSchema = Schema(
      */
     type: {
       type: String,
-      default: 'personal',
-      enum: ['personal', 'business']
+      default: "personal",
+      enum: ["personal", "business"]
     },
     /**
      *  active scope, personal or one of the business asociated
      */
     scope: {
-      id: { type: Schema.Types.ObjectId, ref: 'Business' },
+      id: { type: Schema.Types.ObjectId, ref: "Business" },
       type: {
         type: String,
-        enum: ['personal', 'business'],
-        default: 'personal'
+        enum: ["personal", "business"],
+        default: "personal"
       }
     },
     address: {
       lat: String,
       long: String,
-      text: String
+      text: String,
+      city: String,
+      region: String,
+      country: String,
+      number: String,
+      district: String,
+      mapUrl: String
     },
     lastLogin: Date,
     access: Array({ type: Object }),
     imgUrl: String,
-    currency: { type: Schema.Types.ObjectId, ref: 'Currency' },
+    currency: { type: Schema.Types.ObjectId, ref: "Currency" },
     google: {
       id: String,
       name: String,
@@ -56,13 +62,13 @@ let userSchema = Schema(
       imgUrl: String
     },
     defaults: {
-      tax: { type: Schema.Types.ObjectId, ref: 'Tax' }
+      tax: { type: Schema.Types.ObjectId, ref: "Tax" }
     },
     relations: Array({
-      ref: { type: Schema.Types.ObjectId, ref: 'User' },
+      ref: { type: Schema.Types.ObjectId, ref: "User" },
       id: { type: String }
     }),
-    contacts: Array({ type: Schema.Types.ObjectId, ref: 'Contact' }),
+    contacts: Array({ type: Schema.Types.ObjectId, ref: "Contact" }),
     notifications: {
       newUserContact: { type: Boolean, default: true }
     },
@@ -70,21 +76,21 @@ let userSchema = Schema(
     legalName: String, // razón social,
     businessType: Array({ type: String }), // giro
     website: String,
-    creator: { type: Schema.Types.ObjectId, ref: 'User' },
+    creator: { type: Schema.Types.ObjectId, ref: "User" },
     admins: Array({
       _id: false,
       description: String,
-      user: { type: Schema.Types.ObjectId, ref: 'User' }
+      user: { type: Schema.Types.ObjectId, ref: "User" }
     }),
 
     /**
      *  array of ObjectIds from business asociated
      */
-    business: Array({ type: Schema.Types.ObjectId, ref: 'User' }),
-    users: Array({ type: Schema.Types.ObjectId, ref: 'User' }),
+    business: Array({ type: Schema.Types.ObjectId, ref: "User" }),
+    users: Array({ type: Schema.Types.ObjectId, ref: "User" }),
     quantity: [
       {
-        name: { type: String, default: 'Cantidad' },
+        name: { type: String, default: "Cantidad" },
         number: { type: Number, default: 1 }
       }
     ]
@@ -146,7 +152,7 @@ userSchema.methods.validPassword = function(password) {
   return bcrypt.compareSync(password, this.password.hash);
 };
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
 export default User;
 
@@ -225,15 +231,15 @@ User.updateEmpresa = (username, nuevaEmpresa, options, callback) => {
     var results = user.empresa.find(function(item) {
       return item.empresaId == nuevaEmpresa.empresaId;
     });
-    if (typeof results == 'undefined') {
+    if (typeof results == "undefined") {
       User.findOneAndUpdate(query, update, { upsert: true }, callback);
     }
   });
 };
 
 User.removeEmpresa = (id, empresaId, options, callback) => {
-  console.log('user3: ' + id);
-  console.log('empresa3: ' + empresaId);
+  console.log("user3: " + id);
+  console.log("empresa3: " + empresaId);
   var query = { _id: id };
   var update = {
     $pull: {
@@ -266,7 +272,7 @@ User.getUserById = function(id, callback) {
 };
 
 User.passwordChange = function(id, oldPassword, password, callback) {
-  console.log('dentro de passwordChange');
+  console.log("dentro de passwordChange");
   console.log(id);
   console.log(oldPassword);
   console.log(password);
@@ -285,7 +291,7 @@ User.passwordChange = function(id, oldPassword, password, callback) {
         });
         return callback(null, user);
       } else {
-        return callback(null, false, { message: 'password incorrecta' });
+        return callback(null, false, { message: "password incorrecta" });
       }
     });
   });
