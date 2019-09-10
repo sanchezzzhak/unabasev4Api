@@ -77,8 +77,7 @@ lines.post(
       module
     }),
     updateMovementState,
-    checkParent,
-    checkItem
+    checkParent
   ],
   createMany
 );
