@@ -1,25 +1,7 @@
 import { Router } from "express";
 const lines = Router();
-import {
-  create,
-  get,
-  updateOne,
-  deleteOne,
-  createMany,
-  updateMany,
-  deleteMany,
-  group,
-  move,
-  createParent
-} from "../controllers/line";
-import {
-  checkItem,
-  updateMovementState,
-  updateTotalMovement,
-  updateItemLastPrice,
-  checkParent,
-  updateOldParent
-} from "../middleware/line";
+import { create, get, updateOne, deleteOne, createMany, updateMany, deleteMany, group, move, createParent } from "../controllers/line";
+import { checkItem, updateMovementState, updateTotalMovement, updateItemLastPrice, checkParent, updateOldParent } from "../middleware/line";
 
 import auth from "../config/lib/auth";
 import logger from "../lib/logger";
@@ -95,7 +77,8 @@ lines.post(
       module
     }),
     updateMovementState,
-    checkParent
+    checkParent,
+    checkItem
   ],
   createMany
 );

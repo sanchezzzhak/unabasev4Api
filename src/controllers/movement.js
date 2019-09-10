@@ -513,7 +513,17 @@ export const updateOne = (req, res) => {
       new: true
     }
   )
-    .populate("client.data")
+    // .populate("client.data")
+    .populate([
+      {
+        path: "client.data",
+        select: "isActive name  email phone creator user imgUrl emails type"
+      },
+      {
+        path: "responsable.data",
+        select: "isActive name  email phone creator user imgUrl emails type"
+      }
+    ])
     .exec((err, movement) => {
       if (err) {
         console.log(err);
