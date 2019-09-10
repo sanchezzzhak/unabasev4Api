@@ -88,11 +88,12 @@ Item.updateLastPrice = (id, currency, movementType, priceToAdd) => {
             item.global[index].lastPrice[movementType] = priceToAdd;
             item.save();
           } else {
-            item.global[item.global.length] = {
+            item.global.push({
               currency: _currency,
-              lastPrice: {}
-            };
-            item.global[item.global.length].lastPrice[movementType] = priceToAdd;
+              lastPrice: {
+                [movementType]: priceToAdd
+              }
+            });
             item.save();
           }
         }
