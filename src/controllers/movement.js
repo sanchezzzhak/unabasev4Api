@@ -522,6 +522,9 @@ export const updateOne = (req, res) => {
       {
         path: "responsable.data",
         select: "isActive name  email phone creator user imgUrl emails type"
+      },
+      {
+        path: "currency"
       }
     ])
     .exec((err, movement) => {
