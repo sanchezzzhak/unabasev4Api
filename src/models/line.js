@@ -3,14 +3,12 @@ const Schema = mongoose.Schema;
 
 const lineSchema = new Schema(
   {
-    name: {
-      type: String,
-      required: true
-    },
+    name: { type: String, required: true },
     tax: {
       type: Schema.Types.ObjectId,
       ref: "Tax"
     },
+    observation: { type: String },
     number: {
       type: Number,
       default: 0
