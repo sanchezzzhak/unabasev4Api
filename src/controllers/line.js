@@ -65,6 +65,16 @@ export function get(req, res) {
     }
   });
 }
+
+export function getLinesByMovement(req, res) {
+  Line.find({ movement: req.params.movement }, (err, lines) => {
+    if (err) {
+      res.status(500).end();
+    } else {
+      res.json(lines);
+    }
+  });
+}
 export function createMany(req, res) {
   for (let line of req.body.lines) {
     line.creator = req.user._id;

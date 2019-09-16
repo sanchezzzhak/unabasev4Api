@@ -1,6 +1,6 @@
 import { Router } from "express";
 const lines = Router();
-import { create, get, updateOne, deleteOne, createMany, updateMany, deleteMany, group, move, createParent } from "../controllers/line";
+import { create, get, updateOne, deleteOne, createMany, updateMany, deleteMany, group, move, createParent, getLinesByMovement } from "../controllers/line";
 import { checkItem, updateMovementState, updateTotalMovement, updateItemLastPrice, checkParent, updateOldParent } from "../middleware/line";
 
 import auth from "../config/lib/auth";
@@ -10,15 +10,8 @@ lines.use(auth.sToken);
 
 let module = "line";
 
-lines.get(
-  "/",
-  logger({
-    name: "list lines",
-    description: "get the list of lines",
-    module
-  }),
-  get
-);
+lines.get("/", logger({ name: "list lines", description: "get the list of lines", module }), get);
+lines.get("/movement/:movement", logger({ name: "get lines by movement", description: "get the list of lines", module }), getLinesByMovement);
 lines.post(
   "/",
   [
