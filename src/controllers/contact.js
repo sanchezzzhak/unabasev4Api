@@ -101,7 +101,8 @@ export const findSelf = (req, res) => {
   let rquery = ntype(req.query);
   let options = {};
   options.page = rquery.page || 1;
-  options.limit = rquery.limit || 20;
+  options.limit = rquery.limit || 30;
+  options.sort = { createdAt: "desc" };
   delete rquery.page;
   delete rquery.limit;
   let query = {
