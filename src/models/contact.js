@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-import mongoosePaginate from 'mongoose-paginate';
+import mongoosePaginate from "mongoose-paginate";
 
 const Schema = mongoose.Schema;
 
@@ -10,14 +10,19 @@ const contactSchema = new Schema(
     name: String,
     email: String,
     phone: String,
-    type: { type: String, enum: ['Business', 'User'] },
-    link: { type: Schema.Types.ObjectId, refPath: 'type' },
-    user: { type: Schema.Types.ObjectId, ref: 'User' },
-    business: { type: Schema.Types.ObjectId, ref: 'Business' },
-    creator: { type: Schema.Types.ObjectId, ref: 'User' }
+    type: { type: String, enum: ["Business", "User"] },
+    link: { type: Schema.Types.ObjectId, refPath: "type" },
+    user: { type: Schema.Types.ObjectId, ref: "User" },
+    business: { type: Schema.Types.ObjectId, ref: "Business" },
+    creator: { type: Schema.Types.ObjectId, ref: "User" },
+    company: {
+      idNumber: { type: String },
+      legalName: { type: String },
+      business: { type: Schema.Types.ObjectId, ref: "Business" }
+    }
   },
   { timestamps: true }
 );
 contactSchema.plugin(mongoosePaginate);
-const Contact = mongoose.model('Contact', contactSchema);
+const Contact = mongoose.model("Contact", contactSchema);
 export default Contact;

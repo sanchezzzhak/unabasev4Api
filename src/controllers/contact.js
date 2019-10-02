@@ -1,15 +1,13 @@
-import Contact from '../models/contact';
-import ntype from 'normalize-type';
-import User from '../models/user';
+import Contact from "../models/contact";
+import ntype from "normalize-type";
+import User from "../models/user";
 
 export const get = (req, res) => {
   let rquery = ntype(req.query);
   let options = {};
   options.page = rquery.page || 1;
   options.limit = rquery.limit || 20;
-  const sort = rquery.createdAt
-    ? { createdAt: rquery.createdAt }
-    : { createdAt: 'desc' };
+  const sort = rquery.createdAt ? { createdAt: rquery.createdAt } : { createdAt: "desc" };
   options.sort = { ...sort };
   delete rquery.createdAt;
   delete rquery.page;
@@ -26,8 +24,8 @@ export const get = (req, res) => {
 export const getOne = (req, res) => {
   Contact.findById(req.params.id)
     .populate({
-      path: 'user',
-      select: 'name google.name google.email imgUrl emails.default'
+      path: "user",
+      select: "name google.name google.email imgUrl emails.default"
     })
     .exec((err, item) => {
       if (err) {
@@ -47,24 +45,16 @@ export const create = (req, res) => {
       console.log(err);
       res.status(500).end({ err });
     } else {
-      if (item.user && item.user !== '') {
-        User.findByIdAndUpdate(
-          item.user,
-          { $addToSet: { contacts: item._id } },
-          { new: true },
-          (err, user) => {
-            if (err) {
-              res.status(500).end({ err });
-            } else {
-              item.populate(
-                [{ path: 'user', select: 'name google imgUrl emails' }],
-                err => {
-                  res.send(item);
-                }
-              );
-            }
+      if (item.user && item.user !== "") {
+        User.findByIdAndUpdate(item.user, { $addToSet: { contacts: item._id } }, { new: true }, (err, user) => {
+          if (err) {
+            res.status(500).end({ err });
+          } else {
+            item.populate([{ path: "user", select: "name google imgUrl emails" }], err => {
+              res.send(item);
+            });
           }
-        );
+        });
       } else {
         res.send(item);
       }
@@ -81,10 +71,10 @@ export const find = (req, res) => {
   let query = {
     $or: [
       {
-        name: { $regex: req.params.q, $options: 'i' }
+        name: { $regex: req.params.q, $options: "i" }
       },
       {
-        email: { $regex: req.params.q, $options: 'i' }
+        email: { $regex: req.params.q, $options: "i" }
       }
     ]
   };
@@ -93,8 +83,8 @@ export const find = (req, res) => {
     {
       populate: [
         {
-          path: 'user',
-          select: 'name google.name google.email imgUrl emails.default'
+          path: "user",
+          select: "name google.name google.email imgUrl emails.default"
         }
       ]
     },
@@ -119,38 +109,40 @@ export const findSelf = (req, res) => {
       {
         $or: [
           {
-            name: { $regex: req.params.q, $options: 'i' }
+            name: { $regex: req.params.q || "", $options: "i" }
           },
           {
-            email: { $regex: req.params.q, $options: 'i' }
+            email: { $regex: req.params.q || "", $options: "i" }
           }
         ],
         creator: req.user._id
-      },
-      {
-        $or: [
-          {
-            name: { $regex: req.params.q, $options: 'i' }
-          },
-          {
-            email: { $regex: req.params.q, $options: 'i' }
-          }
-        ],
-        type: 'Business'
       }
     ]
   };
+  if (req.params.q) {
+    query["$or"].push({
+      $or: [
+        {
+          name: { $regex: req.params.q, $options: "i" }
+        },
+        {
+          email: { $regex: req.params.q, $options: "i" }
+        }
+      ],
+      type: "Business"
+    });
+  }
   Contact.paginate(
     query,
     {
       populate: [
         {
-          path: 'user',
-          select: 'name  imgUrl emails'
+          path: "user",
+          select: "name  imgUrl emails"
         },
         {
-          path: 'business',
-          select: 'name idNumber legalName'
+          path: "business",
+          select: "name idNumber legalName"
         }
       ]
     },
@@ -164,16 +156,11 @@ export const findSelf = (req, res) => {
   );
 };
 export const updateOne = (req, res) => {
-  Contact.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    { new: true },
-    (err, item) => {
-      if (err) {
-        res.status(500).end({ err });
-      } else {
-        res.send(item);
-      }
+  Contact.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, item) => {
+    if (err) {
+      res.status(500).end({ err });
+    } else {
+      res.send(item);
     }
-  );
+  });
 };
