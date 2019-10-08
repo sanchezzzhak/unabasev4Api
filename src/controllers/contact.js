@@ -25,7 +25,7 @@ export const getOne = (req, res) => {
   Contact.findById(req.params.id)
     .populate({
       path: "user",
-      select: "name google.name google.email imgUrl emails"
+      select: "name google.name google.email imgUrl emails phones"
     })
     .exec((err, item) => {
       if (err) {
