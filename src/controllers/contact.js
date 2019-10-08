@@ -147,6 +147,7 @@ export const findSelf = (req, res) => {
         }
       ]
     },
+    options,
     (err, items) => {
       if (err) {
         res.status(500).end({ err });

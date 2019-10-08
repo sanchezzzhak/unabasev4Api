@@ -96,18 +96,30 @@ export const getPersonal = (req, res) => {
     }
   });
 };
-export const get = (req, res) => {
-  let rquery = ntype(req.query);
+export const getRelated = (req, res) => {
+  let query = {
+    $or: [
+      {
+        creator: req.user._id,
+        "client.data": ObjectId(`${req.params.id}`)
+      },
+      {
+        creator: req.user._id,
+        "responsable.data": ObjectId(`${req.params.id}`)
+      }
+    ]
+  };
+
   let options = {};
-  const sort = rquery.createdAt
+  const sort = req.query.createdAt
     ? {
-        createdAt: rquery.createdAt
+        createdAt: req.query.createdAt
       }
     : {
         createdAt: "desc"
       };
-  options.page = rquery.page || 1;
-  options.limit = rquery.limit || 20;
+  options.page = req.query.page || 1;
+  options.limit = req.query.limit || 20;
   options.select = "name client responsable createdAt total state";
   options.populate = [
     {
@@ -126,19 +138,53 @@ export const get = (req, res) => {
   options.sort = {
     ...sort
   };
-  delete rquery.createdAt;
-  delete rquery.page;
-  delete rquery.limit;
-  let query = {
-    ...rquery
+  delete req.query.createdAt;
+  delete req.query.page;
+  delete req.query.limit;
+  Movement.paginate(query, options, (err, movements) => {
+    if (err) {
+      res.status(500).end();
+    } else {
+      res.json(movements);
+    }
+  });
+};
+export const get = (req, res) => {
+  // let req.query = ntype(req.query);
+  let options = {};
+  const sort = req.query.createdAt
+    ? {
+        createdAt: req.query.createdAt
+      }
+    : {
+        createdAt: "desc"
+      };
+  options.page = req.query.page || 1;
+  options.limit = req.query.limit || 20;
+  options.select = "name client responsable createdAt total state";
+  options.populate = [
+    {
+      path: "client.data",
+      select: "name phone email imgUrl emails type"
+    },
+    {
+      path: "responsable.data",
+      select: "name phone email imgUrl emails type"
+    },
+    {
+      path: "creator",
+      select: "name imgUrl  emails"
+    }
+  ];
+  options.sort = {
+    ...sort
   };
-  // if (rquery.responsable) {
-  //   query.$or = [
-  //     {
-  //       responsable: rquery.creator
-  //     }
-  //   ];
-  // }
+  delete req.query.createdAt;
+  delete req.query.page;
+  delete req.query.limit;
+  let query = {
+    ...req.query
+  };
   Movement.paginate(query, options, (err, movements) => {
     if (err) {
       res.status(500).end();
