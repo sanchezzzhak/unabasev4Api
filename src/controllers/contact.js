@@ -145,9 +145,9 @@ export const findSelf = (req, res) => {
           path: "business",
           select: "name idNumber legalName"
         }
-      ]
+      ],
+      ...options
     },
-    options,
     (err, items) => {
       if (err) {
         res.status(500).end({ err });
