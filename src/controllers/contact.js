@@ -118,7 +118,8 @@ export const findSelf = (req, res) => {
         ],
         creator: req.user._id
       }
-    ]
+    ],
+    ...rquery
   };
   if (req.params.q) {
     query["$or"].push({
