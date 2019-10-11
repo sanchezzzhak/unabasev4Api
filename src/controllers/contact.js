@@ -37,9 +37,18 @@ export const getOne = (req, res) => {
       }
     });
 };
-export const create = (req, res) => {
+export const create = async (req, res) => {
+  let userId;
+  if (req.body.emails.length) {
+    userId = await User.findOne({
+      "emails.email": {
+        $in: req.body.emails[0].email
+      }
+    });
+  }
   let contact = new Contact(req.body);
   contact.creator = req.user._id;
+  contact.user = userId._id || null;
   contact.save((err, item) => {
     if (err) {
       console.log(err);
