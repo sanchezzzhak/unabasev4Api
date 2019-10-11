@@ -96,16 +96,22 @@ export const getPersonal = (req, res) => {
     }
   });
 };
-export const getRelated = (req, res) => {
+export const getRelated = async (req, res) => {
+  let contact;
+  let userToFind = req.params.id;
+  if (typeof req.query.type !== "undefined" && req.query.type === "contact") {
+    contact = await Contact.findOne({ _id: ObjectId(req.params.id) }).exec();
+    userToFind = contact.user || contact._id;
+  }
   let query = {
     $or: [
       {
         creator: req.user._id,
-        "client.data": ObjectId(`${req.params.id}`)
+        "client.data": ObjectId(`${userToFind}`)
       },
       {
         creator: req.user._id,
-        "responsable.data": ObjectId(`${req.params.id}`)
+        "responsable.data": ObjectId(`${userToFind}`)
       }
     ]
   };
