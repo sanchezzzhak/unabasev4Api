@@ -48,7 +48,7 @@ export const create = async (req, res) => {
   }
   let contact = new Contact(req.body);
   contact.creator = req.user._id;
-  contact.user = userId._id || null;
+  contact.user = userId ? userId._id : null;
   contact.save((err, item) => {
     if (err) {
       console.log(err);
