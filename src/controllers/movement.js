@@ -347,11 +347,11 @@ export const getOne = (req, res) => {
 
       {
         path: "client.data",
-        select: "isActive name  email phone creator user imgUrl emails type"
+        select: "isActive name  email phone creator user imgUrl emails phones type"
       },
       {
         path: "responsable.data",
-        select: "isActive name  email phone creator user imgUrl emails type"
+        select: "isActive name  email phone creator user imgUrl emails phones type"
       },
       {
         path: "creator",
