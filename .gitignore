@@ -67,3 +67,5 @@ src/config/main.js
 build/
 
 .directory
+.DS_Store
+.gitignore
