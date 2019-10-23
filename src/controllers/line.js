@@ -4,6 +4,7 @@ import Item from "../models/item";
 import Currency from "../models/currency";
 
 import { Types } from "mongoose";
+import { checkGlobal } from "../lib/checkGlobal";
 const ObjectId = Types.ObjectId;
 
 export const getOne = (req, res) => {
@@ -94,7 +95,7 @@ export function createMany(req, res) {
       //     children: lines.map(line => line._id)
       //   }
       // }).exec();
-
+      checkGlobal(req.body.movement);
       res.send(lines);
     }
   });
