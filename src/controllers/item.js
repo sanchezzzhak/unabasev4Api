@@ -12,6 +12,8 @@ const routes = {
       {
         path: "tax",
         select: "number name"
+      },{
+        path: "children"
       }
     ];
     delete rquery.page;
