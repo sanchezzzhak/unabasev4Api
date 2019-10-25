@@ -47,7 +47,16 @@ const routes = {
                 console.log(err);
                 res.status(500).end(err);
               } else {
-                res.send(item);
+                item.populate(
+                  [
+                    {
+                      path: "global.currency"
+                    }
+                  ],
+                  err => {
+                    res.send(item);
+                  }
+                );
               }
             }
           );
@@ -71,7 +80,16 @@ const routes = {
             console.log(err);
             res.status(500).end({ err });
           } else {
-            res.send(itemSaved);
+            item.populate(
+              [
+                {
+                  path: "global.currency"
+                }
+              ],
+              err => {
+                res.send(itemSaved);
+              }
+            );
           }
         });
       }
@@ -82,7 +100,16 @@ const routes = {
       if (err) {
         res.status(500).end(err);
       } else {
-        res.send(item);
+        item.populate(
+          [
+            {
+              path: "global.currency"
+            }
+          ],
+          err => {
+            res.send(item);
+          }
+        );
       }
     });
   },
