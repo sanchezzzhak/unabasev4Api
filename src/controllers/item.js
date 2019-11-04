@@ -104,6 +104,9 @@ const routes = {
           [
             {
               path: "global.currency"
+            },
+            {
+              path: "globa.tax"
             }
           ],
           err => {
