@@ -35,22 +35,7 @@ const itemSchema = new Schema(
                 isActive: { type: Boolean }
               }
             },
-            lock: { type: Boolean },
-            margin: {
-              from: {
-                type: String,
-                enum: ["buy", "sell"],
-                default: "sell"
-              },
-              max: {
-                percentage: { type: Number },
-                price: { type: Number, default: 0 }
-              },
-              min: {
-                percentage: { type: Number },
-                price: { type: Number, default: 0 }
-              }
-            }
+            isActive: { type: Boolean }
 
             // lock: { type: Boolean, default: true },
             // min: { type: Number },
@@ -79,22 +64,8 @@ const itemSchema = new Schema(
                 isActive: { type: Boolean }
               }
             },
-            lock: { type: Boolean },
-            margin: {
-              from: {
-                type: String,
-                enum: ["buy", "sell"],
-                default: "sell"
-              },
-              max: {
-                percentage: { type: Number },
-                price: { type: Number, default: 0 }
-              },
-              min: {
-                percentage: { type: Number },
-                price: { type: Number, default: 0 }
-              }
-            }
+            isActive: { type: Boolean }
+
             // lock: { type: Boolean, default: true },
             // min: { type: Number },
             // max: { type: Number },
@@ -109,6 +80,22 @@ const itemSchema = new Schema(
             //     price: { type: Number, default: 0 }
             //   }
             // }
+          },
+          margin: {
+            isActive: { type: Boolean },
+            from: {
+              type: String,
+              enum: ["buy", "sell"],
+              default: "sell"
+            },
+            max: {
+              percentage: { type: Number },
+              price: { type: Number, default: 0 }
+            },
+            min: {
+              percentage: { type: Number },
+              price: { type: Number, default: 0 }
+            }
           }
         },
         tax: Array({ type: Schema.Types.ObjectId, ref: "Tax" }),

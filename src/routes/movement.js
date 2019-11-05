@@ -1,6 +1,6 @@
 import { Router } from "express";
 const movements = Router();
-import { get, getPersonal, getBusiness, create, getOne, findOne, find, updateOne, getRelated } from "../controllers/movement";
+import { get, getPersonal, getBusiness, create, getOne, findOne, find, updateOne, getRelated, byItem } from "../controllers/movement";
 import auth from "../config/lib/auth";
 import logger from "../lib/logger";
 let module = "movement";
@@ -81,6 +81,15 @@ movements.get(
     module
   }),
   find
+);
+movements.get(
+  "/item/:id",
+  logger({
+    name: "find movements by item",
+    description: "find movements by item",
+    module
+  }),
+  byItem
 );
 
 movements.post(
