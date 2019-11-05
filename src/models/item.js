@@ -24,11 +24,24 @@ const itemSchema = new Schema(
         currency: { type: Schema.Types.ObjectId, ref: "Currency" },
         estimate: {
           buy: {
-            lock: { type: Boolean, default: true },
-            min: { type: Number },
-            max: { type: Number },
-            price: { type: Number },
+            price: {
+              isActive: { type: Boolean },
+              number: { type: Number }
+            },
+            range: {
+              min: {
+                number: { type: Number },
+                percentage: { type: Number },
+                isActive: { type: Boolean }
+              }
+            },
+            lock: { type: Boolean },
             margin: {
+              from: {
+                type: String,
+                enum: ["buy", "sell"],
+                default: "sell"
+              },
               max: {
                 percentage: { type: Number },
                 price: { type: Number, default: 0 }
@@ -38,13 +51,41 @@ const itemSchema = new Schema(
                 price: { type: Number, default: 0 }
               }
             }
+
+            // lock: { type: Boolean, default: true },
+            // min: { type: Number },
+            // max: { type: Number },
+            // price: { type: Number },
+            // margin: {
+            //   max: {
+            //     percentage: { type: Number },
+            //     price: { type: Number, default: 0 }
+            //   },
+            //   min: {
+            //     percentage: { type: Number },
+            //     price: { type: Number, default: 0 }
+            //   }
+            // }
           },
           sell: {
-            lock: { type: Boolean, default: true },
-            min: { type: Number },
-            max: { type: Number },
-            price: { type: Number },
+            price: {
+              isActive: { type: Boolean },
+              number: { type: Number }
+            },
+            range: {
+              min: {
+                number: { type: Number },
+                percentage: { type: Number },
+                isActive: { type: Boolean }
+              }
+            },
+            lock: { type: Boolean },
             margin: {
+              from: {
+                type: String,
+                enum: ["buy", "sell"],
+                default: "sell"
+              },
               max: {
                 percentage: { type: Number },
                 price: { type: Number, default: 0 }
@@ -54,6 +95,20 @@ const itemSchema = new Schema(
                 price: { type: Number, default: 0 }
               }
             }
+            // lock: { type: Boolean, default: true },
+            // min: { type: Number },
+            // max: { type: Number },
+            // price: { type: Number },
+            // margin: {
+            //   max: {
+            //     percentage: { type: Number },
+            //     price: { type: Number, default: 0 }
+            //   },
+            //   min: {
+            //     percentage: { type: Number },
+            //     price: { type: Number, default: 0 }
+            //   }
+            // }
           }
         },
         tax: Array({ type: Schema.Types.ObjectId, ref: "Tax" }),
