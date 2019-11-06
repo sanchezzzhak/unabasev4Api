@@ -1,7 +1,8 @@
 import Contact from "../models/contact";
 import ntype from "normalize-type";
 import User from "../models/user";
-
+import Line from "../models/line";
+import Movement from "../models/movement";
 export const get = (req, res) => {
   let rquery = ntype(req.query);
   let options = {};
@@ -175,6 +176,32 @@ export const updateOne = (req, res) => {
         res.status(500).end({ err });
       } else {
         res.send(item);
+      }
+    });
+};
+
+export const byItem = async (req, res) => {
+  let lines = await Line.find({ item: req.params.id }).exec();
+  Movement.find({ _id: { $in: lines.map(i => i.movement) }, creator: req.user._id })
+    .sort({ updatedAt: -1 })
+    .populate([{ path: "client.data" }, { path: "responsable.data" }])
+    .exec((err, movements) => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        let contactsArray = new Array();
+        let contactsIds = new Array();
+        movements.forEach(movement => {
+          if (!movement.client.data._id.equals(req.user._id) && !contactsIds.includes(movement.client.data._id)) {
+            contactsArray.push(movement.client.data);
+            contactsIds.push(movement.client.data._id);
+          }
+          if (!movement.responsable.data._id.equals(req.user._id) && !contactsIds.includes(movement.responsable.data._id)) {
+            contactsArray.push(movement.responsable.data);
+            contactsIds.push(movement.responsable.data._id);
+          }
+        });
+        res.send(contactsArray);
       }
     });
 };

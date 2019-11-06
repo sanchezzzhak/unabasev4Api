@@ -1,6 +1,6 @@
 import { Router } from "express";
 const contacts = Router();
-import { get, getOne, find, updateOne, create, findSelf } from "../controllers/contact";
+import { get, getOne, find, updateOne, create, findSelf, byItem } from "../controllers/contact";
 
 import auth from "../config/lib/auth";
 contacts.use(auth.sToken);
@@ -12,5 +12,6 @@ contacts.get("/self", findSelf);
 contacts.get("/find/:q", find);
 contacts.get("/:id", getOne);
 contacts.put("/:id", updateOne);
+contacts.get("/item/:id", byItem);
 
 export default contacts;
