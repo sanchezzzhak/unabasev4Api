@@ -628,6 +628,7 @@ export const byItem = async (req, res) => {
   let lines = await Line.find({ item: req.params.id }).exec();
   Movement.find({ _id: { $in: lines.map(i => i.movement) } })
     .sort({ updatedAt: -1 })
+    .limit(req.params.limit || 30)
     .exec((err, movements) => {
       if (err) {
         res.status(500).send(err);

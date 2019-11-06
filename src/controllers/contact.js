@@ -185,6 +185,7 @@ export const byItem = async (req, res) => {
   Movement.find({ _id: { $in: lines.map(i => i.movement) }, creator: req.user._id })
     .sort({ updatedAt: -1 })
     .populate([{ path: "client.data" }, { path: "responsable.data" }])
+    .limit(req.params.limit || 30)
     .exec((err, movements) => {
       if (err) {
         res.status(500).send(err);
