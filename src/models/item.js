@@ -33,6 +33,11 @@ const itemSchema = new Schema(
                 number: { type: Number },
                 percentage: { type: Number },
                 isActive: { type: Boolean }
+              },
+              max: {
+                number: { type: Number },
+                percentage: { type: Number },
+                isActive: { type: Boolean }
               }
             },
             isActive: { type: Boolean }
@@ -59,6 +64,11 @@ const itemSchema = new Schema(
             },
             range: {
               min: {
+                number: { type: Number },
+                percentage: { type: Number },
+                isActive: { type: Boolean }
+              },
+              max: {
                 number: { type: Number },
                 percentage: { type: Number },
                 isActive: { type: Boolean }
