@@ -41,21 +41,6 @@ const itemSchema = new Schema(
               }
             },
             isActive: { type: Boolean }
-
-            // lock: { type: Boolean, default: true },
-            // min: { type: Number },
-            // max: { type: Number },
-            // price: { type: Number },
-            // margin: {
-            //   max: {
-            //     percentage: { type: Number },
-            //     price: { type: Number, default: 0 }
-            //   },
-            //   min: {
-            //     percentage: { type: Number },
-            //     price: { type: Number, default: 0 }
-            //   }
-            // }
           },
           sell: {
             price: {
@@ -75,21 +60,6 @@ const itemSchema = new Schema(
               }
             },
             isActive: { type: Boolean }
-
-            // lock: { type: Boolean, default: true },
-            // min: { type: Number },
-            // max: { type: Number },
-            // price: { type: Number },
-            // margin: {
-            //   max: {
-            //     percentage: { type: Number },
-            //     price: { type: Number, default: 0 }
-            //   },
-            //   min: {
-            //     percentage: { type: Number },
-            //     price: { type: Number, default: 0 }
-            //   }
-            // }
           },
           margin: {
             isActive: { type: Boolean },

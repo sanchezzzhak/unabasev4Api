@@ -46,7 +46,8 @@ const movementSchema = new Schema(
     total: {
       opportunity: { type: Number, default: 0 },
       net: { type: Number, default: 0 },
-      tax: { type: Number, default: 0 },
+      // tax: { type: Number, default: 0 },
+      tax: { type: Object },
       budget: { type: Number, default: 0 },
       profit: {
         number: { type: Number, default: 0 },
