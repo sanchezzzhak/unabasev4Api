@@ -95,7 +95,13 @@ export function createMany(req, res) {
       //     children: lines.map(line => line._id)
       //   }
       // }).exec();
-      checkGlobal(req.body.movement);
+      // checkGlobal(req.body.movement);
+      // lines.forEach(line => {
+      //   let global = line.item.global.filter(i => i.currency.equals(req.body.lines[0].currency._id));
+      //   if(global.buy.price.isActive){
+      //     line.
+      //   }
+      // });
       res.send(lines);
     }
   });
