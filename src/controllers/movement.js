@@ -79,6 +79,7 @@ export const getPersonal = (req, res) => {
   console.log(options);
   Movement.paginate(query, options, async (err, movements) => {
     if (err) {
+      console.log(err);
       res.status(500).end();
     } else {
       console.log("----------------after paginate");
