@@ -4,6 +4,7 @@ import Item from "../models/item";
 
 export const checkGlobal = async movementId => {
   let movement = await Movement.findById(movementId).exec();
+  let currencyString = movement.currency.toString();
   // new Promise((resolve, reject) => {
   Line.find({ movement: movement._id })
     .populate("item")
@@ -16,12 +17,12 @@ export const checkGlobal = async movementId => {
         lines.forEach(line => {
           // if (!line.item.currency.equals(movement.currency) && line.item.currency.global.map(i => i.currency.equals(movement.currency)).length === 0) {
           let currencies = Array.from(line.item.global.map(i => i.currency.toString()));
-          // console.log("-----------------------currency from movement");
-          // console.log(movement.currency.toString());
-          // console.log("-----------------------currency from global");
-          // console.log(currencies.includes(movement.currency.toString()));
-          // console.log(currencies);
-          if (!currencies.includes(movement.currency.toString())) {
+          console.log("-----------------------currency from movement");
+          console.log(currencyString);
+          console.log("-----------------------currency from global");
+          console.log(currencies.includes(currencyString));
+          console.log(currencies);
+          if (!currencies.includes(currencyString)) {
             Item.findById(line.item, (err, item) => {
               item.global.push({
                 currency: movement.currency
