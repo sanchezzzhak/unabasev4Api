@@ -29,6 +29,7 @@ const lineSchema = new Schema(
         type: Number,
         default: 0
       },
+      budgetModified: { type: Boolean, default: false },
       cost: {
         type: Number,
         default: 0
