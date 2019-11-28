@@ -116,6 +116,9 @@ const routes = {
             },
             {
               path: "global.tax"
+            },
+            {
+              path: "children"
             }
           ],
           err => {
