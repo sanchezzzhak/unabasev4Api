@@ -61,10 +61,7 @@ export const restart = (req, res) => {
   console.log("enter restart password");
 
   let query = {
-    $or: [
-      { username: { $regex: req.params.q, $options: "i" } },
-      { "emails.email": { $regex: req.params.q, $options: "i" } }
-    ],
+    $or: [{ username: { $regex: req.params.q, $options: "i" } }, { "emails.email": { $regex: req.params.q, $options: "i" } }],
     type: "personal"
   };
 
@@ -273,27 +270,51 @@ export const lastParents = (req, res) => {
   Line.find({ creator: req.user._id, isParent: true })
     .sort({ updatedAt: -1 })
     .limit(100)
-    .populate([{ path: "item" }, { path: "children" }])
+    // .populate([{ path: "item" }, { path: "children" }])
     .exec((err, lines) => {
       if (err) {
         res.status(500).end();
       } else if (lines) {
-        let docs = [];
-        for (let line of lines) {
-          if (line.item) {
-            if (docs.filter(i => i._id === line.item._id).length === 0) {
-              docs.push(line.item);
-            }
-          }
-        }
+        // let docs = [];
+        // for (let line of lines) {
+        //   if (line.item) {
+        //     if (docs.filter(i => i._id === line.item._id).length === 0) {
+        //       docs.push(line.item);
+        //     }
+        //   }
+        // }
+        let itemsIds = lines.map(line => line.item);
 
-        Item.getWithChildren(docs)
-          .then(resp => {
-            res.send(resp);
-          })
-          .catch(err => {
-            res.status(500).end();
+        // query.users = { $in: [req.user._id] };
+        Item.find({ _id: { $in: itemsIds }, isParent: true })
+          .sort({ updatedAt: -1 })
+          .limit(100)
+          .populate([{ path: "children" }])
+          .exec((err, items) => {
+            if (err) {
+              console.log(err);
+              res.status(500).end();
+            } else if (items) {
+              // let docs = [];
+              // for (let line of lines) {
+              //   if (line.item) {
+              //     if (docs.filter(i => i._id === line.item._id).length === 0) {
+              //       docs.push(line.item);
+              //     }
+              //   }
+              // }
+              res.send(items);
+            } else {
+              res.status(404).end({ msg: "not found" });
+            }
           });
+        // Item.getWithChildren(docs)
+        //   .then(resp => {
+        //     res.send(resp);
+        //   })
+        //   .catch(err => {
+        //     res.status(500).end();
+        //   });
 
         // res.send(docs);
       } else {

@@ -147,15 +147,16 @@ const routes = {
       (err, items) => {
         if (err) {
           res.status(500).end();
-        } else if (items.docs) {
-          Item.getWithChildren(items.docs)
-            .then(resp => {
-              items.docs = resp;
-              res.send(items);
-            })
-            .catch(err => {
-              res.status(500).end();
-            });
+        } else if (items) {
+          res.send(items);
+          // Item.getWithChildren(items.docs)
+          //   .then(resp => {
+          //     items.docs = resp;
+          //     res.send(items);
+          //   })
+          //   .catch(err => {
+          //     res.status(500).end();
+          //   });
         }
       }
     );
