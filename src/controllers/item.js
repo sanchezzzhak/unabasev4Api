@@ -135,20 +135,30 @@ const routes = {
       name: { $regex: req.params.q, $options: "i" },
       ...rquery
     };
-    Item.paginate(query, {}, (err, items) => {
-      if (err) {
-        res.status(500).end();
-      } else if (items.docs) {
-        Item.getWithChildren(items.docs)
-          .then(resp => {
-            items.docs = resp;
-            res.send(items);
-          })
-          .catch(err => {
-            res.status(500).end();
-          });
+    Item.paginate(
+      query,
+      {
+        populate: [
+          {
+            path: "children"
+          }
+        ]
+      },
+      (err, items) => {
+        if (err) {
+          res.status(500).end();
+        } else if (items.docs) {
+          Item.getWithChildren(items.docs)
+            .then(resp => {
+              items.docs = resp;
+              res.send(items);
+            })
+            .catch(err => {
+              res.status(500).end();
+            });
+        }
       }
-    });
+    );
   }
 };
 
