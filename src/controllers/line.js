@@ -5,6 +5,7 @@ import Currency from "../models/currency";
 
 import { Types } from "mongoose";
 import { checkGlobal } from "../lib/checkGlobal";
+import { calculateTotalMovement } from "../lib/movement";
 const ObjectId = Types.ObjectId;
 
 export const getOne = (req, res) => {
@@ -102,8 +103,8 @@ export function createMany(req, res) {
       // ------ se debe calcular los totales del movimiento ------------
       lines.forEach(line => {
         let global = line.item.global.filter(i => i.currency.toString() === req.currency._id.toString());
-        line.numbers.price = global.sell.price.isActive ? global.sell.price.number : 0;
-        global.taxes.forEach(tax => {
+        line.numbers.price = global[0].estimate.sell.price.isActive ? global[0].estimate.sell.price.number : 0;
+        global[0].taxes.forEach(tax => {
           lines.taxes.push({
             tax: tax._id,
             price: line.quantity * line.numbers.price * (tax.number / 100)
