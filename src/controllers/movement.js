@@ -376,7 +376,7 @@ export const getOne = (req, res) => {
               path: "item",
               populate: [
                 {
-                  path: "global.tax"
+                  path: "global.taxes"
                 }
               ]
             }
