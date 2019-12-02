@@ -58,7 +58,23 @@ export function checkItem(req, res, next) {
 //     }
 //   });
 // }
-
+export function getCurrencyFromMovement(req, res, next) {
+  if (req.body.movement) {
+    Movement.findById(req.body.movement)
+      .populate("currency")
+      .exec((err, movement) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send(err);
+        } else {
+          req.currency = movement.currency;
+          next();
+        }
+      });
+  } else {
+    next();
+  }
+}
 export function updateMovementState(req, res, next) {
   if (req.body.movement) {
     // let movementId = Array.isArray(req.body.movement) ? req.body[0].movement : req.body.movement;
