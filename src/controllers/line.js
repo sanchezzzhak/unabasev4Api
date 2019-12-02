@@ -98,19 +98,28 @@ export function createMany(req, res) {
       checkGlobal(req.body.movement);
 
       // ------ se debe copiar el impuesto y valores del item en catalogo a cada linea. ------------
-      // lines.forEach(line => {
-      //   let global = line.item.global.filter(i => i.currency.equals(req.body.lines[0].currency._id));
-      //   if(global.buy.price.isActive){
-      //     line.
-      //   }
-      // });
 
       // ------ se debe calcular los totales del movimiento ------------
       lines.forEach(line => {
+        line.numbers.price = global.sell.price.isActive ? global.sell.price.number : 0;
         let global = line.item.global.filter(i => i.currency.toString() === req.currency._id.toString());
-        line.taxes = global.taxes;
+        global.taxes.forEach(tax => {
+          lines.taxes.push({
+            tax: tax._id,
+            price: line.quantity * line.numbers.price * (tax.number / 100)
+          });
+        });
+        line.save();
       });
-      res.send(lines);
+      calculateTotalMovement(req.body.movement)
+        .then(movement => {
+          res.send({ lines, movement });
+          // res.send(lines);
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(500).send(err);
+        });
     }
   });
 }

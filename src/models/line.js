@@ -15,14 +15,14 @@ const lineSchema = new Schema(
     },
     quantity: {
       type: Number,
-      default: 0
+      default: 1
     },
     price: {
       type: Number
     },
     taxes: Array({
       tax: { type: Schema.Types.ObjectId, ref: "Tax" },
-      amount: { type: Number, default: 0 }
+      price: { type: Number, default: 0 }
     }),
     numbers: {
       price: {
