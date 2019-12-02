@@ -78,7 +78,7 @@ const itemSchema = new Schema(
             }
           }
         },
-        tax: Array({ type: Schema.Types.ObjectId, ref: "Tax" }),
+        taxes: Array({ type: Schema.Types.ObjectId, ref: "Tax" }),
 
         lastPrice: {
           buy: { type: Number },
