@@ -105,7 +105,7 @@ export function createMany(req, res) {
         let global = line.item.global.filter(i => i.currency.toString() === req.currency._id.toString());
         line.numbers.price = global[0].estimate.sell.price.isActive ? global[0].estimate.sell.price.number : 0;
         global[0].taxes.forEach(tax => {
-          lines.taxes.push({
+          line.taxes.push({
             tax: tax._id,
             price: line.quantity * line.numbers.price * (tax.number / 100)
           });
