@@ -10,7 +10,7 @@ const routes = {
 
     options.populate = [
       {
-        path: "tax",
+        path: "taxes",
         select: "number name"
       },
       {
@@ -20,11 +20,11 @@ const routes = {
     delete rquery.page;
     delete rquery.limit;
     let query = { ...rquery, creator: req.user._id };
-    Item.paginate(query, options, (err, taxs) => {
+    Item.paginate(query, options, (err, taxes) => {
       if (err) {
         res.status(500).end();
       } else {
-        res.send(taxs);
+        res.send(taxes);
       }
     });
   },
@@ -39,7 +39,7 @@ const routes = {
           item.populate(
             [
               {
-                path: "global.tax"
+                path: "global.taxes"
               },
               {
                 path: "children"
@@ -56,7 +56,7 @@ const routes = {
                       path: "global.currency"
                     },
                     {
-                      path: "global.tax"
+                      path: "global.taxes"
                     }
                   ],
                   err => {
@@ -92,7 +92,7 @@ const routes = {
                   path: "global.currency"
                 },
                 {
-                  path: "global.tax"
+                  path: "global.taxes"
                 }
               ],
               err => {
@@ -115,7 +115,7 @@ const routes = {
               path: "global.currency"
             },
             {
-              path: "global.tax"
+              path: "global.taxes"
             },
             {
               path: "children"
