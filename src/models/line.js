@@ -20,6 +20,10 @@ const lineSchema = new Schema(
     price: {
       type: Number
     },
+    taxes: Array({
+      tax: { type: Schema.Types.ObjectId, ref: "Tax" },
+      amount: { type: Number, default: 0 }
+    }),
     numbers: {
       price: {
         type: Number,
@@ -31,6 +35,10 @@ const lineSchema = new Schema(
       },
       budgetModified: { type: Boolean, default: false },
       cost: {
+        type: Number,
+        default: 0
+      },
+      tax: {
         type: Number,
         default: 0
       }

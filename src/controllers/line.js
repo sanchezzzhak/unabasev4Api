@@ -96,12 +96,17 @@ export function createMany(req, res) {
       //   }
       // }).exec();
       checkGlobal(req.body.movement);
+
+      // ------ se debe copiar el impuesto y valores del item en catalogo a cada linea. ------------
       // lines.forEach(line => {
       //   let global = line.item.global.filter(i => i.currency.equals(req.body.lines[0].currency._id));
       //   if(global.buy.price.isActive){
       //     line.
       //   }
       // });
+
+      // ------ se debe calcular los totales del movimiento ------------
+
       res.send(lines);
     }
   });
