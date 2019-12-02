@@ -28,17 +28,15 @@ const itemSchema = new Schema(
               isActive: { type: Boolean },
               number: { type: Number }
             },
-            range: {
-              min: {
-                number: { type: Number },
-                percentage: { type: Number },
-                isActive: { type: Boolean }
-              },
-              max: {
-                number: { type: Number },
-                percentage: { type: Number },
-                isActive: { type: Boolean }
-              }
+            min: {
+              number: { type: Number },
+              percentage: { type: Number },
+              isActive: { type: Boolean }
+            },
+            max: {
+              number: { type: Number },
+              percentage: { type: Number },
+              isActive: { type: Boolean }
             },
             isActive: { type: Boolean }
           },
@@ -47,17 +45,15 @@ const itemSchema = new Schema(
               isActive: { type: Boolean },
               number: { type: Number }
             },
-            range: {
-              min: {
-                number: { type: Number },
-                percentage: { type: Number },
-                isActive: { type: Boolean }
-              },
-              max: {
-                number: { type: Number },
-                percentage: { type: Number },
-                isActive: { type: Boolean }
-              }
+            min: {
+              number: { type: Number },
+              percentage: { type: Number },
+              isActive: { type: Boolean }
+            },
+            max: {
+              number: { type: Number },
+              percentage: { type: Number },
+              isActive: { type: Boolean }
             },
             isActive: { type: Boolean }
           },

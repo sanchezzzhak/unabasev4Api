@@ -106,7 +106,10 @@ export function createMany(req, res) {
       // });
 
       // ------ se debe calcular los totales del movimiento ------------
-
+      lines.forEach(line => {
+        let global = line.item.global.filter(i => i.currency.toString() === req.currency._id.toString());
+        line.taxes = global.taxes;
+      });
       res.send(lines);
     }
   });
