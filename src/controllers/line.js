@@ -101,8 +101,8 @@ export function createMany(req, res) {
 
       // ------ se debe calcular los totales del movimiento ------------
       lines.forEach(line => {
-        line.numbers.price = global.sell.price.isActive ? global.sell.price.number : 0;
         let global = line.item.global.filter(i => i.currency.toString() === req.currency._id.toString());
+        line.numbers.price = global.sell.price.isActive ? global.sell.price.number : 0;
         global.taxes.forEach(tax => {
           lines.taxes.push({
             tax: tax._id,
