@@ -508,10 +508,18 @@ export function updateOne(req, res) {
                         Line.getTreeTotals(line.movement)
                           .then(lineTree => {
                             console.log("before send responde");
-                            res.send({
-                              line,
-                              lineTree
-                            });
+                            calculateTotalMovement(req.body.movement)
+                              .then(movement => {
+                                res.send({
+                                  line,
+                                  lineTree,
+                                  movement
+                                });
+                              })
+                              .catch(err => {
+                                console.log(err);
+                                res.status(500).send(err);
+                              });
                           })
                           .catch(err => {
                             res.status(500).send(err);
@@ -521,10 +529,19 @@ export function updateOne(req, res) {
                       Line.getTreeTotals(line.movement)
                         .then(lineTree => {
                           console.log("before send responde");
-                          res.send({
-                            line,
-                            lineTree
-                          });
+
+                          calculateTotalMovement(req.body.movement)
+                            .then(movement => {
+                              res.send({
+                                line,
+                                lineTree,
+                                movement
+                              });
+                            })
+                            .catch(err => {
+                              console.log(err);
+                              res.status(500).send(err);
+                            });
                         })
                         .catch(err => {
                           res.status(500).send(err);
@@ -547,9 +564,18 @@ export function updateOne(req, res) {
                 console.log(err);
                 res.status(500).send(err);
               } else {
-                res.send({
-                  line
-                });
+                calculateTotalMovement(req.body.movement)
+                  .then(movement => {
+                    res.send({ line, movement });
+                    // res.send(lines);
+                  })
+                  .catch(err => {
+                    console.log(err);
+                    res.status(500).send(err);
+                  });
+                // res.send({
+                //   line
+                // });
               }
             }
           );
