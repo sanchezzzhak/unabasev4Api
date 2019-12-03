@@ -20,12 +20,14 @@ const movementSchema = new Schema(
     client: {
       type: { type: String, enum: ["Business", "Contact", "User"] },
       data: { type: Schema.Types.ObjectId, refPath: "client.type" },
-      name: String
+      name: String,
+      user: { type: Schema.Types.ObjectId, refPath: "User" }
     },
     responsable: {
       type: { type: String, enum: ["Business", "Contact", "User"] },
       data: { type: Schema.Types.ObjectId, refPath: "responsable.type" },
-      name: String
+      name: String,
+      user: { type: Schema.Types.ObjectId, refPath: "User" }
     },
     editor: { type: Schema.Types.ObjectId, ref: "User" },
 
