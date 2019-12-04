@@ -20,3 +20,8 @@ export function updateSuccessPercentage(comment) {
     });
   }
 }
+
+export function createContact() {
+  if (req.body.client._id) {
+  }
+}
