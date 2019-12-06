@@ -643,6 +643,12 @@ export const byItem = async (req, res) => {
   Movement.find({ _id: { $in: lines.map(i => i.movement) } })
     .sort({ updatedAt: -1 })
     .limit(rquery.limit || 30)
+    .populate([
+      {
+        path: "client.data",
+        select: "name"
+      }
+    ])
     .exec((err, movements) => {
       if (err) {
         res.status(500).send(err);
