@@ -79,13 +79,20 @@ export default {
     });
   },
   updateOne: (req, res) => {
-    Business.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (err, item) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-        res.send(item);
-      }
-    });
+    Business.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
+      .populate([
+        {
+          path: "users.user",
+          select: "name  phone email imgUrl emails type"
+        }
+      ])
+      .exec((err, item) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          res.send(item);
+        }
+      });
   },
   get: (req, res) => {
     let rquery = ntype(req.query);
