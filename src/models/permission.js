@@ -14,8 +14,9 @@ let permissionSchema = Schema({
 // permissionSchema.plugin(AutoIncrement, { inc_field: 'id' });
 
 // let User = module.exports = mongoose.model('User', userSchema);
-let Permission = (module.exports = model("permission", permissionSchema));
+const Permission = mongoose.model("permission", permissionSchema);
 
 // let Permission = mongoose.model('permission', permissionSchema);
 
 // module.exports = Permission;
+export default Permission;
