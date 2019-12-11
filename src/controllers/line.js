@@ -61,6 +61,7 @@ export function get(req, res) {
   console.log(query);
   Line.paginate(query, options, (err, items) => {
     if (err) {
+      console.log(err);
       res.status(500).end();
     } else {
       res.json(items);
