@@ -2,7 +2,7 @@ import { Router } from "express";
 import logger from "../lib/logger";
 const router = Router();
 
-import { get, deleteOne, find } from "../controllers/userPermission";
+import { create, deleteOne, find } from "../controllers/userPermission";
 let module = "userPermission";
 
 router.post(
@@ -12,7 +12,7 @@ router.post(
     description: "create user permission",
     module
   }),
-  get
+  create
 );
 
 router.get(
@@ -34,3 +34,5 @@ router.delete(
   }),
   deleteOne
 );
+
+export default router;

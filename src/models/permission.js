@@ -8,7 +8,7 @@ let permissionSchema = Schema({
   name: { type: String, required: true },
   action: { type: String, Enum: ["create", "delete", "null", "update", "action", "read"] },
   path: String,
-  type: { type: String, enum: ["internal", "external"] },
+  type: { type: String, enum: ["internal", "external", "general"], default: "general" },
   module: { type: String },
   all: { type: Boolean, defaul: false }
 });

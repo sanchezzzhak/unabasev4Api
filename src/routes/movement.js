@@ -3,6 +3,7 @@ const movements = Router();
 import { get, getPersonal, getBusiness, create, getOne, findOne, find, updateOne, getRelated, byItem } from "../controllers/movement";
 import auth from "../config/lib/auth";
 import logger from "../lib/logger";
+import { checkPermission } from "../middleware/permission";
 let module = "movement";
 // if (process.env.NODE_ENV !== 'test') {
 movements.get(
@@ -94,6 +95,7 @@ movements.get(
 
 movements.post(
   "/",
+  checkPermission({ permission: { module, action: "create" } }),
   logger({
     name: "create movement",
     description: "create movement",
