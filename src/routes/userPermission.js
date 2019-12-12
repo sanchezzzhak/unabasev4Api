@@ -26,7 +26,7 @@ router.get(
 );
 
 router.delete(
-  "/",
+  "/:id",
   logger({
     name: "delete permission of the user",
     description: "delete permission of the user",

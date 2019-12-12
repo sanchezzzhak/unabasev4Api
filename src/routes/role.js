@@ -1,7 +1,7 @@
 // imports for routing, logging and controllers
 import { Router } from "express";
 import logger from "../lib/logger";
-import { create, get, find, update } from "../controllers/role";
+import { create, get, find, update, apply } from "../controllers/role";
 
 const router = Router();
 let module = "Role";
@@ -35,6 +35,15 @@ router.post(
   }),
   create
 );
+router.post(
+  "/apply",
+  logger({
+    name: "apply role",
+    description: "apply role",
+    module
+  }),
+  apply
+);
 
 router.put(
   "/:id",
@@ -45,3 +54,5 @@ router.put(
   }),
   update
 );
+
+export default router;

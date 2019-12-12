@@ -16,7 +16,7 @@ permissionSchema.plugin(AutoIncrement, { inc_field: "number" });
 
 permissionSchema.plugin(mongoosePaginate);
 // let User = module.exports = mongoose.model('User', userSchema);
-const Permission = mongoose.model("permission", permissionSchema);
+const Permission = mongoose.model("Permission", permissionSchema);
 
 // let Permission = mongoose.model('permission', permissionSchema);
 

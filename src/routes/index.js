@@ -28,6 +28,7 @@ import comment from "./comment";
 import contact from "./contact";
 import permission from "./permission";
 import userPermission from "./userPermission";
+import role from "./role";
 import { parseQueryUrl } from "../middleware/parseQueryUrl";
 
 routes.use("/auth", auth);
@@ -44,6 +45,7 @@ routes.use("/comments", comment);
 routes.use("/contacts", contact);
 routes.use("/permissions", permission);
 routes.use("/userPermissions", userPermission);
+routes.use("/roles", role);
 routes.post("/t", (req, res) => {
   res.send({ body: req.body, headers: req.headers });
 });

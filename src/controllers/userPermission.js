@@ -25,8 +25,8 @@ export const deleteOne = (req, res) => {
 
 export const find = (req, res) => {
   let options = {};
-  options.page = rquery.page || 1;
-  options.limit = rquery.limit || 20;
+  options.page = req.body.page || 1;
+  options.limit = req.body.limit || 20;
   options.populate = [
     {
       path: "user",
@@ -38,8 +38,8 @@ export const find = (req, res) => {
     },
     { path: "permission" }
   ];
-  delete rquery.page;
-  delete rquery.limit;
+  delete req.body.page;
+  delete req.body.limit;
   UserPermission.paginate(req.query, options, (err, userPermissions) => {
     if (err) {
       console.log(err);

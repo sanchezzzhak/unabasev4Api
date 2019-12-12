@@ -10,7 +10,9 @@ const userPermissionSchema = Schema({
 
 userPermissionSchema.plugin(mongoosePaginate);
 
-const UserPermission = mongoose.model("userPermission", userPermissionSchema);
+userPermissionSchema.index({ user: 1, business: 1, permission: 1 }, { unique: true });
+
+const UserPermission = mongoose.model("UserPermission", userPermissionSchema);
 
 UserPermission.findByPermission = function(data, callback) {
   const query = this.findOne();

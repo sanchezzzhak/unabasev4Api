@@ -1,4 +1,6 @@
 import Role from "../models/role";
+import UserPermission from "../models/userPermission";
+import Permission from "../models/permission";
 
 export const create = (req, res) => {
   Role.create(req.body, (err, role) => {
@@ -57,6 +59,43 @@ export const get = (req, res) => {
         res.status(500).end();
       } else {
         res.send(role);
+      }
+    });
+};
+
+export const apply = (req, res) => {
+  // let errors = [];
+  let userPermissions = [];
+  Role.findById(req.body.role)
+    .populate("permissions")
+    .exec((err, role) => {
+      if (err) {
+        console.log(err);
+        res.status(500).end();
+      } else {
+        role.permissions.forEach(permission => {
+          userPermissions.push({
+            user: req.body.user,
+            business: req.body.business,
+            permission: permission._id
+          });
+        });
+        try {
+          UserPermission.insertMany(userPermissions, { ordered: false }, (err, docs) => {
+            if (err) {
+              console.log(err);
+              if (err.code === 11000 && err.name === "BulkWriteError") {
+                res.send({ success: true });
+              } else {
+                res.status(500).end();
+              }
+            } else {
+              res.semd({ message: "Perfil aplicado con exito" });
+            }
+          });
+        } catch (err) {
+          console.log(err);
+        }
       }
     });
 };
