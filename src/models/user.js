@@ -52,7 +52,6 @@ let userSchema = Schema(
       mapUrl: String
     },
     lastLogin: Date,
-    access: Array({ type: Object }),
     imgUrl: String,
     currency: { type: Schema.Types.ObjectId, ref: "Currency" },
     google: {
