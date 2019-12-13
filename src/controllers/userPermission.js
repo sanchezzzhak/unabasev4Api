@@ -10,7 +10,7 @@ export const create = (req, res) => {
     }
   });
 };
-export const deleteOne = (req, res) => {
+export const deleteOneById = (req, res) => {
   UserPermission.deleteOne({ _id: req.params.id }, err => {
     if (err) {
       console.log(err);
@@ -21,6 +21,23 @@ export const deleteOne = (req, res) => {
       });
     }
   });
+};
+export const deleteOne = (req, res) => {
+  const { business, user, permission } = req.body;
+  if (user && business && permission) {
+    UserPermission.deleteOne({ business, user, permission }, err => {
+      if (err) {
+        console.log(err);
+        res.status(500).end();
+      } else {
+        res.send({
+          success: true
+        });
+      }
+    });
+  } else {
+    res.status(500).end({ msg: "not enought data" });
+  }
 };
 
 export const find = (req, res) => {

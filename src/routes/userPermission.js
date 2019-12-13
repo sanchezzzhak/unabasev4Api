@@ -2,7 +2,7 @@ import { Router } from "express";
 import logger from "../lib/logger";
 const router = Router();
 
-import { create, deleteOne, find } from "../controllers/userPermission";
+import { create, deleteOne, deleteOneById, find } from "../controllers/userPermission";
 let module = "userPermission";
 
 router.post(
@@ -27,6 +27,16 @@ router.get(
 
 router.delete(
   "/:id",
+  logger({
+    name: "delete permission of the user",
+    description: "delete permission of the user",
+    module
+  }),
+  deleteOneById
+);
+
+router.delete(
+  "/",
   logger({
     name: "delete permission of the user",
     description: "delete permission of the user",
