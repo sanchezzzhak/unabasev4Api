@@ -5,8 +5,7 @@ import Permission from "../models/permission";
 export const create = (req, res) => {
   Role.create(req.body, (err, role) => {
     if (err) {
-      console.log(err);
-      res.status(500).end();
+      errorHandler({ code: 500, err, res });
     } else {
       res.send(role);
     }
@@ -16,8 +15,7 @@ export const create = (req, res) => {
 export const update = (req, res) => {
   Role.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, role) => {
     if (err) {
-      console.log(err);
-      res.status(500).end();
+      errorHandler({ code: 500, err, res });
     } else {
       res.send(role);
     }
@@ -38,8 +36,7 @@ export const find = (req, res) => {
 
   Role.paginate(req.query, options, (err, roles) => {
     if (err) {
-      console.log(err);
-      res.status(500).end();
+      errorHandler({ code: 500, err, res });
     } else {
       res.send(roles);
     }
@@ -55,8 +52,7 @@ export const get = (req, res) => {
     ])
     .exec((err, role) => {
       if (err) {
-        console.log(err);
-        res.status(500).end();
+        errorHandler({ code: 500, err, res });
       } else {
         res.send(role);
       }
@@ -70,8 +66,7 @@ export const apply = (req, res) => {
     .populate("permissions")
     .exec((err, role) => {
       if (err) {
-        console.log(err);
-        res.status(500).end();
+        errorHandler({ code: 500, err, res });
       } else {
         role.permissions.forEach(permission => {
           userPermissions.push({

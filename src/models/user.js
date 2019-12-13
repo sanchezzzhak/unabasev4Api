@@ -109,40 +109,11 @@ userSchema.methods.generateHash = function(password) {
 userSchema.methods.getUser = function() {
   if (this.scope.type === "business") {
     UserPermission.find({ user: this._id, business: this.scope.id }, { populate: [{ path: "permissions" }] }, (err, userPermissions) => {
-      if (err) {
-        console.log(err);
-        res.status(500).end();
-      } else {
-        let user = getUserData(this);
-        user.permissions = userPermissions.permissions;
-        // let user = {
-        //   _id: this._id,
-        //   isActive: this.isActive,
-        //   name: this.name,
-        //   username: this.username,
-        //   idNumber: this.idNumber,
-        //   phones: this.phones,
-        //   emails: this.emails,
-        //   scope: this.scope,
-        //   type: this.type,
-        //   address: this.address,
-        //   lastLogin: this.lastLogin,
-        //   imgUrl: this.imgUrl,
-        //   google: {
-        //     name: this.google.name,
-        //     email: this.google.email,
-        //     imgUrl: this.google.imgUrl
-        //   },
-        //   legalName: this.legalName,
-        //   businessType: this.businessType,
-        //   website: this.website,
-        //   creator: this.creator,
-        //   admins: this.admins,
-        //   quantity: this.quantity,
-        //   users: this.users
-        // };
-        return user;
-      }
+      if (err) return next(err);
+      let user = getUserData(this);
+      user.permissions = userPermissions.permissions;
+
+      return user;
     });
   }
 

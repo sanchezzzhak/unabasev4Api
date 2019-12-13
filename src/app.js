@@ -88,13 +88,7 @@ if (env === "test" || env === "dev") {
   app.use(morgan("dev"));
 }
 //global var
-let allowedOrigins = [
-  "https://unabase1.firebaseapp.com",
-  "http://localhost:8080",
-  "https://unabase.net",
-  "https://www.unabase.net",
-  "http://localhost:8081"
-];
+let allowedOrigins = ["https://unabase1.firebaseapp.com", "http://localhost:8080", "https://unabase.net", "https://www.unabase.net", "http://localhost:8081"];
 app.use(function(req, res, next) {
   res.locals.activeUser = req.user || null;
   res.locals.user = req.user || null;
@@ -115,6 +109,7 @@ app.use(function(req, res, next) {
 
 import routes from "./routes";
 import axios from "axios";
+import { handleError } from "./middleware/error";
 
 // console.log(process.env);
 
@@ -126,6 +121,12 @@ app.use("/", routes);
 // });
 // app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
 // app.get('/graphiql', graphiqlExpress({ endpointURL: '/graphql' })); // if you want GraphiQL enabled
+
+// error handler
+
+app.use((err, req, res, next) => {
+  handleError(err, res);
+});
 
 //start server
 app.listen(port, () => {
