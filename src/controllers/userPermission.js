@@ -34,7 +34,7 @@ export const deleteOne = (req, res, next) => {
 
 export const find = (req, res, next) => {
   // TODO   function to check params
-  if (req.body.user && req.body.business) {
+  if (req.query.user && req.query.business) {
     let options = {};
     options.page = req.body.page || 1;
     options.limit = req.body.limit || 20;
