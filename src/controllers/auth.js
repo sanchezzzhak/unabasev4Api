@@ -1,17 +1,17 @@
-import User from '../models/user';
-import jwt from 'jsonwebtoken';
-import gauth from '../config/auth';
-import axios from 'axios';
-import mailer from '../lib/mailer_deprecated';
-import { send } from '../config/mailer';
-import template from '../lib/mails';
-import { linkMovement } from './movement';
+import User from "../models/user";
+import jwt from "jsonwebtoken";
+import gauth from "../config/auth";
+import axios from "axios";
+import mailer from "../lib/mailer_deprecated";
+import { send } from "../config/mailer";
+import template from "../lib/mails";
+import { linkMovement } from "./movement";
 
-import envar from '../lib/envar';
+import envar from "../lib/envar";
 export default {
   password: (req, res) => {
     const { newPassword } = req.body;
-    console.log('enter restart password');
+    console.log("enter restart password");
     User.findById(req.params.id, function(err, user) {
       if (err) {
         res.status(500).send(err);
@@ -25,16 +25,12 @@ export default {
         const isActive = user.isActive;
         if (isActive) {
           user.lastLogin = Date.now();
-          if (
-            user.activeScope == '' ||
-            !user.activeScope ||
-            user.activeScope == null
-          ) {
+          if (user.activeScope == "" || !user.activeScope || user.activeScope == null) {
             user.activeScope = user._id;
           }
           user.save((err, user) => {
             const token = jwt.sign({ user: user.getUser() }, envar().SECRET, {
-              expiresIn: '3d'
+              expiresIn: "3d"
             });
             req.user = user;
             res.statusMessage = req.lg.user.successLogin;
@@ -49,11 +45,8 @@ export default {
   },
   login(req, res) {
     let query = {
-      $or: [
-        { username: req.body.username },
-        { 'emails.email': req.body.username }
-      ],
-      type: 'personal'
+      $or: [{ username: req.body.username }, { "emails.email": req.body.username }],
+      type: "personal"
     };
     User.findOne(query, function(err, user) {
       // if there are any errors, return the error before anything else
@@ -71,23 +64,16 @@ export default {
         console.log(req.lg.user.notFound);
         res.status(404).send({ err: req.lg.user.notFound });
       } else {
-        const isValid =
-          typeof req.body.password.hash !== 'undefined'
-            ? user.validPassword(req.body.password.hash)
-            : false;
+        const isValid = typeof req.body.password.hash !== "undefined" ? user.validPassword(req.body.password.hash) : false;
         const isActive = user.isActive;
         if (isValid && isActive) {
           user.lastLogin = Date.now();
-          if (
-            user.activeScope == '' ||
-            !user.activeScope ||
-            user.activeScope == null
-          ) {
+          if (user.activeScope == "" || !user.activeScope || user.activeScope == null) {
             user.activeScope = user._id;
           }
           user.save((err, user) => {
             const token = jwt.sign({ user: user.getUser() }, envar().SECRET, {
-              expiresIn: '3d'
+              expiresIn: "3d"
             });
             req.user = user;
             res.statusMessage = req.lg.user.successLogin;
@@ -148,7 +134,7 @@ export default {
 
           user.save((err, user) => {
             const token = jwt.sign({ user: user.getUser() }, envar().SECRET, {
-              expiresIn: '3d'
+              expiresIn: "3d"
             });
             req.user = user;
             res.json({ token, user: user.getUser() });
@@ -165,7 +151,7 @@ export default {
   },
   register(req, res) {
     let query = {
-      $or: [{ username: req.body.username }, { 'emails.email': req.body.email }]
+      $or: [{ username: req.body.username }, { "emails.email": req.body.email }]
     };
     User.findOne(query, function(err, user) {
       // if there are any errors, return the error
@@ -176,13 +162,13 @@ export default {
       // check to see if theres already a user with that email
       if (user) {
         // return done(null, false, req.flash('signupMessage', 'El nombre de usuario ya fue elegido.'));
-        res.statusMessage = 'Username already exist';
+        res.statusMessage = "Username already exist";
         res.status(409);
         let msg;
         if (user.username === req.body.username) {
-          msg = 'Username already exist';
+          msg = "Username already exist";
         } else {
-          msg = 'email already registered';
+          msg = "email already registered";
         }
         res.send({
           msg
@@ -196,10 +182,7 @@ export default {
         let activateHash;
         console.log(req.body.password);
 
-        if (
-          typeof req.body.password === 'undefined' ||
-          req.body.password === null
-        ) {
+        if (typeof req.body.password === "undefined" || req.body.password === null) {
           password = Math.random()
             .toString(36)
             .substring(2, 15);
@@ -223,9 +206,7 @@ export default {
           newUser.isActive = true;
         }
         // set the user's local credentials
-        newUser.username =
-          req.body.username ||
-          req.body.email.slice(0, req.body.email.indexOf('@'));
+        newUser.username = req.body.username || req.body.email.slice(0, req.body.email.indexOf("@"));
         // newUser.password.hash = newUser.generateHash(req.body.password);
         // newUser.password.updatedAt = new Date();
         newUser.name = req.body.name;
@@ -235,7 +216,7 @@ export default {
         // newUser.emails = {};
         newUser.emails.push({
           email: req.body.email,
-          label: 'default'
+          label: "default"
         });
         // newUser.address = req.body.address;
 
@@ -244,7 +225,7 @@ export default {
           if (err) throw err;
 
           const token = jwt.sign({ user: user.getUser() }, envar().SECRET, {
-            expiresIn: '3d'
+            expiresIn: "3d"
           });
           user.activeScope = user._id;
           user.save();
@@ -257,7 +238,7 @@ export default {
               id: user._id,
               name: req.body.name
             });
-            console.log('text');
+            console.log("text");
             console.log(text);
 
             let msg = {
@@ -280,30 +261,30 @@ export default {
     // Successful authentication, redirect home.
     // req.session.access_token = req.user.accessToken;
     // req.session.access_token = req.user.google.accessToken;
-    logger('callbackg');
-    if (typeof req.user.history.emailUrl != 'undefined') {
+    logger("callbackg");
+    if (typeof req.user.history.emailUrl != "undefined") {
       let url = req.user.history.emailUrl;
       let update = {
         $unset: {
-          'history.emailUrl': ''
+          "history.emailUrl": ""
         }
       };
       User.findOneAndUpdate({ _id: req.user._id }, update, {}, (err, user) => {
         if (err) log(err);
-        log('user.username');
+        log("user.username");
         log(user.username);
       });
       res.redirect(url);
-    } else if (typeof req.user.history.inviteUrl != 'undefined') {
+    } else if (typeof req.user.history.inviteUrl != "undefined") {
       let url = req.user.history.inviteUrl;
       let update = {
         $unset: {
-          'history.inviteUrl': ''
+          "history.inviteUrl": ""
         }
       };
       User.findOneAndUpdate({ _id: req.user._id }, update, {}, (err, user) => {
         if (err) log(err);
-        log('user.username');
+        log("user.username");
         log(user.username);
       });
       res.redirect(url);
@@ -328,13 +309,13 @@ export default {
         // logger({
         //   'google.id': data.data.sub
         // });
-        console.log('data google');
+        console.log("data google");
         console.log(data.data);
 
         User.findOne(
           {
-            'google.id': data.data.sub,
-            type: 'personal'
+            "google.id": data.data.sub,
+            type: "personal"
           },
           (err, user) => {
             if (err) {
@@ -342,16 +323,12 @@ export default {
             } else if (!user) {
               let newUser = new User();
 
-              (newUser.username = req.body.google.email.slice(
-                0,
-                req.body.google.email.indexOf('@')
-              )),
-                (newUser.google = req.body.google);
+              (newUser.username = req.body.google.email.slice(0, req.body.google.email.indexOf("@"))), (newUser.google = req.body.google);
               newUser.emails = [];
               newUser.imgUrl = req.body.google.imgUrl;
               newUser.emails.push({
                 email: req.body.google.email,
-                label: 'google'
+                label: "google"
               });
               newUser.name = req.body.google.name;
               newUser.save((err, user) => {
@@ -361,13 +338,9 @@ export default {
                   linkMovement(user.emails.google, user);
                   user.activeScope = user._id;
                   user.save((err, userFound) => {
-                    const token = jwt.sign(
-                      { user: user.getUser() },
-                      envar().SECRET,
-                      {
-                        expiresIn: '3d'
-                      }
-                    );
+                    const token = jwt.sign({ user: user.getUser() }, envar().SECRET, {
+                      expiresIn: "3d"
+                    });
                     req.user = user;
                     res.send({
                       token,
@@ -389,7 +362,7 @@ export default {
               user.save();
               const token = jwt.sign({ user: user.getUser() }, envar().SECRET);
               // res.cookie('access_token', token);
-              user.populate([{ path: 'currency' }], err => {
+              user.populate([{ path: "currency" }], err => {
                 let getUser = user.getUser();
                 let userData = {
                   ...getUser,
@@ -406,131 +379,4 @@ export default {
         res.status(503).end();
       });
   }
-
-  // {
-  //   register: (req, res) => {
-  //     User.findOne({ 'google.id': req.body.id }, (err, user) => {
-  //       if (err) {
-  //         res.status(500).end();
-  //       } else {
-  //         if (user) {
-  //           res.send(user);
-  //         } else {
-  //           let newUser = new User();
-
-  //           (newUser.username = req.body.email.slice(
-  //             0,
-  //             req.body.email.indexOf('@')
-  //           )),
-  //             (newUser.google = req.body);
-  //           newUser.emails = {
-  //             google: req.body.email
-  //           };
-  //           newUser.name = req.body.name;
-  //           newUser.save((err, user) => {
-  //             if (err) {
-  //               res.status(500).end();
-  //             } else {
-  //               user.activeScope = user._id;
-  //               user.save((err, userFound) => {
-  //                 const token = jwt.sign(
-  //                   { user: user.getUser() },
-  //                   mainConfig.mSecret,
-  //                   {
-  //                     expiresIn: '3d'
-  //                   }
-  //                 );
-  //                 req.user = user;
-  //                 res.send({
-  //                   token,
-  //                   user: userFound.getUser()
-  //                 });
-
-  //                 // res.json({
-  //                 //   message: "User Authenticated",
-  //                 //   token
-  //                 // });
-  //               });
-  //             }
-  //           });
-  //         }
-  //       }
-  //     });
-  //   },
-  //   login: (req, res) => {
-  //     let url = gauth.googleAuth.endpoint + req.body.google.token;
-
-  //     console.log(req.body);
-
-  //     axios(url)
-  //       .then(data => {
-  //         // logger('data from gauth');
-  //         // logger(data['sub']);
-  //         // logger({
-  //         //   'google.id': data.data.sub
-  //         // });
-  //         User.findOne(
-  //           {
-  //             'google.id': data.data.sub
-  //           },
-  //           (err, user) => {
-  //             if (err) {
-  //               res.status(404).end();
-  //             } else if (!user) {
-  //               let newUser = new User();
-
-  //               (newUser.username = req.body.google.email.slice(
-  //                 0,
-  //                 req.body.google.email.indexOf('@')
-  //               )),
-  //                 (newUser.google = req.body.google);
-  //               newUser.emails = {
-  //                 google: req.body.google.email
-  //               };
-  //               newUser.name = req.body.google.name;
-  //               newUser.save((err, user) => {
-  //                 if (err) {
-  //                   res.status(500).end();
-  //                 } else {
-  //                   user.activeScope = user._id;
-  //                   user.save((err, userFound) => {
-  //                     const token = jwt.sign(
-  //                       { user: user.getUser() },
-  //                       mainConfig.mSecret,
-  //                       {
-  //                         expiresIn: '3d'
-  //                       }
-  //                     );
-  //                     req.user = user;
-  //                     res.send({
-  //                       token,
-  //                       user: userFound.getUser()
-  //                     });
-
-  //                     // res.json({
-  //                     //   message: "User Authenticated",
-  //                     //   token
-  //                     // });
-  //                   });
-  //                 }
-  //               });
-  //             } else {
-  //               // logger('user.google');
-  //               // logger(user);
-  //               const token = jwt.sign(
-  //                 { user: user.getUser() },
-  //                 mainConfig.mSecret
-  //               );
-  //               // res.cookie('access_token', token);
-  //               res.json({ token, user: user.getUser() });
-  //             }
-  //           }
-  //         );
-  //       })
-  //       .catch(err => {
-  //         // logger(err);
-  //         res.status(503).end();
-  //       });
-  //   }
-  // }
 };
