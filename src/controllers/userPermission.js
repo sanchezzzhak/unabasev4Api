@@ -59,6 +59,6 @@ export const find = (req, res, next) => {
     let err = new Error();
     err.statusCode = 406;
     err.message = "data is not enough";
-    return next();
+    return next(err);
   }
 };
