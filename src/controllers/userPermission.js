@@ -34,24 +34,32 @@ export const deleteOne = (req, res, next) => {
 };
 
 export const find = (req, res, next) => {
-  let options = {};
-  options.page = req.body.page || 1;
-  options.limit = req.body.limit || 20;
-  options.populate = [
-    {
-      path: "user",
-      select: "isActive name  email phone user imgUrl emails type"
-    },
-    {
-      path: "business",
-      select: "isActive name  email phone user imgUrl emails type"
-    },
-    { path: "permission" }
-  ];
-  delete req.body.page;
-  delete req.body.limit;
-  UserPermission.paginate(req.query, options, (err, userPermissions) => {
-    if (err) return next(err);
-    res.send(userPermissions);
-  });
+  // TODO   function to check params
+  if (req.body.user && req.body.business) {
+    let options = {};
+    options.page = req.body.page || 1;
+    options.limit = req.body.limit || 20;
+    options.populate = [
+      {
+        path: "user",
+        select: "isActive name  email phone user imgUrl emails type"
+      },
+      {
+        path: "business",
+        select: "isActive name  email phone user imgUrl emails type"
+      },
+      { path: "permission" }
+    ];
+    delete req.body.page;
+    delete req.body.limit;
+    UserPermission.paginate(req.query, options, (err, userPermissions) => {
+      if (err) return next(err);
+      res.send(userPermissions);
+    });
+  } else {
+    let err = new Error();
+    err.statusCode = 406;
+    err.message = "data is not enough";
+    return next();
+  }
 };
