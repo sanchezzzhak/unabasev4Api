@@ -106,13 +106,12 @@ userSchema.methods.generateHash = function(password) {
 };
 
 userSchema.methods.getUser = function() {
-  if(this.scope.type === "business"){
-    UserPermission.find({user: this._id, business: this.scope.id } {populate: [{path: "permissions"}]}, (err, userPermissions) => {
+  if (this.scope.type === "business") {
+    UserPermission.find({ user: this._id, business: this.scope.id }, { populate: [{ path: "permissions" }] }, (err, userPermissions) => {
       if (err) {
         console.log(err);
         res.status(500).end();
       } else {
-        
         let user = {
           _id: this._id,
           isActive: this.isActive,
@@ -143,7 +142,6 @@ userSchema.methods.getUser = function() {
         return user;
       }
     });
-
   }
 
   let user = {

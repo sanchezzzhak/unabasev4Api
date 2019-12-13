@@ -148,7 +148,15 @@ export const update = (req, res) => {
       if (err) {
         res.status(500).send(err);
       } else {
-        res.send(item);
+        UserPermission.find({ user: this._id, business: this.scope.id }, { populate: [{ path: "permissions" }] }, (err, userPermissions) => {
+          if (err) {
+            console.log(err);
+            res.status(500).end();
+          } else {
+            item.permissions = userPermissions.permissions;
+            res.send(item);
+          }
+        });
       }
     });
 };
