@@ -36,7 +36,7 @@ export const deleteOne = (req, res) => {
       }
     });
   } else {
-    res.status(500).end({ msg: "not enought data" });
+    res.status(500).end("the data is not enough");
   }
 };
 
