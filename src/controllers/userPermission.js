@@ -1,5 +1,4 @@
 import UserPermission from "../models/userPermission";
-import { errorHandler, ErrorHandler } from "../lib/error";
 
 export const create = (req, res, next) => {
   UserPermission.create(req.body, (err, userPermission) => {
