@@ -7,6 +7,7 @@ import ntype from "normalize-type";
 // import findByValue from '../lib/findObjectByValue';
 // import accountTypeByUrl from '../lib/accountTypeByUrl';
 import Contact from "../models/contact";
+import { getUserData } from "../lib/user";
 export const create = (req, res) => {
   let user = new User();
   if (req.body.password) {
@@ -153,8 +154,9 @@ export const update = (req, res) => {
             console.log(err);
             res.status(500).end();
           } else {
-            item.permissions = userPermissions.permissions;
-            res.send(item);
+            let user = getUserData(item);
+            user.permissions = userPermissions.permissions;
+            res.send(user);
           }
         });
       }
