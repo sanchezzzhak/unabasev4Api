@@ -97,6 +97,7 @@ export function updateMovementState(req, res, next) {
   }
 }
 
+// TODO remove if the calculation if done in the update of the line
 export function updateTotalMovement(req, res, next) {
   console.log("before  update totalmovement");
   if (req.body.totalMovement) {
@@ -133,6 +134,7 @@ export function updateItemLastPrice(req, res, next) {
   }
 }
 
+// TODO check if is necesary on the put and the post or just one of the routes
 export function checkParent(req, res, next) {
   if (req.body.parent) {
     Line.findByIdAndUpdate(

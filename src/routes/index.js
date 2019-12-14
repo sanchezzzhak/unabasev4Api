@@ -31,6 +31,8 @@ import userPermission from "./userPermission";
 import role from "./role";
 import { parseQueryUrl } from "../middleware/parseQueryUrl";
 
+// TODO verify session for all routes
+
 routes.use("/auth", auth);
 routes.use("/users", user);
 routes.use("/business", business);

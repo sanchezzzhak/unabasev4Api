@@ -6,6 +6,9 @@ import logger from "../lib/logger";
 import { checkPermission } from "../middleware/permission";
 let module = "movement";
 // if (process.env.NODE_ENV !== 'test') {
+
+movements.use(auth.sToken);
+
 movements.get(
   "/:id",
   logger({
@@ -16,7 +19,6 @@ movements.get(
   getOne
 );
 
-movements.use(auth.sToken);
 // }
 
 movements.get(
