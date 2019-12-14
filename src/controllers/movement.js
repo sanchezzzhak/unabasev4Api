@@ -3,23 +3,20 @@ import Movement from "../models/movement";
 import Contact from "../models/contact";
 import { Types } from "mongoose";
 const ObjectId = Types.ObjectId;
-import ntype from "normalize-type";
 import Line from "../models/line";
 import { isEmpty } from "../lib/isEmpty";
 import { errorHandler } from "../lib/errorHandler";
 
 const routes = {};
 export const getPersonal = (req, res) => {
-  // const state = req.params.state;
-  let rquery = ntype(req.query);
   let options = {};
   const sort = {};
-  sort.createdAt = rquery.createdAtSort || "desc";
-  sort.updatedAt = rquery.updatedAtSort || "desc";
+  sort.createdAt = req.query.createdAtSort || "desc";
+  sort.updatedAt = req.query.updatedAtSort || "desc";
   // sort.dates = {};
-  // sort.dates.schedule = rquery.scheduleSort || "desc";
-  options.page = rquery.page || 1;
-  options.limit = rquery.limit || 20;
+  // sort.dates.schedule = req.query.scheduleSort || "desc";
+  options.page = req.query.page || 1;
+  options.limit = req.query.limit || 20;
   options.select = "name client responsable createdAt updatedAt total state isActive dates successPercentage";
   options.populate = [
     {
@@ -44,13 +41,13 @@ export const getPersonal = (req, res) => {
   options.sort = {
     ...sort
   };
-  delete rquery.createdAtSort;
-  delete rquery.updatedAtSort;
-  delete rquery.scheduleSort;
-  delete rquery.page;
-  delete rquery.limit;
+  delete req.query.createdAtSort;
+  delete req.query.updatedAtSort;
+  delete req.query.scheduleSort;
+  delete req.query.page;
+  delete req.query.limit;
   let query = {
-    ...rquery
+    ...req.query
   };
   switch (req.params.state) {
     case "in":
@@ -157,7 +154,6 @@ export const getRelated = async (req, res) => {
   });
 };
 export const get = (req, res) => {
-  // let req.query = ntype(req.query);
   let options = {};
   const sort = req.query.createdAt
     ? {
@@ -201,18 +197,16 @@ export const get = (req, res) => {
   });
 };
 export const getBusiness = (req, res) => {
-  // const state = req.params.state;
-  let rquery = ntype(req.query);
   let options = {};
-  const sort = rquery.createdAt
+  const sort = req.query.createdAt
     ? {
-        createdAt: rquery.createdAt
+        createdAt: req.query.createdAt
       }
     : {
         createdAt: "desc"
       };
-  options.page = rquery.page || 1;
-  options.limit = rquery.limit || 20;
+  options.page = req.query.page || 1;
+  options.limit = req.query.limit || 20;
   options.select = "name client responsable createdAt total state ";
   options.populate = [
     {
@@ -237,11 +231,11 @@ export const getBusiness = (req, res) => {
   options.sort = {
     ...sort
   };
-  delete rquery.createdAt;
-  delete rquery.page;
-  delete rquery.limit;
+  delete req.query.createdAt;
+  delete req.query.page;
+  delete req.query.limit;
   let query = {
-    ...rquery
+    ...req.query
   };
 
   switch (req.params.state) {
@@ -472,7 +466,6 @@ export const findOne = (req, res) => {
     });
 };
 export const find = (req, res) => {
-  let rquery = ntype(req.query);
   let query = {
     $and: [
       {
@@ -503,7 +496,7 @@ export const find = (req, res) => {
       }
     ]
   };
-  Object.assign(query, rquery);
+  Object.assign(query, req.query);
 
   Movement.paginate(
     query,
@@ -638,11 +631,10 @@ export const linkMovement = (email, user) => {
 };
 
 export const byItem = async (req, res) => {
-  let rquery = ntype(req.query);
   let lines = await Line.find({ item: req.params.id }).exec();
   Movement.find({ _id: { $in: lines.map(i => i.movement) } })
     .sort({ updatedAt: -1 })
-    .limit(rquery.limit || 30)
+    .limit(req.query.limit || 30)
     .populate([
       {
         path: "client.data",
