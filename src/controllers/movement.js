@@ -6,19 +6,49 @@ const ObjectId = Types.ObjectId;
 import Line from "../models/line";
 import { isEmpty } from "../lib/isEmpty";
 import { errorHandler } from "../lib/errorHandler";
+import { queryHelper } from "../lib/findHelpers";
 
 const routes = {};
 export const getPersonal = (req, res) => {
-  let options = {};
-  const sort = {};
-  sort.createdAt = req.query.createdAtSort || "desc";
-  sort.updatedAt = req.query.updatedAtSort || "desc";
-  // sort.dates = {};
-  // sort.dates.schedule = req.query.scheduleSort || "desc";
-  options.page = req.query.page || 1;
-  options.limit = req.query.limit || 20;
-  options.select = "name client responsable createdAt updatedAt total state isActive dates successPercentage";
-  options.populate = [
+  // let options = {};
+  // const sort = {};
+  // sort.createdAt = req.query.createdAtSort || "desc";
+  // sort.updatedAt = req.query.updatedAtSort || "desc";
+  // options.page = req.query.page || 1;
+  // options.limit = req.query.limit || 20;
+  // options.select = "name client responsable createdAt updatedAt total state isActive dates successPercentage";
+  // options.populate = [
+  //   {
+  //     path: "client.data",
+  //     select: "isActive name  email phone creator user imgUrl emails type"
+  //   },
+  //   {
+  //     path: "responsable.data",
+  //     select: "isActive name  email phone creator user imgUrl emails type"
+  //   },
+  //   {
+  //     path: "creator",
+  //     select: "name google imgUrl emails.default"
+  //   },
+  //   {
+  //     path: "lines"
+  //   },
+  //   {
+  //     path: "currency"
+  //   }
+  // ];
+  // options.sort = {
+  //   ...sort
+  // };
+  // delete req.query.createdAtSort;
+  // delete req.query.updatedAtSort;
+  // delete req.query.scheduleSort;
+  // delete req.query.page;
+  // delete req.query.limit;
+  // let query = {
+  //   ...req.query
+  // };
+  let populateArray = [
     {
       path: "client.data",
       select: "isActive name  email phone creator user imgUrl emails type"
@@ -38,21 +68,11 @@ export const getPersonal = (req, res) => {
       path: "currency"
     }
   ];
-  options.sort = {
-    ...sort
-  };
-  delete req.query.createdAtSort;
-  delete req.query.updatedAtSort;
-  delete req.query.scheduleSort;
-  delete req.query.page;
-  delete req.query.limit;
-  let query = {
-    ...req.query
-  };
+  let helper = queryHelper(req.query, { populate: populateArray });
   switch (req.params.state) {
     case "in":
       // query.responsable = {        data: ObjectId(`${req.user._id}`)      };
-      query.$or = [
+      helper.query.$or = [
         {
           "responsable.data": ObjectId(`${req.user._id}`)
         }
@@ -61,7 +81,7 @@ export const getPersonal = (req, res) => {
     case "out":
       // query.client = { data: ObjectId(`${req.user._id}`) };
 
-      query.$or = [
+      helper.query.$or = [
         {
           "client.data": ObjectId(`${req.user._id}`)
         }
@@ -69,12 +89,12 @@ export const getPersonal = (req, res) => {
       break;
   }
 
-  console.log("query");
-  console.log(query);
-  console.log(query.$or);
-  console.log("options");
-  console.log(options);
-  Movement.paginate(query, options, async (err, movements) => {
+  // console.log("query");
+  // console.log(query);
+  // console.log(query.$or);
+  // console.log("options");
+  // console.log(options);
+  Movement.paginate(helper.query, helper.options, async (err, movements) => {
     if (err) {
       console.log(err);
       res.status(500).end();
