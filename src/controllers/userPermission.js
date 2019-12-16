@@ -1,4 +1,5 @@
 import UserPermission from "../models/userPermission";
+import { queryHelper } from "../lib/queryHelper";
 
 export const create = (req, res, next) => {
   UserPermission.create(req.body, (err, userPermission) => {
@@ -35,10 +36,23 @@ export const deleteOne = (req, res, next) => {
 export const find = (req, res, next) => {
   // TODO   function to check params
   if (req.query.user && req.query.business) {
-    let options = {};
-    options.page = req.body.page || 1;
-    options.limit = req.body.limit || 20;
-    options.populate = [
+    // let options = {};
+    // options.page = req.body.page || 1;
+    // options.limit = req.body.limit || 20;
+    // options.populate = [
+    //   {
+    //     path: "user",
+    //     select: "isActive name  email phone user imgUrl emails type"
+    //   },
+    //   {
+    //     path: "business",
+    //     select: "isActive name  email phone user imgUrl emails type"
+    //   },
+    //   { path: "permission" }
+    // ];
+    // delete req.body.page;
+    // delete req.body.limit;
+    let populate = [
       {
         path: "user",
         select: "isActive name  email phone user imgUrl emails type"
@@ -49,9 +63,9 @@ export const find = (req, res, next) => {
       },
       { path: "permission" }
     ];
-    delete req.body.page;
-    delete req.body.limit;
-    UserPermission.paginate(req.query, options, (err, userPermissions) => {
+    let helper = queryHelper(req.query, { populate });
+
+    UserPermission.paginate(helper.query, helper.options, (err, userPermissions) => {
       if (err) return next(err);
       res.send(userPermissions);
     });

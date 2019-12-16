@@ -7,6 +7,7 @@ import { Types } from "mongoose";
 import { checkGlobal } from "../lib/checkGlobal";
 import { calculateTotalMovement } from "../lib/movement";
 import { createError } from "../lib/error";
+import { queryHelper } from "../lib/queryHelper";
 const ObjectId = Types.ObjectId;
 
 export const getOne = (req, res, next) => {
@@ -23,11 +24,40 @@ export const getOne = (req, res, next) => {
 };
 
 export function get(req, res, next) {
-  let options = {};
-  options.page = req.query.page || 1;
-  options.limit = req.query.limit || 20;
+  // let options = {};
+  // options.page = req.query.page || 1;
+  // options.limit = req.query.limit || 20;
 
-  options.populate = [
+  // options.populate = [
+  //   {
+  //     path: "tax",
+  //     select: "name number"
+  //   },
+  //   {
+  //     path: "item"
+  //   },
+  //   {
+  //     path: "children",
+  //     populate: {
+  //       path: "children",
+  //       populate: {
+  //         path: "children",
+  //         populate: {
+  //           path: "children",
+  //           populate: "children"
+  //         }
+  //       }
+  //     }
+  //   }
+  // ];
+  // delete req.query.page;
+  // delete req.query.limit;
+  // let query = {
+  //   ...req.query
+  // };
+  // console.log("query");
+  // console.log(query);
+  let populate = [
     {
       path: "tax",
       select: "name number"
@@ -49,14 +79,8 @@ export function get(req, res, next) {
       }
     }
   ];
-  delete req.query.page;
-  delete req.query.limit;
-  let query = {
-    ...req.query
-  };
-  console.log("query");
-  console.log(query);
-  Line.paginate(query, options, (err, items) => {
+  let helper = queryHelper(req, query, { populate });
+  Line.paginate(helper.query, helper.options, (err, items) => {
     if (err) return next(err);
     res.json(items);
   });

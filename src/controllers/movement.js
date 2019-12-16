@@ -6,7 +6,7 @@ const ObjectId = Types.ObjectId;
 import Line from "../models/line";
 import { isEmpty } from "../lib/isEmpty";
 import { errorHandler } from "../lib/errorHandler";
-import { queryHelper } from "../lib/findHelpers";
+import { queryHelper } from "../lib/queryHelper";
 
 const routes = {};
 export const getPersonal = (req, res) => {
@@ -48,7 +48,7 @@ export const getPersonal = (req, res) => {
   // let query = {
   //   ...req.query
   // };
-  let populateArray = [
+  let populate = [
     {
       path: "client.data",
       select: "isActive name  email phone creator user imgUrl emails type"
@@ -68,7 +68,7 @@ export const getPersonal = (req, res) => {
       path: "currency"
     }
   ];
-  let helper = queryHelper(req.query, { populate: populateArray });
+  let helper = queryHelper(req.query, { populate });
   switch (req.params.state) {
     case "in":
       // query.responsable = {        data: ObjectId(`${req.user._id}`)      };
