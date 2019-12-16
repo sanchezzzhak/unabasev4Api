@@ -8,6 +8,8 @@ import ntype from "normalize-type";
 // import accountTypeByUrl from '../lib/accountTypeByUrl';
 import Contact from "../models/contact";
 import { getUserData } from "../lib/user";
+import UserPermission from "../models/userPermission";
+
 export const create = (req, res) => {
   let user = new User();
   if (req.body.password) {
