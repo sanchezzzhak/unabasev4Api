@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import mongoosePaginate from "mongoose-paginate";
 import bcrypt from "bcryptjs";
 import { getUserData } from "../lib/user";
+import UserPermission from "./userPermission";
 const Schema = mongoose.Schema;
 const salt = bcrypt.genSaltSync(10);
 let userSchema = Schema(
