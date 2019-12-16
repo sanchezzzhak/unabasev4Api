@@ -1,17 +1,16 @@
 export const queryHelper = (query, options) => {
   let result = {
-    options: {
-      sort: {}
-    },
+    options: {},
     query: {}
   };
-  result.options.sort.createdAt = query.createdAtSort || options.createdAtSort || "desc";
-  result.options.sort.updatedAt = query.updatedAtSort || options.updatedAtSort || "desc";
+  result.options = options;
+  result.options.sort = {
+    createdAt: query.createdAtSort || "desc",
+    updatedAt: query.updatedAtSort || "desc"
+  };
 
-  result.options.page = query.page || options.page || 1;
-  result.options.limit = query.limit || options.limit || 20;
-
-  result.options.populate = options.populate;
+  result.options.page = query.page || 1;
+  result.options.limit = query.limit || 20;
 
   delete query.createdAtSort;
   delete query.updatedAtSort;

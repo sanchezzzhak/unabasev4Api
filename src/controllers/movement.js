@@ -7,47 +7,11 @@ import Line from "../models/line";
 import { isEmpty } from "../lib/isEmpty";
 import { errorHandler } from "../lib/errorHandler";
 import { queryHelper } from "../lib/queryHelper";
+import { createError } from "../lib/error";
 
 const routes = {};
-export const getPersonal = (req, res) => {
-  // let options = {};
-  // const sort = {};
-  // sort.createdAt = req.query.createdAtSort || "desc";
-  // sort.updatedAt = req.query.updatedAtSort || "desc";
-  // options.page = req.query.page || 1;
-  // options.limit = req.query.limit || 20;
-  // options.select = "name client responsable createdAt updatedAt total state isActive dates successPercentage";
-  // options.populate = [
-  //   {
-  //     path: "client.data",
-  //     select: "isActive name  email phone creator user imgUrl emails type"
-  //   },
-  //   {
-  //     path: "responsable.data",
-  //     select: "isActive name  email phone creator user imgUrl emails type"
-  //   },
-  //   {
-  //     path: "creator",
-  //     select: "name google imgUrl emails.default"
-  //   },
-  //   {
-  //     path: "lines"
-  //   },
-  //   {
-  //     path: "currency"
-  //   }
-  // ];
-  // options.sort = {
-  //   ...sort
-  // };
-  // delete req.query.createdAtSort;
-  // delete req.query.updatedAtSort;
-  // delete req.query.scheduleSort;
-  // delete req.query.page;
-  // delete req.query.limit;
-  // let query = {
-  //   ...req.query
-  // };
+export const getPersonal = (req, res, next) => {
+  let select = "name client responsable createdAt updatedAt total state isActive dates successPercentage";
   let populate = [
     {
       path: "client.data",
@@ -68,10 +32,9 @@ export const getPersonal = (req, res) => {
       path: "currency"
     }
   ];
-  let helper = queryHelper(req.query, { populate });
+  let helper = queryHelper(req.query, { populate, select });
   switch (req.params.state) {
     case "in":
-      // query.responsable = {        data: ObjectId(`${req.user._id}`)      };
       helper.query.$or = [
         {
           "responsable.data": ObjectId(`${req.user._id}`)
@@ -79,8 +42,6 @@ export const getPersonal = (req, res) => {
       ];
       break;
     case "out":
-      // query.client = { data: ObjectId(`${req.user._id}`) };
-
       helper.query.$or = [
         {
           "client.data": ObjectId(`${req.user._id}`)
@@ -89,32 +50,12 @@ export const getPersonal = (req, res) => {
       break;
   }
 
-  // console.log("query");
-  // console.log(query);
-  // console.log(query.$or);
-  // console.log("options");
-  // console.log(options);
   Movement.paginate(helper.query, helper.options, async (err, movements) => {
-    if (err) {
-      console.log(err);
-      res.status(500).end();
-    } else {
-      console.log("----------------after paginate");
-      console.log(movements.docs.length);
-      // let newMovements = {};
-      // Object.assign(newMovements, movements);
-      // newMovements.docs = [];
-      // for (let i = 0; i < movements.docs.length; i++) {
-      //   let lines = await Line.find(
-      //     { movement: movements.docs[i]._id },
-      //     'quantity price'
-      //   );
-      // }
-      res.json(movements);
-    }
+    if (err) return next(err);
+    res.json(movements);
   });
 };
-export const getRelated = async (req, res) => {
+export const getRelated = async (req, res, next) => {
   // let contact;
   // let userToFind = req.params.id;
   // if (typeof req.query.type !== "undefined" && req.query.type === "contact") {
@@ -166,14 +107,11 @@ export const getRelated = async (req, res) => {
   delete req.query.page;
   delete req.query.limit;
   Movement.paginate(query, options, (err, movements) => {
-    if (err) {
-      res.status(500).end();
-    } else {
-      res.json(movements);
-    }
+    if (err) return next(err);
+    res.json(movements);
   });
 };
-export const get = (req, res) => {
+export const get = (req, res, next) => {
   let options = {};
   const sort = req.query.createdAt
     ? {
@@ -209,14 +147,11 @@ export const get = (req, res) => {
     ...req.query
   };
   Movement.paginate(query, options, (err, movements) => {
-    if (err) {
-      res.status(500).end();
-    } else {
-      res.json(movements);
-    }
+    if (err) return next(err);
+    res.json(movements);
   });
 };
-export const getBusiness = (req, res) => {
+export const getBusiness = (req, res, next) => {
   let options = {};
   const sort = req.query.createdAt
     ? {
@@ -275,14 +210,11 @@ export const getBusiness = (req, res) => {
       break;
   }
   Movement.paginate(query, options, (err, movements) => {
-    if (err) {
-      res.status(500).end();
-    } else {
-      res.json(movements);
-    }
+    if (err) return next(err);
+    res.json(movements);
   });
 };
-export const create = (req, res) => {
+export const create = (req, res, next) => {
   const { name, dates, client, contact, state, lines, description, responsable, personal, total } = req.body;
   let errorOnItem = {
     state: false
@@ -294,57 +226,40 @@ export const create = (req, res) => {
   newMovement.creator = req.user._id || null;
 
   newMovement.save((err, movement) => {
-    if (err) {
-      console.log(err);
-      // res.status(500).send(err);
-      errorHandler({
-        err,
-        res,
-        from: "movement create",
-        status: 500
-      });
-    } else {
-      movement.populate(
-        [
-          {
-            path: "client.data",
-            select: "name  phone email imgUrl emails type"
-          },
-          {
-            path: "responsable.data",
-            select: "name  phone email imgUrl emails type"
-          },
-          {
-            path: "creator",
-            select: "name  imgUrl emails type"
-          },
-          {
-            path: "contact"
-          },
-          {
-            path: "currency"
-          }
-        ],
-        err => {
-          res.send(movement);
+    if (err) return next(err);
+    movement.populate(
+      [
+        {
+          path: "client.data",
+          select: "name  phone email imgUrl emails type"
+        },
+        {
+          path: "responsable.data",
+          select: "name  phone email imgUrl emails type"
+        },
+        {
+          path: "creator",
+          select: "name  imgUrl emails type"
+        },
+        {
+          path: "contact"
+        },
+        {
+          path: "currency"
         }
-      );
-    }
+      ],
+      err => {
+        res.send(movement);
+      }
+    );
   });
-  // }
 };
-export const getOne = (req, res) => {
+export const getOne = (req, res, next) => {
   Movement.findOne({
     _id: req.params.id
   })
 
-    // .populate('lines creator', 'creator.name')
-    // .populate('creator', 'name')
-    // .populate('creator', 'google.email')
-    // .populate('client', 'google.email')
-    // .populate('client', 'name')
     .populate([
-      // { path: 'lines' },
       {
         path: "contact"
       },
@@ -377,14 +292,12 @@ export const getOne = (req, res) => {
       }
     ])
     .exec((err, movement) => {
-      if (err) {
-        res.status(500).send(err);
-      } else if (movement) {
+      if (err) return next(err);
+      if (movement) {
         Line.find({
           movement: movement._id
         })
           .populate("item", "lastPrice global ")
-          // .populate("item", "item.global.currency")
           .populate([
             {
               path: "item",
@@ -395,55 +308,17 @@ export const getOne = (req, res) => {
               ]
             }
           ])
-
-          // .populate([
-          //   {
-          //     path: 'children',
-          //     populate: [
-          //       {
-          //         path: 'children',
-          //         populate: [
-          //           {
-          //             path: 'children',
-          //             populate: [
-          //               { path: 'children', populate: 'children' },
-          //               {
-          //                 path: 'item',
-          //                 select: 'lastPrice global'
-          //               }
-          //             ]
-          //           },
-          //           {
-          //             path: 'item',
-          //             select: 'lastPrice global'
-          //           }
-          //         ]
-          //       },
-          //       {
-          //         path: 'item',
-          //         select: 'lastPrice global'
-          //       }
-          //     ]
-          //   },
-          //   {
-          //     path: 'item',
-          //     select: 'lastPrice global'
-          //   }
-          // ])
           .exec((err, lines) => {
-            if (err) {
-              res.status(500).send(err);
-            } else {
-              movement.lines = lines;
-              res.send(movement);
-            }
+            if (err) return next(err);
+            movement.lines = lines;
+            res.send(movement);
           });
       } else {
-        res.status(404).send("Not found");
+        return next(createError(404, "movement not found"));
       }
     });
 };
-export const findOne = (req, res) => {
+export const findOne = (req, res, next) => {
   let query = {
     $or: [
       {
@@ -478,14 +353,11 @@ export const findOne = (req, res) => {
       }
     ])
     .exec((err, movement) => {
-      if (err) {
-        res.status(500).end();
-      } else {
-        res.send(movement);
-      }
+      if (err) return next(err);
+      res.send(movement);
     });
 };
-export const find = (req, res) => {
+export const find = (req, res, next) => {
   let query = {
     $and: [
       {
@@ -538,16 +410,12 @@ export const find = (req, res) => {
       ]
     },
     (err, items) => {
-      if (err) {
-        console.warn(err);
-        res.status(500).send(err);
-      } else {
-        res.send(items);
-      }
+      if (err) return next(err);
+      res.send(items);
     }
   );
 };
-export const updateOne = (req, res) => {
+export const updateOne = (req, res, next) => {
   let data = req.body;
   let update = {};
   for (let i in data) {
@@ -555,33 +423,7 @@ export const updateOne = (req, res) => {
       update[i] = data[i];
     }
   }
-  // if (typeof req.body.lines !== 'undefined' && req.body.lines.length > 0) {
-  //   update.lines = [];
-  //   Line.updateManyMod(req.body.lines)
-  //     .then(items => {
-  //       console.log('items');
-  //       console.log(items);
-  //       items.lines.forEach(i => update.lines.push(i._id));
 
-  //       Movement.findOneAndUpdate(
-  //         { _id: req.params.id },
-  //         update,
-  //         { new: true },
-  //         (err, movement) => {
-  //           if (err) {
-  //             console.log(err);
-  //             res.status(500).send(err);
-  //           } else {
-  //             res.send(movement);
-  //           }
-  //         }
-  //       );
-  //     })
-  //     .catch(err => {
-  //       console.log('err');
-  //       console.log(err);
-  //     });
-  // } else {
   Movement.findOneAndUpdate(
     {
       _id: req.params.id
@@ -606,51 +448,43 @@ export const updateOne = (req, res) => {
       }
     ])
     .exec((err, movement) => {
-      if (err) {
-        console.log(err);
-        res.status(500).send(err);
-      } else {
-        res.send(movement);
-      }
+      if (err) return next(err);
+      res.send(movement);
     });
   // }
 };
-export const linkMovement = (email, user) => {
+export const linkMovement = (req, res, next) => {
   Contact.find(
     {
       email
     },
     (err, contacts) => {
-      if (err) {
-        console.log(err);
-        res.status(500).send(err);
-      } else {
-        for (let contact of contacts) {
-          let client = {
-            "client.type": "Contact",
-            "client.data": contact._id
-          };
-          let clientUpdate = {
-            "client.type": "User",
-            "client.data": user._id
-          };
-          let responsable = {
-            "responsable.type": "Contact",
-            "responsable.data": contact._id
-          };
-          let responsableUpdate = {
-            "responsable.type": "User",
-            "responsable.data": user._id
-          };
-          Movement.updateMany(client, clientUpdate, {}).exec();
-          Movement.updateMany(responsable, responsableUpdate, {}).exec();
-        }
+      if (err) return next(err);
+      for (let contact of contacts) {
+        let client = {
+          "client.type": "Contact",
+          "client.data": contact._id
+        };
+        let clientUpdate = {
+          "client.type": "User",
+          "client.data": user._id
+        };
+        let responsable = {
+          "responsable.type": "Contact",
+          "responsable.data": contact._id
+        };
+        let responsableUpdate = {
+          "responsable.type": "User",
+          "responsable.data": user._id
+        };
+        Movement.updateMany(client, clientUpdate, {}).exec();
+        Movement.updateMany(responsable, responsableUpdate, {}).exec();
       }
     }
   );
 };
 
-export const byItem = async (req, res) => {
+export const byItem = async (req, res, next) => {
   let lines = await Line.find({ item: req.params.id }).exec();
   Movement.find({ _id: { $in: lines.map(i => i.movement) } })
     .sort({ updatedAt: -1 })
@@ -662,10 +496,7 @@ export const byItem = async (req, res) => {
       }
     ])
     .exec((err, movements) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-        res.send(movements);
-      }
+      if (err) return next(err);
+      res.send(movements);
     });
 };
