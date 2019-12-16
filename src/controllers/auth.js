@@ -361,7 +361,7 @@ export default {
             user.save();
             const token = jwt.sign({ user: user.getUser() }, envar().SECRET);
             // res.cookie('access_token', token);
-            user.populate([{ path: "currency" }], err => {
+            user.populate([{ path: "currency" }, { path: "scope.id" }], err => {
               let getUser = user.getUser();
               let userData = {
                 ...getUser,
