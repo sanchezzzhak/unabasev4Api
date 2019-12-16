@@ -44,89 +44,87 @@ export default {
       }
     });
   },
-  login(req, res) {
+  login(req, res, next) {
     let query = {
       $or: [{ username: req.body.username }, { "emails.email": req.body.username }],
       type: "personal"
     };
-    User.findOne(query, function(err, user) {
-      // if there are any errors, return the error before anything else
-      if (err) {
-        console.log(err);
-        res.statusMessage = req.lg.error.server;
-        res.status(500).end({ err });
-      }
+    User.findOne(query)
+      .populate("scope.id")
+      .exec((err, user) => {
+        // if there are any errors, return the error before anything else
+        if (err) return next(err);
 
-      // if no user is found, return the message
-      if (!user) {
-        res.statusMessage = req.lg.user.notFound;
-        res.statusText = req.lg.user.notFound;
-        console.log(req.lg.user.notFound);
-        console.log(req.lg.user.notFound);
-        res.status(404).send({ err: req.lg.user.notFound });
-      } else {
-        const isValid = typeof req.body.password.hash !== "undefined" ? user.validPassword(req.body.password.hash) : false;
-        const isActive = user.isActive;
-        if (isValid && isActive) {
-          user.lastLogin = Date.now();
-          if (user.activeScope == "" || !user.activeScope || user.activeScope == null) {
-            user.activeScope = user._id;
-          }
-          user.save(async (err, user) => {
-            const token = jwt.sign({ user: user.getUser() }, envar().SECRET, {
-              expiresIn: "3d"
-            });
-            req.user = user;
-            res.statusMessage = req.lg.user.successLogin;
-            if (user.scope.type === "business") {
-              let permissions = await UserPermission.find({ business: user.scope.id, user: user._id }).exec();
-              user.permissions = permissions;
+        // if no user is found, return the message
+        if (!user) {
+          res.statusMessage = req.lg.user.notFound;
+          res.statusText = req.lg.user.notFound;
+          console.log(req.lg.user.notFound);
+          console.log(req.lg.user.notFound);
+          res.status(404).send({ err: req.lg.user.notFound });
+        } else {
+          const isValid = typeof req.body.password.hash !== "undefined" ? user.validPassword(req.body.password.hash) : false;
+          const isActive = user.isActive;
+          if (isValid && isActive) {
+            user.lastLogin = Date.now();
+            if (user.activeScope == "" || !user.activeScope || user.activeScope == null) {
+              user.activeScope = user._id;
             }
-            res.json({ token, user: user.getUser() });
-          });
-        } else if (!isValid) {
-          res.statusMessage = req.lg.user.wrongPassword;
-          res.status(403).send({ err: req.lg.user.wrongPassword });
-        } else if (!isActive) {
-          res.statusMessage = req.lg.user.notActive;
-          res.status(401).send({ err: req.lg.user.notActive });
+            user.save(async (err, user) => {
+              const token = jwt.sign({ user: user.getUser() }, envar().SECRET, {
+                expiresIn: "3d"
+              });
+              req.user = user;
+              res.statusMessage = req.lg.user.successLogin;
+              if (user.scope.type === "business") {
+                let permissions = await UserPermission.find({ business: user.scope.id, user: user._id }).exec();
+                user.permissions = permissions;
+              }
+              res.json({ token, user: user.getUser() });
+            });
+          } else if (!isValid) {
+            res.statusMessage = req.lg.user.wrongPassword;
+            res.status(403).send({ err: req.lg.user.wrongPassword });
+          } else if (!isActive) {
+            res.statusMessage = req.lg.user.notActive;
+            res.status(401).send({ err: req.lg.user.notActive });
+          }
+          //   // res.statusMessage = 'Current password does not match';
+          //   // res.status(403).send({ msg: req.lg.user.wrongPassword });
+
+          //   // res.send('Current password does not match');
+          //   // return done(null, false, 'wrong pass123sg'); // create the loginMessage and save it to session as flashdata
+          // } else if (!user.isActive) {
+          //   logger('User is not active');
+          //   // res.statusMessage = 'User is not active';
+          //   // res.status(401).send({ msg: req.lg.user.notActive });
+
+          //   // res.send('User is not active');
+          // } else {
+          //   // all is well, return successful user
+          //   user.lastLogin = Date.now();
+          //   if (
+          //     user.activeScope == '' ||
+          //     !user.activeScope ||
+          //     user.activeScope == null
+          //   ) {
+          //     user.activeScope = user._id;
+          //   }
+          //   user.save((err, user) => {
+          //     const token = jwt.sign({ user: user.getUser() }, mainConfig.mSecret, {
+          //       expiresIn: '3d'
+          //     });
+          //     // res.cookie('access_token', token, {
+          //     //   maxAge: 3600 * 24,
+          //     //   httpOnly: true
+          //     // });
+          //     // req.session.user = user;
+          //     req.user = user;
+          //     res.statusMessage = 'authenticated';
+          //     res.json({ token, user: user.getUser() });
+          //   });
         }
-        //   // res.statusMessage = 'Current password does not match';
-        //   // res.status(403).send({ msg: req.lg.user.wrongPassword });
-
-        //   // res.send('Current password does not match');
-        //   // return done(null, false, 'wrong pass123sg'); // create the loginMessage and save it to session as flashdata
-        // } else if (!user.isActive) {
-        //   logger('User is not active');
-        //   // res.statusMessage = 'User is not active';
-        //   // res.status(401).send({ msg: req.lg.user.notActive });
-
-        //   // res.send('User is not active');
-        // } else {
-        //   // all is well, return successful user
-        //   user.lastLogin = Date.now();
-        //   if (
-        //     user.activeScope == '' ||
-        //     !user.activeScope ||
-        //     user.activeScope == null
-        //   ) {
-        //     user.activeScope = user._id;
-        //   }
-        //   user.save((err, user) => {
-        //     const token = jwt.sign({ user: user.getUser() }, mainConfig.mSecret, {
-        //       expiresIn: '3d'
-        //     });
-        //     // res.cookie('access_token', token, {
-        //     //   maxAge: 3600 * 24,
-        //     //   httpOnly: true
-        //     // });
-        //     // req.session.user = user;
-        //     req.user = user;
-        //     res.statusMessage = 'authenticated';
-        //     res.json({ token, user: user.getUser() });
-        //   });
-      }
-    });
+      });
   },
   verify: (req, res) => {
     User.findById(req.params.id, (err, user) => {
