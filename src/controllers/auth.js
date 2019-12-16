@@ -8,6 +8,7 @@ import template from "../lib/mails";
 import { linkMovement } from "./movement";
 
 import envar from "../lib/envar";
+import UserPermission from "../models/userPermission";
 export default {
   password: (req, res) => {
     const { newPassword } = req.body;
@@ -71,12 +72,16 @@ export default {
           if (user.activeScope == "" || !user.activeScope || user.activeScope == null) {
             user.activeScope = user._id;
           }
-          user.save((err, user) => {
+          user.save(async (err, user) => {
             const token = jwt.sign({ user: user.getUser() }, envar().SECRET, {
               expiresIn: "3d"
             });
             req.user = user;
             res.statusMessage = req.lg.user.successLogin;
+            if (user.scope.type === "business") {
+              let permissions = await UserPermission.find({ business: user.scope.id, user: user._id }).exec();
+              user.permissions = permissions;
+            }
             res.json({ token, user: user.getUser() });
           });
         } else if (!isValid) {
