@@ -71,8 +71,9 @@ export default {
             if (user.activeScope == "" || !user.activeScope || user.activeScope == null) {
               user.activeScope = user._id;
             }
+            console.log("-------- user compare");
+            console.log(JSON.stringify(user.getUser()) == JSON.stringify(getUserData(user)));
             user.save(async (err, user) => {
-              console.log(JSON.stringify(user.getUser()) == JSON.stringify(getUserData(user)));
               const token = jwt.sign({ user: user.getUser() }, envar().SECRET, {
                 expiresIn: "3d"
               });
