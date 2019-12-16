@@ -9,6 +9,7 @@ import { linkMovement } from "./movement";
 
 import envar from "../lib/envar";
 import UserPermission from "../models/userPermission";
+import { getUserData } from "../lib/user";
 export default {
   password: (req, res, next) => {
     const { newPassword } = req.body;
@@ -77,10 +78,22 @@ export default {
               req.user = user;
               res.statusMessage = req.lg.user.successLogin;
               if (user.scope.type === "business") {
-                let permissions = await UserPermission.find({ business: user.scope.id, user: user._id }).exec();
-                user.permissions = permissions;
+                // let permissions = await UserPermission.find({ business: user.scope.id, user: user._id }).exec();
+                // user.permissions = permissions;
+
+                try {
+                  let userPermissions = await UserPermission.find({ user: user._id, business: user.scope.id })
+                    .select("permission")
+                    .populate("permission")
+                    .exec();
+                  let permissions = userPermissions.map(userPermission => userPermission.permission);
+                  let result = getUserData(user);
+                  result.permissions = permissions;
+                  res.json({ token, user: result });
+                } catch (err) {
+                  return next(err);
+                }
               }
-              res.json({ token, user: user.getUser() });
             });
           } else if (!isValid) {
             res.statusMessage = req.lg.user.wrongPassword;

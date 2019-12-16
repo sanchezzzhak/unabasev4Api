@@ -7,7 +7,7 @@ import ntype from "normalize-type";
 // import findByValue from '../lib/findObjectByValue';
 // import accountTypeByUrl from '../lib/accountTypeByUrl';
 import Contact from "../models/contact";
-import { getUserData } from "../lib/user";
+import { getUserData, getUserPermission } from "../lib/user";
 import UserPermission from "../models/userPermission";
 
 export const create = (req, res) => {
@@ -144,23 +144,29 @@ export const getOne = (req, res) => {
       }
     });
 };
-export const update = (req, res) => {
+export const update = (req, res, next) => {
   User.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
     .populate("currency")
-    .exec((err, item) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-        UserPermission.find({ user: item._id, business: item.scope.id }, { populate: [{ path: "permissions" }] }, (err, userPermissions) => {
-          if (err) {
-            console.log(err);
-            res.status(500).end();
-          } else {
-            let user = getUserData(item);
-            user.permissions = userPermissions.permissions;
-            res.send(user);
-          }
-        });
+    .populate("scope.id")
+    .exec(async (err, item) => {
+      if (err) return next(err);
+      // getUserPermission(item)
+      //   .then(permissions => {
+      //     item.permissions = new Array(permissions);
+      //     res.send(item);
+      //   })
+      //   .catch(err => next(err));
+      try {
+        let userPermissions = await UserPermission.find({ user: item._id, business: item.scope.id })
+          .select("permission")
+          .populate("permission")
+          .exec();
+        let user = getUserData(item);
+        let permissions = userPermissions.map(userPermission => userPermission.permission);
+        user.permissions = permissions;
+        res.send(user);
+      } catch (err) {
+        return next(err);
       }
     });
 };

@@ -1,3 +1,5 @@
+import UserPermission from "../models/userPermission";
+
 export const getUserData = data => {
   let user = {
     _id: data._id,
@@ -24,7 +26,22 @@ export const getUserData = data => {
     admins: data.admins,
     quantity: data.quantity,
     users: data.users,
-    currency: data.currency
+    currency: data.currency,
+    permissions: data.permissions
   };
   return user;
+};
+
+export const getUserPermission = user => {
+  return new Promise((resolve, reject) => {
+    let userPermissions = UserPermission.find({ user: user._id, business: user.scope.id })
+      .select("permission")
+      .populate("permission")
+      .exec((err, userPermissions) => {
+        if (err) reject(err);
+        resolve(userPermissions.map(userPermission => userPermission.permission));
+      });
+  });
+
+  // return userPermissions.map(userPermission => userPermission.permission);
 };

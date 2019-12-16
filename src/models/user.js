@@ -107,18 +107,22 @@ userSchema.methods.generateHash = function(password) {
   return bcrypt.hashSync(password, salt, null);
 };
 
-userSchema.methods.getUser = function() {
-  if (this.scope.type === "business") {
-    UserPermission.find({ user: this._id, business: this.scope.id }, { populate: [{ path: "permissions" }] }, (err, userPermissions) => {
-      if (err) return err;
-      let user = getUserData(this);
-      user.permissions = userPermissions.permissions;
+userSchema.methods.getUser = async function() {
+  // if (this.scope.type === "business") {
+  //   try {
+  //     let permissions = await UserPermission.find({ user: this._id, business: this.scope.id }, { populate: [{ path: "permissions" }] });
 
-      return user;
-    });
-  }
-  console.log("user from model:::");
-  console.log(this);
+  //     let user = getUserData(this);
+  //     user.permissions = userPermissions.permissions;
+  //     return user;
+  //   } catch (err) {
+  //     return err;
+  //   }
+  // } else {
+  //   return getUserData(this);
+  // }
+  // console.log("user from model:::");
+  // console.log(this);
   // let user = {
   //   _id: this._id,
   //   isActive: this.isActive,

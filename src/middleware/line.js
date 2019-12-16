@@ -78,7 +78,7 @@ export function getCurrencyFromMovement(req, res, next) {
 export function updateMovementState(req, res, next) {
   if (req.body.movement) {
     // let movementId = Array.isArray(req.body.movement) ? req.body[0].movement : req.body.movement;
-    Movement.update(
+    Movement.updateOne(
       {
         _id: req.body.movement
       },
