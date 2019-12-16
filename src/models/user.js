@@ -107,7 +107,7 @@ userSchema.methods.generateHash = function(password) {
   return bcrypt.hashSync(password, salt, null);
 };
 
-userSchema.methods.getUser = async function() {
+userSchema.methods.getUser = function() {
   // if (this.scope.type === "business") {
   //   try {
   //     let permissions = await UserPermission.find({ user: this._id, business: this.scope.id }, { populate: [{ path: "permissions" }] });
@@ -123,33 +123,33 @@ userSchema.methods.getUser = async function() {
   // }
   // console.log("user from model:::");
   // console.log(this);
-  // let user = {
-  //   _id: this._id,
-  //   isActive: this.isActive,
-  //   name: this.name,
-  //   username: this.username,
-  //   idNumber: this.idNumber,
-  //   phones: this.phones,
-  //   emails: this.emails,
-  //   scope: this.scope,
-  //   type: this.type,
-  //   address: this.address,
-  //   lastLogin: this.lastLogin,
-  //   imgUrl: this.imgUrl,
-  //   google: {
-  //     name: this.google.name,
-  //     email: this.google.email,
-  //     imgUrl: this.google.imgUrl
-  //   },
-  //   legalName: this.legalName,
-  //   businessType: this.businessType,
-  //   website: this.website,
-  //   creator: this.creator,
-  //   admins: this.admins,
-  //   quantity: this.quantity,
-  //   users: this.users
-  // };
-  return getUserData(this);
+  let user = {
+    _id: this._id,
+    isActive: this.isActive,
+    name: this.name,
+    username: this.username,
+    idNumber: this.idNumber,
+    phones: this.phones,
+    emails: this.emails,
+    scope: this.scope,
+    type: this.type,
+    address: this.address,
+    lastLogin: this.lastLogin,
+    imgUrl: this.imgUrl,
+    google: {
+      name: this.google.name,
+      email: this.google.email,
+      imgUrl: this.google.imgUrl
+    },
+    legalName: this.legalName,
+    businessType: this.businessType,
+    website: this.website,
+    creator: this.creator,
+    admins: this.admins,
+    quantity: this.quantity,
+    users: this.users
+  };
+  return user;
 };
 
 // checking if password is valid
