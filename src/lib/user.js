@@ -26,8 +26,7 @@ export const getUserData = data => {
     admins: data.admins,
     quantity: data.quantity,
     users: data.users,
-    currency: data.currency,
-    permissions: data.permissions
+    currency: data.currency
   };
   return user;
 };

@@ -72,6 +72,7 @@ export default {
               user.activeScope = user._id;
             }
             user.save(async (err, user) => {
+              console.log(JSON.stringify(user.getUser()) == JSON.stringify(getUserData(user)));
               const token = jwt.sign({ user: user.getUser() }, envar().SECRET, {
                 expiresIn: "3d"
               });
