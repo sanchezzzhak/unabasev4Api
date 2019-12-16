@@ -152,15 +152,13 @@ export default {
       }
     });
   },
-  register(req, res) {
+  register(req, res, next) {
     let query = {
       $or: [{ username: req.body.username }, { "emails.email": req.body.email }]
     };
     User.findOne(query, function(err, user) {
       // if there are any errors, return the error
-      if (err) {
-        res.status(500).end();
-      }
+      if (err) return next(err);
 
       // check to see if theres already a user with that email
       if (user) {
@@ -314,19 +312,18 @@ export default {
         // });
         console.log("data google");
         console.log(data.data);
-
         User.findOne(
           {
             "google.id": data.data.sub,
-            type: "personal"
+            "google.email": data.data.email
           },
           (err, user) => {
             if (err) {
               res.status(404).end();
             } else if (!user) {
               let newUser = new User();
-
-              (newUser.username = req.body.google.email.slice(0, req.body.google.email.indexOf("@"))), (newUser.google = req.body.google);
+              (newUser.google = newUser.username = req.body.google.email.slice(0, req.body.google.email.indexOf("@"))), (newUser.google = req.body.google);
+              newUser.google.id = data.data.sub;
               newUser.emails = [];
               newUser.imgUrl = req.body.google.imgUrl;
               newUser.emails.push({
@@ -361,6 +358,7 @@ export default {
               // logger('user.google');
               // logger(user);
 
+              user.google.id = data.data.sub;
               user.lastLogin = Date.now();
               user.save();
               const token = jwt.sign({ user: user.getUser() }, envar().SECRET);
