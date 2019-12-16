@@ -126,7 +126,7 @@ export default {
         }
       });
   },
-  verify: (req, res) => {
+  verify: (req, res, next) => {
     User.findById(req.params.id, (err, user) => {
       if (err) {
         res.status(500).send(err);
@@ -258,7 +258,7 @@ export default {
       }
     });
   },
-  googleCallback(req, res) {
+  googleCallback(req, res, next) => {
     // Successful authentication, redirect home.
     // req.session.access_token = req.user.accessToken;
     // req.session.access_token = req.user.google.accessToken;
@@ -294,10 +294,10 @@ export default {
       res.send(req);
     }
   },
-  errUser(req, res) {
+  errUser(req, res, next) => {
     logger(req);
   },
-  google: (req, res) => {
+  google: (req, res, next) => {
     let url = gauth.googleAuth.endpoint + req.body.token;
 
     console.log(req.body);
@@ -312,68 +312,65 @@ export default {
         // });
         console.log("data google");
         console.log(data.data);
-        User.findOne(
-          {
-            "google.id": data.data.sub,
-            "google.email": data.data.email
-          },
-          (err, user) => {
-            if (err) {
-              res.status(404).end();
-            } else if (!user) {
-              let newUser = new User();
-              (newUser.google = newUser.username = req.body.google.email.slice(0, req.body.google.email.indexOf("@"))), (newUser.google = req.body.google);
-              newUser.google.id = data.data.sub;
-              newUser.emails = [];
-              newUser.imgUrl = req.body.google.imgUrl;
-              newUser.emails.push({
-                email: req.body.google.email,
-                label: "google"
-              });
-              newUser.name = req.body.google.name;
-              newUser.save((err, user) => {
-                if (err) {
-                  res.status(500).end();
-                } else {
-                  linkMovement(user.emails.google, user);
-                  user.activeScope = user._id;
-                  user.save((err, userFound) => {
-                    const token = jwt.sign({ user: user.getUser() }, envar().SECRET, {
-                      expiresIn: "3d"
-                    });
-                    req.user = user;
-                    res.send({
-                      token,
-                      user: userFound.getUser()
-                    });
-
-                    // res.json({
-                    //   message: "User Authenticated",
-                    //   token
-                    // });
+        let query = {
+          $or: [{ "google.id": data.data.sub }, { "google.email": data.data.email }]
+        };
+        User.findOne(query, (err, user) => {
+          if (err) {
+            res.status(404).end();
+          } else if (!user) {
+            let newUser = new User();
+            (newUser.google = newUser.username = req.body.google.email.slice(0, req.body.google.email.indexOf("@"))), (newUser.google = req.body.google);
+            newUser.google.id = data.data.sub;
+            newUser.emails = [];
+            newUser.imgUrl = req.body.google.imgUrl;
+            newUser.emails.push({
+              email: req.body.google.email,
+              label: "google"
+            });
+            newUser.name = req.body.google.name;
+            newUser.save((err, user) => {
+              if (err) {
+                res.status(500).end();
+              } else {
+                linkMovement(user.emails.google, user);
+                user.activeScope = user._id;
+                user.save((err, userFound) => {
+                  const token = jwt.sign({ user: user.getUser() }, envar().SECRET, {
+                    expiresIn: "3d"
                   });
-                }
-              });
-            } else {
-              // logger('user.google');
-              // logger(user);
+                  req.user = user;
+                  res.send({
+                    token,
+                    user: userFound.getUser()
+                  });
 
-              user.google.id = data.data.sub;
-              user.lastLogin = Date.now();
-              user.save();
-              const token = jwt.sign({ user: user.getUser() }, envar().SECRET);
-              // res.cookie('access_token', token);
-              user.populate([{ path: "currency" }], err => {
-                let getUser = user.getUser();
-                let userData = {
-                  ...getUser,
-                  currency: user.currency
-                };
-                res.json({ token, user: userData });
-              });
-            }
+                  // res.json({
+                  //   message: "User Authenticated",
+                  //   token
+                  // });
+                });
+              }
+            });
+          } else {
+            // logger('user.google');
+            // logger(user);
+
+            user.google.id = data.data.sub;
+            user.lastLogin = Date.now();
+            user.save();
+            const token = jwt.sign({ user: user.getUser() }, envar().SECRET);
+            // res.cookie('access_token', token);
+            user.populate([{ path: "currency" }], err => {
+              let getUser = user.getUser();
+              let userData = {
+                ...getUser,
+                currency: user.currency
+              };
+              res.json({ token, user: userData });
+            });
           }
-        );
+        });
       })
       .catch(err => {
         // logger(err);
