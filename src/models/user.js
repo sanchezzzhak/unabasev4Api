@@ -117,7 +117,8 @@ userSchema.methods.getUser = function() {
       return user;
     });
   }
-
+  console.log("user from model:::");
+  console.log(this);
   // let user = {
   //   _id: this._id,
   //   isActive: this.isActive,
@@ -144,7 +145,7 @@ userSchema.methods.getUser = function() {
   //   quantity: this.quantity,
   //   users: this.users
   // };
-  return getUserData(user);
+  return getUserData(this);
 };
 
 // checking if password is valid
