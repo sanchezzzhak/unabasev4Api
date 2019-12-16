@@ -151,7 +151,7 @@ export const update = (req, res) => {
       if (err) {
         res.status(500).send(err);
       } else {
-        UserPermission.find({ user: this._id, business: this.scope.id }, { populate: [{ path: "permissions" }] }, (err, userPermissions) => {
+        UserPermission.find({ user: item._id, business: item.scope.id }, { populate: [{ path: "permissions" }] }, (err, userPermissions) => {
           if (err) {
             console.log(err);
             res.status(500).end();
