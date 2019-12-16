@@ -64,6 +64,8 @@ export default {
           console.log(req.lg.user.notFound);
           res.status(404).send({ err: req.lg.user.notFound });
         } else {
+          console.log("-------- user compare");
+          console.log(JSON.stringify(user.getUser()) == JSON.stringify(getUserData(user)));
           const isValid = typeof req.body.password.hash !== "undefined" ? user.validPassword(req.body.password.hash) : false;
           const isActive = user.isActive;
           if (isValid && isActive) {
@@ -71,8 +73,6 @@ export default {
             if (user.activeScope == "" || !user.activeScope || user.activeScope == null) {
               user.activeScope = user._id;
             }
-            console.log("-------- user compare");
-            console.log(JSON.stringify(user.getUser()) == JSON.stringify(getUserData(user)));
             user.save(async (err, user) => {
               const token = jwt.sign({ user: user.getUser() }, envar().SECRET, {
                 expiresIn: "3d"
