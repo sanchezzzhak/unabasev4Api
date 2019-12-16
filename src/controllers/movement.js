@@ -8,8 +8,8 @@ import { createError } from "../lib/error";
 
 const routes = {};
 export const getPersonal = (req, res, next) => {
-  let select = "name client responsable createdAt updatedAt total state isActive dates successPercentage";
-  let populate = [
+  const select = "name client responsable createdAt updatedAt total state isActive dates successPercentage";
+  const populate = [
     {
       path: "client.data",
       select: "isActive name  email phone creator user imgUrl emails type"
@@ -30,22 +30,13 @@ export const getPersonal = (req, res, next) => {
     }
   ];
   let helper = queryHelper(req.query, { populate, select });
-  switch (req.params.state) {
-    case "in":
-      helper.query.$or = [
-        {
-          "responsable.data": ObjectId(`${req.user._id}`)
-        }
-      ];
-      break;
-    case "out":
-      helper.query.$or = [
-        {
-          "client.data": ObjectId(`${req.user._id}`)
-        }
-      ];
-      break;
-  }
+
+  const from = `${req.params.state === "in" ? "responsable" : "client"}.data`;
+  helper.query.$or = [
+    {
+      [from]: ObjectId(`${req.user._id}`)
+    }
+  ];
 
   Movement.paginate(helper.query, helper.options, async (err, movements) => {
     if (err) return next(err);
@@ -53,12 +44,6 @@ export const getPersonal = (req, res, next) => {
   });
 };
 export const getRelated = async (req, res, next) => {
-  // let contact;
-  // let userToFind = req.params.id;
-  // if (typeof req.query.type !== "undefined" && req.query.type === "contact") {
-  //   contact = await Contact.findOne({ _id: ObjectId(req.params.id) }).exec();
-  //   userToFind = contact.user || contact._id;
-  // }
   let query = {
     $or: [
       {

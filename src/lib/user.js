@@ -23,7 +23,8 @@ export const getUserData = data => {
     creator: data.creator,
     admins: data.admins,
     quantity: data.quantity,
-    users: data.users
+    users: data.users,
+    currency: data.currency
   };
   return user;
 };
