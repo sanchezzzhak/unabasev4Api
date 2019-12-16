@@ -10,7 +10,7 @@ import { linkMovement } from "./movement";
 import envar from "../lib/envar";
 import UserPermission from "../models/userPermission";
 export default {
-  password: (req, res) => {
+  password: (req, res, next) => {
     const { newPassword } = req.body;
     console.log("enter restart password");
     User.findById(req.params.id, function(err, user) {
@@ -258,7 +258,7 @@ export default {
       }
     });
   },
-  googleCallback(req, res, next) => {
+  googleCallback(req, res, next) {
     // Successful authentication, redirect home.
     // req.session.access_token = req.user.accessToken;
     // req.session.access_token = req.user.google.accessToken;
@@ -294,7 +294,7 @@ export default {
       res.send(req);
     }
   },
-  errUser(req, res, next) => {
+  errUser(req, res, next) {
     logger(req);
   },
   google: (req, res, next) => {
@@ -373,8 +373,7 @@ export default {
         });
       })
       .catch(err => {
-        // logger(err);
-        res.status(503).end();
+        return next(err);
       });
   }
 };
