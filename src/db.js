@@ -1,12 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-import dbConfig from './config/database.js';
+import dbConfig from "./config/database.js";
 
-const env = process.env.NODE_ENV || '';
-mongoose.connect(
-  dbConfig[env],
-  { useNewUrlParser: true }
-);
+const env = process.env.NODE_ENV || "";
+mongoose.connect(dbConfig[env], { useNewUrlParser: true, useUnifiedTopology: true });
 
 let db = mongoose.connection;
 
