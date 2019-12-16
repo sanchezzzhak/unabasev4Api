@@ -1,11 +1,8 @@
-import bool from "normalize-bool";
 import Movement from "../models/movement";
 import Contact from "../models/contact";
 import { Types } from "mongoose";
 const ObjectId = Types.ObjectId;
 import Line from "../models/line";
-import { isEmpty } from "../lib/isEmpty";
-import { errorHandler } from "../lib/errorHandler";
 import { queryHelper } from "../lib/queryHelper";
 import { createError } from "../lib/error";
 

@@ -1,7 +1,7 @@
 import Line from "../models/line";
 import Movement from "../models/movement";
-import Item from "../models/item";
-import Currency from "../models/currency";
+// import Item from "../models/item";
+// import Currency from "../models/currency";
 
 import { Types } from "mongoose";
 import { checkGlobal } from "../lib/checkGlobal";
@@ -24,39 +24,6 @@ export const getOne = (req, res, next) => {
 };
 
 export function get(req, res, next) {
-  // let options = {};
-  // options.page = req.query.page || 1;
-  // options.limit = req.query.limit || 20;
-
-  // options.populate = [
-  //   {
-  //     path: "tax",
-  //     select: "name number"
-  //   },
-  //   {
-  //     path: "item"
-  //   },
-  //   {
-  //     path: "children",
-  //     populate: {
-  //       path: "children",
-  //       populate: {
-  //         path: "children",
-  //         populate: {
-  //           path: "children",
-  //           populate: "children"
-  //         }
-  //       }
-  //     }
-  //   }
-  // ];
-  // delete req.query.page;
-  // delete req.query.limit;
-  // let query = {
-  //   ...req.query
-  // };
-  // console.log("query");
-  // console.log(query);
   let populate = [
     {
       path: "tax",
@@ -168,7 +135,7 @@ export function group(req, res, next) {
                 });
               })
               .catch(err => {
-                res.status(500).send(err);
+                return next(err);
               });
           }
         );
@@ -231,7 +198,7 @@ export function create(req, res, next) {
             });
           })
           .catch(err => {
-            res.status(500).send(err);
+            return next(err);
           });
       }
     );
@@ -501,7 +468,7 @@ export function deleteOne(req, res, next) {
         });
       })
       .catch(err => {
-        res.status(500).send(err);
+        return next(err);
       });
   });
 }
