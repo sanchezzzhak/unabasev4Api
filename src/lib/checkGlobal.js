@@ -1,6 +1,7 @@
 import Line from "../models/line";
 import Movement from "../models/movement";
 import Item from "../models/item";
+import { asyncForEach } from "./asyncForEach";
 
 export const checkGlobal = async movementId => {
   let movement = await Movement.findById(movementId).exec();
@@ -8,22 +9,15 @@ export const checkGlobal = async movementId => {
   // new Promise((resolve, reject) => {
   Line.find({ movement: movement._id })
     .populate("item")
-    .exec((err, lines) => {
+    .exec(async (err, lines) => {
       if (err) {
         console.log(err);
       } else {
-        // let itemsIds = lines.map(line => line._id);
-        // Item.find({ _id: { $in: itemsIds } });
-        lines.forEach(line => {
-          // if (!line.item.currency.equals(movement.currency) && line.item.currency.global.map(i => i.currency.equals(movement.currency)).length === 0) {
-          let currencies = Array.from(line.item.global.map(i => i.currency.toString()));
-          console.log("-----------------------currency from movement");
-          console.log(currencyString);
-          console.log("-----------------------currency from global");
-          console.log(currencies.includes(currencyString));
-          console.log(currencies);
+        let currencies;
+        await asyncForEach(lines, async line => {
+          currencies = Array.from(line.item.global.map(i => i.currency.toString()));
           if (!currencies.includes(currencyString)) {
-            Item.findById(line.item, (err, item) => {
+            await Item.findById(line.item, (err, item) => {
               item.global.push({
                 currency: movement.currency
               });
@@ -31,7 +25,22 @@ export const checkGlobal = async movementId => {
             });
           }
         });
+        // lines.forEach(line => {
+        //   let currencies = Array.from(line.item.global.map(i => i.currency.toString()));
+        //   console.log("-----------------------currency from movement");
+        //   console.log(currencyString);
+        //   console.log("-----------------------currency from global");
+        //   console.log(currencies.includes(currencyString));
+        //   console.log(currencies);
+        //   if (!currencies.includes(currencyString)) {
+        //     Item.findById(line.item, (err, item) => {
+        //       item.global.push({
+        //         currency: movement.currency
+        //       });
+        //       item.save();
+        //     });
+        //   }
+        // });
       }
     });
-  // });
 };
