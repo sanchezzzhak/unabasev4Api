@@ -24,8 +24,6 @@ export default {
   },
   sToken: (req, res, next) => {
     req.token = req.headers.authorization;
-    console.log("stoken");
-    console.log(req.headers["authorization"].toString());
     if (typeof req.token !== "undefined" && req.headers.authorization !== "postmanvn4b4s3") {
       jwt.verify(req.token, envar().SECRET, (err, decoded) => {
         if (err) {

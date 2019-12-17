@@ -73,7 +73,7 @@ export function createMany(req, res, next) {
       }
     ]);
 
-    checkGlobal(req.body.movement);
+    await checkGlobal(req.body.movement);
 
     // ------ se debe copiar el impuesto y valores del item en catalogo a cada linea. ------------
 
