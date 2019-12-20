@@ -8,7 +8,7 @@ let module = "permission";
 
 //HECTOR -  USUARIOS QUE TIENEN UN PERMISO DENTRO DE LA EMPRESA (ESPECIFICO)
 router.get(
-  "/users/:businessId",
+  "/users/:businessId/:permissionId",
   logger({
     name: "find list users by permission",
     description: "find list of users by permission",
