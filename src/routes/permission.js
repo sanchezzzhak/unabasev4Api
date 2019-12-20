@@ -4,6 +4,19 @@ const router = Router();
 import { get, find, update, create } from "../controllers/permission";
 let module = "permission";
 
+// router
+
+//HECTOR -  USUARIOS QUE TIENEN UN PERMISO DENTRO DE LA EMPRESA (ESPECIFICO)
+router.get(
+  "/users/:businessId/:permissionId",
+  logger({
+    name: "find list users by permission",
+    description: "find list of users by permission",
+    module
+  }),
+  findUsersByPermission
+);
+
 router.get(
   "/:id",
   logger({
