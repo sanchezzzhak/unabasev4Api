@@ -10,10 +10,12 @@ export const create = (req, res) => {
 };
 
 export const update = (req, res, next) => {
-  Permission.findByIdAndUpdate(req.params.id, req.body, { new: true }).exec((err, permission) => {
-    if (err) return next(err);
-    res.send(permission);
-  });
+  Permission.findByIdAndUpdate(req.params.id, req.body, { new: true }).exec(
+    (err, permission) => {
+      if (err) return next(err);
+      res.send(permission);
+    }
+  );
 };
 
 export const get = (req, res, next) => {
