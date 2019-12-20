@@ -1,7 +1,7 @@
 import { Router } from "express";
 import logger from "../lib/logger";
 const router = Router();
-import { get, find, update, create } from "../controllers/permission";
+import { get, find, update, create, findUsersByPermission } from "../controllers/permission";
 let module = "permission";
 
 // router
