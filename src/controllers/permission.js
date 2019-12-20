@@ -59,7 +59,7 @@ export const findUsersByPermission = (req, res) => {
         console.log(err);
         res.status(500).end();
       } else {
-        res.send(users);
+        res.send(["hola", "como estasss !!"]);
       }
     }
   );
