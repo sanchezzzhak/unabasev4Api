@@ -31,6 +31,7 @@ export const find = (req, res, next) => {
   });
 };
 
+// TODO controller can be replaced by find
 //HECTOR -  USUARIOS QUE TIENEN UN PERMISO DENTRO DE LA EMPRESA (ESPECIFICO)
 
 export const findUsersByPermission = (req, res) => {

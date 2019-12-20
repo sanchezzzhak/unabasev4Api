@@ -6,6 +6,7 @@ let module = "permission";
 
 // router
 
+// TODO route can be replaced and can be use the find route with params
 //HECTOR -  USUARIOS QUE TIENEN UN PERMISO DENTRO DE LA EMPRESA (ESPECIFICO)
 router.get(
   "/users/:businessId/:permissionId",
