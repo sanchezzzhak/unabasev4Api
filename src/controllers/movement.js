@@ -24,10 +24,11 @@ export const getPersonal = (req, res, next) => {
     },
     {
       path: "lines"
-    },
-    {
-      path: "currency"
     }
+    // ,
+    // {
+    //   path: "currency"
+    // }
   ];
   let helper = queryHelper(req.query, { populate, select });
 

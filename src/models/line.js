@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import Item from "./item";
+import Movement from "./movement";
 const Schema = mongoose.Schema;
 
 const lineSchema = new Schema(
@@ -99,15 +101,40 @@ lineSchema.pre("save", function(next) {
   console.log("pre has been saved++++++++++++++++++++++++");
   next();
 });
-// lineSchema.post("insertMany", function(next, name) {
-//   console.log("post has been insertManyd++++++++++++++++++++++++");
-//   next();
-// });
-// lineSchema.pre("insertMany", function(next, name) {
-//   console.log("pre has been insertManyd++++++++++++++++++++++++");
-//   console.log(name);
-//   next();
-// });
+lineSchema.post("insertMany", function(docs, next) {
+  console.log("post has been insertManyd++++++++++++++++++++++++");
+  console.log(docs);
+
+  next();
+});
+lineSchema.pre("insertMany", async function(next, docs) {
+  console.log("pre has been insertManyd++++++++++++++++++++++++");
+  console.log(docs);
+  let movement = await Movement.findById(docs[0].movement).exec();
+  let currencyString = movement.currency.toString();
+  let itemsToUpdate = [];
+  docs.forEach(async line => {
+    let item = await Item.findById(line.item).exec();
+
+    let currencies = Array.from(item.global.map(i => i.currency.toString()));
+    if (!currencies.includes(currencyString)) {
+      itemsToUpdate.push(item._id.toString());
+      // await Item.findById(line.item, (err, item) => {
+      //   item.global.push({
+      //     currency: movement.currency
+      //   });
+      //   item.save();
+      // });
+    }
+    if (itemsToUpdate.length) {
+      let global = { currency: movement.currency };
+      Item.update({ _id: { $in: itemsToUpdate } }, { $push: { global: global } }).exec(() => {
+        next(false);
+      });
+    }
+  });
+  next();
+});
 lineSchema.post("update", function(doc, next) {
   console.log("post has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
   console.log(doc);
@@ -124,6 +151,12 @@ lineSchema.pre("update", function(doc, next) {
 });
 lineSchema.post("find", function(doc, next) {
   console.log("post has been findd++++++++++++++++++++++++:::::::::::::::::::::::");
+
+  next();
+});
+
+lineSchema.pre("find", function(doc, next) {
+  console.log("pre has been findd++++++++++++++++++++++++:::::::::::::::::::::::");
 
   next();
 });

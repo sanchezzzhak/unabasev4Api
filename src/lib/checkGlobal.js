@@ -16,8 +16,24 @@ export const checkGlobal = async movementId => {
           reject(err);
         } else {
           let currencies;
-          await asyncForEach(lines, async line => {
+          // let updateGlobal = async () => {
+          //   await asyncForEach(lines, async line => {
+          //     currencies = Array.from(line.item.global.map(i => i.currency.toString()));
+          //     if (!currencies.includes(currencyString)) {
+          //       await Item.findById(line.item, (err, item) => {
+          //         item.global.push({
+          //           currency: movement.currency
+          //         });
+          //         item.save();
+          //       });
+          //     }
+          //   });
+          //   resolve(true);
+          // };
+          // updateGlobal();
+          for await (let line of lines) {
             currencies = Array.from(line.item.global.map(i => i.currency.toString()));
+            let thi = 0;
             if (!currencies.includes(currencyString)) {
               await Item.findById(line.item, (err, item) => {
                 item.global.push({
@@ -26,7 +42,7 @@ export const checkGlobal = async movementId => {
                 item.save();
               });
             }
-          });
+          }
           resolve(true);
           // lines.forEach(line => {
           //   let currencies = Array.from(line.item.global.map(i => i.currency.toString()));

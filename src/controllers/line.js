@@ -73,30 +73,31 @@ export function createMany(req, res, next) {
       }
     ]);
 
-    checkGlobal(req.body.movement)
-      .then(resp => {
-        // ------ se debe copiar el impuesto y valores del item en catalogo a cada linea. ------------
+    // checkGlobal(req.body.movement)
+    //   .then(_ => {
+    //   })
+    //   .catch(err => {
+    //     return next(err);
+    //   });
 
-        // ------ se debe calcular los totales del movimiento ------------
-        lines.forEach(line => {
-          let global = line.item.global.filter(i => i.currency.toString() === req.currency._id.toString());
-          line.numbers.price = global[0].estimate.sell.price.isActive ? global[0].estimate.sell.price.number : 0;
-          global[0].taxes.forEach(tax => {
-            line.taxes.push({
-              tax: tax._id,
-              price: line.quantity * line.numbers.price * (tax.number / 100)
-            });
-          });
-          line.save();
+    // ------ se debe copiar el impuesto y valores del item en catalogo a cada linea. ------------
+
+    // ------ se debe calcular los totales del movimiento ------------
+    lines.forEach(line => {
+      let global = line.item.global.filter(i => i.currency.toString() === req.currency._id.toString());
+      line.numbers.price = global[0].estimate.sell.price.isActive ? global[0].estimate.sell.price.number : 0;
+      global[0].taxes.forEach(tax => {
+        line.taxes.push({
+          tax: tax._id,
+          price: line.quantity * line.numbers.price * (tax.number / 100)
         });
-        calculateTotalMovement(req.body.movement)
-          .then(movement => {
-            res.send({ lines, movement });
-            // res.send(lines);
-          })
-          .catch(err => {
-            return next(err);
-          });
+      });
+      line.save();
+    });
+    calculateTotalMovement(req.body.movement)
+      .then(movement => {
+        res.send({ lines, movement });
+        // res.send(lines);
       })
       .catch(err => {
         return next(err);
