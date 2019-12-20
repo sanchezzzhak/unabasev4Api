@@ -1,7 +1,12 @@
 // import mongoose from 'mongoose';
 import * as path from "path";
-import express, { Router } from "express";
-import bodyParser, { urlencoded, json } from "body-parser";
+import express, {
+  Router
+} from "express";
+import bodyParser, {
+  urlencoded,
+  json
+} from "body-parser";
 import xmlparser from "express-xml-bodyparser";
 
 import cookieParser from "cookie-parser";
@@ -53,7 +58,9 @@ const router = Router();
 
 // body parser middleware
 // parse application/x-www-form-urlencoded
-app.use(urlencoded({ extended: false }));
+app.use(urlencoded({
+  extended: false
+}));
 
 // parse application/json
 app.use(json());
@@ -89,7 +96,7 @@ if (env === "test" || env === "dev") {
 }
 //global var
 let allowedOrigins = ["https://unabase1.firebaseapp.com", "http://localhost:8080", "https://unabase.net", "https://www.unabase.net", "http://localhost:8081"];
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.locals.activeUser = req.user || null;
   res.locals.user = req.user || null;
   // let origin = req.headers.origin;
@@ -109,7 +116,9 @@ app.use(function(req, res, next) {
 
 import routes from "./routes";
 import axios from "axios";
-import { handleError } from "./middleware/error";
+import {
+  handleError
+} from "./middleware/error";
 
 // console.log(process.env);
 

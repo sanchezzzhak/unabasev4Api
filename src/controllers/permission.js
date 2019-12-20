@@ -1,6 +1,8 @@
 import Permission from "../models/permission";
 import UserPermission from "../models/userPermission";
-import { queryHelper } from "../lib/queryHelper";
+import {
+  queryHelper
+} from "../lib/queryHelper";
 
 export const create = (req, res) => {
   Permission.create(req.body, (err, permission) => {
@@ -10,7 +12,9 @@ export const create = (req, res) => {
 };
 
 export const update = (req, res, next) => {
-  Permission.findByIdAndUpdate(req.params.id, req.body, { new: true }).exec(
+  Permission.findByIdAndUpdate(req.params.id, req.body, {
+    new: true
+  }).exec(
     (err, permission) => {
       if (err) return next(err);
       res.send(permission);
@@ -48,8 +52,7 @@ export const findUsersByPermission = (req, res) => {
   delete req.query.page;
   delete req.query.limit;
 
-  UserPermission.paginate(
-    {
+  UserPermission.paginate({
       permission: req.params.permissionId,
       business: req.params.businessId
     },

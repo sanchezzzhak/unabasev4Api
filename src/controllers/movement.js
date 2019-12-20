@@ -1,16 +1,21 @@
 import Movement from "../models/movement";
 import Contact from "../models/contact";
-import { Types } from "mongoose";
+import {
+  Types
+} from "mongoose";
 const ObjectId = Types.ObjectId;
 import Line from "../models/line";
-import { queryHelper } from "../lib/queryHelper";
-import { createError } from "../lib/error";
+import {
+  queryHelper
+} from "../lib/queryHelper";
+import {
+  createError
+} from "../lib/error";
 
 const routes = {};
 export const getPersonal = (req, res, next) => {
   const select = "name client responsable createdAt updatedAt total state isActive dates successPercentage";
-  const populate = [
-    {
+  const populate = [{
       path: "client.data",
       select: "isActive name  email phone creator user imgUrl emails type"
     },
@@ -29,14 +34,15 @@ export const getPersonal = (req, res, next) => {
       path: "currency"
     }
   ];
-  let helper = queryHelper(req.query, { populate, select });
+  let helper = queryHelper(req.query, {
+    populate,
+    select
+  });
 
   const from = `${req.params.state === "in" ? "responsable" : "client"}.data`;
-  helper.query.$or = [
-    {
-      [from]: ObjectId(`${req.user._id}`)
-    }
-  ];
+  helper.query.$or = [{
+    [from]: ObjectId(`${req.user._id}`)
+  }];
 
   Movement.paginate(helper.query, helper.options, async (err, movements) => {
     if (err) return next(err);
@@ -45,8 +51,7 @@ export const getPersonal = (req, res, next) => {
 };
 export const getRelated = async (req, res, next) => {
   let query = {
-    $or: [
-      {
+    $or: [{
         creator: req.user._id,
         "client.data": ObjectId(`${req.params.id}`)
       },
@@ -58,18 +63,15 @@ export const getRelated = async (req, res, next) => {
   };
 
   let options = {};
-  const sort = req.query.createdAt
-    ? {
-        createdAt: req.query.createdAt
-      }
-    : {
-        createdAt: "desc"
-      };
+  const sort = req.query.createdAt ? {
+    createdAt: req.query.createdAt
+  } : {
+    createdAt: "desc"
+  };
   options.page = req.query.page || 1;
   options.limit = req.query.limit || 20;
   options.select = "name client responsable createdAt total state";
-  options.populate = [
-    {
+  options.populate = [{
       path: "client.data",
       select: "name phone email imgUrl emails type"
     },
@@ -95,18 +97,15 @@ export const getRelated = async (req, res, next) => {
 };
 export const get = (req, res, next) => {
   let options = {};
-  const sort = req.query.createdAt
-    ? {
-        createdAt: req.query.createdAt
-      }
-    : {
-        createdAt: "desc"
-      };
+  const sort = req.query.createdAt ? {
+    createdAt: req.query.createdAt
+  } : {
+    createdAt: "desc"
+  };
   options.page = req.query.page || 1;
   options.limit = req.query.limit || 20;
   options.select = "name client responsable createdAt total state";
-  options.populate = [
-    {
+  options.populate = [{
       path: "client.data",
       select: "name phone email imgUrl emails type"
     },
@@ -135,18 +134,15 @@ export const get = (req, res, next) => {
 };
 export const getBusiness = (req, res, next) => {
   let options = {};
-  const sort = req.query.createdAt
-    ? {
-        createdAt: req.query.createdAt
-      }
-    : {
-        createdAt: "desc"
-      };
+  const sort = req.query.createdAt ? {
+    createdAt: req.query.createdAt
+  } : {
+    createdAt: "desc"
+  };
   options.page = req.query.page || 1;
   options.limit = req.query.limit || 20;
   options.select = "name client responsable createdAt total state ";
-  options.populate = [
-    {
+  options.populate = [{
       path: "client.data",
       select: "name imgUrl emails type"
     },
@@ -177,18 +173,14 @@ export const getBusiness = (req, res, next) => {
 
   switch (req.params.state) {
     case "in":
-      query.$or = [
-        {
-          "responsable.data": ObjectId(`${req.params.id}`)
-        }
-      ];
+      query.$or = [{
+        "responsable.data": ObjectId(`${req.params.id}`)
+      }];
       break;
     case "out":
-      query.$or = [
-        {
-          "client.data": ObjectId(`${req.params.id}`)
-        }
-      ];
+      query.$or = [{
+        "client.data": ObjectId(`${req.params.id}`)
+      }];
       break;
   }
   Movement.paginate(query, options, (err, movements) => {
@@ -197,7 +189,18 @@ export const getBusiness = (req, res, next) => {
   });
 };
 export const create = (req, res, next) => {
-  const { name, dates, client, contact, state, lines, description, responsable, personal, total } = req.body;
+  const {
+    name,
+    dates,
+    client,
+    contact,
+    state,
+    lines,
+    description,
+    responsable,
+    personal,
+    total
+  } = req.body;
   let errorOnItem = {
     state: false
   };
@@ -210,8 +213,7 @@ export const create = (req, res, next) => {
   newMovement.save((err, movement) => {
     if (err) return next(err);
     movement.populate(
-      [
-        {
+      [{
           path: "client.data",
           select: "name  phone email imgUrl emails type"
         },
@@ -238,11 +240,10 @@ export const create = (req, res, next) => {
 };
 export const getOne = (req, res, next) => {
   Movement.findOne({
-    _id: req.params.id
-  })
+      _id: req.params.id
+    })
 
-    .populate([
-      {
+    .populate([{
         path: "contact"
       },
       {
@@ -277,21 +278,18 @@ export const getOne = (req, res, next) => {
       if (err) return next(err);
       if (movement) {
         Line.find({
-          movement: movement._id
-        })
+            movement: movement._id
+          })
           .populate("item", "lastPrice global ")
-          .populate([
-            {
-              path: "item",
-              populate: [
-                {
-                  path: "global.taxes"
-                }
-              ]
-            }
-          ])
+          .populate([{
+            path: "item",
+            populate: [{
+              path: "global.taxes"
+            }]
+          }])
           .exec((err, lines) => {
             if (err) return next(err);
+
             movement.lines = lines;
             res.send(movement);
           });
@@ -300,19 +298,21 @@ export const getOne = (req, res, next) => {
       }
     });
 };
+
+
+
+
+
 export const findOne = (req, res, next) => {
   let query = {
-    $or: [
-      {
-        name: req.query.name || null
-      }
-    ]
+    $or: [{
+      name: req.query.name || null
+    }]
   };
   Movement.findOne({
-    _id: req.params.id
-  })
-    .populate([
-      {
+      _id: req.params.id
+    })
+    .populate([{
         path: "lines"
       },
       {
@@ -341,10 +341,8 @@ export const findOne = (req, res, next) => {
 };
 export const find = (req, res, next) => {
   let query = {
-    $and: [
-      {
-        $or: [
-          {
+    $and: [{
+        $or: [{
             name: {
               $regex: req.params.q,
               $options: "i"
@@ -359,8 +357,7 @@ export const find = (req, res, next) => {
         ]
       },
       {
-        $or: [
-          {
+        $or: [{
             creator: req.user._id
           },
           {
@@ -373,15 +370,13 @@ export const find = (req, res, next) => {
   Object.assign(query, req.query);
 
   Movement.paginate(
-    query,
-    {
+    query, {
       path: "client",
       match: {
         name: req.params.q
       },
 
-      populate: [
-        {
+      populate: [{
           path: "client.data",
           select: "isActive name  email phone creator user imgUrl emails type"
         },
@@ -406,18 +401,15 @@ export const updateOne = (req, res, next) => {
     }
   }
 
-  Movement.findOneAndUpdate(
-    {
-      _id: req.params.id
-    },
-    update,
-    {
-      new: true
-    }
-  )
+  Movement.findOneAndUpdate({
+        _id: req.params.id
+      },
+      update, {
+        new: true
+      }
+    )
     // .populate("client.data")
-    .populate([
-      {
+    .populate([{
         path: "client.data",
         select: "isActive name  email phone creator user imgUrl emails type"
       },
@@ -436,8 +428,7 @@ export const updateOne = (req, res, next) => {
   // }
 };
 export const linkMovement = (req, res, next) => {
-  Contact.find(
-    {
+  Contact.find({
       email
     },
     (err, contacts) => {
@@ -467,16 +458,22 @@ export const linkMovement = (req, res, next) => {
 };
 
 export const byItem = async (req, res, next) => {
-  let lines = await Line.find({ item: req.params.id }).exec();
-  Movement.find({ _id: { $in: lines.map(i => i.movement) } })
-    .sort({ updatedAt: -1 })
-    .limit(req.query.limit || 30)
-    .populate([
-      {
-        path: "client.data",
-        select: "name"
+  let lines = await Line.find({
+    item: req.params.id
+  }).exec();
+  Movement.find({
+      _id: {
+        $in: lines.map(i => i.movement)
       }
-    ])
+    })
+    .sort({
+      updatedAt: -1
+    })
+    .limit(req.query.limit || 30)
+    .populate([{
+      path: "client.data",
+      select: "name"
+    }])
     .exec((err, movements) => {
       if (err) return next(err);
       res.send(movements);

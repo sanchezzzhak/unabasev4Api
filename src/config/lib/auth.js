@@ -9,14 +9,18 @@ export default {
       // if (req.isAuthenticated()) {
       next();
     } else {
-      res.status(403).send({ msg: "Not authorized." });
+      res.status(403).send({
+        msg: "Not authorized."
+      });
     }
   },
   cToken: (req, res, next) => {
     req.token = req.cookies.access_token;
     jwt.verify(req.token, envar().SECRET, (err, decoded) => {
       if (err) {
-        res.status(403).send({ msg: "Not authorized.." });
+        res.status(403).send({
+          msg: "Not authorized.."
+        });
       } else {
         next();
       }
@@ -25,9 +29,13 @@ export default {
   sToken: (req, res, next) => {
     req.token = req.headers.authorization;
     if (typeof req.token !== "undefined" && req.headers.authorization !== "postmanvn4b4s3") {
+
       jwt.verify(req.token, envar().SECRET, (err, decoded) => {
         if (err) {
-          res.status(403).send({ msg: "Not authorized1" });
+          res.status(403).send({
+            msg: "Not authorized1"
+
+          });
         } else {
           console.log("decoded!");
           req.user = decoded.user;
@@ -40,10 +48,17 @@ export default {
     } else if (req.headers.authorization === "postmanvn4b4s3" || process.env.NODE_ENV === "test") {
       let query;
       if (req.headers["proxy-authorization"]) {
-        query = { _id: req.headers["proxy-authorization"] };
+        query = {
+          _id: req.headers["proxy-authorization"]
+        };
       } else {
         query = {
-          $or: [{ "emails.email": { $regex: "mail", $options: "i" } }]
+          $or: [{
+            "emails.email": {
+              $regex: "mail",
+              $options: "i"
+            }
+          }]
         };
       }
       User.findOne(query).exec((err, user) => {
@@ -54,11 +69,15 @@ export default {
           req.user = user;
           next();
         } else {
-          res.status(404).send({ msg: "Not user found for auth" });
+          res.status(404).send({
+            msg: "Not user found for auth"
+          });
         }
       });
     } else {
-      res.status(403).send({ msg: "Not authorized2" });
+      res.status(403).send({
+        msg: "Not authorized2"
+      });
     }
   }
 };
