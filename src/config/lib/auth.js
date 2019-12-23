@@ -30,19 +30,19 @@ export default {
     req.token = req.headers.authorization;
     if (typeof req.token !== "undefined" && req.headers.authorization !== "postmanvn4b4s3") {
 
-      // jwt.verify(req.token, envar().SECRET, (err, decoded) => {
-      //   if (err) {
-      //     res.status(403).send({
-      //       msg: "Not authorized1"
+      jwt.verify(req.token, envar().SECRET, (err, decoded) => {
+        if (err) {
+          res.status(403).send({
+            msg: "Not authorized1"
 
-      //     });
-      //   } else {
-      //     console.log("decoded!");
-      //     req.user = decoded.user;
-      //     next();
-      //   }
-      // });
-      next();
+          });
+        } else {
+          console.log("decoded!");
+          req.user = decoded.user;
+          next();
+        }
+      });
+      // next();
     } else if (req.method === "OPTIONS") {
       next();
     } else if (req.headers.authorization === "postmanvn4b4s3" || process.env.NODE_ENV === "test") {
