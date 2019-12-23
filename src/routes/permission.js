@@ -1,7 +1,16 @@
-import { Router } from "express";
+import {
+  Router
+} from "express";
 import logger from "../lib/logger";
 const router = Router();
-import { get, find, update, create, findUsersByPermission } from "../controllers/permission";
+import {
+  get,
+  find,
+  update,
+  create,
+  findUsersByPermission,
+  getPermissionsRoles
+} from "../controllers/permission";
 let module = "permission";
 
 // router
@@ -17,6 +26,18 @@ router.get(
   }),
   findUsersByPermission
 );
+
+// HECTOR - OBTENER PERFILES DE USUARIO DISPONIBLES
+router.get(
+  "/roles",
+  logger({
+    name: "get permissions roles",
+    description: "get permissions roles",
+    module
+  }),
+  getPermissionsRoles
+);
+
 
 router.get(
   "/:id",
