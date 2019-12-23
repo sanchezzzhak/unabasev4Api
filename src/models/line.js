@@ -178,7 +178,7 @@ lineSchema.post("find", function (doc, next) {
 // lineSchema.pre("find", function (doc, next) {
 //   console.log("lineSchema - pre has been findd++++++++++++++++++++++++:::::::::::::::::::::::");
 //   console.log(this.getPopulatedPaths());
-//   return next();
+//   next();
 // });
 
 const Line = mongoose.model("Line", lineSchema);

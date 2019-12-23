@@ -1,15 +1,10 @@
-import {
-  should as _should,
-  use
-} from 'chai';
+import { should as _should, use } from 'chai';
 import chaiHttp from 'chai-http';
 import axios from 'axios';
 use(chaiHttp);
 import api from '../../src/config/api.js';
 // import mailer from '../../src/lib/mailer';
-import {
-  send
-} from '../../src/config/mailer';
+import { send } from '../../src/config/mailer';
 
 import template from '../../src/lib/mails';
 const data = {

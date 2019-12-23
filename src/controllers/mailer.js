@@ -1,6 +1,4 @@
-import {
-  send
-} from "../config/mailer";
+import { send } from "../config/mailer";
 import axios from "axios";
 // import { user, pass } from '../secret/mail';
 import envar from "../lib/envar";

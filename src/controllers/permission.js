@@ -1,7 +1,5 @@
 import Permission from "../models/permission";
 import UserPermission from "../models/userPermission";
-import Roles from "../models/role";
-
 import {
   queryHelper
 } from "../lib/queryHelper";
@@ -68,22 +66,4 @@ export const findUsersByPermission = (req, res) => {
       }
     }
   );
-};
-
-
-// HECTOR - OBTENER PERFILES DE USUARIO DISPONIBLES
-
-export const getPermissionsRoles = (req, res) => {
-  let populate = [{
-    path: "permissions",
-    select: "name action path module"
-  }];
-
-  let helper = queryHelper(req.query, {});
-  Roles.paginate(helper.query, {
-    populate
-  }, (err, roles) => {
-    if (err) return next(err);
-    res.send(roles);
-  });
 };
