@@ -1,4 +1,6 @@
-import { Router } from "express";
+import {
+  Router
+} from "express";
 import logger from "../lib/logger";
 const router = Router();
 import {
@@ -24,7 +26,7 @@ router.get(
   findUsersByPermission
 );
 
-// HECTOR - GET USER ROLES
+// HECTOR - GET USER ROLES 
 router.get(
   "/roles",
   logger({
@@ -34,6 +36,7 @@ router.get(
   }),
   getUserRoles
 );
+
 
 router.get(
   "/:id",
