@@ -1,18 +1,18 @@
 import nodemailer from 'nodemailer';
-import { user, pass } from '../secret/mail';
+import {
+  user,
+  pass
+} from '../secret/mail';
 // import template from './mails';
-const transporter = nodemailer.createTransport(
-  {
-    service: 'gmail',
-    auth: {
-      user,
-      pass
-    }
-  },
-  {
-    from: `Unabase  <${user}>`
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user,
+    pass
   }
-);
+}, {
+  from: `Unabase  <${user}>`
+});
 const mailer = {
   send: message => {
     return new Promise((resolve, reject) => {

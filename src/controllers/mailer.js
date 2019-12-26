@@ -1,4 +1,6 @@
-import { send } from "../config/mailer";
+import {
+  send
+} from "../config/mailer";
 import axios from "axios";
 // import { user, pass } from '../secret/mail';
 import envar from "../lib/envar";
@@ -17,29 +19,31 @@ export default {
       from: "Unabase  <notificaciones@unabase.com>"
     };
 
-    // send(mailOptions)
-    //   .then(data => {
-    //     res.send(data);
-    //   })
-    //   .catch(err => {
-    //     res.status(500).send(err);
-    //   });
-    axios
-      .post("https://unabase.cc/mail", mailOptions, {
-        headers: {
-          "x-api-key": envar().mailApiKey
-        }
-      })
-      .then(resp => {
-        res.send(resp.data);
+
+    // HECTOR - CAMBIE EL METODO DE ENVIO DE EMAIL EL CLASICO, CON NODEMAILER TEMPORALMENTE PARA PRUEBAS
+    send(mailOptions)
+      .then(data => {
+        res.send(data);
       })
       .catch(err => {
-        console.log("envar:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-        // console.log(envar);
-        console.log("err");
-        console.log(err.Error);
-        res.status(500).send(err.Error);
+        res.status(500).send(err);
       });
+    // axios
+    //   .post("https://unabase.cc/mail", mailOptions, {
+    //     headers: {
+    //       "x-api-key": envar().mailApiKey
+    //     }
+    //   })
+    //   .then(resp => {
+    //     res.send(resp.data);
+    //   })
+    //   .catch(err => {
+    //     console.log("envar:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+    //     // console.log(envar);
+    //     console.log("err");
+    //     console.log(err);
+    //     res.status(500).send(err.Error);
+    //   });
   }
 };
 // {

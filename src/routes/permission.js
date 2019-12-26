@@ -1,6 +1,4 @@
-import {
-  Router
-} from "express";
+import { Router } from "express";
 import logger from "../lib/logger";
 const router = Router();
 import {
@@ -14,7 +12,6 @@ import {
 let module = "permission";
 
 // router
-
 // TODO route can be replaced and can be use the find route with params
 //HECTOR -  USUARIOS QUE TIENEN UN PERMISO DENTRO DE LA EMPRESA (ESPECIFICO)
 router.get(
@@ -27,7 +24,7 @@ router.get(
   findUsersByPermission
 );
 
-// HECTOR - GET USER ROLES 
+// HECTOR - GET USER ROLES
 router.get(
   "/roles",
   logger({
@@ -37,7 +34,6 @@ router.get(
   }),
   getUserRoles
 );
-
 
 router.get(
   "/:id",
