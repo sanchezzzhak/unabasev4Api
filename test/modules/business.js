@@ -1,4 +1,7 @@
-import { should as _should, use } from 'chai';
+import {
+  should as _should,
+  use
+} from 'chai';
 import chaiHttp from 'chai-http';
 import axios from 'axios';
 use(chaiHttp);

@@ -8,7 +8,8 @@ import {
   create,
   getOne,
   updateOne,
-  user
+  user,
+  addUserToBusiness
 } from '../controllers/business';
 import auth from '../config/lib/auth';
 
@@ -18,6 +19,9 @@ business.post('/create', create);
 business.get('/:id', getOne);
 business.put('/:id', updateOne);
 business.put('/user/:id', user);
+
+// HECTOR - RUTA QUE AGREGA UN USUARIO A UNA EMPRESA
+business.put('/addUser/:id', addUserToBusiness);
 // business
 
 export default business;

@@ -3,6 +3,7 @@ import ntype from "normalize-type";
 import Contact from "../models/contact";
 import Business from "../models/business";
 import User from "../models/user";
+import UserPermissions from '../models/userPermission'
 import business from "../routes/business";
 import {
   Types
@@ -127,6 +128,50 @@ export default {
       }
     });
   },
+
+
+
+  // HECTOR - RUTA QUE AGREGA UN USUARIO A UNA EMPRESA
+  addUserToBusiness: (req, res) => {
+    console.log(req.body);
+    let user = {
+      description: req.body.role.name,
+      user: req.body.userToAdd
+    }
+    Business.findByIdAndUpdate(req.params.id, {
+      $push: {
+        users: user
+      }
+    }, {
+      new: false
+    }, (err, company) => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+
+        let permissionsArray = new Array();
+        for (let index = 0; index < req.body.role.permissions.length; index++) {
+          let permission = {
+            user: req.body.userToAdd._id,
+            business: req.body.business._id,
+            permission: req.body.role.permissions[index]._id
+          }
+          permissionsArray.push(permission);
+        }
+
+        UserPermissions.insertMany(permissionsArray, function (err, permissions) {
+          if (err) {
+            res.status(500).send(err);
+          } else {
+            res.send(permissions);
+          }
+        });
+        // res.send(company);
+      }
+    });
+  },
+
+
   user: (req, res) => {
     const action = req.body.action === "add" ? "$addToSet" : "$pull";
     let update = {
