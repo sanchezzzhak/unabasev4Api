@@ -1,13 +1,18 @@
 import User from "../models/user";
 import Line from "../models/line";
 import Item from "../models/item";
-import { send } from "../config/mailer";
+import {
+  send
+} from "../config/mailer";
 import template from "../lib/mails";
 import ntype from "normalize-type";
 // import findByValue from '../lib/findObjectByValue';
 // import accountTypeByUrl from '../lib/accountTypeByUrl';
 import Contact from "../models/contact";
-import { getUserData, getUserPermission } from "../lib/user";
+import {
+  getUserData,
+  getUserPermission
+} from "../lib/user";
 import UserPermission from "../models/userPermission";
 
 export const create = (req, res) => {
@@ -21,7 +26,10 @@ export const create = (req, res) => {
   if (type === "business") {
     user.creator = req.user._id;
     user.users = [req.user._id];
-    user.admins = [{ description: "creator", user: req.user._id }];
+    user.admins = [{
+      description: "creator",
+      user: req.user._id
+    }];
   }
   user.save((err, item) => {
     if (err) {
@@ -39,23 +47,32 @@ export const create = (req, res) => {
   });
 };
 export const password = (req, res) => {
-  const { password, newPassword } = req.body;
+  const {
+    password,
+    newPassword
+  } = req.body;
   console.log(req.body);
-  User.findById(req.params.id, function(err, user) {
+  User.findById(req.params.id, function (err, user) {
     if (err) {
       res.status(500).send(err);
     } else {
       if (typeof user.password === "undefined") {
-        res.status(200).send({ msg: "password created" });
+        res.status(200).send({
+          msg: "password created"
+        });
 
         user.password.hash = user.generateHash(newPassword);
         user.save();
       } else if (user.validPassword(password)) {
         user.password.hash = user.generateHash(newPassword);
         user.save();
-        res.status(200).send({ msg: "password changed" });
+        res.status(200).send({
+          msg: "password changed"
+        });
       } else {
-        res.status(500).send({ msg: "password change failed" });
+        res.status(500).send({
+          msg: "password change failed"
+        });
       }
     }
   });
@@ -64,7 +81,17 @@ export const restart = (req, res) => {
   console.log("enter restart password");
 
   let query = {
-    $or: [{ username: { $regex: req.params.q, $options: "i" } }, { "emails.email": { $regex: req.params.q, $options: "i" } }],
+    $or: [{
+      username: {
+        $regex: req.params.q,
+        $options: "i"
+      }
+    }, {
+      "emails.email": {
+        $regex: req.params.q,
+        $options: "i"
+      }
+    }],
     type: "personal"
   };
 
@@ -75,7 +102,10 @@ export const restart = (req, res) => {
     } else if (item) {
       const email = item.emails.filter(i => i.label === "default" || i.label === "google");
 
-      const { text, subject } = template().restartPassword({
+      const {
+        text,
+        subject
+      } = template().restartPassword({
         origin: req.headers.origin,
         lang: req.locale.language,
         id: item._id
@@ -87,7 +117,9 @@ export const restart = (req, res) => {
       };
       send(msg)
         .then(resp => {
-          res.status(200).send({ msg: "password restart success" });
+          res.status(200).send({
+            msg: "password restart success"
+          });
         })
         .catch(err => {
           console.log("err+++++++===");
@@ -95,7 +127,9 @@ export const restart = (req, res) => {
           res.status(500).send(err);
         });
     } else {
-      res.status(404).send({ msg: "user not found" });
+      res.status(404).send({
+        msg: "user not found"
+      });
     }
   });
 };
@@ -113,9 +147,14 @@ export const get = (req, res) => {
   delete rquery.page;
   delete rquery.limit;
   const type = req.query.type || "personal";
-  let query = { ...rquery, type };
+  let query = {
+    ...rquery,
+    type
+  };
   if (type === "business") {
-    query.users = { $in: [req.user._id] };
+    query.users = {
+      $in: [req.user._id]
+    };
   }
   // query.name = req.query.name || null;
   // query.isActive = bool(req.query.active) || null;
@@ -132,7 +171,10 @@ export const getOne = (req, res) => {
   console.log(req.params.id);
 
   const type = req.query.type || "personal";
-  User.findOne({ _id: req.params.id, type })
+  User.findOne({
+      _id: req.params.id,
+      type
+    })
     .populate("users")
     .exec((err, user) => {
       if (err) {
@@ -140,12 +182,18 @@ export const getOne = (req, res) => {
       } else if (user) {
         res.send(user.getUser());
       } else {
-        res.status(404).send({ msg: "user not found" });
+        res.status(404).send({
+          msg: "user not found"
+        });
       }
     });
 };
 export const update = (req, res, next) => {
-  User.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
+  User.findOneAndUpdate({
+      _id: req.params.id
+    }, req.body, {
+      new: true
+    })
     .populate("currency")
     .populate("scope.id")
     .exec(async (err, item) => {
@@ -157,7 +205,10 @@ export const update = (req, res, next) => {
       //   })
       //   .catch(err => next(err));
       try {
-        let userPermissions = await UserPermission.find({ user: item._id, business: item.scope.id })
+        let userPermissions = await UserPermission.find({
+            user: item._id,
+            business: item.scope.id
+          })
           .select("permission")
           .populate("permission")
           .exec();
@@ -172,9 +223,13 @@ export const update = (req, res, next) => {
 };
 export const business = (req, res) => {
   let update = {
-    $addToSet: { business: req.body.business }
+    $addToSet: {
+      business: req.body.business
+    }
   };
-  User.findByIdAndUpdate(req.params.id, update, { new: true }, (err, item) => {
+  User.findByIdAndUpdate(req.params.id, update, {
+    new: true
+  }, (err, item) => {
     if (err) {
       res.status(500).send(err);
     } else {
@@ -184,9 +239,13 @@ export const business = (req, res) => {
 };
 export const user = (req, res) => {
   let update = {
-    $addToSet: { users: req.body.user }
+    $addToSet: {
+      users: req.body.user
+    }
   };
-  User.findByIdAndUpdate(req.params.id, update, { new: true }, (err, item) => {
+  User.findByIdAndUpdate(req.params.id, update, {
+    new: true
+  }, (err, item) => {
     if (err) {
       res.status(500).send(err);
     } else {
@@ -196,14 +255,14 @@ export const user = (req, res) => {
 };
 export const scope = (req, res) => {
   User.findByIdAndUpdate(
-    req.params.id,
-    {
+    req.params.id, {
       scope: {
         type: req.body.type,
         id: req.body.id
       }
+    }, {
+      new: true
     },
-    { new: true },
     (err, item) => {
       if (err) {
         res.status(500).send(err);
@@ -216,21 +275,42 @@ export const scope = (req, res) => {
 export const find = (req, res) => {
   const type = req.query.type || "personal";
   let query = {
-    $and: [
-      {
-        $or: [
-          { "emails.email": { $regex: req.params.q, $options: "i" } },
-          { name: { $regex: req.params.q, $options: "i" } },
-          { username: { $regex: req.params.q, $options: "i" } },
-          { idNumber: { $regex: req.params.q, $options: "i" } }
+    $and: [{
+        $or: [{
+            "emails.email": {
+              $regex: req.params.q,
+              $options: "i"
+            }
+          },
+          {
+            name: {
+              $regex: req.params.q,
+              $options: "i"
+            }
+          },
+          {
+            username: {
+              $regex: req.params.q,
+              $options: "i"
+            }
+          },
+          {
+            idNumber: {
+              $regex: req.params.q,
+              $options: "i"
+            }
+          }
         ]
       },
-      { type }
+      {
+        type
+      }
     ]
   };
   User.paginate(query, {}, (err, items) => {
     if (err) {
-      res.status(500).end();
+      console.log(err);
+      res.status(500).send(err);
     } else {
       res.send(items);
     }
@@ -238,13 +318,31 @@ export const find = (req, res) => {
 };
 export const relationsFind = (req, res) => {
   let query = {
-    $and: [
-      {
-        $or: [
-          { "emails.email": { $regex: req.params.q, $options: "i" } },
-          { name: { $regex: req.params.q, $options: "i" } },
-          { username: { $regex: req.params.q, $options: "i" } },
-          { idNumber: { $regex: req.params.q, $options: "i" } }
+    $and: [{
+        $or: [{
+            "emails.email": {
+              $regex: req.params.q,
+              $options: "i"
+            }
+          },
+          {
+            name: {
+              $regex: req.params.q,
+              $options: "i"
+            }
+          },
+          {
+            username: {
+              $regex: req.params.q,
+              $options: "i"
+            }
+          },
+          {
+            idNumber: {
+              $regex: req.params.q,
+              $options: "i"
+            }
+          }
         ]
       },
       {
@@ -262,10 +360,19 @@ export const relationsFind = (req, res) => {
   });
 };
 export const lastItems = (req, res) => {
-  Line.find({ creator: req.user._id, isParent: false })
-    .sort({ updatedAt: -1 })
+  Line.find({
+      creator: req.user._id,
+      isParent: false
+    })
+    .sort({
+      updatedAt: -1
+    })
     .limit(100)
-    .populate([{ path: "item" }, { path: "children" }])
+    .populate([{
+      path: "item"
+    }, {
+      path: "children"
+    }])
     .exec((err, lines) => {
       if (err) {
         res.status(500).end();
@@ -280,13 +387,20 @@ export const lastItems = (req, res) => {
         }
         res.send(docs);
       } else {
-        res.status(404).end({ msg: "not found" });
+        res.status(404).end({
+          msg: "not found"
+        });
       }
     });
 };
 export const lastParents = (req, res) => {
-  Line.find({ creator: req.user._id, isParent: true })
-    .sort({ updatedAt: -1 })
+  Line.find({
+      creator: req.user._id,
+      isParent: true
+    })
+    .sort({
+      updatedAt: -1
+    })
     .limit(100)
     // .populate([{ path: "item" }, { path: "children" }])
     .exec((err, lines) => {
@@ -304,10 +418,19 @@ export const lastParents = (req, res) => {
         let itemsIds = lines.map(line => line.item);
 
         // query.users = { $in: [req.user._id] };
-        Item.find({ _id: { $in: itemsIds }, isParent: true })
-          .sort({ updatedAt: -1 })
+        Item.find({
+            _id: {
+              $in: itemsIds
+            },
+            isParent: true
+          })
+          .sort({
+            updatedAt: -1
+          })
           .limit(100)
-          .populate([{ path: "children" }])
+          .populate([{
+            path: "children"
+          }])
           .exec((err, items) => {
             if (err) {
               console.log(err);
@@ -323,7 +446,9 @@ export const lastParents = (req, res) => {
               // }
               res.send(items);
             } else {
-              res.status(404).end({ msg: "not found" });
+              res.status(404).end({
+                msg: "not found"
+              });
             }
           });
         // Item.getWithChildren(docs)
@@ -336,7 +461,9 @@ export const lastParents = (req, res) => {
 
         // res.send(docs);
       } else {
-        res.status(404).end({ msg: "not found" });
+        res.status(404).end({
+          msg: "not found"
+        });
       }
     });
 };

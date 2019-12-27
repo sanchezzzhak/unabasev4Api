@@ -18,6 +18,8 @@ export const queryHelper = (query, options) => {
     result.options.populate.push(...populate);
   }
 
+
+
   result.options.page = query.page || 1;
   result.options.limit = query.limit || 20;
 
