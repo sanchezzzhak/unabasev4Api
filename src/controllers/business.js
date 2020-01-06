@@ -3,101 +3,117 @@ import ntype from "normalize-type";
 import Contact from "../models/contact";
 import Business from "../models/business";
 import User from "../models/user";
-import UserPermissions from '../models/userPermission'
+import UserPermissions from "../models/userPermission";
 import business from "../routes/business";
-import {
-  Types
-} from "mongoose";
+import { Types } from "mongoose";
 const ObjectId = Types.ObjectId;
 export default {
   create: (req, res) => {
-    Business.findOne({
-      idNumber: req.body.idNumber
-    }, (err, business) => {
-      if (err) throw err;
+    Business.findOne(
+      {
+        idNumber: req.body.idNumber
+      },
+      (err, business) => {
+        if (err) throw err;
 
-      if (business) {
-        res.status(409).send({
-          msg: "Business already exist"
-        });
-      } else if (typeof req.body.idNumber === "undefined") {
-        res.send({
-          msg: "You must enter an id number"
-        });
-      } else {
-        let newBusiness = new Business(req.body);
-        newBusiness.creator = req.user._id;
-        console.log("//");
-        console.log(req.user._id);
-        newBusiness.users = [{
-          description: "creator",
-          user: req.user._id
-        }];
-        console.log(newBusiness.users);
-        newBusiness.save((err, business) => {
-          if (err) {
-            console.log(err);
-            res.status(500).end({
-              err
-            });
-          } else {
-            let contact = new Contact();
-            contact.name = business.name;
-            contact.business = business._id;
-            contact.type = "Business";
-            contact.save();
-            newBusiness.populate(
-              [{
-                path: "users.user",
-                select: "name  phone email imgUrl emails type"
-              }],
-              err => {
-                if (err) {
-                  console.log(err);
-                  res.status(500).end({
-                    err
-                  });
-                } else {
-                  res.send(business);
+        if (business) {
+          res.status(409).send({
+            msg: "Business already exist"
+          });
+        } else if (typeof req.body.idNumber === "undefined") {
+          res.send({
+            msg: "You must enter an id number"
+          });
+        } else {
+          let newBusiness = new Business(req.body);
+          newBusiness.creator = req.user._id;
+          console.log("//");
+          console.log(req.user._id);
+          newBusiness.users = [
+            {
+              description: "creator",
+              user: req.user._id
+            }
+          ];
+          console.log(newBusiness.users);
+          newBusiness.save((err, business) => {
+            if (err) {
+              console.log(err);
+              res.status(500).end({
+                err
+              });
+            } else {
+              let contact = new Contact();
+              contact.name = business.name;
+              contact.business = business._id;
+              contact.type = "Business";
+              contact.save();
+              newBusiness.populate(
+                [
+                  {
+                    path: "users.user",
+                    select: "name  phone email imgUrl emails type"
+                  }
+                ],
+                err => {
+                  if (err) {
+                    console.log(err);
+                    res.status(500).end({
+                      err
+                    });
+                  } else {
+                    res.send(business);
+                  }
                 }
-              }
-            );
-          }
-        });
+              );
+            }
+          });
+        }
       }
-    });
+    );
   },
   getOne: (req, res) => {
-    Business.findOne({
-      _id: req.params.id
-    }, (err, business) => {
-      if (err) {
-        res.status(500).send(err);
-      } else if (business) {
-        business.populate(
-          [{
-            path: "users.user",
-            select: "name  phone email imgUrl emails type"
-          }],
-          err => {
-            res.send(business);
-          }
-        );
-      } else {
-        res.status(404).end("business not found");
+    Business.findOne(
+      {
+        _id: req.params.id
+      },
+      (err, business) => {
+        if (err) {
+          res.status(500).send(err);
+        } else if (business) {
+          business.populate(
+            [
+              {
+                path: "users.user",
+                select: "name  phone email imgUrl emails type"
+              }
+            ],
+            err => {
+              res.send(business);
+            }
+          );
+        } else {
+          res.status(404).end("business not found");
+        }
       }
-    });
+    );
   },
   updateOne: (req, res) => {
-    Business.findOneAndUpdate({
+    Business.findOneAndUpdate(
+      {
         _id: req.params.id
-      }, req.body, {
+      },
+      req.body,
+      {
         new: true
-      })
-      .populate([{
-        path: "users.user",
-        select: "name  phone email imgUrl emails type"
-      }])
+      }
+    )
+      .populate([
+        {
+          path: "users.user",
+          select: "name  phone email imgUrl emails type"
+        }
+      ])
       .exec((err, item) => {
         if (err) {
           res.status(500).send(err);
@@ -115,9 +131,11 @@ export default {
     delete rquery.page;
     delete rquery.limit;
 
-    rquery.$or = [{
-      "users.user": ObjectId(`${req.user._id}`)
-    }];
+    rquery.$or = [
+      {
+        "users.user": ObjectId(`${req.user._id}`)
+      }
+    ];
 
     Business.paginate(rquery, options, (err, item) => {
       if (err) {
@@ -129,48 +147,56 @@ export default {
     });
   },
 
-
-
   // HECTOR - RUTA QUE AGREGA UN USUARIO A UNA EMPRESA
   addUserToBusiness: (req, res) => {
     console.log(req.body);
     let user = {
       description: req.body.role.name,
       user: req.body.userToAdd
-    }
-    Business.findByIdAndUpdate(req.params.id, {
-      $push: {
-        users: user
-      }
-    }, {
-      new: false
-    }, (err, company) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-
-        let permissionsArray = new Array();
-        for (let index = 0; index < req.body.role.permissions.length; index++) {
-          let permission = {
-            user: req.body.userToAdd._id,
-            business: req.body.business._id,
-            permission: req.body.role.permissions[index]._id
-          }
-          permissionsArray.push(permission);
+    };
+    Business.findByIdAndUpdate(
+      req.params.id,
+      {
+        $push: {
+          users: user
         }
-
-        UserPermissions.insertMany(permissionsArray, function (err, permissions) {
-          if (err) {
-            res.status(500).send(err);
-          } else {
-            res.send(permissions);
+      },
+      {
+        new: false
+      },
+      (err, company) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          let permissionsArray = new Array();
+          for (
+            let index = 0;
+            index < req.body.role.permissions.length;
+            index++
+          ) {
+            let permission = {
+              user: req.body.userToAdd._id,
+              business: req.body.business._id,
+              permission: req.body.role.permissions[index]._id
+            };
+            permissionsArray.push(permission);
           }
-        });
-        // res.send(company);
-      }
-    });
-  },
 
+          UserPermissions.insertMany(permissionsArray, function(
+            err,
+            permissions
+          ) {
+            if (err) {
+              res.status(500).send(err);
+            } else {
+              res.send(permissions);
+            }
+          });
+          // res.send(company);
+        }
+      }
+    );
+  },
 
   user: (req, res) => {
     const action = req.body.action === "add" ? "$addToSet" : "$pull";
@@ -180,29 +206,36 @@ export default {
       }
     };
 
-    Business.findByIdAndUpdate(req.params.id, update, {
-      new: true
-    }, (err, item) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-        User.findByIdAndUpdate(
-          req.body.user, {
-            [action]: {
-              business: item._id
+    Business.findByIdAndUpdate(
+      req.params.id,
+      update,
+      {
+        new: true
+      },
+      (err, item) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          User.findByIdAndUpdate(
+            req.body.user,
+            {
+              [action]: {
+                business: item._id
+              }
+            },
+            {
+              new: true
+            },
+            (err, user) => {
+              if (err) {
+                res.status(500).send(err);
+              } else {
+                res.send(item);
+              }
             }
-          }, {
-            new: true
-          },
-          (err, user) => {
-            if (err) {
-              res.status(500).send(err);
-            } else {
-              res.send(item);
-            }
-          }
-        );
+          );
+        }
       }
-    });
+    );
   }
 };
