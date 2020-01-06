@@ -146,7 +146,7 @@ export default {
       }
     });
   },
-
+  // todo - user method can be used for the same action plus permissions asignment
   // HECTOR - RUTA QUE AGREGA UN USUARIO A UNA EMPRESA
   addUserToBusiness: (req, res) => {
     console.log(req.body);
@@ -169,11 +169,7 @@ export default {
           res.status(500).send(err);
         } else {
           let permissionsArray = new Array();
-          for (
-            let index = 0;
-            index < req.body.role.permissions.length;
-            index++
-          ) {
+          for (let index = 0; index < req.body.role.permissions.length; index++) {
             let permission = {
               user: req.body.userToAdd._id,
               business: req.body.business._id,
@@ -182,10 +178,7 @@ export default {
             permissionsArray.push(permission);
           }
 
-          UserPermissions.insertMany(permissionsArray, function(
-            err,
-            permissions
-          ) {
+          UserPermissions.insertMany(permissionsArray, function(err, permissions) {
             if (err) {
               res.status(500).send(err);
             } else {

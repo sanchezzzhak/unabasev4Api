@@ -1,9 +1,7 @@
 import Permission from "../models/permission";
 import UserPermission from "../models/userPermission";
-import Role from '../models/role'
-import {
-  queryHelper
-} from "../lib/queryHelper";
+import Role from "../models/role";
+import { queryHelper } from "../lib/queryHelper";
 
 export const create = (req, res) => {
   Permission.create(req.body, (err, permission) => {
@@ -15,12 +13,10 @@ export const create = (req, res) => {
 export const update = (req, res, next) => {
   Permission.findByIdAndUpdate(req.params.id, req.body, {
     new: true
-  }).exec(
-    (err, permission) => {
-      if (err) return next(err);
-      res.send(permission);
-    }
-  );
+  }).exec((err, permission) => {
+    if (err) return next(err);
+    res.send(permission);
+  });
 };
 
 export const get = (req, res, next) => {
@@ -38,7 +34,7 @@ export const find = (req, res, next) => {
   });
 };
 
-// TODO controller can be replaced by find
+// TODO controller can be replaced by find in the userPermission controller
 //HECTOR -  USUARIOS QUE TIENEN UN PERMISO DENTRO DE LA EMPRESA (ESPECIFICO)
 
 export const findUsersByPermission = (req, res) => {
@@ -53,7 +49,8 @@ export const findUsersByPermission = (req, res) => {
   delete req.query.page;
   delete req.query.limit;
 
-  UserPermission.paginate({
+  UserPermission.paginate(
+    {
       permission: req.params.permissionId,
       business: req.params.businessId
     },
@@ -69,18 +66,23 @@ export const findUsersByPermission = (req, res) => {
   );
 };
 
-// HECTOR - GET USER ROLES 
+// TODO controller can be replaced by find in the role controller
+// HECTOR - GET USER ROLES
 
 export const getUserRoles = (req, res, next) => {
   let helper = queryHelper(req.query, {});
   let populate = {
-    path: 'permissions',
-    select: 'name path action module'
-  }
-  Role.paginate(helper.query, {
-    populate
-  }, (err, roles) => {
-    if (err) return next(err);
-    res.send(roles);
-  });
+    path: "permissions",
+    select: "name path action module"
+  };
+  Role.paginate(
+    helper.query,
+    {
+      populate
+    },
+    (err, roles) => {
+      if (err) return next(err);
+      res.send(roles);
+    }
+  );
 };
