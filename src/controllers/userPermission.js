@@ -35,44 +35,29 @@ export const deleteOne = (req, res, next) => {
 
 export const find = (req, res, next) => {
   // TODO   function to check params
-  if (req.query.user && req.query.business) {
-    // let options = {};
-    // options.page = req.body.page || 1;
-    // options.limit = req.body.limit || 20;
-    // options.populate = [
-    //   {
-    //     path: "user",
-    //     select: "isActive name  email phone user imgUrl emails type"
-    //   },
-    //   {
-    //     path: "business",
-    //     select: "isActive name  email phone user imgUrl emails type"
-    //   },
-    //   { path: "permission" }
-    // ];
-    // delete req.body.page;
-    // delete req.body.limit;
-    let populate = [
-      {
-        path: "user",
-        select: "isActive name  email phone user imgUrl emails type"
-      },
-      {
-        path: "business",
-        select: "isActive name  email phone user imgUrl emails type"
-      },
-      { path: "permission" }
-    ];
-    let helper = queryHelper(req.query, { populate });
+  // if (req.query.user && req.query.business) {
 
-    UserPermission.paginate(helper.query, helper.options, (err, userPermissions) => {
-      if (err) return next(err);
-      res.send(userPermissions);
-    });
-  } else {
-    let err = new Error();
-    err.statusCode = 406;
-    err.message = "data is not enough";
-    return next(err);
-  }
+  let populate = [
+    {
+      path: "user",
+      select: "isActive name  email phone user imgUrl emails type"
+    },
+    {
+      path: "business",
+      select: "isActive name  email phone user imgUrl emails type"
+    },
+    { path: "permission" }
+  ];
+  let helper = queryHelper(req.query, { populate });
+
+  UserPermission.paginate(helper.query, helper.options, (err, userPermissions) => {
+    if (err) return next(err);
+    res.send(userPermissions);
+  });
+  // } else {
+  //   let err = new Error();
+  //   err.statusCode = 406;
+  //   err.message = "data is not enough";
+  //   return next(err);
+  // }
 };
