@@ -7,15 +7,15 @@ let module = "permission";
 // router
 // TODO route can be replaced and can be use the find route with params
 //HECTOR -  USUARIOS QUE TIENEN UN PERMISO DENTRO DE LA EMPRESA (ESPECIFICO)
-router.get(
-  "/users/:businessId/:permissionId",
-  logger({
-    name: "find list users by permission",
-    description: "find list of users by permission",
-    module
-  }),
-  findUsersByPermission
-);
+// router.get(
+//   "/users/:businessId/:permissionId",
+//   logger({
+//     name: "find list users by permission",
+//     description: "find list of users by permission",
+//     module
+//   }),
+//   findUsersByPermission
+// );
 
 // HECTOR - GET USER ROLES
 // router.get(
