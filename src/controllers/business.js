@@ -5,12 +5,13 @@ import Business from "../models/business";
 import User from "../models/user";
 import UserPermissions from "../models/userPermission";
 import business from "../routes/business";
-import { Types } from "mongoose";
+import {
+  Types
+} from "mongoose";
 const ObjectId = Types.ObjectId;
 export default {
   create: (req, res) => {
-    Business.findOne(
-      {
+    Business.findOne({
         idNumber: req.body.idNumber
       },
       (err, business) => {
@@ -29,12 +30,10 @@ export default {
           newBusiness.creator = req.user._id;
           console.log("//");
           console.log(req.user._id);
-          newBusiness.users = [
-            {
-              description: "creator",
-              user: req.user._id
-            }
-          ];
+          newBusiness.users = [{
+            description: "creator",
+            user: req.user._id
+          }];
           console.log(newBusiness.users);
           newBusiness.save((err, business) => {
             if (err) {
@@ -49,12 +48,10 @@ export default {
               contact.type = "Business";
               contact.save();
               newBusiness.populate(
-                [
-                  {
-                    path: "users.user",
-                    select: "name  phone email imgUrl emails type"
-                  }
-                ],
+                [{
+                  path: "users.user",
+                  select: "name  phone email imgUrl emails type"
+                }],
                 err => {
                   if (err) {
                     console.log(err);
@@ -73,8 +70,7 @@ export default {
     );
   },
   getOne: (req, res) => {
-    Business.findOne(
-      {
+    Business.findOne({
         _id: req.params.id
       },
       (err, business) => {
@@ -82,12 +78,10 @@ export default {
           res.status(500).send(err);
         } else if (business) {
           business.populate(
-            [
-              {
-                path: "users.user",
-                select: "name  phone email imgUrl emails type"
-              }
-            ],
+            [{
+              path: "users.user",
+              select: "name  phone email imgUrl emails type"
+            }],
             err => {
               res.send(business);
             }
@@ -99,21 +93,17 @@ export default {
     );
   },
   updateOne: (req, res) => {
-    Business.findOneAndUpdate(
-      {
-        _id: req.params.id
-      },
-      req.body,
-      {
-        new: true
-      }
-    )
-      .populate([
-        {
-          path: "users.user",
-          select: "name  phone email imgUrl emails type"
+    Business.findOneAndUpdate({
+          _id: req.params.id
+        },
+        req.body, {
+          new: true
         }
-      ])
+      )
+      .populate([{
+        path: "users.user",
+        select: "name  phone email imgUrl emails type"
+      }])
       .exec((err, item) => {
         if (err) {
           res.status(500).send(err);
@@ -131,11 +121,9 @@ export default {
     delete rquery.page;
     delete rquery.limit;
 
-    rquery.$or = [
-      {
-        "users.user": ObjectId(`${req.user._id}`)
-      }
-    ];
+    rquery.$or = [{
+      "users.user": ObjectId(`${req.user._id}`)
+    }];
 
     Business.paginate(rquery, options, (err, item) => {
       if (err) {
@@ -155,14 +143,12 @@ export default {
       user: req.body.userToAdd
     };
     Business.findByIdAndUpdate(
-      req.params.id,
-      {
+      req.params.id, {
         $push: {
           users: user
         }
-      },
-      {
-        new: false
+      }, {
+        new: true
       },
       (err, company) => {
         if (err) {
@@ -178,14 +164,14 @@ export default {
             permissionsArray.push(permission);
           }
 
-          UserPermissions.insertMany(permissionsArray, function(err, permissions) {
+          UserPermissions.insertMany(permissionsArray, function (err, permissions) {
             if (err) {
               res.status(500).send(err);
+              console.log(err);
             } else {
               res.send(permissions);
             }
           });
-          // res.send(company);
         }
       }
     );
@@ -201,8 +187,7 @@ export default {
 
     Business.findByIdAndUpdate(
       req.params.id,
-      update,
-      {
+      update, {
         new: true
       },
       (err, item) => {
@@ -210,13 +195,11 @@ export default {
           res.status(500).send(err);
         } else {
           User.findByIdAndUpdate(
-            req.body.user,
-            {
+            req.body.user, {
               [action]: {
                 business: item._id
               }
-            },
-            {
+            }, {
               new: true
             },
             (err, user) => {
