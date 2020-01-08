@@ -1,16 +1,7 @@
-import {
-  Router
-} from "express";
+import { Router } from "express";
 import logger from "../lib/logger";
 const router = Router();
-import {
-  get,
-  find,
-  update,
-  create,
-  findUsersByPermission,
-  getUserRoles
-} from "../controllers/permission";
+import { get, find, update, create, findUsersByPermission, getUserRoles } from "../controllers/permission";
 let module = "permission";
 
 // router
@@ -26,17 +17,16 @@ router.get(
   findUsersByPermission
 );
 
-// HECTOR - GET USER ROLES 
-router.get(
-  "/roles",
-  logger({
-    name: "get user roles",
-    description: "get user roles",
-    module
-  }),
-  getUserRoles
-);
-
+// HECTOR - GET USER ROLES
+// router.get(
+//   "/roles",
+//   logger({
+//     name: "get user roles",
+//     description: "get user roles",
+//     module
+//   }),
+//   getUserRoles
+// );
 
 router.get(
   "/:id",
