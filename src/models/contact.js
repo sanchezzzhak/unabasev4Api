@@ -12,10 +12,15 @@ const contactSchema = new Schema(
     phone: String,
     phones: [{ _id: false, phone: String, label: String }],
     emails: [{ _id: false, email: String, label: String }],
+    // type and link DEPRECATED, contact must be only from users
     type: { type: String, enum: ["Business", "User"] },
     link: { type: Schema.Types.ObjectId, refPath: "type" },
     user: { type: Schema.Types.ObjectId, ref: "User" },
     business: Array({ type: Schema.Types.ObjectId, ref: "Business" }),
+    business: {
+      default: { type: Schema.Types.ObjectId, ref: "business" },
+      name: { type: String }
+    },
     creator: { type: Schema.Types.ObjectId, ref: "User" },
     company: {
       idNumber: { type: String },

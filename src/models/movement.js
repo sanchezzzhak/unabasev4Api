@@ -18,29 +18,35 @@ const movementSchema = new Schema(
     },
     // client: { type: Schema.Types.ObjectId, ref: 'User' },
     client: {
+      // type and data DEPRECATED
       type: { type: String, enum: ["Business", "Contact", "User"] },
       data: { type: Schema.Types.ObjectId, refPath: "client.type" },
       name: String,
-      user: { type: Schema.Types.ObjectId, refPath: "User" }
+      user: { type: Schema.Types.ObjectId, ref: "User" },
+      contact: { type: Schema.Types.ObjectId, ref: "Contact" },
+      business: { type: Schema.Types.ObjectId, ref: "Business" }
     },
     responsable: {
+      // type and data DEPRECATED
       type: { type: String, enum: ["Business", "Contact", "User"] },
       data: { type: Schema.Types.ObjectId, refPath: "responsable.type" },
       name: String,
-      user: { type: Schema.Types.ObjectId, refPath: "User" }
+      user: { type: Schema.Types.ObjectId, ref: "User" },
+      contact: { type: Schema.Types.ObjectId, ref: "Contact" },
+      business: { type: Schema.Types.ObjectId, ref: "Business" }
     },
     editor: { type: Schema.Types.ObjectId, ref: "User" },
 
     creator: { type: Schema.Types.ObjectId, ref: "User" },
-    // responsable: { type: Schema.Types.ObjectId, ref: 'User' },
-    personal: {
-      client: { type: Schema.Types.ObjectId, ref: "User" },
-      responsable: { type: Schema.Types.ObjectId, ref: "User" }
-    },
-    business: {
-      client: { type: Schema.Types.ObjectId, ref: "Business" },
-      provider: { type: Schema.Types.ObjectId, ref: "Business" }
-    },
+    // DEPRECATED
+    // personal: {
+    //   client: { type: Schema.Types.ObjectId, ref: "User" },
+    //   responsable: { type: Schema.Types.ObjectId, ref: "User" }
+    // },
+    // business: {
+    //   client: { type: Schema.Types.ObjectId, ref: "Business" },
+    //   provider: { type: Schema.Types.ObjectId, ref: "Business" }
+    // },
     isBusiness: { type: Boolean, default: false },
     lines: Array({ type: Schema.Types.ObjectId, ref: "Line" }),
     comments: Array({ type: Schema.Types.ObjectId, ref: "Comment" }),
