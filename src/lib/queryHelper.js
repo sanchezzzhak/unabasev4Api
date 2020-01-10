@@ -1,4 +1,4 @@
-export const queryHelper = (query, options) => {
+export const queryHelper = (query, options, regex = []) => {
   // object to return
   let result = {
     options: {},
@@ -18,8 +18,6 @@ export const queryHelper = (query, options) => {
     result.options.populate.push(...populate);
   }
 
-
-
   result.options.page = query.page || 1;
   result.options.limit = query.limit || 20;
 
@@ -28,8 +26,17 @@ export const queryHelper = (query, options) => {
   delete query.scheduleSort;
   delete query.page;
   delete query.limit;
+
+  let regexQuery = {};
+  if (regex.length) {
+    for (let reg of regex) {
+      regexQuery[reg] = { $regex: query[reg], $options: "i" };
+      delete query[reg];
+    }
+  }
   result.query = {
-    ...query
+    ...query,
+    ...regexQuery
   };
   return result;
 };
