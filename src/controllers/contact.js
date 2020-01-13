@@ -3,7 +3,7 @@ import ntype from "normalize-type";
 import User from "../models/user";
 import Line from "../models/line";
 import Movement from "../models/movement";
-export const get = (req, res) => {
+export const get = (req, res, next) => {
   let rquery = ntype(req.query);
   let options = {};
   options.page = rquery.page || 1;
@@ -15,30 +15,26 @@ export const get = (req, res) => {
   delete rquery.limit;
   // let query = { ...rquery };
   Contact.paginate(rquery, options, (err, items) => {
-    if (err) {
-      res.status(500).end();
-    } else {
-      res.send(items);
-    }
+    if (err) next(err);
+    res.send(items);
   });
 };
-export const getOne = (req, res) => {
+export const getOne = (req, res, next) => {
   Contact.findById(req.params.id)
     .populate({
       path: "user",
       select: "name google.name google.email imgUrl emails phones"
     })
     .exec((err, item) => {
-      if (err) {
-        res.status(500).end({ err });
-      } else if (item) {
+      if (err) next(err);
+      if (item) {
         res.send(item);
       } else {
         res.status(404).end();
       }
     });
 };
-export const create = async (req, res) => {
+export const create = async (req, res, next) => {
   let userId;
   if (req.body.emails.length) {
     userId = await User.findOne({
@@ -51,27 +47,20 @@ export const create = async (req, res) => {
   contact.creator = req.user._id;
   contact.user = userId ? userId._id : null;
   contact.save((err, item) => {
-    if (err) {
-      console.log(err);
-      res.status(500).end({ err });
-    } else {
-      if (item.user && item.user !== "") {
-        User.findByIdAndUpdate(item.user, { $addToSet: { contacts: item._id } }, { new: true }, (err, user) => {
-          if (err) {
-            res.status(500).end({ err });
-          } else {
-            item.populate([{ path: "user", select: "name google imgUrl emails" }], err => {
-              res.send(item);
-            });
-          }
+    if (err) next(err);
+    if (item.user && item.user !== "") {
+      User.findByIdAndUpdate(item.user, { $addToSet: { contacts: item._id } }, { new: true }, (err, user) => {
+        if (err) next(err);
+        item.populate([{ path: "user", select: "name google imgUrl emails" }], err => {
+          res.send(item);
         });
-      } else {
-        res.send(item);
-      }
+      });
+    } else {
+      res.send(item);
     }
   });
 };
-export const find = (req, res) => {
+export const find = (req, res, next) => {
   let rquery = ntype(req.query);
   let options = {};
   options.page = rquery.page || 1;
@@ -99,15 +88,12 @@ export const find = (req, res) => {
       ]
     },
     (err, items) => {
-      if (err) {
-        res.status(500).end({ err });
-      } else {
-        res.send(items);
-      }
+      if (err) next(err);
+      res.send(items);
     }
   );
 };
-export const findSelf = (req, res) => {
+export const findSelf = (req, res, next) => {
   let rquery = ntype(req.query);
   let options = {};
   options.page = rquery.page || 1;
@@ -151,36 +137,26 @@ export const findSelf = (req, res) => {
         {
           path: "user",
           select: "name  imgUrl emails"
-        },
-        {
-          path: "business",
-          select: "name idNumber legalName"
         }
       ],
       ...options
     },
     (err, items) => {
-      if (err) {
-        res.status(500).end({ err });
-      } else {
-        res.send(items);
-      }
+      if (err) next(err);
+      res.send(items);
     }
   );
 };
-export const updateOne = (req, res) => {
+export const updateOne = (req, res, next) => {
   Contact.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .populate("user")
     .exec((err, item) => {
-      if (err) {
-        res.status(500).end({ err });
-      } else {
-        res.send(item);
-      }
+      if (err) next(err);
+      res.send(item);
     });
 };
 
-export const byItem = async (req, res) => {
+export const byItem = async (req, res, next) => {
   let rquery = ntype(req.query);
   let lines = await Line.find({ item: req.params.id }).exec();
   Movement.find({ _id: { $in: lines.map(i => i.movement) }, creator: req.user._id })
@@ -188,22 +164,19 @@ export const byItem = async (req, res) => {
     .populate([{ path: "client.data" }, { path: "responsable.data" }])
     .limit(rquery.limit || 30)
     .exec((err, movements) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-        let contactsArray = new Array();
-        let contactsIds = new Array();
-        movements.forEach(movement => {
-          if (!movement.client.data._id.equals(req.user._id) && !contactsIds.includes(movement.client.data._id)) {
-            contactsArray.push(movement.client.data);
-            contactsIds.push(movement.client.data._id);
-          }
-          if (!movement.responsable.data._id.equals(req.user._id) && !contactsIds.includes(movement.responsable.data._id)) {
-            contactsArray.push(movement.responsable.data);
-            contactsIds.push(movement.responsable.data._id);
-          }
-        });
-        res.send(contactsArray);
-      }
+      if (err) next(err);
+      let contactsArray = new Array();
+      let contactsIds = new Array();
+      movements.forEach(movement => {
+        if (!movement.client.data._id.equals(req.user._id) && !contactsIds.includes(movement.client.data._id)) {
+          contactsArray.push(movement.client.data);
+          contactsIds.push(movement.client.data._id);
+        }
+        if (!movement.responsable.data._id.equals(req.user._id) && !contactsIds.includes(movement.responsable.data._id)) {
+          contactsArray.push(movement.responsable.data);
+          contactsIds.push(movement.responsable.data._id);
+        }
+      });
+      res.send(contactsArray);
     });
 };
