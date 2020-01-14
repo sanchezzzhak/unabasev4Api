@@ -194,7 +194,9 @@ User.addUser = (user, callback) => {
 // 	})
 // 	callback()
 // }
-
+User.addBusiness = (id, business, callback) => {
+  User.findByIdAndUpdate(id, { $addToSet: { business: business } }, callback);
+};
 User.getUsers = (callback, limit) => {
   User.find(callback).limit(limit);
 };
