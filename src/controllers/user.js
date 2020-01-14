@@ -329,7 +329,7 @@ export const find = (req, res) => {
         }
       ]
     },
-    (err, items) => {
+    async (err, items) => {
       if (err) {
         console.log(err);
         res.status(500).send(err);

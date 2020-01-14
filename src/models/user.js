@@ -88,7 +88,7 @@ let userSchema = Schema(
     /**
      *  array of ObjectIds from business asociated
      */
-    business: Array({ type: Schema.Types.ObjectId, ref: "User" }),
+    business: Array({ type: Schema.Types.ObjectId, ref: "Business" }),
     users: Array({ type: Schema.Types.ObjectId, ref: "User" }),
     quantity: [
       {
