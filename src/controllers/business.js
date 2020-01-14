@@ -179,7 +179,7 @@ export default {
             };
             permissionsArray.push(permission);
           }
-
+          User.addBusiness(req.body.userToAdd._id, req.body.business._id).exec();
           UserPermissions.insertMany(permissionsArray, function(err, permissions) {
             if (err) {
               res.status(500).send(err);
