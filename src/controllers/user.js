@@ -320,14 +320,24 @@ export const find = (req, res) => {
       }
     ]
   };
-  User.paginate(query, {}, (err, items) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send(err);
-    } else {
-      res.send(items);
+  User.paginate(
+    query,
+    {
+      populate: [
+        {
+          path: "business"
+        }
+      ]
+    },
+    (err, items) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send(err);
+      } else {
+        res.send(items);
+      }
     }
-  });
+  );
 };
 export const relationsFind = (req, res) => {
   let query = {
