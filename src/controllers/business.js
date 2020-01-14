@@ -48,7 +48,7 @@ export default {
               contact.business = business._id;
               contact.type = "Business";
               contact.save();
-              User.addBussiness(req.user._id, business._id, () => {
+              User.addBusiness(req.user._id, business._id, () => {
                 newBusiness.populate(
                   [
                     {
