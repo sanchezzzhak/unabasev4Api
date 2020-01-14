@@ -1,18 +1,13 @@
 import User from "../models/user";
 import Line from "../models/line";
 import Item from "../models/item";
-import {
-  send
-} from "../config/mailer";
+import { send } from "../config/mailer";
 import template from "../lib/mails";
 import ntype from "normalize-type";
 // import findByValue from '../lib/findObjectByValue';
 // import accountTypeByUrl from '../lib/accountTypeByUrl';
 import Contact from "../models/contact";
-import {
-  getUserData,
-  getUserPermission
-} from "../lib/user";
+import { getUserData, getUserPermission } from "../lib/user";
 import UserPermission from "../models/userPermission";
 
 export const create = (req, res) => {
@@ -26,10 +21,12 @@ export const create = (req, res) => {
   if (type === "business") {
     user.creator = req.user._id;
     user.users = [req.user._id];
-    user.admins = [{
-      description: "creator",
-      user: req.user._id
-    }];
+    user.admins = [
+      {
+        description: "creator",
+        user: req.user._id
+      }
+    ];
   }
   user.save((err, item) => {
     if (err) {
@@ -47,12 +44,9 @@ export const create = (req, res) => {
   });
 };
 export const password = (req, res) => {
-  const {
-    password,
-    newPassword
-  } = req.body;
+  const { password, newPassword } = req.body;
   console.log(req.body);
-  User.findById(req.params.id, function (err, user) {
+  User.findById(req.params.id, function(err, user) {
     if (err) {
       res.status(500).send(err);
     } else {
@@ -81,17 +75,20 @@ export const restart = (req, res) => {
   console.log("enter restart password");
 
   let query = {
-    $or: [{
-      username: {
-        $regex: req.params.q,
-        $options: "i"
+    $or: [
+      {
+        username: {
+          $regex: req.params.q,
+          $options: "i"
+        }
+      },
+      {
+        "emails.email": {
+          $regex: req.params.q,
+          $options: "i"
+        }
       }
-    }, {
-      "emails.email": {
-        $regex: req.params.q,
-        $options: "i"
-      }
-    }],
+    ],
     type: "personal"
   };
 
@@ -102,10 +99,7 @@ export const restart = (req, res) => {
     } else if (item) {
       const email = item.emails.filter(i => i.label === "default" || i.label === "google");
 
-      const {
-        text,
-        subject
-      } = template().restartPassword({
+      const { text, subject } = template().restartPassword({
         origin: req.headers.origin,
         lang: req.locale.language,
         id: item._id
@@ -172,10 +166,11 @@ export const getOne = (req, res) => {
 
   const type = req.query.type || "personal";
   User.findOne({
-      _id: req.params.id,
-      type
-    })
+    _id: req.params.id,
+    type
+  })
     .populate("users")
+    .populate("business")
     .exec((err, user) => {
       if (err) {
         res.status(500).send(err);
@@ -189,11 +184,15 @@ export const getOne = (req, res) => {
     });
 };
 export const update = (req, res, next) => {
-  User.findOneAndUpdate({
+  User.findOneAndUpdate(
+    {
       _id: req.params.id
-    }, req.body, {
+    },
+    req.body,
+    {
       new: true
-    })
+    }
+  )
     .populate("currency")
     .populate("scope.id")
     .exec(async (err, item) => {
@@ -206,9 +205,9 @@ export const update = (req, res, next) => {
       //   .catch(err => next(err));
       try {
         let userPermissions = await UserPermission.find({
-            user: item._id,
-            business: item.scope.id
-          })
+          user: item._id,
+          business: item.scope.id
+        })
           .select("permission")
           .populate("permission")
           .exec();
@@ -227,15 +226,20 @@ export const business = (req, res) => {
       business: req.body.business
     }
   };
-  User.findByIdAndUpdate(req.params.id, update, {
-    new: true
-  }, (err, item) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.send(item);
+  User.findByIdAndUpdate(
+    req.params.id,
+    update,
+    {
+      new: true
+    },
+    (err, item) => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.send(item);
+      }
     }
-  });
+  );
 };
 export const user = (req, res) => {
   let update = {
@@ -243,24 +247,31 @@ export const user = (req, res) => {
       users: req.body.user
     }
   };
-  User.findByIdAndUpdate(req.params.id, update, {
-    new: true
-  }, (err, item) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.send(item);
+  User.findByIdAndUpdate(
+    req.params.id,
+    update,
+    {
+      new: true
+    },
+    (err, item) => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.send(item);
+      }
     }
-  });
+  );
 };
 export const scope = (req, res) => {
   User.findByIdAndUpdate(
-    req.params.id, {
+    req.params.id,
+    {
       scope: {
         type: req.body.type,
         id: req.body.id
       }
-    }, {
+    },
+    {
       new: true
     },
     (err, item) => {
@@ -275,8 +286,10 @@ export const scope = (req, res) => {
 export const find = (req, res) => {
   const type = req.query.type || "personal";
   let query = {
-    $and: [{
-        $or: [{
+    $and: [
+      {
+        $or: [
+          {
             "emails.email": {
               $regex: req.params.q,
               $options: "i"
@@ -318,8 +331,10 @@ export const find = (req, res) => {
 };
 export const relationsFind = (req, res) => {
   let query = {
-    $and: [{
-        $or: [{
+    $and: [
+      {
+        $or: [
+          {
             "emails.email": {
               $regex: req.params.q,
               $options: "i"
@@ -361,18 +376,21 @@ export const relationsFind = (req, res) => {
 };
 export const lastItems = (req, res) => {
   Line.find({
-      creator: req.user._id,
-      isParent: false
-    })
+    creator: req.user._id,
+    isParent: false
+  })
     .sort({
       updatedAt: -1
     })
     .limit(100)
-    .populate([{
-      path: "item"
-    }, {
-      path: "children"
-    }])
+    .populate([
+      {
+        path: "item"
+      },
+      {
+        path: "children"
+      }
+    ])
     .exec((err, lines) => {
       if (err) {
         res.status(500).end();
@@ -395,9 +413,9 @@ export const lastItems = (req, res) => {
 };
 export const lastParents = (req, res) => {
   Line.find({
-      creator: req.user._id,
-      isParent: true
-    })
+    creator: req.user._id,
+    isParent: true
+  })
     .sort({
       updatedAt: -1
     })
@@ -419,18 +437,20 @@ export const lastParents = (req, res) => {
 
         // query.users = { $in: [req.user._id] };
         Item.find({
-            _id: {
-              $in: itemsIds
-            },
-            isParent: true
-          })
+          _id: {
+            $in: itemsIds
+          },
+          isParent: true
+        })
           .sort({
             updatedAt: -1
           })
           .limit(100)
-          .populate([{
-            path: "children"
-          }])
+          .populate([
+            {
+              path: "children"
+            }
+          ])
           .exec((err, items) => {
             if (err) {
               console.log(err);
