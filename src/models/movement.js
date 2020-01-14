@@ -19,21 +19,41 @@ const movementSchema = new Schema(
     // client: { type: Schema.Types.ObjectId, ref: 'User' },
     client: {
       // type and data DEPRECATED
-      type: { type: String, enum: ["Business", "Contact", "User"] },
-      data: { type: Schema.Types.ObjectId, refPath: "client.type" },
+      // type: { type: String, enum: ["Business", "Contact", "User"] },
+      // data: { type: Schema.Types.ObjectId, refPath: "client.type" },
+      //------------
+      // save a name for the client if no contact is created.
       name: String,
+      // save the user if the contact created or selected has a user reference.
       user: { type: Schema.Types.ObjectId, ref: "User" },
+      // save the contact id
       contact: { type: Schema.Types.ObjectId, ref: "Contact" },
-      business: { type: Schema.Types.ObjectId, ref: "Business" }
+      // save the business id if the user has businesses and one of them is selected
+      business: { type: Schema.Types.ObjectId, ref: "Business" },
+      // if one business from the SII if seleted, we save the id and the name
+      businessData: {
+        id: { type: String },
+        name: { type: String }
+      }
     },
     responsable: {
       // type and data DEPRECATED
-      type: { type: String, enum: ["Business", "Contact", "User"] },
-      data: { type: Schema.Types.ObjectId, refPath: "responsable.type" },
+      // type: { type: String, enum: ["Business", "Contact", "User"] },
+      // data: { type: Schema.Types.ObjectId, refPath: "responsable.type" },
+      //------------
+      // save a name for the client if no contact is created.
       name: String,
+      // save the user if the contact created or selected has a user reference.
       user: { type: Schema.Types.ObjectId, ref: "User" },
+      // save the contact id
       contact: { type: Schema.Types.ObjectId, ref: "Contact" },
-      business: { type: Schema.Types.ObjectId, ref: "Business" }
+      // save the business id if the user has businesses and one of them is selected
+      business: { type: Schema.Types.ObjectId, ref: "Business" },
+      // if one business from the SII if seleted, we save the id and the name
+      businessData: {
+        id: { type: String },
+        name: { type: String }
+      }
     },
     editor: { type: Schema.Types.ObjectId, ref: "User" },
 

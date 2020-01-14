@@ -17,11 +17,11 @@ const contactSchema = new Schema(
     link: { type: Schema.Types.ObjectId, refPath: "type" },
     user: { type: Schema.Types.ObjectId, ref: "User" },
     // business: Array({ type: Schema.Types.ObjectId, ref: "Business" }),
-    business: {
-      _id: false,
-      name: { type: String },
-      id: { type: String }
-    },
+    // business: {
+    //   _id: false,
+    //   name: { type: String },
+    //   id: { type: String }
+    // },
     creator: { type: Schema.Types.ObjectId, ref: "User" },
     company: {
       idNumber: { type: String },
