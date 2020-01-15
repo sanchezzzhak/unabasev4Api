@@ -15,11 +15,15 @@ export const getPersonal = (req, res, next) => {
       select: "isActive name  email phone creator user imgUrl emails type"
     },
     {
-      path: "responsable.user",
+      path: "client.business",
       select: "isActive name  email phone creator user imgUrl emails type"
     },
     {
-      path: "client.business",
+      path: "client.contact",
+      select: "isActive name emails phones"
+    },
+    {
+      path: "responsable.user",
       select: "isActive name  email phone creator user imgUrl emails type"
     },
     {
@@ -27,14 +31,15 @@ export const getPersonal = (req, res, next) => {
       select: "isActive name  email phone creator user imgUrl emails type"
     },
     {
+      path: "client.contact",
+      select: "isActive name emails phones"
+    },
+    {
       path: "creator",
       select: "name google imgUrl emails.default"
     },
     {
       path: "lines"
-    },
-    {
-      path: "client.contact"
     },
     {
       path: "currency"
