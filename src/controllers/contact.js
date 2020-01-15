@@ -161,20 +161,20 @@ export const byItem = async (req, res, next) => {
   let lines = await Line.find({ item: req.params.id }).exec();
   Movement.find({ _id: { $in: lines.map(i => i.movement) }, creator: req.user._id })
     .sort({ updatedAt: -1 })
-    .populate([{ path: "client.data" }, { path: "responsable.data" }])
+    .populate([{ path: "client.user" }, { path: "responsable.user" }])
     .limit(rquery.limit || 30)
     .exec((err, movements) => {
       if (err) next(err);
       let contactsArray = new Array();
       let contactsIds = new Array();
       movements.forEach(movement => {
-        if (!movement.client.data._id.equals(req.user._id) && !contactsIds.includes(movement.client.data._id)) {
-          contactsArray.push(movement.client.data);
-          contactsIds.push(movement.client.data._id);
+        if (!movement.client.user._id.equals(req.user._id) && !contactsIds.includes(movement.client.user._id)) {
+          contactsArray.push(movement.client.user);
+          contactsIds.push(movement.client.user._id);
         }
-        if (!movement.responsable.data._id.equals(req.user._id) && !contactsIds.includes(movement.responsable.data._id)) {
-          contactsArray.push(movement.responsable.data);
-          contactsIds.push(movement.responsable.data._id);
+        if (!movement.responsable.user._id.equals(req.user._id) && !contactsIds.includes(movement.responsable.user._id)) {
+          contactsArray.push(movement.responsable.user);
+          contactsIds.push(movement.responsable.user._id);
         }
       });
       res.send(contactsArray);
