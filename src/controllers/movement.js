@@ -239,6 +239,14 @@ export const create = (req, res, next) => {
           select: "name  phone email imgUrl emails type"
         },
         {
+          path: "client.contact",
+          select: "isActive name emails phones"
+        },
+        {
+          path: "responsable.contact",
+          select: "isActive name emails phones"
+        },
+        {
           path: "creator",
           select: "name  imgUrl emails type"
         },
