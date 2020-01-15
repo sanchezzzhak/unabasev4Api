@@ -251,9 +251,6 @@ export const create = (req, res, next) => {
           select: "name  imgUrl emails type"
         },
         {
-          path: "contact"
-        },
-        {
           path: "currency"
         }
       ],
