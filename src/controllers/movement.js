@@ -174,6 +174,22 @@ export const getBusiness = (req, res, next) => {
       select: "name imgUrl emails type"
     },
     {
+      path: "client.business",
+      select: "name imgUrl emails type"
+    },
+    {
+      path: "responsable.business",
+      select: "name imgUrl emails type"
+    },
+    {
+      path: "client.contact",
+      select: "isActive name emails phones"
+    },
+    {
+      path: "responsable.contact",
+      select: "isActive name emails phones"
+    },
+    {
       path: "creator",
       select: "name  imgUrl emails"
     },
@@ -193,19 +209,19 @@ export const getBusiness = (req, res, next) => {
   let query = {
     ...req.query
   };
-
+  // TODO check permission, if the user can't see all the movement, filter by responsable/client.user
   switch (req.params.state) {
     case "in":
       query.$or = [
         {
-          "responsable.user": ObjectId(`${req.params.id}`)
+          "responsable.business": ObjectId(`${req.params.id}`)
         }
       ];
       break;
     case "out":
       query.$or = [
         {
-          "client.user": ObjectId(`${req.params.id}`)
+          "client.business": ObjectId(`${req.params.id}`)
         }
       ];
       break;
