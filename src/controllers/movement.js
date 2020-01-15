@@ -281,6 +281,10 @@ export const getOne = (req, res, next) => {
         select: "isActive name  email phone creator user imgUrl emails phones type"
       },
       {
+        path: "client.contact",
+        select: "isActive name emails phones"
+      },
+      {
         path: "responsable.user",
         select: "isActive name  email phone creator user imgUrl emails phones type"
       },
@@ -442,7 +446,12 @@ export const updateOne = (req, res, next) => {
         select: "isActive name  email phone creator user imgUrl emails type"
       },
       {
-        path: "client.contact"
+        path: "client.contact",
+        select: "isActive name emails phones"
+      },
+      {
+        path: "responsable.contact",
+        select: "isActive name emails phones"
       },
       {
         path: "responsable.user",
@@ -455,9 +464,6 @@ export const updateOne = (req, res, next) => {
       {
         path: "responsable.business",
         select: "isActive name  email phone creator user imgUrl emails type"
-      },
-      {
-        path: "responsable.contact"
       },
       {
         path: "currency"
