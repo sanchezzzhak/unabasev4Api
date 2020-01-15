@@ -62,11 +62,11 @@ export const getRelated = async (req, res, next) => {
     $or: [
       {
         creator: req.user._id,
-        "client.data": ObjectId(`${req.params.id}`)
+        "client.user": ObjectId(`${req.params.id}`)
       },
       {
         creator: req.user._id,
-        "responsable.data": ObjectId(`${req.params.id}`)
+        "responsable.user": ObjectId(`${req.params.id}`)
       }
     ]
   };
@@ -84,11 +84,11 @@ export const getRelated = async (req, res, next) => {
   options.select = "name client responsable createdAt total state";
   options.populate = [
     {
-      path: "client.data",
+      path: "client.user",
       select: "name phone email imgUrl emails type"
     },
     {
-      path: "responsable.data",
+      path: "responsable.user",
       select: "name phone email imgUrl emails type"
     },
     {
@@ -121,11 +121,11 @@ export const get = (req, res, next) => {
   options.select = "name client responsable createdAt total state";
   options.populate = [
     {
-      path: "client.data",
+      path: "client.user",
       select: "name phone email imgUrl emails type"
     },
     {
-      path: "responsable.data",
+      path: "responsable.user",
       select: "name phone email imgUrl emails type"
     },
     {
@@ -161,11 +161,11 @@ export const getBusiness = (req, res, next) => {
   options.select = "name client responsable createdAt total state ";
   options.populate = [
     {
-      path: "client.data",
+      path: "client.user",
       select: "name imgUrl emails type"
     },
     {
-      path: "responsable.data",
+      path: "responsable.user",
       select: "name imgUrl emails type"
     },
     {
@@ -193,14 +193,14 @@ export const getBusiness = (req, res, next) => {
     case "in":
       query.$or = [
         {
-          "responsable.data": ObjectId(`${req.params.id}`)
+          "responsable.user": ObjectId(`${req.params.id}`)
         }
       ];
       break;
     case "out":
       query.$or = [
         {
-          "client.data": ObjectId(`${req.params.id}`)
+          "client.user": ObjectId(`${req.params.id}`)
         }
       ];
       break;
@@ -226,11 +226,11 @@ export const create = (req, res, next) => {
     movement.populate(
       [
         {
-          path: "client.data",
+          path: "client.user",
           select: "name  phone email imgUrl emails type"
         },
         {
-          path: "responsable.data",
+          path: "responsable.user",
           select: "name  phone email imgUrl emails type"
         },
         {
@@ -272,11 +272,11 @@ export const getOne = (req, res, next) => {
       },
 
       {
-        path: "client.data",
+        path: "client.user",
         select: "isActive name  email phone creator user imgUrl emails phones type"
       },
       {
-        path: "responsable.data",
+        path: "responsable.user",
         select: "isActive name  email phone creator user imgUrl emails phones type"
       },
       {
@@ -342,11 +342,11 @@ export const findOne = (req, res, next) => {
         select: "name  imgUrl emails"
       },
       {
-        path: "client.data",
+        path: "client.user",
         select: "isActive name  email phone creator user imgUrl emails type"
       },
       {
-        path: "responsable.data",
+        path: "responsable.user",
         select: "isActive name  email phone creator user imgUrl emails type"
       }
     ])
@@ -380,7 +380,7 @@ export const find = (req, res, next) => {
             creator: req.user._id
           },
           {
-            "responsable.data": ObjectId(`${req.user._id}`)
+            "responsable.user": ObjectId(`${req.user._id}`)
           }
         ]
       }
@@ -398,11 +398,11 @@ export const find = (req, res, next) => {
 
       populate: [
         {
-          path: "client.data",
+          path: "client.user",
           select: "isActive name  email phone creator user imgUrl emails type"
         },
         {
-          path: "responsable.data",
+          path: "responsable.user",
           select: "isActive name  email phone creator user imgUrl emails type"
         }
       ]
@@ -431,15 +431,28 @@ export const updateOne = (req, res, next) => {
       new: true
     }
   )
-    // .populate("client.data")
     .populate([
       {
-        path: "client.data",
+        path: "client.user",
         select: "isActive name  email phone creator user imgUrl emails type"
       },
       {
-        path: "responsable.data",
+        path: "client.contact"
+      },
+      {
+        path: "responsable.user",
         select: "isActive name  email phone creator user imgUrl emails type"
+      },
+      {
+        path: "client.business",
+        select: "isActive name  email phone creator user imgUrl emails type"
+      },
+      {
+        path: "responsable.business",
+        select: "isActive name  email phone creator user imgUrl emails type"
+      },
+      {
+        path: "responsable.contact"
       },
       {
         path: "currency"
@@ -497,7 +510,7 @@ export const byItem = async (req, res, next) => {
     .limit(req.query.limit || 30)
     .populate([
       {
-        path: "client.data",
+        path: "client.user",
         select: "name"
       }
     ])
