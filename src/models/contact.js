@@ -16,7 +16,7 @@ const contactSchema = new Schema(
     type: { type: String, enum: ["Business", "User"] },
     link: { type: Schema.Types.ObjectId, refPath: "type" },
     user: { type: Schema.Types.ObjectId, ref: "User" },
-    // business: Array({ type: Schema.Types.ObjectId, ref: "Business" }),
+    business: Array({ type: String }),
     // business: {
     //   _id: false,
     //   name: { type: String },
