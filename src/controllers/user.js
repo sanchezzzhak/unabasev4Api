@@ -50,7 +50,7 @@ export const password = (req, res) => {
     if (err) {
       res.status(500).send(err);
     } else {
-      if (typeof user.password === "undefined") {
+      if (typeof user.password.hash === "undefined") {
         res.status(200).send({
           msg: "password created"
         });
