@@ -2,7 +2,7 @@ import axios from "axios";
 import { Router } from "express";
 import jwt from "jsonwebtoken";
 import gauth from "../config/auth";
-import ctl from "../controllers/auth";
+import { verify, register, password, login, google, googleCallback, errUser } from "../controllers/auth";
 import User from "../models/user";
 import logger from "../lib/logger";
 // import passport from "../config/passport";
@@ -25,7 +25,7 @@ auth.put(
     description: "verify a user with local strategy",
     module
   }),
-  ctl.verify
+  verify
 );
 
 auth.post(
@@ -35,7 +35,7 @@ auth.post(
     description: "register a user with local strategy",
     module
   }),
-  ctl.register
+  register
 );
 
 auth.post(
@@ -45,10 +45,10 @@ auth.post(
     description: "restart a password",
     module
   }),
-  ctl.password
+  password
 );
 
-// auth.get('/errUser', ctl.errUser);
+// auth.get('/errUser', errUser);
 
 auth.post(
   "/login",
@@ -57,7 +57,7 @@ auth.post(
     description: "login a user with local strategy",
     module
   }),
-  ctl.login
+  login
 );
 
 auth.post("/login2", passport.authenticate("local", { successRedirect: "/", failureRedirect: "/login2" }));
@@ -69,6 +69,6 @@ auth.get("/google/callback", passport.authenticate("google", { failureRedirect: 
   res.redirect("/");
 });
 
-// auth.post('/google/register', ctl.google.register);
-auth.post("/google", ctl.google);
+// auth.post('/google/register', google.register);
+auth.post("/google", google);
 export default auth;
