@@ -154,8 +154,8 @@ userSchema.methods.getUser = function() {
 
 // checking if password is valid
 userSchema.methods.validPassword = function(password) {
-  // console.log(password);
-  // console.log(this.password);
+  console.log(password);
+  console.log(this.password);
   return bcrypt.compareSync(password, this.password.hash);
 };
 
