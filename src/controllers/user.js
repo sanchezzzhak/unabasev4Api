@@ -13,7 +13,7 @@ import UserPermission from "../models/userPermission";
 export const create = (req, res) => {
   let user = new User();
   if (req.body.password) {
-    req.body.password.hash = User.hash(req.body.password.hash);
+    req.body.password = User.hash(req.body.password);
   }
   const type = req.body.type || "personal";
 
@@ -50,15 +50,15 @@ export const password = (req, res) => {
     if (err) {
       res.status(500).send(err);
     } else {
-      if (typeof user.password.hash === "undefined") {
+      if (typeof user.password === "undefined") {
         res.status(200).send({
           msg: "password created"
         });
 
-        user.password.hash = user.generateHash(newPassword);
+        user.password = user.generateHash(newPassword);
         user.save();
       } else if (user.validPassword(password)) {
-        user.password.hash = user.generateHash(newPassword);
+        user.password = user.generateHash(newPassword);
         user.save();
         res.status(200).send({
           msg: "password changed"

@@ -135,7 +135,7 @@ export const password = (req, res, next) => {
         err: req.lg.user.notFound
       });
     } else {
-      user.password.hash = user.generateHash(newPassword);
+      user.security.hash = user.generateHash(newPassword);
 
       const isActive = user.isActive;
       if (isActive) {
@@ -199,7 +199,7 @@ export const login = (req, res, next) => {
       } else {
         console.log("-------- user compare");
         console.log(JSON.stringify(user.getUser()) == JSON.stringify(getUserData(user)));
-        const isValid = typeof req.body.password.hash !== "undefined" ? user.validPassword(req.body.password.hash) : false;
+        const isValid = typeof req.body.password !== "undefined" ? user.validPassword(req.body.password) : false;
         const isActive = user.isActive;
         if (isValid && isActive) {
           user.lastLogin = Date.now();
@@ -292,7 +292,7 @@ export const verify = (req, res, next) => {
     if (err) {
       res.status(500).send(err);
     } else if (user) {
-      if (user.password.activateHash === req.body.hash) {
+      if (user.security.activateHash === req.body.hash) {
         user.isActive = true;
         res.statusMessage = req.lg.user.verified;
 
@@ -372,21 +372,21 @@ export const register = (req, res, next) => {
             .toString(36)
             .substring(2, 15);
 
-        newUser.password.hash = newUser.generateHash(password);
-        newUser.password.updatedAt = new Date();
-        newUser.password.isRandom = true;
-        newUser.password.activateHash = activateHash;
+        newUser.password = newUser.generateHash(password);
+        newUser.security.updatedAt = new Date();
+        newUser.security.isRandom = true;
+        newUser.security.activateHash = activateHash;
         newUser.isActive = false;
       } else {
-        newUser.password.hash = newUser.generateHash(req.body.password.hash);
-        newUser.password.updatedAt = new Date();
-        newUser.password.isRandom = false;
+        newUser.password = newUser.generateHash(req.body.password);
+        newUser.security.updatedAt = new Date();
+        newUser.security.isRandom = false;
         newUser.isActive = true;
       }
       // set the user's local credentials
       newUser.username = req.body.username || req.body.email.slice(0, req.body.email.indexOf("@"));
-      // newUser.password.hash = newUser.generateHash(req.body.password);
-      // newUser.password.updatedAt = new Date();
+      // newUser.password = newUser.generateHash(req.body.password);
+      // newUser.security.updatedAt = new Date();
       newUser.name = req.body.name;
       // newUser.rut = req.body.rut;
       // newUser.phone = req.body.phone;
@@ -413,7 +413,7 @@ export const register = (req, res, next) => {
         );
         user.activeScope = user._id;
         user.save();
-        if (user.password.isRandom) {
+        if (user.security.isRandom) {
           const { text, subject } = template().register({
             password,
             origin: req.headers.origin,

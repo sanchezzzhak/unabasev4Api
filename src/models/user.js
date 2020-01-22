@@ -12,9 +12,8 @@ let userSchema = Schema(
     name: String,
     username: { type: String },
     language: { type: String, default: "es" },
-    // password: String,
-    password: {
-      hash: String,
+    password: { type: String },
+    security: {
       updatedAt: { type: Date, default: new Date() },
       isRandom: { type: Boolean, default: false },
       activateHash: String
@@ -156,7 +155,7 @@ userSchema.methods.getUser = function() {
 userSchema.methods.validPassword = function(password) {
   console.log(password);
   console.log(this.password);
-  return bcrypt.compareSync(password, this.password.hash);
+  return bcrypt.compareSync(password, this.password);
 };
 
 const User = mongoose.model("User", userSchema);
