@@ -31,6 +31,7 @@ import permission from "./permission";
 import userPermission from "./userPermission";
 import role from "./role";
 import empresa from "./empresa";
+import report from "./report";
 import { parseQueryUrl } from "../middleware/parseQueryUrl";
 
 // TODO verify session for all routes
@@ -51,6 +52,7 @@ routes.use("/permissions", permission);
 routes.use("/userPermissions", userPermission);
 routes.use("/roles", role);
 routes.use("/empresas", empresa);
+routes.use("/reports", report);
 routes.post("/t", (req, res) => {
   res.send({ body: req.body, headers: req.headers });
 });
