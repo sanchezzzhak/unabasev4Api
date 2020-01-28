@@ -9,16 +9,16 @@ export const main = async (req, res, next) => {
     total: await User.countDocuments({ isActive: true }).exec(),
     byYear: {
       2019: await User.countDocuments({ createdAt: { $gte: new Date(2019, 0, 1), $lte: new Date(2019, 11, 31) } }).exec(),
-      2020: await User.countDocuments({ createdAt: { $gt: new Date(2020, 0, 1), $lt: new Date(2020, 11, 31) } }).exec()
+      2020: await User.countDocuments({ createdAt: { $gte: new Date(2020, 0, 1), $lte: new Date(2020, 11, 31) } }).exec()
     },
     byMonth: {
       2019: {},
       2020: {}
     }
   };
-  for (let i = 0; i < 13; i++) {
-    users.byMonth[2019][i] = await User.countDocuments({ createdAt: { $gte: new Date(2019, i, 1), $lte: new Date(2019, i, 31) } }).exec();
-    users.byMonth[2020][i] = await User.countDocuments({ createdAt: { $gte: new Date(2020, i, 1), $lte: new Date(2020, i, 31) } }).exec();
+  for (let i = 0; i < 12; i++) {
+    users.byMonth[2019][i + 1] = await User.countDocuments({ createdAt: { $gte: new Date(2019, i, 1), $lte: new Date(2019, i, 31) } }).exec();
+    users.byMonth[2020][i + 1] = await User.countDocuments({ createdAt: { $gte: new Date(2020, i, 1), $lte: new Date(2020, i, 31) } }).exec();
   }
   const movements = {
     total: await Movement.countDocuments({ isActive: true }).exec(),
