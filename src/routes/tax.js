@@ -1,16 +1,17 @@
 import { Router } from "express";
 const taxs = Router();
-import ctl from "../controllers/tax";
+import { get, getOne, create, updateOne, find, deleteOne } from "../controllers/tax";
 import auth from "../config/lib/auth";
 import { isAuth } from "../config/lib/auth";
 
 taxs.use(auth.sToken);
 
-taxs.get("/", ctl.get);
-// taxs.get('/', ctl.filter)
-taxs.get("/:id", ctl.getOne);
-taxs.post("/", ctl.create);
-taxs.put("/:id", ctl.updateOne);
-taxs.get("/find/:q", ctl.find);
+taxs.get("/", get);
+// taxs.get('/', filter)
+taxs.get("/:id", getOne);
+taxs.post("/", create);
+taxs.put("/:id", updateOne);
+taxs.get("/find/:q", find);
+taxs.delete("/:id", deleteOne);
 
 export default taxs;
