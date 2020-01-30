@@ -2,6 +2,9 @@ import User from "../models/user";
 import Movement from "../models/movement";
 import Business from "../models/business";
 import Lines from "../models/line";
+import Currency from "../models/currency";
+import { Types } from "mongoose";
+const ObjectId = Types.ObjectId;
 
 export const main = async (req, res, next) => {
   // const users = await User.countDocuments({ isActive: true }).exec();
@@ -20,6 +23,14 @@ export const main = async (req, res, next) => {
     users.byMonth[2019][i + 1] = await User.countDocuments({ createdAt: { $gte: new Date(2019, i, 1), $lte: new Date(2019, i, 31) } }).exec();
     users.byMonth[2020][i + 1] = await User.countDocuments({ createdAt: { $gte: new Date(2020, i, 1), $lte: new Date(2020, i, 31) } }).exec();
   }
+  const currenciesDocs = await Currency.find({}).exec();
+  const currencies = {
+    docs: await currenciesDocs.length,
+    movements: {}
+  };
+  currenciesDocs.forEach(async currency => {
+    currencies.movements[currency.prefix] = await Movement.countDocuments({ isActive: true, currency: currency._id }).exec();
+  });
   const movements = {
     total: await Movement.countDocuments({ isActive: true }).exec(),
     opportunities: await Movement.countDocuments({ isActive: true, state: "opportunity" }).exec(),
@@ -28,5 +39,5 @@ export const main = async (req, res, next) => {
   };
   const lines = await Lines.countDocuments({ isParent: false }).exec();
   const businesses = await Business.countDocuments({ isActive: true }).exec();
-  res.send({ users, movements, lines, businesses });
+  res.send({ users, movements, lines, businesses, currencies });
 };
