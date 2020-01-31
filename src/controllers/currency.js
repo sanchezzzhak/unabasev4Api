@@ -70,6 +70,13 @@ export const updateOne = (req, res) => {
     }
   });
 };
+
+export const deleteOne = (req, res, next) => {
+  Currency.findByIdAndDelete(req.params.id).exec(err => {
+    if (err) next(err);
+    res.send({ success: true });
+  });
+};
 // };
 
 // export default routes;

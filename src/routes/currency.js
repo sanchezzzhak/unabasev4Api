@@ -1,56 +1,65 @@
-import { Router } from 'express';
+import { Router } from "express";
 const currencies = Router();
 
-import { get, create, updateOne, find, getOne } from '../controllers/currency';
+import { get, create, updateOne, find, getOne, deleteOne } from "../controllers/currency";
 
-import logger from '../lib/logger';
-import auth from '../config/lib/auth';
+import logger from "../lib/logger";
+import auth from "../config/lib/auth";
 currencies.use(auth.sToken);
-let module = 'currencies';
+let module = "currencies";
 currencies.get(
-  '/',
+  "/",
   logger({
-    name: 'list currencies',
-    description: 'list currencies',
+    name: "list currencies",
+    description: "list currencies",
     module
   }),
   get
 );
 currencies.get(
-  '/:id',
+  "/:id",
   logger({
-    name: 'get one',
-    description: 'get one currency by id',
+    name: "get one",
+    description: "get one currency by id",
     module
   }),
   getOne
 );
 currencies.post(
-  '/',
+  "/",
   logger({
-    name: 'create',
-    description: 'create currency',
+    name: "create",
+    description: "create currency",
     module
   }),
   create
 );
 currencies.put(
-  '/:id',
+  "/:id",
   logger({
-    name: 'update',
-    description: 'update currency',
+    name: "update",
+    description: "update currency",
     module
   }),
   updateOne
 );
 currencies.get(
-  '/find/:q',
+  "/find/:q",
   logger({
-    name: 'find',
-    description: 'find currencies',
+    name: "find",
+    description: "find currencies",
     module
   }),
   find
+);
+currencies.delete(
+  "/:id",
+  logger({
+    name: "delete",
+    description: "delete currency",
+    module
+  }),
+  deleteOne
 );
 
 export default currencies;
