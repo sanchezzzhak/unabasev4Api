@@ -69,7 +69,7 @@ export const google = (req, res, next) => {
                 req.user = user;
                 res.send({
                   token,
-                  user: userFound.getUser()
+                  user: getUserData(userFound)
                 });
 
                 // res.json({
@@ -88,7 +88,7 @@ export const google = (req, res, next) => {
           user.save();
           const token = jwt.sign(
             {
-              user: user.getUser()
+              user: getUserData(user)
             },
             envar().SECRET
           );
@@ -103,7 +103,7 @@ export const google = (req, res, next) => {
               }
             ],
             err => {
-              let getUser = user.getUser();
+              let getUser = getUserData(user);
               let userData = {
                 ...getUser,
                 currency: user.currency
@@ -146,7 +146,7 @@ export const password = (req, res, next) => {
         user.save((err, user) => {
           const token = jwt.sign(
             {
-              user: user.getUser()
+              user: getUserData(user)
             },
             envar().SECRET,
             {
@@ -157,7 +157,7 @@ export const password = (req, res, next) => {
           res.statusMessage = req.lg.user.successLogin;
           res.json({
             token,
-            user: user.getUser()
+            user: getUserData(user)
           });
         });
       } else if (!isActive) {
@@ -198,7 +198,7 @@ export const login = (req, res, next) => {
         });
       } else {
         console.log("-------- user compare");
-        console.log(JSON.stringify(user.getUser()) == JSON.stringify(getUserData(user)));
+        console.log(JSON.stringify(getUserData(user)) == JSON.stringify(getUserData(user)));
         const isValid = typeof req.body.password !== "undefined" ? user.validPassword(req.body.password) : false;
         const isActive = user.isActive;
         if (isValid && isActive) {
@@ -209,7 +209,7 @@ export const login = (req, res, next) => {
           user.save(async (err, user) => {
             const token = jwt.sign(
               {
-                user: user.getUser()
+                user: getUserData(user)
               },
               envar().SECRET,
               {
@@ -236,7 +236,7 @@ export const login = (req, res, next) => {
             }
             res.json({
               token,
-              user: user.getUser()
+              user: getUserData(user)
             });
           });
         } else if (!isValid) {
@@ -272,7 +272,7 @@ export const login = (req, res, next) => {
         //     user.activeScope = user._id;
         //   }
         //   user.save((err, user) => {
-        //     const token = jwt.sign({ user: user.getUser() }, mainConfig.mSecret, {
+        //     const token = jwt.sign({ user: getUserData(user) }, mainConfig.mSecret, {
         //       expiresIn: '3d'
         //     });
         //     // res.cookie('access_token', token, {
@@ -282,7 +282,7 @@ export const login = (req, res, next) => {
         //     // req.session.user = user;
         //     req.user = user;
         //     res.statusMessage = 'authenticated';
-        //     res.json({ token, user: user.getUser() });
+        //     res.json({ token, user: getUserData(user) });
         //   });
       }
     });
@@ -299,7 +299,7 @@ export const verify = (req, res, next) => {
         user.save((err, user) => {
           const token = jwt.sign(
             {
-              user: user.getUser()
+              user: getUserData(user)
             },
             envar().SECRET,
             {
@@ -309,7 +309,7 @@ export const verify = (req, res, next) => {
           req.user = user;
           res.json({
             token,
-            user: user.getUser()
+            user: getUserData(user)
           });
         });
       } else {
@@ -404,7 +404,7 @@ export const register = (req, res, next) => {
 
         const token = jwt.sign(
           {
-            user: user.getUser()
+            user: getUserData(user)
           },
           envar().SECRET,
           {
@@ -438,7 +438,7 @@ export const register = (req, res, next) => {
         req.user = user;
         res.json({
           token,
-          user: user.getUser()
+          user: getUserData(user)
         });
       });
     }
