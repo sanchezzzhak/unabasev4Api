@@ -10,7 +10,7 @@ import Contact from "../models/contact";
 import { getUserData, getUserPermission } from "../lib/user";
 import UserPermission from "../models/userPermission";
 
-export const create = (req, res) => {
+export const create = (req, res, next) => {
   let user = new User();
   if (req.body.password) {
     req.body.password = User.hash(req.body.password);
@@ -43,7 +43,7 @@ export const create = (req, res) => {
     }
   });
 };
-export const password = (req, res) => {
+export const password = (req, res, next) => {
   const { password, newPassword } = req.body;
   console.log(req.body);
   User.findById(req.params.id, function(err, user) {
@@ -71,7 +71,7 @@ export const password = (req, res) => {
     }
   });
 };
-export const restart = (req, res) => {
+export const restart = (req, res, next) => {
   console.log("enter restart password");
 
   let query = {
@@ -127,12 +127,12 @@ export const restart = (req, res) => {
     }
   });
 };
-export const logout = (req, res) => {
+export const logout = (req, res, next) => {
   req.logout();
   req.session = null;
   res.status(200).send("Log out");
 };
-export const get = (req, res) => {
+export const get = (req, res, next) => {
   console.log("list users");
   let rquery = ntype(req.query);
   let options = {};
@@ -161,7 +161,7 @@ export const get = (req, res) => {
     }
   });
 };
-export const getOne = (req, res) => {
+export const getOne = (req, res, next) => {
   console.log(req.params.id);
 
   const type = req.query.type || "personal";
@@ -220,7 +220,7 @@ export const update = (req, res, next) => {
       }
     });
 };
-export const business = (req, res) => {
+export const business = (req, res, next) => {
   let update = {
     $addToSet: {
       business: req.body.business
@@ -241,7 +241,7 @@ export const business = (req, res) => {
     }
   );
 };
-export const user = (req, res) => {
+export const user = (req, res, next) => {
   let update = {
     $addToSet: {
       users: req.body.user
@@ -262,7 +262,7 @@ export const user = (req, res) => {
     }
   );
 };
-export const scope = (req, res) => {
+export const scope = (req, res, next) => {
   User.findByIdAndUpdate(
     req.params.id,
     {
@@ -283,7 +283,7 @@ export const scope = (req, res) => {
     }
   );
 };
-export const find = (req, res) => {
+export const find = (req, res, next) => {
   const type = req.query.type || "personal";
   let query = {
     $and: [
@@ -330,16 +330,17 @@ export const find = (req, res) => {
       ]
     },
     async (err, items) => {
-      if (err) {
-        console.log(err);
-        res.status(500).send(err);
-      } else {
-        res.send(items);
-      }
+      if (err) next(err);
+      let users = [];
+      items.docs.forEach(item => {
+        users.push(getUserData(item));
+      });
+      items.docs = users;
+      res.send(items);
     }
   );
 };
-export const relationsFind = (req, res) => {
+export const relationsFind = (req, res, next) => {
   let query = {
     $and: [
       {
@@ -384,7 +385,7 @@ export const relationsFind = (req, res) => {
     }
   });
 };
-export const lastItems = (req, res) => {
+export const lastItems = (req, res, next) => {
   Line.find({
     creator: req.user._id,
     isParent: false
@@ -421,7 +422,7 @@ export const lastItems = (req, res) => {
       }
     });
 };
-export const lastParents = (req, res) => {
+export const lastParents = (req, res, next) => {
   Line.find({
     creator: req.user._id,
     isParent: true
