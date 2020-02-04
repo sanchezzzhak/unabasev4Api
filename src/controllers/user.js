@@ -9,6 +9,7 @@ import ntype from "normalize-type";
 import Contact from "../models/contact";
 import { getUserData, getUserPermission } from "../lib/user";
 import UserPermission from "../models/userPermission";
+import { notFoundError } from "../lib/error";
 
 export const create = (req, res, next) => {
   let user = new User();
@@ -59,9 +60,10 @@ export const password = (req, res, next) => {
         msg: "password changed"
       });
     } else {
-      res.status(500).send({
-        msg: "password change failed"
-      });
+      next(err);
+      // res.status(500).send({
+      //   msg: "password change failed"
+      // });
     }
   });
 };
@@ -89,35 +91,30 @@ export const restart = (req, res, next) => {
   // console.log(query.$or);
   User.findOne(query, (err, item) => {
     if (err) next(err);
-    if (item) {
-      const email = item.emails.filter(i => i.label === "default" || i.label === "google");
+    if (!item) next(notFoundError());
+    const email = item.emails.filter(i => i.label === "default" || i.label === "google");
 
-      const { text, subject } = template().restartPassword({
-        origin: req.headers.origin,
-        lang: req.locale.language,
-        id: item._id
-      });
-      const msg = {
-        to: email[0].email,
-        subject: subject,
-        html: text
-      };
-      send(msg)
-        .then(resp => {
-          res.status(200).send({
-            msg: "password restart success"
-          });
-        })
-        .catch(err => {
-          console.log("err+++++++===");
-          console.log(err);
-          res.status(500).send(err);
+    const { text, subject } = template().restartPassword({
+      origin: req.headers.origin,
+      lang: req.locale.language,
+      id: item._id
+    });
+    const msg = {
+      to: email[0].email,
+      subject: subject,
+      html: text
+    };
+    send(msg)
+      .then(resp => {
+        res.status(200).send({
+          msg: "password restart success"
         });
-    } else {
-      res.status(404).send({
-        msg: "user not found"
+      })
+      .catch(err => {
+        console.log("err+++++++===");
+        console.log(err);
+        res.status(500).send(err);
       });
-    }
   });
 };
 export const logout = (req, res, next) => {
@@ -161,13 +158,8 @@ export const getOne = (req, res, next) => {
     .populate("business")
     .exec((err, user) => {
       if (err) next(err);
-      if (user) {
-        res.send(getUserData(user));
-      } else {
-        res.status(404).send({
-          msg: "user not found"
-        });
-      }
+      if (!user) next(notFoundError());
+      res.send(getUserData(user));
     });
 };
 export const update = (req, res, next) => {
@@ -385,21 +377,16 @@ export const lastItems = (req, res, next) => {
     ])
     .exec((err, lines) => {
       if (err) next(err);
-      if (lines) {
-        let docs = [];
-        for (let line of lines) {
-          if (line.item) {
-            if (docs.filter(i => i._id === line.item._id).length === 0) {
-              docs.push(line.item);
-            }
+      if (!lines) next(notFoundError());
+      let docs = [];
+      for (let line of lines) {
+        if (line.item) {
+          if (docs.filter(i => i._id === line.item._id).length === 0) {
+            docs.push(line.item);
           }
         }
-        res.send(docs);
-      } else {
-        res.status(404).end({
-          msg: "not found"
-        });
       }
+      res.send(docs);
     });
 };
 export const lastParents = (req, res, next) => {
@@ -414,38 +401,28 @@ export const lastParents = (req, res, next) => {
     // .populate([{ path: "item" }, { path: "children" }])
     .exec((err, lines) => {
       if (err) next(err);
-      if (lines) {
-        let itemsIds = lines.map(line => line.item);
+      if (!lines) next(notFoundError());
+      let itemsIds = lines.map(line => line.item);
 
-        Item.find({
-          _id: {
-            $in: itemsIds
-          },
-          isParent: true
+      Item.find({
+        _id: {
+          $in: itemsIds
+        },
+        isParent: true
+      })
+        .sort({
+          updatedAt: -1
         })
-          .sort({
-            updatedAt: -1
-          })
-          .limit(100)
-          .populate([
-            {
-              path: "children"
-            }
-          ])
-          .exec((err, items) => {
-            if (err) next(err);
-            if (items) {
-              res.send(items);
-            } else {
-              res.status(404).end({
-                msg: "not found"
-              });
-            }
-          });
-      } else {
-        res.status(404).end({
-          msg: "not found"
+        .limit(100)
+        .populate([
+          {
+            path: "children"
+          }
+        ])
+        .exec((err, items) => {
+          if (err) next(err);
+          if (!items) next(notFoundError());
+          res.send(items);
         });
-      }
     });
 };
