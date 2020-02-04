@@ -59,7 +59,7 @@ export const google = (req, res, next) => {
               user.save((err, userFound) => {
                 const token = jwt.sign(
                   {
-                    user: user.getUser()
+                    user: getUserData(user)
                   },
                   envar().SECRET,
                   {

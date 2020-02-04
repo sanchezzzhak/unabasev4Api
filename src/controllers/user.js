@@ -43,7 +43,7 @@ export const create = (req, res, next) => {
 };
 export const password = (req, res, next) => {
   const { password, newPassword } = req.body;
-  console.log(req.body);
+
   User.findById(req.params.id, function(err, user) {
     if (err) next(err);
     if (typeof user.password === "undefined") {
@@ -61,15 +61,10 @@ export const password = (req, res, next) => {
       });
     } else {
       next(err);
-      // res.status(500).send({
-      //   msg: "password change failed"
-      // });
     }
   });
 };
 export const restart = (req, res, next) => {
-  console.log("enter restart password");
-
   let query = {
     $or: [
       {
@@ -88,7 +83,6 @@ export const restart = (req, res, next) => {
     type: "personal"
   };
 
-  // console.log(query.$or);
   User.findOne(query, (err, item) => {
     if (err) next(err);
     if (!item) next(notFoundError());
@@ -111,9 +105,7 @@ export const restart = (req, res, next) => {
         });
       })
       .catch(err => {
-        console.log("err+++++++===");
-        console.log(err);
-        res.status(500).send(err);
+        next(err);
       });
   });
 };
