@@ -4,3 +4,5 @@ export const createError = (statusCode = 500, message = "server error.") => {
   err.statusCode = statusCode;
   return err;
 };
+
+export const NotFoundError = (msg = "Document not found") => createError(404, msg);
