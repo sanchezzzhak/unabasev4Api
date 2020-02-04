@@ -29,45 +29,39 @@ export const create = (req, res, next) => {
     ];
   }
   user.save((err, item) => {
-    if (err) {
-      res.status(500).end();
-    } else {
-      if (type === "business") {
-        let contact = new Contact();
-        contact.name = user.name;
-        contact.type = "Business";
-        contact.user = user._id;
-        contact.save();
-      }
-      res.send(item);
+    if (err) next(err);
+    if (type === "business") {
+      let contact = new Contact();
+      contact.name = user.name;
+      contact.type = "Business";
+      contact.user = user._id;
+      contact.save();
     }
+    res.send(item);
   });
 };
 export const password = (req, res, next) => {
   const { password, newPassword } = req.body;
   console.log(req.body);
   User.findById(req.params.id, function(err, user) {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      if (typeof user.password === "undefined") {
-        res.status(200).send({
-          msg: "password created"
-        });
+    if (err) next(err);
+    if (typeof user.password === "undefined") {
+      res.status(200).send({
+        msg: "password created"
+      });
 
-        user.password = user.generateHash(newPassword);
-        user.save();
-      } else if (user.validPassword(password)) {
-        user.password = user.generateHash(newPassword);
-        user.save();
-        res.status(200).send({
-          msg: "password changed"
-        });
-      } else {
-        res.status(500).send({
-          msg: "password change failed"
-        });
-      }
+      user.password = user.generateHash(newPassword);
+      user.save();
+    } else if (user.validPassword(password)) {
+      user.password = user.generateHash(newPassword);
+      user.save();
+      res.status(200).send({
+        msg: "password changed"
+      });
+    } else {
+      res.status(500).send({
+        msg: "password change failed"
+      });
     }
   });
 };
@@ -94,9 +88,8 @@ export const restart = (req, res, next) => {
 
   // console.log(query.$or);
   User.findOne(query, (err, item) => {
-    if (err) {
-      res.status(500).send(err);
-    } else if (item) {
+    if (err) next(err);
+    if (item) {
       const email = item.emails.filter(i => i.label === "default" || i.label === "google");
 
       const { text, subject } = template().restartPassword({
@@ -150,15 +143,10 @@ export const get = (req, res, next) => {
       $in: [req.user._id]
     };
   }
-  // query.name = req.query.name || null;
-  // query.isActive = bool(req.query.active) || null;
 
   User.paginate(query, options, (err, item) => {
-    if (err) {
-      res.status(500).end();
-    } else {
-      res.send(item);
-    }
+    if (err) next(err);
+    res.send(item);
   });
 };
 export const getOne = (req, res, next) => {
@@ -172,10 +160,9 @@ export const getOne = (req, res, next) => {
     .populate("users")
     .populate("business")
     .exec((err, user) => {
-      if (err) {
-        res.status(500).send(err);
-      } else if (user) {
-        res.send(user.getUser());
+      if (err) next(err);
+      if (user) {
+        res.send(getUserData(user));
       } else {
         res.status(404).send({
           msg: "user not found"
@@ -197,12 +184,6 @@ export const update = (req, res, next) => {
     .populate("scope.id")
     .exec(async (err, item) => {
       if (err) return next(err);
-      // getUserPermission(item)
-      //   .then(permissions => {
-      //     item.permissions = new Array(permissions);
-      //     res.send(item);
-      //   })
-      //   .catch(err => next(err));
       try {
         let userPermissions = await UserPermission.find({
           user: item._id,
@@ -403,9 +384,8 @@ export const lastItems = (req, res, next) => {
       }
     ])
     .exec((err, lines) => {
-      if (err) {
-        res.status(500).end();
-      } else if (lines) {
+      if (err) next(err);
+      if (lines) {
         let docs = [];
         for (let line of lines) {
           if (line.item) {
@@ -433,20 +413,10 @@ export const lastParents = (req, res, next) => {
     .limit(100)
     // .populate([{ path: "item" }, { path: "children" }])
     .exec((err, lines) => {
-      if (err) {
-        res.status(500).end();
-      } else if (lines) {
-        // let docs = [];
-        // for (let line of lines) {
-        //   if (line.item) {
-        //     if (docs.filter(i => i._id === line.item._id).length === 0) {
-        //       docs.push(line.item);
-        //     }
-        //   }
-        // }
+      if (err) next(err);
+      if (lines) {
         let itemsIds = lines.map(line => line.item);
 
-        // query.users = { $in: [req.user._id] };
         Item.find({
           _id: {
             $in: itemsIds
@@ -463,18 +433,8 @@ export const lastParents = (req, res, next) => {
             }
           ])
           .exec((err, items) => {
-            if (err) {
-              console.log(err);
-              res.status(500).end();
-            } else if (items) {
-              // let docs = [];
-              // for (let line of lines) {
-              //   if (line.item) {
-              //     if (docs.filter(i => i._id === line.item._id).length === 0) {
-              //       docs.push(line.item);
-              //     }
-              //   }
-              // }
+            if (err) next(err);
+            if (items) {
               res.send(items);
             } else {
               res.status(404).end({
@@ -482,15 +442,6 @@ export const lastParents = (req, res, next) => {
               });
             }
           });
-        // Item.getWithChildren(docs)
-        //   .then(resp => {
-        //     res.send(resp);
-        //   })
-        //   .catch(err => {
-        //     res.status(500).end();
-        //   });
-
-        // res.send(docs);
       } else {
         res.status(404).end({
           msg: "not found"
