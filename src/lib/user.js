@@ -26,7 +26,12 @@ export const getUserData = data => {
     admins: data.admins,
     quantity: data.quantity,
     users: data.users,
-    currency: data.currency
+    currency: data.currency,
+    security: {
+      updatedAt: data.security.updatedAt,
+      isRandom: data.security.isRandom,
+      hasPassword: data.password != null && data.password !== ""
+    }
   };
   return user;
 };
