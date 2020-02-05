@@ -192,6 +192,7 @@ export const login = (req, res, next) => {
   };
   User.findOne(query)
     .populate("scope.id")
+    .populate("currency")
     .exec((err, user) => {
       // if there are any errors, return the error before anything else
       if (err) return next(err);
