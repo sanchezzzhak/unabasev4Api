@@ -1,24 +1,7 @@
-import {
-  Router
-} from "express";
+import { Router } from "express";
 const users = Router();
 
-import {
-  create,
-  get,
-  logout,
-  find,
-  getOne,
-  password,
-  update,
-  business,
-  scope,
-  user,
-  restart,
-  relationsFind,
-  lastItems,
-  lastParents
-} from "../controllers/user";
+import { create, get, logout, find, getOne, password, update, business, scope, user, restart, relationsFind, lastItems, lastParents } from "../controllers/user";
 
 import auth from "../config/lib/auth";
 users.use(auth.sToken);
@@ -41,7 +24,7 @@ users.get("/find/:q", find);
 users.get("/relations/:q", relationsFind);
 users.get("/:id", getOne);
 users.put("/:id", update);
-users.put("/password/:id", password);
+users.put("/password", password);
 users.post("/restart/:q", restart);
 users.put("/business/:id", business);
 users.put("/user/:id", user);
