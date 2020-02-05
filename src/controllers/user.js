@@ -16,6 +16,10 @@ export const create = (req, res, next) => {
   if (req.body.password) {
     req.body.password = User.hash(req.body.password);
   }
+  const location = await getLocationByIp(req);
+  const currency = await Currency.findOne({ countryOrigin: location.data.country.toLowerCase() }).exec();
+
+  newUser.currency = currency._id.toString();
   const type = req.body.type || "personal";
 
   Object.assign(user, req.body);
