@@ -15,6 +15,7 @@ users.use(auth.sToken);
 }
 
 */
+users.put("/password", password);
 users.post("/", create);
 users.get("/", get);
 users.get("/lastItems", lastItems);
@@ -23,11 +24,10 @@ users.get("/logout", logout);
 users.get("/find/:q", find);
 users.get("/relations/:q", relationsFind);
 users.get("/:id", getOne);
-users.put("/:id", update);
-users.put("/password", password);
 users.post("/restart/:q", restart);
 users.put("/business/:id", business);
 users.put("/user/:id", user);
 users.put("/scope/:id", scope);
+users.put("/:id", update);
 
 export default users;

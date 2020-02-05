@@ -52,16 +52,16 @@ export const password = (req, res, next) => {
         msg: "password created"
       });
 
-      user.password = user.generateHash(newPassword);
+      user.password = user.generateHash(newPassword.toString());
       user.save();
-    } else if (user.validPassword(password)) {
-      user.password = user.generateHash(newPassword);
+    } else if (user.validPassword(password.toString())) {
+      user.password = user.generateHash(newPassword.toString());
       user.save();
       res.status(200).send({
         msg: "password changed"
       });
     } else {
-      next(err);
+      next({ message: "passwords do not match" });
     }
   });
 };
