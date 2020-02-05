@@ -53,6 +53,7 @@ export const password = (req, res, next) => {
       });
 
       user.password = user.generateHash(newPassword.toString());
+      user.security.hasPassword = true;
       user.save();
     } else if (user.validPassword(password.toString())) {
       user.password = user.generateHash(newPassword.toString());
@@ -147,12 +148,16 @@ export const getOne = (req, res, next) => {
     _id: req.params.id,
     type
   })
+    .select(
+      "isActive security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts"
+    )
     .populate("users")
     .populate("business")
     .exec((err, user) => {
       if (err) next(err);
       if (!user) next(notFoundError());
-      res.send(getUserData(user));
+      // res.send(getUserData(user));
+      res.send(user);
     });
 };
 export const update = (req, res, next) => {
@@ -165,6 +170,9 @@ export const update = (req, res, next) => {
       new: true
     }
   )
+    .select(
+      "isActive security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts"
+    )
     .populate("currency")
     .populate("scope.id")
     .exec(async (err, item) => {
@@ -177,10 +185,10 @@ export const update = (req, res, next) => {
           .select("permission")
           .populate("permission")
           .exec();
-        let user = getUserData(item);
+        // let user = getUserData(item);
         let permissions = userPermissions.map(userPermission => userPermission.permission);
-        user.permissions = permissions;
-        res.send(user);
+        item.permissions = permissions;
+        res.send(item);
       } catch (err) {
         return next(err);
       }
@@ -293,13 +301,16 @@ export const find = (req, res, next) => {
         {
           path: "business"
         }
-      ]
+      ],
+      select:
+        "isActive security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts"
     },
     async (err, items) => {
       if (err) next(err);
       let users = [];
       items.docs.forEach(item => {
-        users.push(getUserData(item));
+        // users.push(getUserData(item));
+        users.push(user);
       });
       items.docs = users;
       res.send(items);

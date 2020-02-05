@@ -16,6 +16,7 @@ let userSchema = Schema(
     security: {
       updatedAt: { type: Date, default: new Date() },
       isRandom: { type: Boolean, default: false },
+      hasPassword: { type: Boolean, default: false },
       activateHash: String
     },
     idNumber: { type: String },
