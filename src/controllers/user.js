@@ -47,7 +47,7 @@ export const password = (req, res, next) => {
   User.findById(req.user._id, function(err, user) {
     if (err) next(err);
     if (!user) next(notFoundError());
-    if (typeof user.password === "undefined" || user.password === null) {
+    if (typeof user.password == "undefined" || user.password === null) {
       res.status(200).send({
         msg: "password created"
       });
