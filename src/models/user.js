@@ -22,6 +22,13 @@ let userSchema = Schema(
     idNumber: { type: String },
     phones: [{ _id: false, phone: String, label: String }],
     emails: [{ _id: false, email: String, label: String }],
+    otherAccounts: {
+      instagram: String,
+      twitter: String,
+      facebook: String,
+      web: String,
+      linkedin: String
+    },
     /**
      *     enum: ['personal', 'business']
      */

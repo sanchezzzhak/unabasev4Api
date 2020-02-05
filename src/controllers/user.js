@@ -171,7 +171,7 @@ export const update = (req, res, next) => {
     }
   )
     .select(
-      "isActive security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts"
+      "isActive security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
     )
     .populate("currency")
     .populate("scope.id")
@@ -303,7 +303,7 @@ export const find = (req, res, next) => {
         }
       ],
       select:
-        "isActive security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts"
+        "isActive security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
     },
     async (err, items) => {
       if (err) next(err);

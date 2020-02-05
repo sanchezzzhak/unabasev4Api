@@ -38,7 +38,7 @@ export const google = (req, res, next) => {
       };
       User.findOne(
         query,
-        "isActive security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts",
+        "isActive security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts",
         (err, user) => {
           if (err) {
             res.status(404).end();
@@ -131,7 +131,7 @@ export const password = (req, res, next) => {
   console.log("enter restart password");
   User.findById(
     req.params.id,
-    "isActive security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts",
+    "isActive security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts",
     function(err, user) {
       if (err) {
         res.status(500).send(err);
