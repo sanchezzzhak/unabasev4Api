@@ -10,17 +10,24 @@ import Contact from "../models/contact";
 import { getUserData, getUserPermission } from "../lib/user";
 import UserPermission from "../models/userPermission";
 import { notFoundError } from "../lib/error";
+import { getLocationByIp } from "../lib/location";
+import Currency from "../models/currency";
 
-export const create = (req, res, next) => {
+export const create = async (req, res, next) => {
   let user = new User();
   if (req.body.password) {
     req.body.password = User.hash(req.body.password);
   }
-  const location = await getLocationByIp(req);
-  const currency = await Currency.findOne({ countryOrigin: location.data.country.toLowerCase() }).exec();
-
-  newUser.currency = currency._id.toString();
   const type = req.body.type || "personal";
+  try {
+    const location = await getLocationByIp(req);
+
+    const currency = await Currency.findOne({ countryOrigin: location.data.country.toLowerCase() }).exec();
+
+    newUser.currency = currency._id.toString();
+  } catch (err) {
+    console.log(err);
+  }
 
   Object.assign(user, req.body);
   if (type === "business") {
