@@ -55,7 +55,7 @@ export function get(req, res, next) {
 
 export function getLinesByMovement(req, res, next) {
   Line.find({ movement: req.params.movement })
-    // .populate("movement")
+    .populate("movement", "name _id")
     // .populate("item")
     .exec((err, lines) => {
       if (err) return next(err);

@@ -74,7 +74,7 @@ const movementSchema = new Schema(
     },
     state: { type: String, default: "opportunity", enum: ["draft", "business", "budget", "opportunity"] },
     isActive: { type: Boolean, default: true },
-    currency: { type: Schema.Types.ObjectId, ref: "Currency" }
+    currency: { type: String, ref: "Currency" }
     // currency: { type: String }
   },
   { timestamps: true }

@@ -27,8 +27,10 @@ const lineSchema = new Schema(
     isParent: { type: Boolean, default: false },
     parent: { type: Schema.Types.ObjectId, ref: "Line" },
 
-    item: { type: Schema.Types.ObjectId, ref: "Item" },
-    movement: { type: Schema.Types.ObjectId, ref: "Movement" },
+    // item: { type: Schema.Types.ObjectId, ref: "Item" },
+    item: { type: String, ref: "Item" },
+    // movement: { type: Schema.Types.ObjectId, ref: "Movement" },
+    movement: { ref: "Movement", type: String },
     comments: Array({ type: Schema.Types.ObjectId, ref: "Comment" }),
     creator: { type: Schema.Types.ObjectId, ref: "User" }
   },
