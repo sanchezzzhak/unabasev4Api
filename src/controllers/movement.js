@@ -237,10 +237,10 @@ export const create = (req, res, next) => {
     state: false
   };
   delete req.body.lines;
-
+  req.body.currency = req.body.currency.toString();
   let newMovement = new Movement(req.body);
 
-  newMovement.creator = req.user._id || null;
+  newMovement.creator = req.user._id.toString() || null;
 
   newMovement.save((err, movement) => {
     if (err) return next(err);

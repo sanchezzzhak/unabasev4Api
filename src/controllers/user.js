@@ -44,9 +44,10 @@ export const create = (req, res, next) => {
 export const password = (req, res, next) => {
   const { password, newPassword } = req.body;
 
-  User.findById(req.params.id, function(err, user) {
+  User.findById(req.user._id, function(err, user) {
     if (err) next(err);
-    if (typeof user.password === "undefined") {
+    if (!user) next(notFoundError());
+    if (typeof user.password === "undefined" && user.password === null) {
       res.status(200).send({
         msg: "password created"
       });

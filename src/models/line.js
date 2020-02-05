@@ -3,98 +3,39 @@ import Item from "./item";
 import Movement from "./movement";
 const Schema = mongoose.Schema;
 
-const lineSchema = new Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  tax: {
-    type: Schema.Types.ObjectId,
-    ref: "Tax"
-  },
-  observation: {
-    type: String
-  },
-  number: {
-    type: Number,
-    default: 0
-  },
-  quantity: {
-    type: Number,
-    default: 1
-  },
-  price: {
-    type: Number
-  },
-  taxes: Array({
-    tax: {
-      type: Schema.Types.ObjectId,
-      ref: "Tax"
+const lineSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    // tax: { type: Schema.Types.ObjectId, ref: "Tax" }, // deprecated
+    observation: { type: String },
+    number: { type: Number, default: 0 },
+    quantity: { type: Number, default: 1 },
+    price: { type: Number },
+    taxes: Array({
+      tax: { type: Schema.Types.ObjectId, ref: "Tax" },
+      price: { type: Number, default: 0 }
+    }),
+    numbers: {
+      price: { type: Number, default: 0 },
+      budget: { type: Number, default: 0 },
+      budgetModified: { type: Boolean, default: false },
+      cost: { type: Number, default: 0 }, // TODO rename to expense
+      tax: { type: Number, default: 0 }
     },
-    price: {
-      type: Number,
-      default: 0
-    }
-  }),
-  numbers: {
-    price: {
-      type: Number,
-      default: 0
-    },
-    budget: {
-      type: Number,
-      default: 0
-    },
-    budgetModified: {
-      type: Boolean,
-      default: false
-    },
-    cost: {
-      type: Number,
-      default: 0
-    },
-    tax: {
-      type: Number,
-      default: 0
-    }
-  },
-  children: Array({
-    type: Schema.Types.ObjectId,
-    ref: "Line"
-  }),
-  listIndex: Number,
-  isParent: {
-    type: Boolean,
-    default: false
-  },
-  parent: {
-    type: Schema.Types.ObjectId,
-    ref: "Line"
-  },
+    children: Array({ type: Schema.Types.ObjectId, ref: "Line" }),
+    listIndex: Number,
+    isParent: { type: Boolean, default: false },
+    parent: { type: Schema.Types.ObjectId, ref: "Line" },
 
-  // quantity: Array({}),
-
-  item: {
-    type: Schema.Types.ObjectId,
-    ref: "Item"
+    item: { type: Schema.Types.ObjectId, ref: "Item" },
+    movement: { type: Schema.Types.ObjectId, ref: "Movement" },
+    comments: Array({ type: Schema.Types.ObjectId, ref: "Comment" }),
+    creator: { type: Schema.Types.ObjectId, ref: "User" }
   },
-  movement: {
-    type: Schema.Types.ObjectId,
-    ref: "Movement"
-  },
-  comments: Array({
-    type: Schema.Types.ObjectId,
-    ref: "Comment"
-  }),
-  creator: {
-    type: Schema.Types.ObjectId,
-    ref: "User"
-  }
-}, {
-  timestamps: true
-});
+  { timestamps: true }
+);
 
-lineSchema.methods.saveAsync = function () {
+lineSchema.methods.saveAsync = function() {
   return new Promise((resolve, reject) => {
     this.save((err, line) => {
       if (err) return reject(err);
@@ -103,22 +44,22 @@ lineSchema.methods.saveAsync = function () {
   });
 };
 
-lineSchema.post("save", function (doc, next) {
+lineSchema.post("save", function(doc, next) {
   console.log("post has been saved++++++++++++++++++++++++");
 
   next();
 });
-lineSchema.pre("save", function (next) {
+lineSchema.pre("save", function(next) {
   console.log("pre has been saved++++++++++++++++++++++++");
   next();
 });
-lineSchema.post("insertMany", function (docs, next) {
+lineSchema.post("insertMany", function(docs, next) {
   console.log("post has been insertManyd++++++++++++++++++++++++");
   console.log(docs);
 
   next();
 });
-lineSchema.pre("insertMany", async function (next, docs) {
+lineSchema.pre("insertMany", async function(next, docs) {
   console.log("pre has been insertManyd++++++++++++++++++++++++");
   console.log(docs);
   let movement = await Movement.findById(docs[0].movement).exec();
@@ -141,22 +82,25 @@ lineSchema.pre("insertMany", async function (next, docs) {
       let global = {
         currency: movement.currency
       };
-      Item.update({
-        _id: {
-          $in: itemsToUpdate
+      Item.update(
+        {
+          _id: {
+            $in: itemsToUpdate
+          }
+        },
+        {
+          $push: {
+            global: global
+          }
         }
-      }, {
-        $push: {
-          global: global
-        }
-      }).exec(() => {
+      ).exec(() => {
         next(false);
       });
     }
   });
   next();
 });
-lineSchema.post("update", function (doc, next) {
+lineSchema.post("update", function(doc, next) {
   console.log("post has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
   console.log(doc);
   // console.log(doc.numbers);
@@ -164,13 +108,13 @@ lineSchema.post("update", function (doc, next) {
 
   next();
 });
-lineSchema.pre("update", function (doc, next) {
+lineSchema.pre("update", function(doc, next) {
   console.log("pre has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
   console.log(doc);
 
   next();
 });
-lineSchema.post("find", function (doc, next) {
+lineSchema.post("find", function(doc, next) {
   console.log("lineSchema - post has been findd++++++++++++++++++++++++:::::::::::::::::::::::");
   next();
 });
@@ -184,7 +128,8 @@ lineSchema.post("find", function (doc, next) {
 const Line = mongoose.model("Line", lineSchema);
 
 Line.updateParentTotal = (parentId, callback) => {
-  Line.find({
+  Line.find(
+    {
       parent: parentId
     },
     (err, lines) => {
@@ -198,10 +143,12 @@ Line.updateParentTotal = (parentId, callback) => {
           budgetSum += line.numbers.budget * line.quantity;
         }
         Line.findByIdAndUpdate(
-          parentId.toString(), {
+          parentId.toString(),
+          {
             "numbers.price": priceSum,
             "numbers.budget": budgetSum
-          }, {
+          },
+          {
             new: true
           },
           (err, parent) => {
@@ -226,11 +173,13 @@ Line.addParent = (children, parentId) => {
   return new Promise((resolve, reject) => {
     // deprecated for
     // for (let child of children) {
-    Line.updateMany({
+    Line.updateMany(
+      {
         _id: {
           $in: children
         }
-      }, {
+      },
+      {
         parent: parentId
       },
       (err, resp) => {
@@ -248,8 +197,8 @@ Line.addParent = (children, parentId) => {
 Line.getTreeTotals = movementId => {
   return new Promise((resolve, reject) => {
     Line.find({
-        movement: movementId
-      })
+      movement: movementId
+    })
       .select("parent numbers name isParent observation")
       .exec((err, lines) => {
         if (err) reject(err);
@@ -294,7 +243,8 @@ Line.updateManyMod = items => {
       if (i._id) {
         Line.findByIdAndUpdate(
           i._id,
-          i, {
+          i,
+          {
             new: true
           },
           (err, line) => {

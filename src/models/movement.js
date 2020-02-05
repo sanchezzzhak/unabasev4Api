@@ -16,13 +16,7 @@ const movementSchema = new Schema(
         }
       ]
     },
-    // client: { type: Schema.Types.ObjectId, ref: 'User' },
     client: {
-      // type and data DEPRECATED
-      // type: { type: String, enum: ["Business", "Contact", "User"] },
-      // data: { type: Schema.Types.ObjectId, refPath: "client.type" },
-      //------------
-      // save a name for the client if no contact is created.
       name: String,
       // save the user if the contact created or selected has a user reference.
       user: { type: Schema.Types.ObjectId, ref: "User" },
@@ -58,15 +52,7 @@ const movementSchema = new Schema(
     editor: { type: Schema.Types.ObjectId, ref: "User" },
 
     creator: { type: Schema.Types.ObjectId, ref: "User" },
-    // DEPRECATED
-    // personal: {
-    //   client: { type: Schema.Types.ObjectId, ref: "User" },
-    //   responsable: { type: Schema.Types.ObjectId, ref: "User" }
-    // },
-    // business: {
-    //   client: { type: Schema.Types.ObjectId, ref: "Business" },
-    //   provider: { type: Schema.Types.ObjectId, ref: "Business" }
-    // },
+
     isBusiness: { type: Boolean, default: false },
     lines: Array({ type: Schema.Types.ObjectId, ref: "Line" }),
     comments: Array({ type: Schema.Types.ObjectId, ref: "Comment" }),
@@ -89,8 +75,7 @@ const movementSchema = new Schema(
     state: { type: String, default: "opportunity", enum: ["draft", "business", "budget", "opportunity"] },
     isActive: { type: Boolean, default: true },
     currency: { type: Schema.Types.ObjectId, ref: "Currency" }
-    // contact: { type: Schema.Types.ObjectId, ref: 'Contact' },
-    // contactName: { type: String }
+    // currency: { type: String }
   },
   { timestamps: true }
 );

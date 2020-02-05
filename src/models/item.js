@@ -19,6 +19,16 @@ const itemSchema = new Schema(
     },
     isParent: { type: Boolean, default: false },
     parent: { type: Schema.Types.ObjectId, ref: "Item" },
+    margin: {
+      buy: {
+        min: { type: Number },
+        max: { type: Number }
+      },
+      sell: {
+        min: { type: Number },
+        max: { type: Number }
+      }
+    },
     global: [
       {
         currency: { type: Schema.Types.ObjectId, ref: "Currency" },

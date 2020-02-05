@@ -54,10 +54,28 @@ export function get(req, res, next) {
 }
 
 export function getLinesByMovement(req, res, next) {
-  Line.find({ movement: req.params.movement }, (err, lines) => {
-    if (err) return next(err);
-    res.json(lines);
-  });
+  Line.find({ movement: req.params.movement })
+    // .populate("movement")
+    // .populate("item")
+    .exec((err, lines) => {
+      if (err) return next(err);
+
+      res.send(lines);
+    });
+
+  // Line.aggregate([
+  //   {
+  //     $match: {
+  //       $and: [{ movement: req.params.movement }]
+  //     }
+  //   },
+  //   {
+  //     $lookup: { from: Movement.collection.name, localField: "movement", foreignField: "_id", as: "movement" }
+  //   }
+  // ]).exec((err, lines) => {
+  //   if (err) return next(err);
+  //   res.send(lines);
+  // });
 }
 export function createMany(req, res, next) {
   for (let line of req.body.lines) {
