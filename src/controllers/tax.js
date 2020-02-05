@@ -9,11 +9,11 @@ export const get = (req, res, next) => {
   delete rquery.page;
   delete rquery.limit;
   let query = { ...rquery };
-  Tax.paginate(query, options, (err, taxs) => {
+  Tax.paginate(query, options, (err, taxes) => {
     if (err) {
       res.status(500).end();
     } else {
-      res.send(taxs);
+      res.send(taxes);
     }
   });
 };
