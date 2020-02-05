@@ -8,6 +8,7 @@ import { checkGlobal } from "../lib/checkGlobal";
 import { calculateTotalMovement } from "../lib/movement";
 import { createError } from "../lib/error";
 import { queryHelper } from "../lib/queryHelper";
+import { getLocationByIp } from "../lib/location";
 const ObjectId = Types.ObjectId;
 
 export const getOne = (req, res, next) => {
@@ -53,7 +54,9 @@ export function get(req, res, next) {
   });
 }
 
-export function getLinesByMovement(req, res, next) {
+export const getLinesByMovement = async (req, res, next) => {
+  const location = await getLocationByIp(req);
+  console.log(location);
   Line.find({ movement: req.params.movement })
     .populate("movement", "name _id")
     // .populate("item")
@@ -76,7 +79,7 @@ export function getLinesByMovement(req, res, next) {
   //   if (err) return next(err);
   //   res.send(lines);
   // });
-}
+};
 export function createMany(req, res, next) {
   for (let line of req.body.lines) {
     line.creator = req.user._id;

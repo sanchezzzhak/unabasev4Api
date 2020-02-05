@@ -10,7 +10,7 @@ import { linkMovement } from "./movement";
 import envar from "../lib/envar";
 import UserPermission from "../models/userPermission";
 import { getUserData } from "../lib/user";
-
+import { getLocationByIp } from "../lib/location";
 export const google = (req, res, next) => {
   let url = gauth.googleAuth.endpoint + req.body.token;
 
@@ -43,6 +43,7 @@ export const google = (req, res, next) => {
           if (err) {
             res.status(404).end();
           } else if (!user) {
+            const location = getLocationByIp(req);
             let newUser = new User();
             (newUser.google = newUser.username = req.body.google.email.slice(0, req.body.google.email.indexOf("@"))), (newUser.google = req.body.google);
             newUser.google.id = data.data.sub;
