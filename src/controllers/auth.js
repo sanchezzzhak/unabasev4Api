@@ -11,6 +11,7 @@ import envar from "../lib/envar";
 import UserPermission from "../models/userPermission";
 import { getUserData } from "../lib/user";
 import { getLocationByIp } from "../lib/location";
+import Currency from "../models/currency";
 export const google = (req, res, next) => {
   let url = gauth.googleAuth.endpoint + req.body.token;
 
@@ -44,7 +45,9 @@ export const google = (req, res, next) => {
             res.status(404).end();
           } else if (!user) {
             const location = await getLocationByIp(req);
+            const currency = await Currency.findOne({ countryOrigin: location.data.country.toLowerCase() }).exec();
             let newUser = new User();
+            newUser.currency = currency._id.toString();
             (newUser.google = newUser.username = req.body.google.email.slice(0, req.body.google.email.indexOf("@"))), (newUser.google = req.body.google);
             newUser.google.id = data.data.sub;
             newUser.emails = [];
@@ -343,7 +346,7 @@ export const register = (req, res, next) => {
       }
     ]
   };
-  User.findOne(query, function(err, user) {
+  User.findOne(query, async function(err, user) {
     // if there are any errors, return the error
     if (err) return next(err);
 
@@ -366,6 +369,10 @@ export const register = (req, res, next) => {
       // create the user
       let newUser = new User();
 
+      const location = await getLocationByIp(req);
+      const currency = await Currency.findOne({ countryOrigin: location.data.country.toLowerCase() }).exec();
+
+      newUser.currency = currency._id.toString();
       let password;
       let activateHash;
       console.log(req.body.password);
