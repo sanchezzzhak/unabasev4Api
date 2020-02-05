@@ -39,11 +39,11 @@ export const google = (req, res, next) => {
       User.findOne(
         query,
         "isActive security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts",
-        (err, user) => {
+        async (err, user) => {
           if (err) {
             res.status(404).end();
           } else if (!user) {
-            const location = getLocationByIp(req);
+            const location = await getLocationByIp(req);
             let newUser = new User();
             (newUser.google = newUser.username = req.body.google.email.slice(0, req.body.google.email.indexOf("@"))), (newUser.google = req.body.google);
             newUser.google.id = data.data.sub;

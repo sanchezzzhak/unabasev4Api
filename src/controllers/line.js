@@ -55,9 +55,6 @@ export function get(req, res, next) {
 }
 
 export const getLinesByMovement = async (req, res, next) => {
-  const location = await getLocationByIp(req);
-  console.log("locationx");
-  console.log(location);
   Line.find({ movement: req.params.movement })
     .populate("movement", "name _id")
     // .populate("item")
