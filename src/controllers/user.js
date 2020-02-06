@@ -319,11 +319,11 @@ export const find = (req, res, next) => {
     async (err, items) => {
       if (err) next(err);
       let users = [];
-      items.docs.forEach(item => {
-        // users.push(getUserData(item));
-        users.push(user);
-      });
-      items.docs = users;
+      // items.docs.forEach(item => {
+      //   // users.push(getUserData(item));
+      //   users.push(user);
+      // });
+      // items.docs = users;
       res.send(items);
     }
   );
