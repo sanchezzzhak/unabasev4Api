@@ -237,7 +237,7 @@ export const create = (req, res, next) => {
     state: false
   };
   delete req.body.lines;
-  req.body.currency = req.body.currency.toString();
+  req.body.currency = typeof req.body.currency === "string" ? req.body.currency : req.body.currency._id.toString();
   let newMovement = new Movement(req.body);
 
   newMovement.creator = req.user._id.toString() || null;
