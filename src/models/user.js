@@ -169,7 +169,13 @@ userSchema.methods.validPassword = function(password) {
 const User = mongoose.model("User", userSchema);
 
 export default User;
-
+User.validPassword = async (id, password) => {
+  const user = await User.findById(id).exec();
+  let valid = bcrypt.compareSync(password, user.password);
+  var q = () => {};
+  q();
+  return valid;
+};
 User.hash = password => {
   return bcrypt.hashSync(password, salt, null);
 };

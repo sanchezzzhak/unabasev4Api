@@ -66,7 +66,7 @@ export const password = (req, res, next) => {
       user.password = user.generateHash(newPassword.toString());
       user.security.hasPassword = true;
       user.save();
-    } else if (user.validPassword(password.toString())) {
+    } else if (password && user.validPassword(password.toString())) {
       user.password = user.generateHash(newPassword.toString());
       user.save();
       res.status(200).send({

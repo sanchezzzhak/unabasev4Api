@@ -31,7 +31,8 @@ export const getUserData = data => {
       updatedAt: data.security.updatedAt,
       isRandom: data.security.isRandom,
       hasPassword: data.password != null && data.password !== ""
-    }
+    },
+    otherAccounts: data.otherAccounts
   };
   return user;
 };

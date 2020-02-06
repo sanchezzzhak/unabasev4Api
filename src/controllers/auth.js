@@ -110,14 +110,14 @@ export const google = (req, res, next) => {
                 }
               ],
               err => {
-                let getUser = getUserData(user);
-                let userData = {
-                  ...getUser,
-                  currency: user.currency
-                };
-                res.json({
+                // let getUser = getUserData(user);
+                // let userData = {
+                //   ...getUser,
+                //   currency: user.currency
+                // };
+                res.send({
                   token,
-                  user: userData
+                  user
                 });
               }
             );
@@ -194,9 +194,12 @@ export const login = (req, res, next) => {
     type: "personal"
   };
   User.findOne(query)
+    .select(
+      "isActive security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
+    )
     .populate("scope.id")
     .populate("currency")
-    .exec((err, user) => {
+    .exec(async (err, user) => {
       // if there are any errors, return the error before anything else
       if (err) return next(err);
 
@@ -212,7 +215,9 @@ export const login = (req, res, next) => {
       } else {
         console.log("-------- user compare");
         // console.log(JSON.stringify(getUserData(user)) == JSON.stringify(getUserData(user)));
-        const isValid = typeof req.body.password !== "undefined" ? user.validPassword(req.body.password) : false;
+        const isValid = typeof req.body.password !== "undefined" ? await User.validPassword(user._id.toString(), req.body.password) : false;
+        // const isValid = typeof req.body.password !== "undefined" ? user.validPassword(req.body.password) : false;
+        delete user.password;
         const isActive = user.isActive;
         if (isValid && isActive) {
           user.lastLogin = Date.now();
@@ -231,22 +236,7 @@ export const login = (req, res, next) => {
             );
             req.user = user;
             res.statusMessage = req.lg.user.successLogin;
-            if (user.scope.type === "business") {
-              // let permissions = await UserPermission.find({ business: user.scope.id, user: user._id }).exec();
-              // user.permissions = permissions;
-              // try {
-              //   let userPermissions = await UserPermission.find({ user: user._id, business: user.scope.id })
-              //     .select("permission")
-              //     .populate("permission")
-              //     .exec();
-              //   let permissions = userPermissions.map(userPermission => userPermission.permission);
-              //   let result = getUserData(user);
-              //   result.permissions = permissions;
-              //   res.json({ token, user: result });
-              // } catch (err) {
-              //   return next(err);
-              // }
-            }
+            delete user.password;
             res.json({
               token,
               user
@@ -263,40 +253,6 @@ export const login = (req, res, next) => {
             err: req.lg.user.notActive
           });
         }
-        //   // res.statusMessage = 'Current password does not match';
-        //   // res.status(403).send({ msg: req.lg.user.wrongPassword });
-
-        //   // res.send('Current password does not match');
-        //   // return done(null, false, 'wrong pass123sg'); // create the loginMessage and save it to session as flashdata
-        // } else if (!user.isActive) {
-        //   logger('User is not active');
-        //   // res.statusMessage = 'User is not active';
-        //   // res.status(401).send({ msg: req.lg.user.notActive });
-
-        //   // res.send('User is not active');
-        // } else {
-        //   // all is well, return successful user
-        //   user.lastLogin = Date.now();
-        //   if (
-        //     user.activeScope == '' ||
-        //     !user.activeScope ||
-        //     user.activeScope == null
-        //   ) {
-        //     user.activeScope = user._id;
-        //   }
-        //   user.save((err, user) => {
-        //     const token = jwt.sign({ user: getUserData(user) }, mainConfig.mSecret, {
-        //       expiresIn: '3d'
-        //     });
-        //     // res.cookie('access_token', token, {
-        //     //   maxAge: 3600 * 24,
-        //     //   httpOnly: true
-        //     // });
-        //     // req.session.user = user;
-        //     req.user = user;
-        //     res.statusMessage = 'authenticated';
-        //     res.json({ token, user: getUserData(user) });
-        //   });
       }
     });
 };
