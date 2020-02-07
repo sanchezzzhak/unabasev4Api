@@ -4,9 +4,9 @@ import mongoosePaginate from "mongoose-paginate";
 const itemSchema = new Schema(
   {
     isActive: { type: Boolean, default: true },
-    children: Array({ type: Schema.Types.ObjectId, ref: "Item" }),
+    children: Array({ type: String, ref: "Item" }),
     name: String,
-    creator: { type: Schema.Types.ObjectId, ref: "User" },
+    creator: { type: String, ref: "User" },
     quantity: {
       buy: {
         min: { type: Number },
@@ -18,7 +18,7 @@ const itemSchema = new Schema(
       }
     },
     isParent: { type: Boolean, default: false },
-    parent: { type: Schema.Types.ObjectId, ref: "Item" },
+    parent: { type: String, ref: "Item" },
     margin: {
       buy: {
         min: { type: Number },
@@ -31,7 +31,7 @@ const itemSchema = new Schema(
     },
     global: [
       {
-        currency: { type: Schema.Types.ObjectId, ref: "Currency" },
+        currency: { type: String, ref: "Currency" },
         // estimate: {
         //   buy: {
         //     price: {
@@ -84,7 +84,7 @@ const itemSchema = new Schema(
         //     }
         //   }
         // },
-        // taxes: Array({ type: Schema.Types.ObjectId, ref: "Tax" }),
+        // taxes: Array({ type: String, ref: "Tax" }),
 
         lastPrice: {
           buy: { type: Number },

@@ -324,16 +324,7 @@ export const getOne = (req, res, next) => {
           movement: movement._id
         })
           .populate("item", "lastPrice global ")
-          .populate([
-            {
-              path: "item",
-              populate: [
-                {
-                  path: "global.taxes"
-                }
-              ]
-            }
-          ])
+
           .exec((err, lines) => {
             if (err) return next(err);
 

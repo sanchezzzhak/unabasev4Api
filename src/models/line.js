@@ -6,13 +6,13 @@ const Schema = mongoose.Schema;
 const lineSchema = new Schema(
   {
     name: { type: String, required: true },
-    // tax: { type: Schema.Types.ObjectId, ref: "Tax" }, // deprecated
+    // tax: { type: String, ref: "Tax" }, // deprecated
     observation: { type: String },
     number: { type: Number, default: 0 },
     quantity: { type: Number, default: 1 },
     price: { type: Number },
     taxes: Array({
-      tax: { type: Schema.Types.ObjectId, ref: "Tax" },
+      tax: { type: String, ref: "Tax" },
       price: { type: Number, default: 0 }
     }),
     numbers: {
@@ -22,17 +22,17 @@ const lineSchema = new Schema(
       cost: { type: Number, default: 0 }, // TODO rename to expense
       tax: { type: Number, default: 0 }
     },
-    children: Array({ type: Schema.Types.ObjectId, ref: "Line" }),
+    children: Array({ type: String, ref: "Line" }),
     listIndex: Number,
     isParent: { type: Boolean, default: false },
-    parent: { type: Schema.Types.ObjectId, ref: "Line" },
+    parent: { type: String, ref: "Line" },
 
-    // item: { type: Schema.Types.ObjectId, ref: "Item" },
+    // item: { type: String, ref: "Item" },
     item: { type: String, ref: "Item" },
-    // movement: { type: Schema.Types.ObjectId, ref: "Movement" },
+    // movement: { type: String, ref: "Movement" },
     movement: { ref: "Movement", type: String },
-    comments: Array({ type: Schema.Types.ObjectId, ref: "Comment" }),
-    creator: { type: Schema.Types.ObjectId, ref: "User" }
+    comments: Array({ type: String, ref: "Comment" }),
+    creator: { type: String, ref: "User" }
   },
   { timestamps: true }
 );
