@@ -5,28 +5,20 @@ import axios from "axios";
 import mailer from "../lib/mailer_deprecated";
 import { send } from "../config/mailer";
 import template from "../lib/mails";
+
 import { linkMovement } from "./movement";
 
 import envar from "../lib/envar";
 import UserPermission from "../models/userPermission";
-import { getUserData } from "../lib/user";
+import { getUserData, generateToken } from "../lib/user";
 import { getLocationByIp } from "../lib/location";
 import Currency from "../models/currency";
+import { notFoundError, createError } from "../lib/error";
 export const google = (req, res, next) => {
   let url = gauth.googleAuth.endpoint + req.body.token;
 
-  console.log(req.body);
-  console.log(url);
-
   axios(url)
     .then(data => {
-      // logger('data from gauth');
-      // logger(data['sub']);
-      // logger({
-      //   'google.id': data.data.sub
-      // });
-      console.log("data google");
-      console.log(data.data);
       let query = {
         $or: [
           {
@@ -41,9 +33,8 @@ export const google = (req, res, next) => {
         query,
         "isActive security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts",
         async (err, user) => {
-          if (err) {
-            res.status(404).end();
-          } else if (!user) {
+          if (err) next(err);
+          if (!user) {
             const location = await getLocationByIp(req);
             const currency = await Currency.findOne({ countryOrigin: location.data.country.toLowerCase() }).exec();
             let newUser = new User();
@@ -58,48 +49,37 @@ export const google = (req, res, next) => {
             });
             newUser.name = req.body.google.name;
             newUser.save((err, user) => {
-              if (err) {
-                res.status(500).end();
-              } else {
-                linkMovement(user.emails.google, user);
-                user.activeScope = user._id;
-                user.save((err, userFound) => {
-                  const token = jwt.sign(
-                    {
-                      user: userFound
-                    },
-                    envar().SECRET,
-                    {
-                      expiresIn: "3d"
-                    }
-                  );
-                  req.user = user;
-                  res.send({
-                    token,
-                    user: userFound
-                  });
-
-                  // res.json({
-                  //   message: "User Authenticated",
-                  //   token
-                  // });
+              if (err) next(err);
+              linkMovement(user.emails.google, user);
+              user.activeScope = user._id;
+              user.save((err, userFound) => {
+                if (err) next(err);
+                // const token = jwt.sign(
+                //   {
+                //     user: userFound
+                //   },
+                //   envar().SECRET,
+                //   {
+                //     expiresIn: "3d"
+                //   }
+                // );
+                req.user = user;
+                res.send({
+                  token: generateToken(userFound),
+                  user: userFound
                 });
-              }
+              });
             });
           } else {
-            // logger('user.google');
-            // logger(user);
-
             user.google.id = data.data.sub;
             user.lastLogin = Date.now();
             user.save();
-            const token = jwt.sign(
-              {
-                user: getUserData(user)
-              },
-              envar().SECRET
-            );
-            // res.cookie('access_token', token);
+            // const token = jwt.sign(
+            //   {
+            //     user: getUserData(user)
+            //   },
+            //   envar().SECRET
+            // );
             user.populate(
               [
                 {
@@ -110,13 +90,8 @@ export const google = (req, res, next) => {
                 }
               ],
               err => {
-                // let getUser = getUserData(user);
-                // let userData = {
-                //   ...getUser,
-                //   currency: user.currency
-                // };
                 res.send({
-                  token,
+                  token: generateToken(getUserData(user)),
                   user
                 });
               }
@@ -155,19 +130,19 @@ export const password = (req, res, next) => {
             user.activeScope = user._id;
           }
           user.save((err, user) => {
-            const token = jwt.sign(
-              {
-                user
-              },
-              envar().SECRET,
-              {
-                expiresIn: "3d"
-              }
-            );
+            // const token = jwt.sign(
+            //   {
+            //     user
+            //   },
+            //   envar().SECRET,
+            //   {
+            //     expiresIn: "3d"
+            //   }
+            // );
             req.user = user;
             res.statusMessage = req.lg.user.successLogin;
             res.json({
-              token,
+              token: generateToken(user),
               user
             });
           });
@@ -204,56 +179,46 @@ export const login = (req, res, next) => {
       if (err) return next(err);
 
       // if no user is found, return the message
-      if (!user) {
-        res.statusMessage = req.lg.user.notFound;
-        res.statusText = req.lg.user.notFound;
-        console.log(req.lg.user.notFound);
-        console.log(req.lg.user.notFound);
-        res.status(404).send({
-          err: req.lg.user.notFound
-        });
-      } else {
-        console.log("-------- user compare");
-        // console.log(JSON.stringify(getUserData(user)) == JSON.stringify(getUserData(user)));
-        const isValid = typeof req.body.password !== "undefined" ? await User.validPassword(user._id.toString(), req.body.password) : false;
-        // const isValid = typeof req.body.password !== "undefined" ? user.validPassword(req.body.password) : false;
-        delete user.password;
-        const isActive = user.isActive;
-        if (isValid && isActive) {
-          user.lastLogin = Date.now();
-          if (user.activeScope == "" || !user.activeScope || user.activeScope == null) {
-            user.activeScope = user._id;
-          }
-          user.save(async (err, user) => {
-            const token = jwt.sign(
-              {
-                user
-              },
-              envar().SECRET,
-              {
-                expiresIn: "3d"
-              }
-            );
-            req.user = user;
-            res.statusMessage = req.lg.user.successLogin;
-            delete user.password;
-            res.json({
-              token,
-              user
-            });
-          });
-        } else if (!isValid) {
-          res.statusMessage = req.lg.user.wrongPassword;
-          res.status(403).send({
-            err: req.lg.user.wrongPassword
-          });
-        } else if (!isActive) {
-          res.statusMessage = req.lg.user.notActive;
-          res.status(401).send({
-            err: req.lg.user.notActive
-          });
-        }
+      if (!user) next(notFoundError());
+      const isValid = typeof req.body.password !== "undefined" ? await User.validPassword(user._id.toString(), req.body.password) : false;
+      // const isValid = typeof req.body.password !== "undefined" ? user.validPassword(req.body.password) : false;
+      delete user.password;
+      if (!isValid) next(createError(403, "Wrong password"));
+      if (!user.isActive) next(createError(401, "User not active"));
+      // if (isValid && user.isActive) {
+      user.lastLogin = Date.now();
+      if (user.activeScope == "" || !user.activeScope || user.activeScope == null) {
+        user.activeScope = user._id;
       }
+      user.save(async (err, user) => {
+        // const token = jwt.sign(
+        //   {
+        //     user
+        //   },
+        //   envar().SECRET,
+        //   {
+        //     expiresIn: "3d"
+        //   }
+        // );
+        req.user = user;
+        res.statusMessage = req.lg.user.successLogin;
+        delete user.password;
+        res.json({
+          token: generateToken(user),
+          user
+        });
+      });
+      // } else if (!isValid) {
+      //   res.statusMessage = req.lg.user.wrongPassword;
+      //   res.status(403).send({
+      //     err: req.lg.user.wrongPassword
+      //   });
+      // } else if (!user.isActive) {
+      //   res.statusMessage = req.lg.user.notActive;
+      //   res.status(401).send({
+      //     err: req.lg.user.notActive
+      //   });
+      // }
     });
 };
 export const verify = (req, res, next) => {
@@ -266,18 +231,18 @@ export const verify = (req, res, next) => {
         res.statusMessage = req.lg.user.verified;
 
         user.save((err, user) => {
-          const token = jwt.sign(
-            {
-              user
-            },
-            envar().SECRET,
-            {
-              expiresIn: "3d"
-            }
-          );
+          // const token = jwt.sign(
+          //   {
+          //     user
+          //   },
+          //   envar().SECRET,
+          //   {
+          //     expiresIn: "3d"
+          //   }
+          // );
           req.user = user;
           res.json({
-            token,
+            token: generateToken(user),
             user
           });
         });
@@ -358,32 +323,27 @@ export const register = (req, res, next) => {
       }
       // set the user's local credentials
       newUser.username = req.body.username || req.body.email.slice(0, req.body.email.indexOf("@"));
-      // newUser.password = newUser.generateHash(req.body.password);
-      // newUser.security.updatedAt = new Date();
+
       newUser.name = req.body.name;
-      // newUser.rut = req.body.rut;
-      // newUser.phone = req.body.phone;
-      // newUser.cellphone = req.body.cellphone;
-      // newUser.emails = {};
+
       newUser.emails.push({
         email: req.body.email,
         label: "default"
       });
-      // newUser.address = req.body.address;
 
       // save the user
       newUser.save(function(err, user) {
         if (err) throw err;
 
-        const token = jwt.sign(
-          {
-            user
-          },
-          envar().SECRET,
-          {
-            expiresIn: "3d"
-          }
-        );
+        // const token = jwt.sign(
+        //   {
+        //     user
+        //   },
+        //   envar().SECRET,
+        //   {
+        //     expiresIn: "3d"
+        //   }
+        // );
         user.activeScope = user._id;
         user.save();
         if (user.security.isRandom) {
@@ -410,7 +370,7 @@ export const register = (req, res, next) => {
         }
         req.user = user;
         res.json({
-          token,
+          token: generateToken(user),
           user
         });
       });
