@@ -42,7 +42,10 @@ export const google = (req, res, next) => {
 
             let newUser = new User();
             newUser.currency = await getCurrencyByLocation(req);
-            (newUser.google = newUser.username = req.body.google.email.slice(0, req.body.google.email.indexOf("@"))), (newUser.google = req.body.google);
+            // (newUser.google = newUser.username = req.body.google.email.slice(0, req.body.google.email.indexOf("@"))), (newUser.google = req.body.google);
+
+            newUser.username = req.body.google.email.slice(0, req.body.google.email.indexOf("@"));
+            newUser.google = req.body.google;
             newUser.google.id = data.data.sub;
             newUser.emails = [];
             newUser.imgUrl = req.body.google.imgUrl;
