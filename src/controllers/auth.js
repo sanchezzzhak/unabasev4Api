@@ -14,7 +14,7 @@ import { getUserData, generateToken } from "../lib/user";
 import { getLocationByIp } from "../lib/location";
 import Currency from "../models/currency";
 import { notFoundError, createError } from "../lib/error";
-import { await, getCurrencyByLocation } from "../lib/currency";
+import { getCurrencyByLocation } from "../lib/currency";
 export const google = (req, res, next) => {
   let url = gauth.googleAuth.endpoint + req.body.token;
 
