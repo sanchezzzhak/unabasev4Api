@@ -32,59 +32,59 @@ const itemSchema = new Schema(
     global: [
       {
         currency: { type: Schema.Types.ObjectId, ref: "Currency" },
-        estimate: {
-          buy: {
-            price: {
-              isActive: { type: Boolean },
-              number: { type: Number }
-            },
-            min: {
-              number: { type: Number },
-              percentage: { type: Number },
-              isActive: { type: Boolean }
-            },
-            max: {
-              number: { type: Number },
-              percentage: { type: Number },
-              isActive: { type: Boolean }
-            },
-            isActive: { type: Boolean }
-          },
-          sell: {
-            price: {
-              isActive: { type: Boolean },
-              number: { type: Number }
-            },
-            min: {
-              number: { type: Number },
-              percentage: { type: Number },
-              isActive: { type: Boolean }
-            },
-            max: {
-              number: { type: Number },
-              percentage: { type: Number },
-              isActive: { type: Boolean }
-            },
-            isActive: { type: Boolean }
-          },
-          margin: {
-            isActive: { type: Boolean },
-            from: {
-              type: String,
-              enum: ["buy", "sell"],
-              default: "sell"
-            },
-            max: {
-              percentage: { type: Number },
-              price: { type: Number, default: 0 }
-            },
-            min: {
-              percentage: { type: Number },
-              price: { type: Number, default: 0 }
-            }
-          }
-        },
-        taxes: Array({ type: Schema.Types.ObjectId, ref: "Tax" }),
+        // estimate: {
+        //   buy: {
+        //     price: {
+        //       isActive: { type: Boolean },
+        //       number: { type: Number }
+        //     },
+        //     min: {
+        //       number: { type: Number },
+        //       percentage: { type: Number },
+        //       isActive: { type: Boolean }
+        //     },
+        //     max: {
+        //       number: { type: Number },
+        //       percentage: { type: Number },
+        //       isActive: { type: Boolean }
+        //     },
+        //     isActive: { type: Boolean }
+        //   },
+        //   sell: {
+        //     price: {
+        //       isActive: { type: Boolean },
+        //       number: { type: Number }
+        //     },
+        //     min: {
+        //       number: { type: Number },
+        //       percentage: { type: Number },
+        //       isActive: { type: Boolean }
+        //     },
+        //     max: {
+        //       number: { type: Number },
+        //       percentage: { type: Number },
+        //       isActive: { type: Boolean }
+        //     },
+        //     isActive: { type: Boolean }
+        //   },
+        //   margin: {
+        //     isActive: { type: Boolean },
+        //     from: {
+        //       type: String,
+        //       enum: ["buy", "sell"],
+        //       default: "sell"
+        //     },
+        //     max: {
+        //       percentage: { type: Number },
+        //       price: { type: Number, default: 0 }
+        //     },
+        //     min: {
+        //       percentage: { type: Number },
+        //       price: { type: Number, default: 0 }
+        //     }
+        //   }
+        // },
+        // taxes: Array({ type: Schema.Types.ObjectId, ref: "Tax" }),
 
         lastPrice: {
           buy: { type: Number },
