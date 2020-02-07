@@ -53,26 +53,28 @@ export const google = (req, res, next) => {
             newUser.name = req.body.google.name;
             newUser.save((err, user) => {
               if (err) next(err);
-              // TODO verify link with user after modify the model of client.data to client.user
-              // linkMovement(user.emails.google, user);
-              user.activeScope = user._id;
-              user.save((err, userFound) => {
-                if (err) next(err);
-                // const token = jwt.sign(
-                //   {
-                //     user: userFound
-                //   },
-                //   envar().SECRET,
-                //   {
-                //     expiresIn: "3d"
-                //   }
-                // );
-                req.user = user;
-                res.send({
-                  token: generateToken(userFound),
-                  user: userFound
+              if (user) {
+                // TODO verify link with user after modify the model of client.data to client.user
+                // linkMovement(user.emails.google, user);
+                user.activeScope = user._id;
+                user.save((err, userFound) => {
+                  if (err) next(err);
+                  // const token = jwt.sign(
+                  //   {
+                  //     user: userFound
+                  //   },
+                  //   envar().SECRET,
+                  //   {
+                  //     expiresIn: "3d"
+                  //   }
+                  // );
+                  req.user = user;
+                  res.send({
+                    token: generateToken(userFound),
+                    user: userFound
+                  });
                 });
-              });
+              }
             });
           } else {
             user.google.id = data.data.sub;
