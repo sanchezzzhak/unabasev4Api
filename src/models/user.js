@@ -12,7 +12,7 @@ let userSchema = Schema(
     name: String,
     username: { type: String },
     language: { type: String, default: "es" },
-    password: { type: String },
+    password: { type: String, select: false },
     security: {
       updatedAt: { type: Date, default: new Date() },
       isRandom: { type: Boolean, default: false },

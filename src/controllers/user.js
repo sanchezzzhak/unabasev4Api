@@ -13,6 +13,7 @@ import { notFoundError, createError } from "../lib/error";
 import { getLocationByIp } from "../lib/location";
 import Currency from "../models/currency";
 
+// TODO verify that the password is not returning to the client
 export const create = async (req, res, next) => {
   let user = new User();
   if (req.body.password) {
