@@ -9,7 +9,7 @@ import ntype from "normalize-type";
 import Contact from "../models/contact";
 import { getUserData, getUserPermission } from "../lib/user";
 import UserPermission from "../models/userPermission";
-import { notFoundError } from "../lib/error";
+import { notFoundError, createError } from "../lib/error";
 import { getLocationByIp } from "../lib/location";
 import Currency from "../models/currency";
 
@@ -172,6 +172,7 @@ export const getOne = (req, res, next) => {
     });
 };
 export const update = (req, res, next) => {
+  if (req.body.scope.type === "business" && req.body.scope.id == null) next(createError(500, "business id cannot be null"));
   User.findOneAndUpdate(
     {
       _id: req.params.id
