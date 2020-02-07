@@ -22,10 +22,10 @@ export const create = async (req, res, next) => {
   const type = req.body.type || "personal";
   try {
     const location = await getLocationByIp(req);
+    const countryOrigin = location.data.country ? location.data.country.toLowerCase() : "chile";
+    const currency = await Currency.findOne({ countryOrigin }).exec();
 
-    const currency = await Currency.findOne({ countryOrigin: location.data.country.toLowerCase() }).exec();
-
-    newUser.currency = currency._id.toString();
+    user.currency = currency ? currency_id.toString() : null;
   } catch (err) {
     console.log(err);
   }

@@ -7,7 +7,7 @@ import xmlparser from "express-xml-bodyparser";
 import cookieParser from "cookie-parser";
 import passport from "passport";
 import passportConfig from "./config/passport";
-import dbConfig from "./config/database.js";
+// import dbConfig from "./config/database.js";
 import logger from "./lib/logger";
 const port = process.env.PORT || 3000;
 import favicon from "serve-favicon";
@@ -18,9 +18,9 @@ import localeMiddleware from "express-locale";
 import db from "./db";
 const env = process.env.NODE_ENV || "";
 /// database
-console.log("env");
+// console.log("env");
 
-console.log(env);
+// console.log(env);
 
 // ()(dbConfig[env]);
 // mongoose.connect(
@@ -35,12 +35,12 @@ console.log(env);
 
 //check connection
 db.once("open", () => {
-  console.log(`Connnected to mongodb  ${process.env.NODE_ENV} ${dbConfig[env]}`);
+  console.log(`Connnected to mongodb  ${process.env.NODE_ENV} `);
 });
 
 //check for DB erros
 db.on("error", err => {
-  console.log(dbConfig[env]);
+  console.log(env);
   console.log(err);
 });
 
