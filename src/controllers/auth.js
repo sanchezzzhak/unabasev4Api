@@ -53,7 +53,8 @@ export const google = (req, res, next) => {
             newUser.name = req.body.google.name;
             newUser.save((err, user) => {
               if (err) next(err);
-              linkMovement(user.emails.google, user);
+              // TODO verify link with user after modify the model of client.data to client.user
+              // linkMovement(user.emails.google, user);
               user.activeScope = user._id;
               user.save((err, userFound) => {
                 if (err) next(err);
