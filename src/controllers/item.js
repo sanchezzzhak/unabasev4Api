@@ -59,7 +59,7 @@ export const getOne = (req, res, next) => {
           }
         );
       } else {
-        return next(createError(404, "Item not found"));
+        return next(createError(404, req.lg.item.notFound));
       }
     });
 };

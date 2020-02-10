@@ -174,7 +174,7 @@ export const getOne = (req, res, next) => {
     });
 };
 export const update = (req, res, next) => {
-  if (req.body.scope.type === "business" && (req.body.scope.id == null || req.body.scope.id == req.user._id)) next(createError(500, "business id cannot be null"));
+  if (req.body.scope.type === "business" && (req.body.scope.id == null || req.body.scope.id == req.user._id)) next(createError(500, req.lg.user.businessNotNull));
   User.findOneAndUpdate(
     {
       _id: req.params.id

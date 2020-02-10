@@ -332,7 +332,7 @@ export const getOne = (req, res, next) => {
             res.send(movement);
           });
       } else {
-        return next(createError(404, "movement not found"));
+        return next(createError(404, req.lg.movement.notFound));
       }
     });
 };

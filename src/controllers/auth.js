@@ -193,8 +193,8 @@ export const login = (req, res, next) => {
       const isValid = typeof req.body.password !== "undefined" ? await User.validPassword(user._id.toString(), req.body.password) : false;
       // const isValid = typeof req.body.password !== "undefined" ? user.validPassword(req.body.password) : false;
       delete user.password;
-      if (!isValid) next(createError(403, "Wrong password"));
-      if (!user.isActive) next(createError(401, "User not active"));
+      if (!isValid) next(createError(403, req.lg.user.wrongPassword));
+      if (!user.isActive) next(createError(401, req.lg.user.notActive));
       // if (isValid && user.isActive) {
       user.lastLogin = Date.now();
       if (user.activeScope == "" || !user.activeScope || user.activeScope == null) {

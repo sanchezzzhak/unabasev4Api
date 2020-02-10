@@ -458,7 +458,7 @@ export function updateOne(req, res, next) {
           );
         }
       } else {
-        return next(createError(404, "Line not found"));
+        return next(createError(404, req.lg.line.notFound));
       }
     }
   );

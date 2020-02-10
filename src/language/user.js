@@ -6,7 +6,8 @@ export default {
     notActive: "usuario inactivo",
     successLogin: "te has logeado",
     verified: "cuenta verificada",
-    notVerified: "la cuenta no se ha podido verificar"
+    notVerified: "la cuenta no se ha podido verificar",
+    businessNotNull: "Debe enviar una empresa."
   },
   en: {
     notFound: "user not found",
@@ -15,6 +16,7 @@ export default {
     notActive: "user inactive1",
     successLogin: "Login succesful",
     verified: "account verified",
-    notVerified: "the account could not be verified"
+    notVerified: "the account could not be verified",
+    businessNotNull: "Business cannot be null."
   }
 };
