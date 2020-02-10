@@ -171,7 +171,12 @@ const User = mongoose.model("User", userSchema);
 export default User;
 User.validPassword = async (id, password) => {
   const user = await User.findById(id, "password").exec();
-  let valid = bcrypt.compareSync(password, user.password);
+  let valid = false;
+  try {
+    valid = bcrypt.compareSync(password, user.password);
+  } catch (err) {
+    valid = false;
+  }
 
   return valid;
 };
