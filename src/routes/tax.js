@@ -1,10 +1,10 @@
 import { Router } from "express";
 const taxs = Router();
 import { get, getOne, create, updateOne, find, deleteOne } from "../controllers/tax";
-import auth from "../config/lib/auth";
+import { sToken } from "../config/lib/auth";
 import { isAuth } from "../config/lib/auth";
 
-taxs.use(auth.sToken);
+taxs.use(sToken);
 
 taxs.get("/", get);
 // taxs.get('/', filter)

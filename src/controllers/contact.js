@@ -169,11 +169,11 @@ export const byItem = async (req, res, next) => {
       let contactsArray = new Array();
       let contactsIds = new Array();
       movements.forEach(movement => {
-        if (movement.client && !movement.client.user._id.equals(req.user._id) && !contactsIds.includes(movement.client.user._id)) {
+        if (!movement.client.user?._id.equals(req.user._id) && !contactsIds.includes(movement.client.user._id)) {
           contactsArray.push(movement.client.user);
           contactsIds.push(movement.client.user._id);
         }
-        if (movement.responsable && !movement.responsable.user._id.equals(req.user._id) && !contactsIds.includes(movement.responsable.user._id)) {
+        if (!movement.responsable.user?._id.equals(req.user._id) && !contactsIds.includes(movement.responsable.user._id)) {
           contactsArray.push(movement.responsable.user);
           contactsIds.push(movement.responsable.user._id);
         }

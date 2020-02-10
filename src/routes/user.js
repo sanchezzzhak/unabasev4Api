@@ -3,9 +3,9 @@ const users = Router();
 
 import { create, get, logout, find, getOne, password, update, business, scope, user, restart, relationsFind, lastItems, lastParents } from "../controllers/user";
 
-import auth from "../config/lib/auth";
+import { sToken } from "../config/lib/auth";
 users.post("/", create);
-users.use(auth.sToken);
+users.use(sToken);
 
 /*
 {

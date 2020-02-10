@@ -2,8 +2,8 @@ import { Router } from "express";
 const contacts = Router();
 import { get, getOne, find, updateOne, create, findSelf, byItem } from "../controllers/contact";
 
-import auth from "../config/lib/auth";
-contacts.use(auth.sToken);
+import { sToken } from "../config/lib/auth";
+contacts.use(sToken);
 
 contacts.post("/", create);
 contacts.get("/", get);

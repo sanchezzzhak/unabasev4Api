@@ -1,10 +1,10 @@
 import { Router } from "express";
 import logger from "../lib/logger";
 const router = Router();
-
+import { sToken } from "../config/lib/auth";
 import { create, deleteOne, deleteOneById, find } from "../controllers/userPermission";
 let module = "userPermission";
-
+router.use(sToken);
 router.post(
   "/",
   logger({

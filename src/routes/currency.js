@@ -4,8 +4,8 @@ const currencies = Router();
 import { get, create, updateOne, find, getOne, deleteOne } from "../controllers/currency";
 
 import logger from "../lib/logger";
-import auth from "../config/lib/auth";
-currencies.use(auth.sToken);
+import { sToken } from "../config/lib/auth";
+currencies.use(sToken);
 let module = "currencies";
 currencies.get(
   "/",

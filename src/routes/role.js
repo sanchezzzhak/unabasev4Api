@@ -2,10 +2,10 @@
 import { Router } from "express";
 import logger from "../lib/logger";
 import { create, get, find, update, apply } from "../controllers/role";
-
+import { sToken } from "../config/lib/auth";
 const router = Router();
 let module = "Role";
-
+router.use(sToken);
 router.get(
   "/:id",
   logger({

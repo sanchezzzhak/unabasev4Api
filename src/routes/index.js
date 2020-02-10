@@ -1,6 +1,6 @@
 import express from "express";
 const routes = express.Router();
-import authConfig from "../config/lib/auth";
+import { sToken } from "../config/lib/auth";
 import language from "../language";
 
 routes.use(language);
@@ -11,7 +11,7 @@ routes.get("/", (req, res) => {
   res.send({ msg: `Unabase api. ${process.env.NODE_ENV}` });
 });
 
-routes.get("/isAuth", authConfig.sToken, (req, res) => {
+routes.get("/isAuth", sToken, (req, res) => {
   res.statusMessage = "authenticated";
   res.send(req.user.getUser());
 });

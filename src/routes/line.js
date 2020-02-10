@@ -3,10 +3,10 @@ const lines = Router();
 import { create, get, updateOne, deleteOne, createMany, updateMany, deleteMany, group, move, createParent, getLinesByMovement } from "../controllers/line";
 import { checkItem, updateMovementState, updateTotalMovement, updateItemLastPrice, checkParent, updateOldParent, getCurrencyFromMovement } from "../middleware/line";
 
-import auth from "../config/lib/auth";
+import { sToken } from "../config/lib/auth";
 import logger from "../lib/logger";
 
-lines.use(auth.sToken);
+lines.use(sToken);
 
 let module = "line";
 

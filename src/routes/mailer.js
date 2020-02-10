@@ -1,7 +1,7 @@
-import { Router } from 'express';
+import { Router } from "express";
 
-import { send } from '../controllers/mailer';
-const mailer = Router();
+import { sendMail } from "../controllers/mailer";
+const router = Router();
 /*
 {
 	get--/ list of  
@@ -11,6 +11,6 @@ const mailer = Router();
 }
 
 */
-mailer.post('/', send);
+router.post("/", sendMail);
 
-export default mailer;
+export default router;
