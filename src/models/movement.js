@@ -68,6 +68,13 @@ const movementSchema = new Schema(
         percentage: { type: Number, default: 0 }
       }
     },
+    /**
+     * Opportunity: without client and without lines
+     * Draft: request of a budget by someone
+     * Budget: with client or lines without approval
+     * Business: with client and lines, approved and check by the user
+     *
+     */
     state: { type: String, default: "opportunity", enum: ["draft", "business", "budget", "opportunity"] },
     isActive: { type: Boolean, default: true },
     currency: { type: String, ref: "Currency" }
