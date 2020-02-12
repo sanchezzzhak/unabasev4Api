@@ -88,6 +88,7 @@ export const addUser = () => {
   it("/PUT business addUser@business", done => {
     let businessDoc = new Business(testData());
     let userDoc = new User(userData());
+    // TODO promise all, to use async/await with the saves
     businessDoc.save((err, business) => {
       userDoc.save((err, user) => {
         chai
