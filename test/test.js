@@ -7,7 +7,7 @@ import axios from "axios";
 use(chaiHttp);
 // import api from '../src/config/api/index';
 import user from "./modules/user";
-import business from "./modules/business";
+import { createBusiness, getBusiness } from "./modules/business";
 import { registerWith, registerWithout, login } from "./modules/auth";
 import movement from "./modules/movement";
 import tax from "./modules/tax";
@@ -46,11 +46,8 @@ describe("User***************************************", () => {
 });
 
 describe("Business***************************************", () => {
-  business.create(api);
-  business.list(api);
-  business.update(api);
-  business.password(api);
-  business.user(api);
+  createBusiness();
+  getBusiness();
 });
 
 describe("Tax***************************************", () => {

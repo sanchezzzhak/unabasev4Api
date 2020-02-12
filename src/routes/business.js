@@ -5,7 +5,7 @@ import { sToken } from "../config/lib/auth";
 
 business.use(sToken);
 business.get("/", get);
-business.post("/create", create);
+business.post("/", create);
 business.get("/:id", getOne);
 business.put("/:id", updateOne);
 business.put("/user/:id", user);
