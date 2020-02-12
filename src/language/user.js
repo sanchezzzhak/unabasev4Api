@@ -17,6 +17,8 @@ export default {
     successLogin: "Login succesful",
     verified: "account verified",
     notVerified: "the account could not be verified",
-    businessNotNull: "Business cannot be null."
+    businessNotNull: "Business cannot be null.",
+    alreadyExist: "User already exist.",
+    alreadyRegistered: "User already registered."
   }
 };

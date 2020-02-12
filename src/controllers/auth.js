@@ -284,13 +284,13 @@ export const register = (req, res, next) => {
     // check to see if theres already a user with that email
     if (user) {
       // return done(null, false, req.flash('signupMessage', 'El nombre de usuario ya fue elegido.'));
-      res.statusMessage = "Username already exist";
+      res.statusMessage = req.lg.user.alreadyExist;
       res.status(409);
       let msg;
       if (user.username === req.body.username) {
-        msg = "Username already exist";
+        msg = req.lg.user.alreadyExist;
       } else {
-        msg = "email already registered";
+        msg = req.lg.user.alreadyRegistered;
       }
       res.send({
         msg
