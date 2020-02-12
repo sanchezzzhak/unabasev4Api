@@ -57,7 +57,7 @@ export const find = (req, res, next) => {
 //     options,
 //     (err, users) => {
 //       if (err) {
-//         console.log(err);
+//         logy(err);
 //         res.status(500).end();
 //       } else {
 //         res.send(users);

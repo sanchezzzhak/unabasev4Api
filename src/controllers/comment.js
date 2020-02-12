@@ -22,17 +22,17 @@ export const create = (req, res) => {
 export const updateOne = (req, res) => {
   Comment.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, comment) => {
     if (err) {
-      console.log(err);
+      logy(err);
       res.status(500).send(err);
     } else {
-      console.log(comment);
+      logy(comment);
       res.send(comment);
     }
   });
 };
 
 export const getFrom = (req, res) => {
-  console.log(req.params);
+  logy(req.params);
   Comment.find({ "from.id": req.params.id, "from.name": req.params.name })
     .populate("creator", "name imgUrl")
     .sort({

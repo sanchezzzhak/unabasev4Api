@@ -1,9 +1,9 @@
-import { send } from '../config/mailer';
+import { send } from "../config/mailer";
 // import template from './mails';
 
 export default msg =>
   new Promise((resolve, reject) => {
-    console.log('enter mailer');
+    logy("enter mailer");
     const mailOptions = {
       to: msg.to, // list of receivers
       subject: msg.subject, // Subject line

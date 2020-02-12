@@ -3,7 +3,7 @@
 // DEPRECATED
 
 // import envar from "../lib/envar";
-// console.log(envar());
+// logy(envar());
 // export default {
 //   // dev: `mongodb://${main.host}:27020/unabase`, // looks like mongodb://<user>:<pass>@mongo.onmodulus.net:27017/Mikha4ot
 //   dev: `mongodb://${envar().DB_USER}:${envar().DB_PASS}@${envar().DB_DEV}`,

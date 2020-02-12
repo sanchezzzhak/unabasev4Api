@@ -117,7 +117,7 @@ export const google = (req, res, next) => {
 
 export const password = (req, res, next) => {
   const { newPassword } = req.body;
-  console.log("enter restart password");
+  logy("enter restart password");
   User.findById(
     req.params.id,
     "isActive security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts",
@@ -307,7 +307,7 @@ export const register = (req, res, next) => {
       newUser.currency = await getCurrencyByLocation(req);
       let password;
       let activateHash;
-      console.log(req.body.password);
+      logy(req.body.password);
 
       // if the user register without password, we generate one random, and ask to verify the account
       if (typeof req.body.password === "undefined" || req.body.password === null) {
@@ -368,8 +368,8 @@ export const register = (req, res, next) => {
         //     id: user._id,
         //     name: req.body.name
         //   });
-        //   console.log("text");
-        //   console.log(text);
+        //   logy("text");
+        //   logy(text);
 
         //   let msg = {
         //     to: req.body.email,
@@ -378,7 +378,7 @@ export const register = (req, res, next) => {
         //   };
 
         //   send(msg)
-        //     .then(res => console.log(res))
+        //     .then(res => logy(res))
         //     .catch(err => console.warn(err));
         // }
         req.user = user;

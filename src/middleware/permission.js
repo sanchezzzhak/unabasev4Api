@@ -9,7 +9,7 @@ export const checkPermission = data => (req, res, next) => {
       if (userPermission) {
         next();
       } else {
-        console.log(err);
+        logy(err);
         res.status(403).end();
       }
     });

@@ -13,19 +13,19 @@ module.exports.checkAccess = (id, errorMsg) => {
     if (typeof allowed != "undefined") {
       Permission.findOne({ id: id }, (err, permission) => {
         if (err) {
-          console.log(err);
+          logy(err);
         } else {
           if (allowed.ids.indexOf(permission.id) >= 0) {
             next();
           } else {
             req.flash("warning", errorMsg);
-            console.log("no posee permisos");
+            logy("no posee permisos");
             res.redirect(req.get("referer"));
           }
         }
       });
     } else {
-      console.log("no trabaja en la empresa");
+      logy("no trabaja en la empresa");
       req.flash("warning", errorMsg);
       res.redirect(req.get("referer"));
     }
@@ -69,10 +69,10 @@ module.exports.isAuth = (req, res, next) => {
     });
   }
   if (req.isAuthenticated()) {
-    // console.log('authenticated');
+    // logy('authenticated');
     return next();
   }
-  // console.log('no esta authenticated');
+  // logy('no esta authenticated');
   res.redirect("/auth/login");
   // res.send(JSON.parse(CircularJSON.stringify(req)))
 };

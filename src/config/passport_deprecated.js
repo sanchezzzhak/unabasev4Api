@@ -137,8 +137,8 @@ module.exports = function(passport) {
       },
       function(req, username, password, done) {
         // callback with username and password from our form
-        // console.log(username)
-        // console.log(password)
+        // logy(username)
+        // logy(password)
         // find a user whose username is the same as the forms username
         // we are checking to see if the user trying to login already exists
         User.findOne({ username: username }, function(err, user) {
@@ -147,7 +147,7 @@ module.exports = function(passport) {
 
           // if no user is found, return the message
           if (!user) {
-            console.log("no user");
+            logy("no user");
             return done(null, false, {
               code: 404,
               msg: "User does not exist",
@@ -156,7 +156,7 @@ module.exports = function(passport) {
           }
           // if the user is found but the password is wrong
           if (!user.validPassword(password)) {
-            console.log("Current password does not match");
+            logy("Current password does not match");
 
             return done(null, false, {
               code: 403,
@@ -165,7 +165,7 @@ module.exports = function(passport) {
             }); // create the loginMessage and save it to session as flashdata
           }
           if (!user.isActive) {
-            console.log("innactive");
+            logy("innactive");
             return done(null, false, {
               code: 401,
               msg: "User is not active",
@@ -175,9 +175,9 @@ module.exports = function(passport) {
 
           // all is well, return successful user
           user.last_login = Date.now();
-          console.log("desde passport login------------");
-          console.log(typeof user.activeScope);
-          console.log(user.activeScope);
+          logy("desde passport login------------");
+          logy(typeof user.activeScope);
+          logy(user.activeScope);
           if (user.activeScope == "" || !user.activeScope || user.activeScope == null) {
             user.activeScope = user._id;
           }
@@ -201,14 +201,14 @@ module.exports = function(passport) {
       },
       function(req, accessToken, refreshToken, profile, done) {
         process.nextTick(function() {
-          console.log("//////////////////////////////");
-          console.log(configAuth.googleAuth.callbackURL);
-          console.log(req.user);
+          logy("//////////////////////////////");
+          logy(configAuth.googleAuth.callbackURL);
+          logy(req.user);
           if (!req.user) {
-            console.log("no hay usuario activo");
+            logy("no hay usuario activo");
             User.findOne({ "google.id": profile.id }, function(err, user) {
               if (err) {
-                console.log(err);
+                logy(err);
                 return done(err);
               }
 
@@ -220,7 +220,7 @@ module.exports = function(passport) {
                   }
                   user.save();
                 }
-                console.log("consiguio un usuario google en db");
+                logy("consiguio un usuario google en db");
                 // return done(null, user);
 
                 const token = jwt.sign({ user: user.getUser() }, secret, { expiresIn: "3d" });
@@ -230,10 +230,10 @@ module.exports = function(passport) {
                 //   token
                 // });
               } else {
-                console.log("no consiguio un usuario google en db");
+                logy("no consiguio un usuario google en db");
                 User.findOne({ email: profile.emails[0].value }, (err, user) => {
                   if (err) {
-                    console.log(err);
+                    logy(err);
                     return done(err);
                   }
 
@@ -291,12 +291,12 @@ module.exports = function(passport) {
           } else {
             User.findOne({ "google.id": profile.id }, function(err, user) {
               if (err) {
-                console.log(err);
+                logy(err);
                 return done(err);
               }
 
               if (user) {
-                console.log("consiguio un usuario google en db ya asociada");
+                logy("consiguio un usuario google en db ya asociada");
                 return done(null, user);
 
                 // res.json({
@@ -324,8 +324,8 @@ module.exports = function(passport) {
                   //   message: "User Authenticated",
                   //   token
                   // });
-                  // console.log("desde passport, user");
-                  // console.log(user);
+                  // logy("desde passport, user");
+                  // logy(user);
                   return done(null, user);
                 });
               }

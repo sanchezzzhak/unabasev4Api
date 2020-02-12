@@ -19,7 +19,7 @@ UserPermission.findByPermission = function(data, callback) {
   const { permission, user, business } = data;
   Permission.findOne(permission, (err, permission) => {
     if (err) {
-      console.log(err);
+      logy(err);
       return null;
     } else if (permission) {
       query.where({ permission: permission._id, user, business }).exec(callback);

@@ -47,14 +47,14 @@ passport.use(
     },
     function(req, accessToken, refreshToken, profile, done) {
       process.nextTick(function() {
-        console.log("//////////////////////////////");
-        console.log(configAuth.googleAuth.callbackURL);
-        console.log(req.user);
+        logy("//////////////////////////////");
+        logy(configAuth.googleAuth.callbackURL);
+        logy(req.user);
         if (!req.user) {
-          console.log("no hay usuario activo");
+          logy("no hay usuario activo");
           User.findOne({ "google.id": profile.id }, function(err, user) {
             if (err) {
-              console.log(err);
+              logy(err);
               return done(err);
             }
 
@@ -66,7 +66,7 @@ passport.use(
                 }
                 user.save();
               }
-              console.log("consiguio un usuario google en db");
+              logy("consiguio un usuario google en db");
               // return done(null, user);
 
               const token = jwt.sign({ user: user.getUser() }, process.env.SECRET, { expiresIn: "3d" });
@@ -76,10 +76,10 @@ passport.use(
               //   token
               // });
             } else {
-              console.log("no consiguio un usuario google en db");
+              logy("no consiguio un usuario google en db");
               User.findOne({ email: profile.emails[0].value }, (err, user) => {
                 if (err) {
-                  console.log(err);
+                  logy(err);
                   return done(err);
                 }
 
@@ -137,12 +137,12 @@ passport.use(
         } else {
           User.findOne({ "google.id": profile.id }, function(err, user) {
             if (err) {
-              console.log(err);
+              logy(err);
               return done(err);
             }
 
             if (user) {
-              console.log("consiguio un usuario google en db ya asociada");
+              logy("consiguio un usuario google en db ya asociada");
               return done(null, user);
 
               // res.json({
@@ -170,8 +170,8 @@ passport.use(
                 //   message: "User Authenticated",
                 //   token
                 // });
-                // console.log("desde passport, user");
-                // console.log(user);
+                // logy("desde passport, user");
+                // logy(user);
                 return done(null, user);
               });
             }

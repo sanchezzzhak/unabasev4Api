@@ -78,7 +78,7 @@ export const apply = (req, res) => {
         try {
           UserPermission.insertMany(userPermissions, { ordered: false }, (err, docs) => {
             if (err) {
-              console.log(err);
+              logy(err);
               if (err.code === 11000 && err.name === "BulkWriteError") {
                 res.send({ success: true });
               } else {
@@ -89,7 +89,7 @@ export const apply = (req, res) => {
             }
           });
         } catch (err) {
-          console.log(err);
+          logy(err);
         }
       }
     });

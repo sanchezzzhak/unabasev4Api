@@ -3,8 +3,8 @@ import Movement from "../models/movement";
 import Item from "../models/item";
 
 export function checkItem(req, res, next) {
-  console.log("middleware checkItem");
-  console.log(req.body);
+  logy("middleware checkItem");
+  logy(req.body);
   let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
   if (!req.body.item) {
     Item.findOne({
@@ -14,7 +14,7 @@ export function checkItem(req, res, next) {
       }
     }).exec((err, item) => {
       if (err) {
-        console.log(err);
+        logy(err);
         res.status(500).send(err);
       } else if (item) {
         req.body.item = item._id;
@@ -28,7 +28,7 @@ export function checkItem(req, res, next) {
         });
         item.save((err, item) => {
           if (err) {
-            console.log(err);
+            logy(err);
             res.status(500).send(err);
           } else {
             req.body.item = item._id;
@@ -47,7 +47,7 @@ export function checkItem(req, res, next) {
 //     if (line.parent) {
 //       Line.updateParentTotal(line._id, err => {
 //         if (err) {
-//           console.log(err);
+//           logy(err);
 //           res.status(500).send(err);
 //         } else {
 //           next();
@@ -64,7 +64,7 @@ export function getCurrencyFromMovement(req, res, next) {
       .populate("currency")
       .exec((err, movement) => {
         if (err) {
-          console.log(err);
+          logy(err);
           res.status(500).send(err);
         } else {
           req.currency = movement.currency;
@@ -87,7 +87,7 @@ export function updateMovementState(req, res, next) {
       }
     ).exec((err, movement) => {
       if (err) {
-        console.log(err);
+        logy(err);
         res.status(500).send(err);
       }
       next();
@@ -99,13 +99,13 @@ export function updateMovementState(req, res, next) {
 
 // TODO remove if the calculation if done in the update of the line
 export function updateTotalMovement(req, res, next) {
-  console.log("before  update totalmovement");
+  logy("before  update totalmovement");
   if (req.body.totalMovement) {
     Movement.findByIdAndUpdate(req.body.movement, {
       total: req.body.totalMovement
     }).exec((err, movement) => {
       if (err) {
-        console.log(err);
+        logy(err);
         res.status(500).send(err);
       }
       next();
@@ -126,7 +126,7 @@ export function updateItemLastPrice(req, res, next) {
         next();
       })
       .catch(err => {
-        console.log(err);
+        logy(err);
         res.status(500).send(err);
       });
   } else {
@@ -150,7 +150,7 @@ export function checkParent(req, res, next) {
       },
       (err, parent) => {
         if (err) {
-          console.log(err);
+          logy(err);
           res.status(500).send(err);
         }
         next();
@@ -165,7 +165,7 @@ export function updateOldParent(req, res, next) {
   if (req.body.oldParent) {
     Line.updateParentTotal(req.body.oldParent, err => {
       if (err) {
-        console.log(err);
+        logy(err);
         res.status(500).send(err);
       } else {
         next();

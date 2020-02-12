@@ -12,7 +12,7 @@ export const checkGlobal = async movementId => {
       .populate("item")
       .exec(async (err, lines) => {
         if (err) {
-          console.log(err);
+          logy(err);
           reject(err);
         } else {
           let currencies;

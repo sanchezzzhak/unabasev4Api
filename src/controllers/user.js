@@ -28,7 +28,7 @@ export const create = async (req, res, next) => {
 
     user.currency = await getCurrencyByLocation(req);
   } catch (err) {
-    console.log(err);
+    logy(err);
   }
 
   Object.assign(user, req.body);
@@ -130,7 +130,7 @@ export const logout = (req, res, next) => {
   res.status(200).send("Log out");
 };
 export const get = (req, res, next) => {
-  console.log("list users");
+  logy("list users");
   let rquery = ntype(req.query);
   let options = {};
   options.page = rquery.page || 1;
@@ -154,7 +154,7 @@ export const get = (req, res, next) => {
   });
 };
 export const getOne = (req, res, next) => {
-  console.log(req.params.id);
+  logy(req.params.id);
 
   const type = req.query.type || "personal";
   User.findOne({
@@ -367,7 +367,7 @@ export const relationsFind = (req, res, next) => {
       }
     ]
   };
-  console.log(query);
+  logy(query);
   User.paginate(query, {}, (err, items) => {
     if (err) {
       res.status(500).end();

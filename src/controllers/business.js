@@ -27,18 +27,18 @@ const ObjectId = Types.ObjectId;
 //         } else {
 //           let newBusiness = new Business(req.body);
 //           newBusiness.creator = req.user._id;
-//           console.log("//");
-//           console.log(req.user._id);
+//           logy("//");
+//           logy(req.user._id);
 //           newBusiness.users = [
 //             {
 //               description: "creator",
 //               user: req.user._id
 //             }
 //           ];
-//           console.log(newBusiness.users);
+//           logy(newBusiness.users);
 //           newBusiness.save((err, business) => {
 //             if (err) {
-//               console.log(err);
+//               logy(err);
 //               res.status(500).end({
 //                 err
 //               });
@@ -58,7 +58,7 @@ const ObjectId = Types.ObjectId;
 //                   ],
 //                   err => {
 //                     if (err) {
-//                       console.log(err);
+//                       logy(err);
 //                       res.status(500).end({
 //                         err
 //                       });
@@ -125,7 +125,7 @@ const ObjectId = Types.ObjectId;
 //       });
 //   },
 //   get: (req, res) => {
-//     console.log("req ---> ", req);
+//     logy("req ---> ", req);
 //     let rquery = ntype(req.query);
 //     let options = {};
 //     options.page = rquery.page || 1;
@@ -141,7 +141,7 @@ const ObjectId = Types.ObjectId;
 
 //     Business.paginate(rquery, options, (err, item) => {
 //       if (err) {
-//         console.log(err);
+//         logy(err);
 //         res.status(500).end(req);
 //       } else {
 //         res.send(item);
@@ -151,7 +151,7 @@ const ObjectId = Types.ObjectId;
 //   // todo - user method can be used for the same action plus permissions asignment
 //   // HECTOR - RUTA QUE AGREGA UN USUARIO A UNA EMPRESA
 //   addUserToBusiness: (req, res) => {
-//     console.log(req.body);
+//     logy(req.body);
 //     let user = {
 //       description: req.body.role.name,
 //       user: req.body.userToAdd
@@ -183,7 +183,7 @@ const ObjectId = Types.ObjectId;
 //           UserPermissions.insertMany(permissionsArray, function(err, permissions) {
 //             if (err) {
 //               res.status(500).send(err);
-//               console.log(err);
+//               logy(err);
 //             } else {
 //               res.send(permissions);
 //             }
@@ -253,18 +253,18 @@ export const create = (req, res) => {
       } else {
         let newBusiness = new Business(req.body);
         newBusiness.creator = req.user._id;
-        console.log("//");
-        console.log(req.user._id);
+        logy("//");
+        logy(req.user._id);
         newBusiness.users = [
           {
             description: "creator",
             user: req.user._id
           }
         ];
-        console.log(newBusiness.users);
+        logy(newBusiness.users);
         newBusiness.save((err, business) => {
           if (err) {
-            console.log(err);
+            logy(err);
             res.status(500).end({
               err
             });
@@ -284,7 +284,7 @@ export const create = (req, res) => {
                 ],
                 err => {
                   if (err) {
-                    console.log(err);
+                    logy(err);
                     res.status(500).end({
                       err
                     });
@@ -351,7 +351,7 @@ export const updateOne = (req, res) => {
     });
 };
 export const get = (req, res) => {
-  console.log("req ---> ", req);
+  logy("req ---> ", req);
   let rquery = ntype(req.query);
   let options = {};
   options.page = rquery.page || 1;
@@ -367,7 +367,7 @@ export const get = (req, res) => {
 
   Business.paginate(rquery, options, (err, item) => {
     if (err) {
-      console.log(err);
+      logy(err);
       res.status(500).end(req);
     } else {
       res.send(item);
@@ -377,7 +377,7 @@ export const get = (req, res) => {
 // todo - user method can be used for the same action plus permissions asignment
 // HECTOR - RUTA QUE AGREGA UN USUARIO A UNA EMPRESA
 export const addUserToBusiness = (req, res) => {
-  console.log(req.body);
+  logy(req.body);
   let user = {
     description: req.body.role.name,
     user: req.body.userToAdd
@@ -409,7 +409,7 @@ export const addUserToBusiness = (req, res) => {
         UserPermissions.insertMany(permissionsArray, function(err, permissions) {
           if (err) {
             res.status(500).send(err);
-            console.log(err);
+            logy(err);
           } else {
             res.send(permissions);
           }

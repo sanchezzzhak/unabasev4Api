@@ -35,7 +35,7 @@ export const sToken = (req, res, next) => {
           msg: "Not authorized1"
         });
       } else {
-        console.log("decoded!");
+        logy("decoded!");
         req.user = decoded.user;
         next();
       }
@@ -63,8 +63,8 @@ export const sToken = (req, res, next) => {
     }
     User.findOne(query).exec((err, user) => {
       if (err) {
-        console.log("err find");
-        console.log(err);
+        logy("err find");
+        logy(err);
       } else if (user) {
         req.user = user;
         next();

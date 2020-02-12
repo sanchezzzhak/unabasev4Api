@@ -18,13 +18,13 @@ const currencySchema = new Schema(
 currencySchema.plugin(mongoosePaginate);
 currencySchema.post("update", function() {
   const modifiedFields = this.getUpdate().$set;
-  console.log("------");
-  console.log(modifiedFields);
+  logy("------");
+  logy(modifiedFields);
 });
 currencySchema.post("findOneAndUpdate", function() {
   const modifiedFields = this.getUpdate().$set;
-  console.log("------");
-  console.log(modifiedFields);
+  logy("------");
+  logy(modifiedFields);
 });
 const Currency = mongoose.model("Currency", currencySchema);
 export default Currency;

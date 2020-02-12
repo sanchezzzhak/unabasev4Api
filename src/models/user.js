@@ -128,8 +128,8 @@ userSchema.methods.getUser = function() {
   // } else {
   //   return getUserData(this);
   // }
-  // console.log("user from model:::");
-  // console.log(this);
+  // logy("user from model:::");
+  // logy(this);
   let user = {
     _id: this._id,
     isActive: this.isActive,
@@ -161,8 +161,8 @@ userSchema.methods.getUser = function() {
 
 // checking if password is valid
 userSchema.methods.validPassword = function(password) {
-  console.log(password);
-  console.log(this.password);
+  logy(password);
+  logy(this.password);
   return bcrypt.compareSync(password, this.password);
 };
 
@@ -220,7 +220,7 @@ User.getUsers = (callback, limit) => {
 
 User.updateUser = (id, user, options, callback) => {
   var query = { _id: id };
-  // console.log(user.address);
+  // logy(user.address);
   bcrypt.genSalt(10, function(err, salt) {
     bcrypt.hash(user.password, salt, function(err, hash) {
       user.password = hash;
@@ -245,7 +245,7 @@ User.updateUser = (id, user, options, callback) => {
 };
 
 User.updateEmpresa = (username, nuevaEmpresa, options, callback) => {
-  // console.log("new empresa: "+login);
+  // logy("new empresa: "+login);
   var query = { username: username };
   var update = {
     $addToSet: {
@@ -264,8 +264,8 @@ User.updateEmpresa = (username, nuevaEmpresa, options, callback) => {
 };
 
 User.removeEmpresa = (id, empresaId, options, callback) => {
-  console.log("user3: " + id);
-  console.log("empresa3: " + empresaId);
+  logy("user3: " + id);
+  logy("empresa3: " + empresaId);
   var query = { _id: id };
   var update = {
     $pull: {
@@ -298,10 +298,10 @@ User.getUserById = function(id, callback) {
 };
 
 User.passwordChange = function(id, oldPassword, password, callback) {
-  console.log("dentro de passwordChange");
-  console.log(id);
-  console.log(oldPassword);
-  console.log(password);
+  logy("dentro de passwordChange");
+  logy(id);
+  logy(oldPassword);
+  logy(password);
 
   User.findById(id, function(err, user) {
     User.comparePassword(oldPassword, user.password, function(err, isMatch) {

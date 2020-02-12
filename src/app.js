@@ -18,9 +18,9 @@ import localeMiddleware from "express-locale";
 import db from "./db";
 const env = process.env.NODE_ENV || "";
 /// database
-// console.log("env");
+// logy("env");
 
-// console.log(env);
+// logy(env);
 
 // ()(dbConfig[env]);
 // mongoose.connect(

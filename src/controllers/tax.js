@@ -18,7 +18,7 @@ export const get = (req, res, next) => {
   });
 };
 export const getOne = (req, res, next) => {
-  console.log(req.params.id);
+  logy(req.params.id);
   Tax.findById(req.params.id, (err, tax) => {
     if (err) {
       res.status(500).end(err);

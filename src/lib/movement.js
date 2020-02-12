@@ -14,8 +14,8 @@ export const calculateTotalMovement = id => {
         detail: []
       }
     };
-    console.log("-------total from calculate movement -  - - - - -- ");
-    console.log(total);
+    logy("-------total from calculate movement -  - - - - -- ");
+    logy(total);
     if (lines.length) {
       lines.map(line => {
         total.net += line.quantity * line.numbers.price;

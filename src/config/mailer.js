@@ -25,7 +25,7 @@ export const send = message => {
         resolve(info);
       }
 
-      // console.log(nodemailer.getTestMessageUrl(info));
+      // logy(nodemailer.getTestMessageUrl(info));
 
       // only needed when using pooled connections
       // transporter.close();
@@ -42,7 +42,7 @@ export const send = message => {
 
 // transporter.sendMail(mailOptions, function (err, info) {
 //   if(err)
-//     console.log(err)
+//     logy(err)
 //   else
-//     console.log(info);
+//     logy(info);
 // });

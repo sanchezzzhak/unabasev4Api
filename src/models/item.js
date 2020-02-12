@@ -105,8 +105,8 @@ Item.updateLastPrice = (id, currency, movementType, priceToAdd) => {
 
     Item.findById(id, (err, item) => {
       if (err) {
-        console.log("err from update last price");
-        console.log(err);
+        logy("err from update last price");
+        logy(err);
         reject(err);
       } else if (item) {
         if (item.global.length) {

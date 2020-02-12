@@ -48,23 +48,23 @@ lineSchema.methods.saveAsync = function() {
 };
 
 lineSchema.post("save", function(doc, next) {
-  console.log("post has been saved++++++++++++++++++++++++");
+  logy("post has been saved++++++++++++++++++++++++");
 
   next();
 });
 lineSchema.pre("save", function(next) {
-  console.log("pre has been saved++++++++++++++++++++++++");
+  logy("pre has been saved++++++++++++++++++++++++");
   next();
 });
 lineSchema.post("insertMany", function(docs, next) {
-  console.log("post has been insertManyd++++++++++++++++++++++++");
-  console.log(docs);
+  logy("post has been insertManyd++++++++++++++++++++++++");
+  logy(docs);
 
   next();
 });
 lineSchema.pre("insertMany", async function(next, docs) {
-  console.log("pre has been insertManyd++++++++++++++++++++++++");
-  console.log(docs);
+  logy("pre has been insertManyd++++++++++++++++++++++++");
+  logy(docs);
   let movement = await Movement.findById(docs[0].movement).exec();
   let currencyString = movement.currency.toString();
   let itemsToUpdate = [];
@@ -104,21 +104,21 @@ lineSchema.pre("insertMany", async function(next, docs) {
   next();
 });
 lineSchema.post("update", function(doc, next) {
-  console.log("post has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
-  console.log(doc);
-  // console.log(doc.numbers);
-  // console.log(doc.name);
+  logy("post has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
+  logy(doc);
+  // logy(doc.numbers);
+  // logy(doc.name);
 
   next();
 });
 lineSchema.pre("update", function(doc, next) {
-  console.log("pre has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
-  console.log(doc);
+  logy("pre has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
+  logy(doc);
 
   next();
 });
 lineSchema.post("find", function(doc, next) {
-  console.log("lineSchema - post has been findd++++++++++++++++++++++++:::::::::::::::::::::::");
+  logy("lineSchema - post has been findd++++++++++++++++++++++++:::::::::::::::::::::::");
 
   next();
 });
@@ -126,13 +126,13 @@ lineSchema.post("findOneAndUpdate", async function(doc, next) {
   // const id = this._conditions._id.toString();
   const modifiedFields = this.getUpdate().$set;
 
-  console.log("------");
-  console.log(modifiedFields);
+  logy("------");
+  logy(modifiedFields);
 });
 
 // lineSchema.pre("find", function (doc, next) {
-//   console.log("lineSchema - pre has been findd++++++++++++++++++++++++:::::::::::::::::::::::");
-//   console.log(this.getPopulatedPaths());
+//   logy("lineSchema - pre has been findd++++++++++++++++++++++++:::::::::::::::::::::::");
+//   logy(this.getPopulatedPaths());
 //   next();
 // });
 
@@ -169,7 +169,7 @@ Line.updateParentTotal = (parentId, callback) => {
               if (parent.parent) {
                 Line.updateParentTotal(parent.parent, callback);
               } else {
-                console.log("End of updatePArentTotal/////////////////////////");
+                logy("End of updatePArentTotal/////////////////////////");
                 if (callback) callback(null, parent);
               }
             }
@@ -195,7 +195,7 @@ Line.addParent = (children, parentId) => {
       },
       (err, resp) => {
         if (err) {
-          console.log(err);
+          logy(err);
           reject(err);
         } else {
           resolve();
@@ -240,10 +240,10 @@ Line.updateManyMod = items => {
   return new Promise((resolve, reject) => {
     let check = (items, count) => {
       if (items.length === count) {
-        console.log("items.length");
-        console.log(items.length);
-        console.log("count");
-        console.log(count);
+        logy("items.length");
+        logy(items.length);
+        logy("count");
+        logy(count);
         resolve({
           lines,
           errorLines

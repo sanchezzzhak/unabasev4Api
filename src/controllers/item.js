@@ -66,7 +66,7 @@ export const getOne = (req, res, next) => {
 export const create = (req, res, next) => {
   Item.findOne({ name: { $regex: new RegExp(`^${req.body.name}$`, "i") } }, (err, itemFound) => {
     if (err) {
-      console.log(err);
+      logy(err);
       res.status(500).end({ err });
     } else if (itemFound) {
       res.send(itemFound);

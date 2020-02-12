@@ -7,7 +7,7 @@ routes.use(language);
 routes.use(parseQueryUrl);
 
 routes.get("/", (req, res) => {
-  console.log(req.headers.host);
+  logy(req.headers.host);
   res.send({ msg: `Unabase api. ${process.env.NODE_ENV}` });
 });
 

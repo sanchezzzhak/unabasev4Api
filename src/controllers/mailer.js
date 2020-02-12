@@ -4,8 +4,8 @@ import axios from "axios";
 import envar from "../lib/envar";
 
 export const sendMail = (req, res, next) => {
-  console.log("enter mailer");
-  console.log(envar().mailApiKey);
+  logy("enter mailer");
+  logy(envar().mailApiKey);
   const mailOptions = {
     to: req.body.to, // list of receivers
     subject: req.body.subject, // Subject line
@@ -34,10 +34,10 @@ export const sendMail = (req, res, next) => {
   //     res.send(resp.data);
   //   })
   //   .catch(err => {
-  //     console.log("envar:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-  //     // console.log(envar);
-  //     console.log("err");
-  //     console.log(err);
+  //     logy("envar:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+  //     // logy(envar);
+  //     logy("err");
+  //     logy(err);
   //     res.status(500).send(err.Error);
   //   });
 };

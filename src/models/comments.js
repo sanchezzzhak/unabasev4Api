@@ -22,33 +22,33 @@ const commentSchema = new Schema(
 );
 
 commentSchema.post("update", function(doc, next) {
-  console.log("commentSchema post has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
-  console.log(doc);
-  // console.log(doc.numbers);
-  // console.log(doc.name);
+  logy("commentSchema post has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
+  logy(doc);
+  // logy(doc.numbers);
+  // logy(doc.name);
 
   next();
 });
 commentSchema.pre("update", function(doc, next) {
-  console.log("commentSchema pre has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
-  console.log(doc);
+  logy("commentSchema pre has been updated++++++++++++++++++++++++:::::::::::::::::::::::");
+  logy(doc);
 
   next();
 });
 
 commentSchema.post("save", function(doc, next) {
-  console.log("commentSchema post has been saved++++++++++++++++++++++++");
+  logy("commentSchema post has been saved++++++++++++++++++++++++");
   updateSuccessPercentage(doc);
 
   next();
 });
 commentSchema.pre("save", function(next) {
-  console.log("commentSchema pre has been saved++++++++++++++++++++++++");
+  logy("commentSchema pre has been saved++++++++++++++++++++++++");
   next();
 });
 
 commentSchema.post("find", function(doc, next) {
-  console.log("commentSchema post has been findd++++++++++++++++++++++++:::::::::::::::::::::::");
+  logy("commentSchema post has been findd++++++++++++++++++++++++:::::::::::::::::::::::");
 
   next();
 });

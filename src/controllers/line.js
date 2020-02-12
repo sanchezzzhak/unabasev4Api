@@ -157,7 +157,7 @@ export function group(req, res, next) {
             if (err) return next(err);
             Line.getTreeTotals(line.movement)
               .then(lineTree => {
-                console.log("before send responde");
+                logy("before send responde");
                 res.send({
                   line,
                   lineTree
@@ -218,7 +218,7 @@ export function create(req, res, next) {
         if (err) return next(err);
         Line.getTreeTotals(line.movement)
           .then(lineTree => {
-            console.log("before send responde");
+            logy("before send responde");
             res.send({
               line,
               lineTree
@@ -249,8 +249,8 @@ export function updateMany(req, res, next) {
     },
     async (err, lines) => {
       if (err) return next(err);
-      console.log("////////////////////lines");
-      console.log(lines);
+      logy("////////////////////lines");
+      logy(lines);
       Line.findByIdAndUpdate(req.body.lines[0].parent, {
         $addToSet: {
           children: req.body.lines.map(line => line._id)
@@ -291,7 +291,7 @@ export function deleteMany(req, res, next) {
 
       Line.getTreeTotals(req.body.movement || "")
         .then(lineTree => {
-          console.log("before send responde");
+          logy("before send responde");
           res.send({
             lineTree
           });
@@ -307,7 +307,7 @@ export async function move(req, res, next) {
   const getTreeTotals = () => {
     Line.getTreeTotals(req.body.movement)
       .then(lineTree => {
-        console.log("before send responde");
+        logy("before send responde");
         res.send({
           lineTree
         });
@@ -359,11 +359,11 @@ export async function move(req, res, next) {
 
 // TODO must be optimized ! ! !
 export async function updateOne(req, res, next) {
-  console.log("-------------start updateOne");
+  logy("-------------start updateOne");
   // let movementType = req.body.movementType === "income" ? "sell" : "buy";
   // let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
   // let item = typeof req.body.item === "object" ? req.body.item._id : req.body.item;
-  console.log("before  update parent");
+  logy("before  update parent");
   // if (req.body.numers.price)
   Line.findOneAndUpdate(
     {
@@ -406,7 +406,7 @@ export async function updateOne(req, res, next) {
                   updateOldParent(line.parent, () => {
                     Line.getTreeTotals(line.movement)
                       .then(lineTree => {
-                        console.log("before send responde");
+                        logy("before send responde");
                         calculateTotalMovement(req.body.movement)
                           .then(movement => {
                             res.send({
@@ -426,7 +426,7 @@ export async function updateOne(req, res, next) {
                 } else {
                   Line.getTreeTotals(line.movement)
                     .then(lineTree => {
-                      console.log("before send responde");
+                      logy("before send responde");
 
                       calculateTotalMovement(req.body.movement)
                         .then(movement => {
@@ -502,7 +502,7 @@ export function deleteOne(req, res, next) {
     if (err) return next(err);
     Line.getTreeTotals(req.body.movement || "")
       .then(lineTree => {
-        console.log("before send responde");
+        logy("before send responde");
         res.send({
           lineTree
         });
