@@ -59,6 +59,7 @@ export const getPersonal = (req, res, next) => {
 
   Movement.paginate(helper.query, helper.options, async (err, movements) => {
     if (err) return next(err);
+
     res.json(movements);
   });
 };

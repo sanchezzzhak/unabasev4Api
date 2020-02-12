@@ -49,7 +49,9 @@ lineSchema.methods.saveAsync = function() {
 
 lineSchema.post("save", function(doc, next) {
   logy("post has been saved++++++++++++++++++++++++");
-
+  if (doc.movement) {
+    Movement.findByIdAndUpdate(doc.movement, { $addToSet: { lines: doc.id } }).exec();
+  }
   next();
 });
 lineSchema.pre("save", function(next) {
