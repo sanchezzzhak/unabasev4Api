@@ -1,35 +1,35 @@
-import { should as _should, use } from 'chai';
-import chaiHttp from 'chai-http';
-import { assert } from 'chai';
+import { should as _should, use } from "chai";
+import chaiHttp from "chai-http";
+import { assert } from "chai";
 const should = _should();
-import axios from 'axios';
+import axios from "axios";
 use(chaiHttp);
 // import api from '../src/config/api/index';
-import user from './modules/user';
-import business from './modules/business';
-import auth from './modules/auth';
-import movement from './modules/movement';
-import tax from './modules/tax';
-import item from './modules/item';
-import currency from './modules/currency';
-import mailer from './modules/mailer';
+import user from "./modules/user";
+import business from "./modules/business";
+import auth from "./modules/auth";
+import movement from "./modules/movement";
+import tax from "./modules/tax";
+import item from "./modules/item";
+import currency from "./modules/currency";
+import mailer from "./modules/mailer";
 
-import api_doc from 'unabase_api_doc';
+import api_doc from "unabase_api_doc";
 
-const api = api_doc(process.env.NODE_ENV);
+const api = process.env.NODE_ENV === "dev" ? "https://dev.unabase.net" : "http://localhost:3000/";
 let userId;
 // global.userId = '';
 let data = {
-  password: 'test123'
+  password: "test123"
 };
 
-describe('Auth***************************************', () => {
+describe("Auth***************************************", () => {
   auth.registerWith(api);
   auth.registerWithout(api);
   auth.login(api);
 });
 
-describe('User***************************************', () => {
+describe("User***************************************", () => {
   user.create(api);
   user.list(api);
   user.update(api);
@@ -39,7 +39,7 @@ describe('User***************************************', () => {
   user.find(api);
 });
 
-describe('Business***************************************', () => {
+describe("Business***************************************", () => {
   business.create(api);
   business.list(api);
   business.update(api);
@@ -47,7 +47,7 @@ describe('Business***************************************', () => {
   business.user(api);
 });
 
-describe('Tax***************************************', () => {
+describe("Tax***************************************", () => {
   tax.create(api);
   tax.list(api);
   tax.update(api);
@@ -55,7 +55,7 @@ describe('Tax***************************************', () => {
   tax.getOne(api);
 });
 
-describe('Item***************************************', () => {
+describe("Item***************************************", () => {
   item.create(api);
   item.list(api);
   item.update(api);
@@ -63,7 +63,7 @@ describe('Item***************************************', () => {
   item.getOne(api);
 });
 
-describe('Currency***************************************', () => {
+describe("Currency***************************************", () => {
   currency.create(api);
   currency.list(api);
   currency.update(api);
@@ -71,7 +71,7 @@ describe('Currency***************************************', () => {
   currency.getOne(api);
 });
 
-describe('Movement***************************************', () => {
+describe("Movement***************************************", () => {
   movement.create(api);
   movement.list(api);
   movement.update(api);
@@ -80,7 +80,7 @@ describe('Movement***************************************', () => {
   movement.getOne(api);
 });
 
-describe('Mailer***********************************', () => {
+describe("Mailer***********************************", () => {
   mailer.sendFunc(api);
   mailer.send(api);
 });

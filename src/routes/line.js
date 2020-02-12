@@ -1,6 +1,6 @@
 import { Router } from "express";
 const lines = Router();
-import { create, get, updateOne, deleteOne, createMany, updateMany, deleteMany, group, move, createParent, getLinesByMovement } from "../controllers/line";
+import { create, get, updateOne, deleteOne, createMany, updateMany, deleteMany, group, move, createParent, getLinesByMovement, requestBudget } from "../controllers/line";
 import { checkItem, updateMovementState, updateTotalMovement, updateItemLastPrice, checkParent, updateOldParent, getCurrencyFromMovement } from "../middleware/line";
 
 import { sToken } from "../config/lib/auth";
@@ -115,6 +115,16 @@ lines.delete(
     module
   }),
   deleteOne
+);
+
+lines.post(
+  "/request-budget",
+  logger({
+    name: "request budget",
+    description: "request budget",
+    module
+  }),
+  requestBudget
 );
 
 export default lines;

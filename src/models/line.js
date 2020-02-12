@@ -26,7 +26,8 @@ const lineSchema = new Schema(
     listIndex: Number,
     isParent: { type: Boolean, default: false },
     parent: { type: String, ref: "Line" },
-
+    requestedMovements: Array({ providor: { type: String, ref: "Contact" }, movement: { type: String, ref: "Movement" } }),
+    clientLine: { type: String, ref: "Line" },
     // item: { type: String, ref: "Item" },
     item: { type: String, ref: "Item" },
     // movement: { type: String, ref: "Movement" },
@@ -118,7 +119,15 @@ lineSchema.pre("update", function(doc, next) {
 });
 lineSchema.post("find", function(doc, next) {
   console.log("lineSchema - post has been findd++++++++++++++++++++++++:::::::::::::::::::::::");
+
   next();
+});
+lineSchema.post("findOneAndUpdate", async function(doc, next) {
+  // const id = this._conditions._id.toString();
+  const modifiedFields = this.getUpdate().$set;
+
+  console.log("------");
+  console.log(modifiedFields);
 });
 
 // lineSchema.pre("find", function (doc, next) {

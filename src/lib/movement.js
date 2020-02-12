@@ -3,13 +3,6 @@ import Line from "../models/line";
 
 export const calculateTotalMovement = id => {
   return new Promise(async (resolve, reject) => {
-    // Movement.findById(id).exec(async (err, movement) => {
-    //   if (err) {
-    //     reject(err);
-    //   } else {
-
-    //   }
-    // });
     let lines = await Line.find({ movement: id })
       .populate([{ path: "taxes.tax" }])
       .exec();

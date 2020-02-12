@@ -15,24 +15,24 @@ const transporter = nodemailer.createTransport(
     from: `Unabase  <${user}>`
   }
 );
-const mailer = {
-  send: message => {
-    return new Promise((resolve, reject) => {
-      transporter.sendMail(message, (err, info) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(info);
-        }
 
-        // console.log(nodemailer.getTestMessageUrl(info));
+export const send = message => {
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(message, (err, info) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(info);
+      }
 
-        // only needed when using pooled connections
-        // transporter.close();
-      });
+      // console.log(nodemailer.getTestMessageUrl(info));
+
+      // only needed when using pooled connections
+      // transporter.close();
     });
-  }
+  });
 };
+
 // const mailOptions = {
 //   from: 'sender@email.com', // sender address
 //   to: 'to@email.com', // list of receivers
@@ -46,5 +46,3 @@ const mailer = {
 //   else
 //     console.log(info);
 // });
-
-export default mailer;

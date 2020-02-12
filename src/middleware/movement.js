@@ -2,6 +2,7 @@ import Comments from "../models/comments";
 import Movement from "../models/movement";
 
 import { Types } from "mongoose";
+import Line from "../models/line";
 const ObjectId = Types.ObjectId;
 export function updateSuccessPercentage(comment) {
   const from = comment.from;

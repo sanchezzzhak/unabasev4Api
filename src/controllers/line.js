@@ -9,6 +9,9 @@ import { calculateTotalMovement } from "../lib/movement";
 import { createError } from "../lib/error";
 import { queryHelper } from "../lib/queryHelper";
 import { getLocationByIp } from "../lib/location";
+import Contact from "../models/contact";
+import Item from "../models/item";
+import { checkDraftState } from "../middleware/movement";
 const ObjectId = Types.ObjectId;
 
 export const getOne = (req, res, next) => {
@@ -195,8 +198,6 @@ export function create(req, res, next) {
   let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
 
   let line = new Line(req.body);
-  // let movementType = req.body.movementType === "income" ? "sell" : "buy";
-  // let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
   line.creator = req.user._id;
   line.save((err, line) => {
     if (err) return next(err);
@@ -357,23 +358,28 @@ export async function move(req, res, next) {
 }
 
 // TODO must be optimized ! ! !
-export function updateOne(req, res, next) {
+export async function updateOne(req, res, next) {
   console.log("-------------start updateOne");
-  let movementType = req.body.movementType === "income" ? "sell" : "buy";
-  let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
-  let item = typeof req.body.item === "object" ? req.body.item._id : req.body.item;
+  // let movementType = req.body.movementType === "income" ? "sell" : "buy";
+  // let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
+  // let item = typeof req.body.item === "object" ? req.body.item._id : req.body.item;
   console.log("before  update parent");
-
+  // if (req.body.numers.price)
   Line.findOneAndUpdate(
     {
       _id: req.params.id
     },
     req.body,
     // { new: true },
-    (err, line) => {
+    async (err, line) => {
       if (err) return next(err);
 
       if (line) {
+        // let movement = await Movement.findById(line.movement, "_id state").lean();
+        let movement;
+        if (req.body.numbers.price) {
+          movement = await Movement.findByIdAndUpdate(line.movement, { $set: { state: "budget" } }, { $fields: { _id: 1, state: 1 } }).lean();
+        }
         if (req.body.parent || line.parent) {
           const updateOldParent = (oldParent, callback) => {
             Line.updateParentTotal(oldParent, err => {
@@ -388,6 +394,10 @@ export function updateOne(req, res, next) {
               [
                 {
                   path: "item"
+                },
+                {
+                  path: "movement",
+                  select: "_id state"
                 }
               ],
               err => {
@@ -442,11 +452,15 @@ export function updateOne(req, res, next) {
             [
               {
                 path: "item"
+              },
+              {
+                path: "movement",
+                select: "_id state"
               }
             ],
             err => {
               if (err) return next(err);
-              calculateTotalMovement(req.body.movement)
+              calculateTotalMovement(line.movement._id.toString())
                 .then(movement => {
                   res.send({ line, movement });
                   // res.send(lines);
@@ -498,3 +512,60 @@ export function deleteOne(req, res, next) {
       });
   });
 }
+
+export const requestBudget = async (req, res, next) => {
+  // const originMovement = await Movement.findById(req.body.movement).exec();
+  // const contact = await Contact.findById(req.body.contact).exec();
+  // const lines = await Line.find({ _id: { $in: req.body.lines } })
+  //   .select("name item")
+  //   .populate("item")
+  //   .lean();
+  const [originMovement, contact, lines] = await Promise.all([
+    Movement.findById(req.body.movement).exec(),
+    Contact.findById(req.body.contact).exec(),
+    Line.find({ _id: { $in: req.body.lines } })
+      .select("name item")
+      .populate("item")
+      .lean()
+  ]);
+  let movement = new Movement({
+    name: `Solicitud de ${req.user.name} / ${originMovement.name}`,
+    creator: req.user._id,
+    currency: originMovement.currency,
+    "client.user": req.user._id,
+    "responsable.user": contact.user,
+    "responsable.contact": contact._id,
+    state: "draft"
+  });
+  const movementCreated = await movement.save();
+  for await (let line of lines) {
+    const createLine = (item, line, creator, movement) => {
+      let newLine = new Line({
+        name: line.name,
+        item: item,
+        clientLine: line._id,
+        creator,
+        movement
+      });
+      newLine.save();
+    };
+    let itemFound = await Item.findOne({ name: line.item.name, creator: contact.user }).exec();
+    if (itemFound) {
+      createLine(itemFound._id, line, contact.user._id, movementCreated._id.toString());
+    } else {
+      let item = new Item({
+        name: line.name,
+        creator: contact.user,
+        global: [
+          {
+            currency: originMovement.currency
+          }
+        ]
+      });
+      let itemCreated = await item.save();
+      createLine(itemCreated._id, line, contact.user._id, movementCreated._id.toString());
+    }
+  }
+  const linesCreated = await Line.find({ movement: movementCreated._id.toString() }).exec();
+  res.send({ success: lines.length === linesCreated.length });
+};
