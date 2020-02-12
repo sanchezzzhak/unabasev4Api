@@ -50,9 +50,7 @@ const registerWith = api =>
       .post(api + routes.register, {
         name: data.name,
         email: data.email2,
-        password: {
-          hash: data.password
-        }
+        password: data.password
       })
       .then(res => {
         res.should.have.status(200);
@@ -76,9 +74,7 @@ const login = api =>
     axios
       .post(api + routes.login, {
         username: data.email2,
-        password: {
-          hash: data.password
-        }
+        password: data.password
       })
       .then(res => {
         res.should.have.status(200);
@@ -100,7 +96,7 @@ const loginEmail = api =>
     axios
       .post(api + routes.login, {
         email: data.email,
-        "password.hash": data.password
+        password: data.password
       })
       .then(res => {
         res.should.have.status(200);
