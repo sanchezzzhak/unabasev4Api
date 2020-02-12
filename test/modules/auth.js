@@ -1,7 +1,8 @@
-import { should as _should, use } from "chai";
+import chai from "chai";
 import chaiHttp from "chai-http";
 import axios from "axios";
-use(chaiHttp);
+import app from "../../src/app";
+chai.use(chaiHttp);
 const routes = {
   register: "auth/register",
   login: "auth/login"
@@ -23,26 +24,41 @@ const data = {
 
 const registerWithout = api =>
   it("REGISTER WITHOUT PASS a user @auth", done => {
-    axios
-      .post(api + routes.register, {
-        name: data.name,
-        email: data.email1
-      })
-      .then(res => {
-        res.should.have.status(200);
-        res.data.should.be.a("object");
-        // global.loginId = res.data._id;
-        done();
-      })
-      .catch(err => {
+    chai
+      .request(app)
+      .post("/auth/register")
+      .end((err, res) => {
         if (err.response) {
           console.log(err.response.status);
           console.log(err.response.statusText);
           console.log(err.response.data);
         }
-        // console.log(err.response.status);
-        // console.log(err.response.statusText);
+
+        res.should.have.status(200);
+        res.data.should.be.a("object");
+        // global.loginId = res.data._id;
+        done();
       });
+    // axios
+    //   .post(api + routes.register, {
+    //     name: data.name,
+    //     email: data.email1
+    //   })
+    //   .then(res => {
+    //     res.should.have.status(200);
+    //     res.data.should.be.a("object");
+    //     // global.loginId = res.data._id;
+    //     done();
+    //   })
+    //   .catch(err => {
+    //     if (err.response) {
+    //       console.log(err.response.status);
+    //       console.log(err.response.statusText);
+    //       console.log(err.response.data);
+    //     }
+    //     // console.log(err.response.status);
+    //     // console.log(err.response.statusText);
+    //   });
   });
 const registerWith = api =>
   it("REGISTER WITH PASS a user @auth", done => {

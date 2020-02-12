@@ -17,6 +17,7 @@ import mailer from "./modules/mailer";
 import api_doc from "unabase_api_doc";
 
 const api = process.env.NODE_ENV === "dev" ? "https://dev.unabase.net" : "http://localhost:3000/";
+// process.env.NODE_ENV = "test";
 let userId;
 // global.userId = '';
 let data = {
@@ -31,12 +32,12 @@ describe("Auth***************************************", () => {
 
 describe("User***************************************", () => {
   user.createUser(api);
-  user.list(api);
-  user.update(api);
-  user.password(api);
-  user.restart(api);
-  user.getOne(api);
-  user.find(api);
+  user.listUser(api);
+  user.updateUser(api);
+  user.passwordUser(api);
+  user.restartUser(api);
+  user.getOneUser(api);
+  user.findUser(api);
 });
 
 describe("Business***************************************", () => {
