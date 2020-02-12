@@ -309,6 +309,7 @@ export const register = (req, res, next) => {
       let activateHash;
       console.log(req.body.password);
 
+      // if the user register without password, we generate one random, and ask to verify the account
       if (typeof req.body.password === "undefined" || req.body.password === null) {
         password = Math.random()
           .toString(36)
