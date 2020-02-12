@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+import logy from "./config/lib/logy";
 // import dbConfig from "./config/database.js";
 
 import envar from "./lib/envar";
@@ -9,7 +10,7 @@ const dbConfig = {
   dev: `mongodb+srv://${envar().DB_USER}:${envar().DB_PASS}@${envar().DB_DEV}`,
   dev4: `mongodb+srv://${envar().DB_USER4}:${envar().DB_PASS4}@${envar().DB_DEV4}`,
   una: `mongodb://${envar().DB_USER}:${envar().DB_PASS}@${envar().DB_UNA}`,
-  test: `mongodb://${envar().DB_USER}:${envar().DB_PASS}@${envar().DB_TEST}`,
+  test: `mongodb+srv://${envar().DB_USER}:${envar().DB_PASS}@${envar().DB_TEST}`,
   local: `mongodb://${envar().DB_USER}:${envar().DB_PASS}@${envar().DB_TEST}`,
   prod: `mongodb://${envar().DB_USER}:${envar().DB_PASS}@${envar().DB_PROD}`
 };

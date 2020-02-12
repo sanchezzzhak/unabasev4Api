@@ -4,6 +4,7 @@ import express, { Router } from "express";
 import bodyParser, { urlencoded, json } from "body-parser";
 import xmlparser from "express-xml-bodyparser";
 import logy from "./config/lib/logy";
+global.logy = logy;
 import cookieParser from "cookie-parser";
 import passport from "passport";
 import passportConfig from "./config/passport";
