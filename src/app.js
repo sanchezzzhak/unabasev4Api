@@ -3,7 +3,7 @@ import * as path from "path";
 import express, { Router } from "express";
 import bodyParser, { urlencoded, json } from "body-parser";
 import xmlparser from "express-xml-bodyparser";
-
+import logy from "./config/lib/logy";
 import cookieParser from "cookie-parser";
 import passport from "passport";
 import passportConfig from "./config/passport";
@@ -35,13 +35,13 @@ const env = process.env.NODE_ENV || "";
 
 //check connection
 db.once("open", () => {
-  console.log(`Connnected to mongodb  ${process.env.NODE_ENV} `);
+  logy(`Connnected to mongodb  ${process.env.NODE_ENV} `);
 });
 
 //check for DB erros
 db.on("error", err => {
-  console.log(env);
-  console.log(err);
+  logy(env);
+  logy(err);
 });
 
 //init app
@@ -88,7 +88,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 require("./config/passport");
 if (env === "test" || env === "dev") {
-  console.log("using morgan");
+  logy("using morgan");
   app.use(morgan("dev"));
 }
 //global var
@@ -115,7 +115,7 @@ import routes from "./routes";
 import axios from "axios";
 import { handleError } from "./middleware/error";
 
-// console.log(process.env);
+// logy(process.env);
 
 app.use("/", routes);
 
@@ -134,7 +134,7 @@ app.use((err, req, res, next) => {
 
 //start server
 app.listen(port, () => {
-  console.log("Server started on port " + port + " env: " + env);
+  logy("Server started on port " + port + " env: " + env);
 });
 
 export default app;
