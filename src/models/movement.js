@@ -75,7 +75,7 @@ const movementSchema = new Schema(
      * Business: with client and lines, approved and check by the user
      *
      */
-    state: { type: String, default: "opportunity", enum: ["draft", "business", "budget", "opportunity"] },
+    state: { type: String, default: "opportunity", enum: ["draft", "business", "budget", "opportunity", "request", "expense"] },
     isActive: { type: Boolean, default: true },
     currency: { type: String, ref: "Currency" }
     // currency: { type: String }
