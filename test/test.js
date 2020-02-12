@@ -30,7 +30,7 @@ describe("Auth***************************************", () => {
 });
 
 describe("User***************************************", () => {
-  user.create(api);
+  user.createUser(api);
   user.list(api);
   user.update(api);
   user.password(api);
