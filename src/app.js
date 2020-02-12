@@ -128,7 +128,6 @@ app.use("/", routes);
 // app.get('/graphiql', graphiqlExpress({ endpointURL: '/graphql' })); // if you want GraphiQL enabled
 
 // error handler
-
 app.use((err, req, res, next) => {
   handleError(err, res);
 });

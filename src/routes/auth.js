@@ -18,6 +18,12 @@ let module = "auth";
 }
 
 */
+auth.get("/", (req, res, next) => {
+  res.send({ msg: "ok" });
+});
+auth.post("/", (req, res, next) => {
+  res.send({ msg: "post ok" });
+});
 auth.put(
   "/verify/:id",
   logger({

@@ -1,3 +1,4 @@
+process.env.NODE_ENV = "test";
 import { should as _should, use } from "chai";
 import chaiHttp from "chai-http";
 import { assert } from "chai";
@@ -7,27 +8,31 @@ use(chaiHttp);
 // import api from '../src/config/api/index';
 import user from "./modules/user";
 import business from "./modules/business";
-import auth from "./modules/auth";
+import { registerWith, registerWithout, login } from "./modules/auth";
 import movement from "./modules/movement";
 import tax from "./modules/tax";
 import item from "./modules/item";
 import currency from "./modules/currency";
 import mailer from "./modules/mailer";
+import { init } from "./init";
 
 import api_doc from "unabase_api_doc";
 
 const api = process.env.NODE_ENV === "dev" ? "https://dev.unabase.net" : "http://localhost:3000/";
-// process.env.NODE_ENV = "test";
+
 let userId;
 // global.userId = '';
 let data = {
   password: "test123"
 };
+describe("initTest", () => {
+  init();
+});
 
 describe("Auth***************************************", () => {
-  auth.registerWith(api);
-  auth.registerWithout(api);
-  auth.login(api);
+  registerWith(api);
+  registerWithout(api);
+  login(api);
 });
 
 describe("User***************************************", () => {

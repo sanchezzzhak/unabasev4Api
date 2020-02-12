@@ -277,6 +277,7 @@ export const register = (req, res, next) => {
       }
     ]
   };
+
   User.findOne(query, async function(err, user) {
     // if there are any errors, return the error
     if (err) return next(err);

@@ -22,46 +22,31 @@ const data = {
   name: "pedro perez"
 };
 
-const registerWithout = api =>
-  it("REGISTER WITHOUT PASS a user @auth", done => {
+export const registerWithout = api =>
+  it("REGISTER WITHOUT PASS a user without@auth", done => {
     chai
       .request(app)
       .post("/auth/register")
+      .send({
+        name: data.name,
+        email: data.email1
+      })
       .end((err, res) => {
-        if (err.response) {
+        if (err) {
           console.log(err.response.status);
           console.log(err.response.statusText);
           console.log(err.response.data);
         }
 
         res.should.have.status(200);
-        res.data.should.be.a("object");
+        res.body.should.be.a("object");
         // global.loginId = res.data._id;
         done();
       });
-    // axios
-    //   .post(api + routes.register, {
-    //     name: data.name,
-    //     email: data.email1
-    //   })
-    //   .then(res => {
-    //     res.should.have.status(200);
-    //     res.data.should.be.a("object");
-    //     // global.loginId = res.data._id;
-    //     done();
-    //   })
-    //   .catch(err => {
-    //     if (err.response) {
-    //       console.log(err.response.status);
-    //       console.log(err.response.statusText);
-    //       console.log(err.response.data);
-    //     }
-    //     // console.log(err.response.status);
-    //     // console.log(err.response.statusText);
-    //   });
   });
-const registerWith = api =>
-  it("REGISTER WITH PASS a user @auth", done => {
+
+export const registerWith = api =>
+  it("REGISTER WITH PASS a user with@auth", done => {
     axios
       .post(api + routes.register, {
         name: data.name,
@@ -85,8 +70,8 @@ const registerWith = api =>
       });
   });
 
-const login = api =>
-  it("LOGIN with username a user @auth", done => {
+export const login = api =>
+  it("LOGIN with username a user login@auth", done => {
     axios
       .post(api + routes.login, {
         username: data.email2,
@@ -107,8 +92,8 @@ const login = api =>
         }
       });
   });
-const loginEmail = api =>
-  it("LOGIN with email a user @auth", done => {
+export const loginEmail = api =>
+  it("LOGIN with email a user mail@auth", done => {
     axios
       .post(api + routes.login, {
         email: data.email,
@@ -130,9 +115,9 @@ const loginEmail = api =>
       });
   });
 
-export default {
-  registerWith,
-  registerWithout,
-  login,
-  loginEmail
-};
+// export default {
+//   registerWith,
+//   registerWithout,
+//   login,
+//   loginEmail
+// };
