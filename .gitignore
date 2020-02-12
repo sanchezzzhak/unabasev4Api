@@ -69,3 +69,4 @@ build/
 .directory
 .DS_Store
 .gitignore
+log.csv

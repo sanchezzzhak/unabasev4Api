@@ -11,3 +11,8 @@ ENV: local,Wed, 12 Feb 2020 15:56:37 GMT,2/12/2020,mongodb://devuna:!devUna21_37
 ENV: local,Wed, 12 Feb 2020 15:56:37 GMT,2/12/2020,Server started on port 3000 env: local
 ENV: dev,Wed, 12 Feb 2020 15:57:40 GMT,2/12/2020,[object Object]
 ENV: dev,Wed, 12 Feb 2020 15:57:40 GMT,2/12/2020,mongodb+srv://devuna:!devUna21_37@cluster0-4lsvi.mongodb.net/unadev?retryWrites=true&w=majority
+ENV: local,Wed, 12 Feb 2020 15:58:06 GMT,2/12/2020,[object Object]
+ENV: local,Wed, 12 Feb 2020 15:58:06 GMT,2/12/2020,mongodb://devuna:!devUna21_37@cluster0-4lsvi.mongodb.net/unatest?retryWrites=true&w=majority
+ENV: local,Wed, 12 Feb 2020 15:58:07 GMT,2/12/2020,Server started on port 3000 env: local
+ENV: local,Wed, 12 Feb 2020 15:58:36 GMT,2/12/2020,local
+ENV: local,Wed, 12 Feb 2020 15:58:36 GMT,2/12/2020,MongoTimeoutError: Server selection timed out after 30000 ms
