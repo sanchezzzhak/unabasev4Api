@@ -544,25 +544,33 @@ export const byItem = async (req, res, next) => {
 export const createExpense = async (req, res, next) => {
   let sourceMovement = await Movement.findById(req.body.movement).lean();
   let sourceLines = await Line.find({ _id: { $in: req.body.lines } }).lean();
-
-  let movement = new Movement({
-    name: `Compra de ${sourceMovement.name}`,
-    client: {
-      user: req.user.id
-    },
-    creator: req.user.id,
-    state: "expense",
-    currency: sourceMovement.currency
-  });
-  sourceLines.forEach(sourceLine => {
-    let newLine = new Line({
-      item: sourceLine.item,
-      name: sourceLine.name,
-      numbers: {},
-      requestedMovement: sourceMovement.id,
-      clientLine: sourceLine.id,
-      movement: newMovement.id,
-      creator: req.user._id
+  try {
+    let newMovement = new Movement({
+      name: `Compra de ${sourceMovement.name}`,
+      client: {
+        user: req.user.id
+      },
+      creator: req.user.id,
+      state: "expense",
+      currency: sourceMovement.currency
     });
-  });
+    let lines = [];
+    for await (let sourceLine of sourceLines) {
+      let newLine = new Line({
+        item: sourceLine.item,
+        name: sourceLine.name,
+        numbers: {},
+        requestedMovement: sourceMovement.id,
+        clientLine: sourceLine.id,
+        movement: newMovement.id,
+        creator: req.user._id
+      });
+      let line = await newLine.save();
+      lines.push(line);
+  } catch (err) {
+    next(err);
+  }
+  }
+  let movement = await movement.save();
+  res.send({ success: sourceLines.length === lines.length });
 };
