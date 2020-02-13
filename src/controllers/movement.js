@@ -557,4 +557,15 @@ export const createExpense = async (req, res, next) => {
     state: "expense",
     currency: sourceMovement.currency
   });
+  sourceLines.forEach(sourceLine => {
+    let newLine = new Line({
+      item: sourceLine.item,
+      name: sourceLine.name,
+      numbers: {},
+      requestedMovement: sourceMovement.id,
+      clientLine: sourceLine.id,
+      movement: newMovement.id,
+      creator: req.user._id
+    });
+  });
 };
