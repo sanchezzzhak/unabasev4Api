@@ -1,5 +1,5 @@
 import { Router } from "express";
-const movements = Router();
+const router = Router();
 import { get, getPersonal, getBusiness, create, getOne, findOne, find, updateOne, getRelated, byItem } from "../controllers/movement";
 import { sToken } from "../config/lib/auth";
 import logger from "../lib/logger";
@@ -7,9 +7,9 @@ import { checkPermission } from "../middleware/permission";
 let module = "movement";
 // if (process.env.NODE_ENV !== 'test') {
 
-movements.use(sToken);
+router.use(sToken);
 
-movements.get(
+router.get(
   "/:id",
   logger({
     name: "get one movement by id",
@@ -21,7 +21,7 @@ movements.get(
 
 // }
 
-movements.get(
+router.get(
   "/",
   logger({
     name: "list movements",
@@ -30,7 +30,7 @@ movements.get(
   }),
   get
 );
-movements.get(
+router.get(
   "/related/:id",
   logger({
     name: "list movements with related contact",
@@ -39,7 +39,7 @@ movements.get(
   }),
   getRelated
 );
-movements.get(
+router.get(
   "/personal/:state",
   logger({
     name: "list movements",
@@ -48,7 +48,7 @@ movements.get(
   }),
   getPersonal
 );
-movements.get(
+router.get(
   "/business/:state/:id",
   logger({
     name: "list movements",
@@ -57,7 +57,7 @@ movements.get(
   }),
   getBusiness
 );
-// movements.get(
+// router.get(
 //   '/business/:state',
 //   logger({
 //     name: 'list movements',
@@ -66,8 +66,8 @@ movements.get(
 //   }),
 //   get
 // );
-// movements.get('/', filter)
-movements.get(
+// router.get('/', filter)
+router.get(
   "/findOne",
   logger({
     name: "create movement",
@@ -76,7 +76,7 @@ movements.get(
   }),
   findOne
 );
-movements.get(
+router.get(
   "/find/:q",
   logger({
     name: "create movement",
@@ -85,7 +85,7 @@ movements.get(
   }),
   find
 );
-movements.get(
+router.get(
   "/item/:id",
   logger({
     name: "find movements by item",
@@ -95,7 +95,7 @@ movements.get(
   byItem
 );
 
-movements.post(
+router.post(
   "/",
   checkPermission({ permission: { module, action: "create" } }),
   logger({
@@ -105,6 +105,6 @@ movements.post(
   }),
   create
 );
-movements.put("/:id", updateOne);
+router.put("/:id", updateOne);
 
-export default movements;
+export default router;
