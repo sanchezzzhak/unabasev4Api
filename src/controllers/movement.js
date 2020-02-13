@@ -567,10 +567,10 @@ export const createExpense = async (req, res, next) => {
       });
       let line = await newLine.save();
       lines.push(line);
+    }
+    let movement = await movement.save();
+    res.send({ success: sourceLines.length === lines.length });
   } catch (err) {
     next(err);
   }
-  }
-  let movement = await movement.save();
-  res.send({ success: sourceLines.length === lines.length });
 };
