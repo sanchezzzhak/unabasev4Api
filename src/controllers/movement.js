@@ -542,8 +542,12 @@ export const byItem = async (req, res, next) => {
 };
 
 export const createExpense = async (req, res, next) => {
-  let sourceMovement = await Movement.findById(req.body.movement).lean();
-  let sourceLines = await Line.find({ _id: { $in: req.body.lines } }).lean();
+  let sourceMovement = await Movement.findById(req.body.movement)
+    .select("id name currency")
+    .exec();
+  let sourceLines = await Line.find({ _id: { $in: req.body.lines } })
+    .select("id name item")
+    .exec();
   try {
     let newMovement = new Movement({
       name: `Compra de ${sourceMovement.name}`,
@@ -564,12 +568,12 @@ export const createExpense = async (req, res, next) => {
         requestedMovement: sourceMovement.id,
         clientLine: sourceLine.id,
         movement: newMovement.id,
-        creator: req.user._id
+        creator: req.user.id
       });
       let line = await newLine.save();
       lines.push(line);
     }
-    let movement = await movement.save();
+    let movement = await newMovement.save();
     res.send({ success: sourceLines.length === lines.length });
   } catch (err) {
     next(err);
