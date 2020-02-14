@@ -377,7 +377,7 @@ export async function updateOne(req, res, next) {
       if (line) {
         // let movement = await Movement.findById(line.movement, "_id state").lean();
         let movement;
-        if (req.body.numbers.price) {
+        if (req.body.numbers?.price) {
           movement = await Movement.findByIdAndUpdate(line.movement, { $set: { state: "budget" } }, { $fields: { _id: 1, state: 1 } }).lean();
         }
         if (req.body.parent || line.parent) {
