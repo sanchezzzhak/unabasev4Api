@@ -22,6 +22,14 @@ const lineSchema = new Schema(
       cost: { type: Number, default: 0 }, // TODO rename to expense
       tax: { type: Number, default: 0 }
     },
+    providers: Array({
+      // save the user if the contact created or selected has a user reference.
+      user: { type: String, ref: "User" },
+      // save the contact id
+      contact: { type: String, ref: "Contact" },
+      // save the business id if the user has businesses and one of them is selected
+      business: { type: String, ref: "Business" }
+    }),
     children: Array({ type: String, ref: "Line" }),
     listIndex: Number,
     isParent: { type: Boolean, default: false },
