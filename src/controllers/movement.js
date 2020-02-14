@@ -564,7 +564,9 @@ export const createExpense = async (req, res, next) => {
       let newLine = new Line({
         item: sourceLine.item,
         name: sourceLine.name,
-        numbers: {},
+        numbers: {
+          price: sourceLine.numbers.budget
+        },
         requestedMovement: sourceMovement.id,
         clientLine: sourceLine.id,
         movement: newMovement.id,
