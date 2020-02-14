@@ -334,6 +334,9 @@ export const getOne = (req, res, next) => {
         })
           .populate("item", "lastPrice global ")
 
+          .populate("providers.user", "name emails idNumber")
+          .populate("providers.contact", "name emails")
+          .populate("providers.business", "name emails idNumber")
           .exec((err, lines) => {
             if (err) return next(err);
 
