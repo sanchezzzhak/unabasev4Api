@@ -63,6 +63,17 @@ export const getPersonal = (req, res, next) => {
     res.json(movements);
   });
 };
+export const getByClientLine = async (req, res, next) => {
+  const lines = await Line.find({ clientLine: req.params.id })
+    .select("movement")
+    .lean();
+  Movement.find({ _id: { $in: lines.map(line => line.movement) }, isActive: true })
+    .select("name client responsable state total successPercentage")
+    .exec((err, movements) => {
+      if (err) next(err);
+      res.send(movements);
+    });
+};
 export const getRelated = async (req, res, next) => {
   let query = {
     $or: [
