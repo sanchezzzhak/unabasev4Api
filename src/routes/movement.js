@@ -1,6 +1,6 @@
 import { Router } from "express";
 const router = Router();
-import { get, getPersonal, getBusiness, create, getOne, findOne, find, updateOne, getRelated, byItem, createExpense } from "../controllers/movement";
+import { get, getPersonal, getBusiness, create, getOne, findOne, find, updateOne, getRelated, byItem, createExpense, getByClientLine } from "../controllers/movement";
 import { sToken } from "../config/lib/auth";
 import logger from "../lib/logger";
 import { checkPermission } from "../middleware/permission";
@@ -107,5 +107,7 @@ router.post(
 );
 router.put("/:id", updateOne);
 router.post("/expense", createExpense);
+
+router.get("/line/client/:id", getByClientLine);
 
 export default router;
