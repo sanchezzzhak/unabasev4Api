@@ -60,6 +60,10 @@ export function get(req, res, next) {
 export const getLinesByMovement = async (req, res, next) => {
   Line.find({ movement: req.params.movement })
     .populate("movement", "name _id")
+
+    .populate("providers.user", "name emails idNumber")
+    .populate("providers.contact", "name emails")
+    .populate("providers.business", "name emails idNumber")
     // .populate("item")
     .exec((err, lines) => {
       if (err) return next(err);
@@ -398,7 +402,10 @@ export async function updateOne(req, res, next) {
                 {
                   path: "movement",
                   select: "_id state"
-                }
+                },
+                { path: "providers.user", select: "name emails idNumber" },
+                { path: "providers.contact", select: "name emails idNumber" },
+                { path: "providers.business", select: "name emails idNumber" }
               ],
               err => {
                 if (err) return next(err);
@@ -456,7 +463,10 @@ export async function updateOne(req, res, next) {
               {
                 path: "movement",
                 select: "_id state"
-              }
+              },
+              { path: "providers.user", select: "name emails idNumber" },
+              { path: "providers.contact", select: "name emails idNumber" },
+              { path: "providers.business", select: "name emails idNumber" }
             ],
             err => {
               if (err) return next(err);
