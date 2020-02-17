@@ -375,7 +375,7 @@ export async function updateOne(req, res, next) {
       _id: req.params.id
     },
     req.body,
-    // { new: true },
+    { new: true },
     // TODO return the new documetn
     async (err, line) => {
       if (err) return next(err);
@@ -384,7 +384,7 @@ export async function updateOne(req, res, next) {
         // let movement = await Movement.findById(line.movement, "_id state").lean();
         let movement;
         if (req.body.numbers?.price) {
-          movement = await Movement.findOne(
+          movement = await Movement.findOneAndUpdate(
             { _id: line.movement, state: { $nin: ["business", "budget"] } },
             { $set: { state: "budget" } },
             { $fields: { _id: 1, state: 1 } }
