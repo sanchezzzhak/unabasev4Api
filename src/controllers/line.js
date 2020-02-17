@@ -551,7 +551,7 @@ export const requestBudget = async (req, res, next) => {
     "client.user": req.user._id,
     "responsable.user": contact.user,
     "responsable.contact": contact._id,
-    state: "draft"
+    state: "request"
   });
   const movementCreated = await movement.save();
   for await (let line of lines) {
