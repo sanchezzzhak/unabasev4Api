@@ -1,7 +1,7 @@
 import User from "./user";
 import mongoose from "mongoose";
-// import mongoosePaginate from "mongoose-paginate";
-import mongoosePaginate from "../config/paginate";
+import mongoosePaginate from "mongoose-paginate";
+// import mongoosePaginate from "../config/paginate";
 const Schema = mongoose.Schema;
 const movementSchema = new Schema(
   {
