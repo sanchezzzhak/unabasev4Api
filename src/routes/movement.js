@@ -121,7 +121,7 @@ router.post(
 );
 router.put("/:id", updateOne);
 router.post("/expense", createExpense);
-router.post("request", createRequest);
+router.post("/request", createRequest);
 
 router.get("/line/client/:id", getByClientLine);
 
