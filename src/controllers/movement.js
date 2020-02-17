@@ -570,7 +570,7 @@ export const createExpense = async (req, res, next) => {
         business: req.user.scope.type === "business" ? req.user.scope.id : null
       },
       creator: req.user.id,
-      state: "expense",
+      state: "business",
       currency: sourceMovement.currency
     });
     let lines = [];
