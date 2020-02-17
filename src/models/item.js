@@ -1,6 +1,8 @@
 import mongoose, { Schema, mongo } from "mongoose";
 
-import mongoosePaginate from "mongoose-paginate";
+// import mongoosePaginate from "mongoose-paginate";
+import mongoosePaginate from "mongoose-paginate-v2";
+import paginateConfig from "../config/paginate";
 const itemSchema = new Schema(
   {
     isActive: { type: Boolean, default: true },
@@ -98,6 +100,8 @@ const itemSchema = new Schema(
 
 // itemSchema.plugin(mongoosePaginate);
 itemSchema.plugin(mongoosePaginate);
+
+mongoosePaginate.paginate.options = paginateConfig;
 const Item = mongoose.model("Item", itemSchema);
 Item.updateLastPrice = (id, currency, movementType, priceToAdd) => {
   return new Promise((resolve, reject) => {

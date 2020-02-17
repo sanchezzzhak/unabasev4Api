@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
-import mongoosePaginate from "mongoose-paginate";
+// import mongoosePaginate from "mongoose-paginate";
+import mongoosePaginate from "mongoose-paginate-v2";
+import paginateConfig from "../config/paginate";
 const Schema = mongoose.Schema;
 
 const currencySchema = new Schema(
@@ -16,6 +18,8 @@ const currencySchema = new Schema(
 );
 
 currencySchema.plugin(mongoosePaginate);
+
+mongoosePaginate.paginate.options = paginateConfig;
 currencySchema.post("update", function() {
   const modifiedFields = this.getUpdate().$set;
   logy("------");

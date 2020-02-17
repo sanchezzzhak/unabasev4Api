@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
-import mongoosePaginate from "mongoose-paginate";
+// import mongoosePaginate from "mongoose-paginate";
+import mongoosePaginate from "mongoose-paginate-v2";
+import paginateConfig from "../config/paginate";
 const Schema = mongoose.Schema;
 
 const businessSchema = Schema(
@@ -71,6 +73,8 @@ const businessSchema = Schema(
   }
 );
 businessSchema.plugin(mongoosePaginate);
+
+mongoosePaginate.paginate.options = paginateConfig;
 const Business = mongoose.model("Business", businessSchema);
 
 export default Business;

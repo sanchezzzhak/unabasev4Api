@@ -1,5 +1,7 @@
 import mongoose, { Schema as _Schema, model } from "mongoose";
-import mongoosePaginate from "mongoose-paginate";
+// import mongoosePaginate from "mongoose-paginate";
+import mongoosePaginate from "mongoose-paginate-v2";
+import paginateConfig from "../config/paginate";
 let Schema = _Schema;
 const AutoIncrement = require("mongoose-sequence")(mongoose);
 
@@ -15,6 +17,8 @@ let permissionSchema = Schema({
 permissionSchema.plugin(AutoIncrement, { inc_field: "number" });
 
 permissionSchema.plugin(mongoosePaginate);
+
+mongoosePaginate.paginate.options = paginateConfig;
 // let User = module.exports = mongoose.model('User', userSchema);
 const Permission = mongoose.model("Permission", permissionSchema);
 

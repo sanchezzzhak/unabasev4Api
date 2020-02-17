@@ -1,5 +1,7 @@
 import mongoose, { Schema, model } from "mongoose";
-import mongoosePaginate from "mongoose-paginate";
+// import mongoosePaginate from "mongoose-paginate";
+import mongoosePaginate from "mongoose-paginate-v2";
+import paginateConfig from "../config/paginate";
 import Permission from "./permission";
 
 const userPermissionSchema = Schema({
@@ -10,6 +12,7 @@ const userPermissionSchema = Schema({
 
 userPermissionSchema.plugin(mongoosePaginate);
 
+mongoosePaginate.paginate.options = paginateConfig;
 userPermissionSchema.index({ user: 1, business: 1, permission: 1 }, { unique: true });
 
 const UserPermission = mongoose.model("UserPermission", userPermissionSchema);

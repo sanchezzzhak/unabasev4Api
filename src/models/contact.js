@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 
-import mongoosePaginate from "mongoose-paginate";
-
+// import mongoosePaginate from "mongoose-paginate";
+import mongoosePaginate from "mongoose-paginate-v2";
+import paginateConfig from "../config/paginate";
 const Schema = mongoose.Schema;
 
 const contactSchema = new Schema(
@@ -32,5 +33,7 @@ const contactSchema = new Schema(
   { timestamps: true }
 );
 contactSchema.plugin(mongoosePaginate);
+
+mongoosePaginate.paginate.options = paginateConfig;
 const Contact = mongoose.model("Contact", contactSchema);
 export default Contact;

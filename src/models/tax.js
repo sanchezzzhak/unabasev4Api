@@ -1,6 +1,7 @@
-import mongoose, { Schema } from 'mongoose';
-import mongoosePaginate from 'mongoose-paginate';
-
+import mongoose, { Schema } from "mongoose";
+// import mongoosePaginate from 'mongoose-paginate';
+import mongoosePaginate from "mongoose-paginate-v2";
+import paginateConfig from "../config/paginate";
 const taxSchema = new Schema(
   {
     name: String,
@@ -10,6 +11,8 @@ const taxSchema = new Schema(
 );
 
 taxSchema.plugin(mongoosePaginate);
-const Tax = mongoose.model('Tax', taxSchema);
+
+mongoosePaginate.paginate.options = paginateConfig;
+const Tax = mongoose.model("Tax", taxSchema);
 
 export default Tax;

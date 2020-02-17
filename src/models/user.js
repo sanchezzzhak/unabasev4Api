@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 
-import mongoosePaginate from "mongoose-paginate";
+// import mongoosePaginate from "mongoose-paginate";
+import mongoosePaginate from "mongoose-paginate-v2";
+import paginateConfig from "../config/paginate";
 import bcrypt from "bcryptjs";
 import { getUserData } from "../lib/user";
 import UserPermission from "./userPermission";
@@ -109,6 +111,7 @@ let userSchema = Schema(
 
 userSchema.plugin(mongoosePaginate);
 
+mongoosePaginate.paginate.options = paginateConfig;
 // generating a hash
 userSchema.methods.generateHash = function(password) {
   return bcrypt.hashSync(password, salt, null);
