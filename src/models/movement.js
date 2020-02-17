@@ -1,7 +1,8 @@
 import User from "./user";
 import mongoose from "mongoose";
-import mongoosePaginate from "mongoose-paginate";
-// import mongoosePaginate from "../config/paginate";
+// import mongoosePaginate from "mongoose-paginate";
+import mongoosePaginate from "mongoose-paginate-v2";
+import paginateConfig from "../config/paginate";
 const Schema = mongoose.Schema;
 const movementSchema = new Schema(
   {
@@ -83,7 +84,8 @@ const movementSchema = new Schema(
   },
   { timestamps: true }
 );
-
+mongoosePaginate.paginate.options = paginateConfig;
+// movementSchema.plugin(mongoosePaginate);
 movementSchema.plugin(mongoosePaginate);
 
 const Movement = mongoose.model("Movement", movementSchema);

@@ -1,3 +1,5 @@
+import paginateConfig from "../config/paginate";
+
 export const queryHelper = (query, options, regex = []) => {
   // object to return
   let result = {
@@ -18,8 +20,8 @@ export const queryHelper = (query, options, regex = []) => {
     result.options.populate.push(...populate);
   }
 
-  result.options.page = query.page || 1;
-  result.options.limit = query.limit || 20;
+  result.options.page = query.page || paginateConfig.page;
+  result.options.limit = query.limit || paginateConfig.limit;
 
   delete query.createdAtSort;
   delete query.updatedAtSort;

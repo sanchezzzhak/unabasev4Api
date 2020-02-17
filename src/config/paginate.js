@@ -1,10 +1,18 @@
-import mongoosePaginate from "mongoose-paginate";
-
-mongoosePaginate.paginate.options = {
-  lean: true,
-  limit: 5
-};
-
 export default {
-  mongoosePaginate
+  limit: 20,
+  page: 1,
+  lean: true,
+  leanWithId: true,
+  customLabels: {
+    totalDocs: "total",
+    pagingCounter: false,
+    totalPages: "pages"
+    // docs: "docs",
+    // limit: "perPage",
+    // page: "currentPage",
+    // nextPage: "next",
+    // prevPage: "prev",
+    // pagingCounter: "slNo",
+    // meta: "paginator"
+  }
 };
