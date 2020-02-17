@@ -595,3 +595,54 @@ export const createExpense = async (req, res, next) => {
     next(err);
   }
 };
+
+export const createRequest = async (req, res, next) => {
+  let sourceMovement = await Movement.findById(req.body.movement)
+    .select("id name currency")
+    .exec();
+  let sourceLines = await Line.find({ _id: { $in: req.body.lines } })
+    .select("id name item")
+    .exec();
+  let countSuccess = true;
+  for (let provider of providers) {
+    try {
+      let newMovement = new Movement({
+        name: `Compra de ${sourceMovement.name}`,
+        client: {
+          user: req.user.id,
+          business: req.user.scope.type === "business" ? req.user.scope.id : null
+        },
+        responsable: {
+          user: provider.user,
+          business: provider.business,
+          contact: provider.contact
+        },
+        creator: req.user.id,
+        state: "business",
+        currency: sourceMovement.currency
+      });
+      let lines = [];
+      for await (let sourceLine of sourceLines) {
+        let newLine = new Line({
+          item: sourceLine.item,
+          name: sourceLine.name,
+          numbers: {
+            price: sourceLine.numbers.budget
+          },
+          requestedMovement: sourceMovement.id,
+          clientLine: sourceLine.id,
+          movement: newMovement.id,
+          creator: req.user.id
+        });
+        let line = await newLine.save();
+        lines.push(line);
+      }
+      let movement = await newMovement.save();
+      countSuccess = countSuccess && sourceLines.length === lines.length;
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  res.send({ success: countSuccess });
+};
