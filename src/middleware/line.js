@@ -80,7 +80,8 @@ export function updateMovementState(req, res, next) {
     // let movementId = Array.isArray(req.body.movement) ? req.body[0].movement : req.body.movement;
     Movement.updateOne(
       {
-        _id: req.body.movement
+        _id: req.body.movement,
+        state: "opportunity"
       },
       {
         state: "budget"
