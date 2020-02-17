@@ -417,7 +417,7 @@ export async function updateOne(req, res, next) {
                 if (line.parent) {
                   await Line.updateParentTotal(parentToUpdate);
                   // updateOldParent(parentToUpdate, () => {
-                  Line.getTreeTotals(line.movement)
+                  Line.getTreeTotals(line.movement.id)
                     .then(lineTree => {
                       logy("before send responde");
                       calculateTotalMovement(req.body.movement)
