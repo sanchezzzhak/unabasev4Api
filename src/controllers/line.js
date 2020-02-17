@@ -368,6 +368,7 @@ export async function updateOne(req, res, next) {
   // let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
   // let item = typeof req.body.item === "object" ? req.body.item._id : req.body.item;
   logy("before  update parent");
+  const parentToUpdate = req.body.parent || "";
   // if (req.body.numers.price)
   Line.findOneAndUpdate(
     {
@@ -375,6 +376,7 @@ export async function updateOne(req, res, next) {
     },
     req.body,
     // { new: true },
+    // TODO return the new documetn
     async (err, line) => {
       if (err) return next(err);
 
@@ -382,17 +384,20 @@ export async function updateOne(req, res, next) {
         // let movement = await Movement.findById(line.movement, "_id state").lean();
         let movement;
         if (req.body.numbers?.price) {
-          movement = await Movement.findByIdAndUpdate(line.movement, { $set: { state: "budget" } }, { $fields: { _id: 1, state: 1 } }).lean();
+          movement = await Movement.findOne(
+            { _id: line.movement, state: { $nin: ["business", "budget"] } },
+            { $set: { state: "budget" } },
+            { $fields: { _id: 1, state: 1 } }
+          ).lean();
         }
-        if (req.body.parent || line.parent) {
-          const updateOldParent = (oldParent, callback) => {
-            Line.updateParentTotal(oldParent, err => {
-              if (err) return next(err);
-              callback();
-            });
-          };
-          // const parentToUpdate = req.body.parent || line.parent || "";
-          Line.updateParentTotal(req.body.parent, err => {
+        if (parentToUpdate !== "") {
+          // const updateOldParent = (oldParent, callback) => {
+          //   Line.updateParentTotal(oldParent, err => {
+          //     if (err) return next(err);
+          //     callback();
+          //   });
+          // };
+          Line.updateParentTotal(line.parent, err => {
             if (err) return next(err);
             line.populate(
               [
@@ -407,29 +412,30 @@ export async function updateOne(req, res, next) {
                 { path: "providers.contact", select: "name emails idNumber" },
                 { path: "providers.business", select: "name emails idNumber" }
               ],
-              err => {
+              async err => {
                 if (err) return next(err);
                 if (line.parent) {
-                  updateOldParent(line.parent, () => {
-                    Line.getTreeTotals(line.movement)
-                      .then(lineTree => {
-                        logy("before send responde");
-                        calculateTotalMovement(req.body.movement)
-                          .then(movement => {
-                            res.send({
-                              line,
-                              lineTree,
-                              movement
-                            });
-                          })
-                          .catch(err => {
-                            return next(err);
+                  await Line.updateParentTotal(parentToUpdate);
+                  // updateOldParent(parentToUpdate, () => {
+                  Line.getTreeTotals(line.movement)
+                    .then(lineTree => {
+                      logy("before send responde");
+                      calculateTotalMovement(req.body.movement)
+                        .then(movement => {
+                          res.send({
+                            line,
+                            lineTree,
+                            movement
                           });
-                      })
-                      .catch(err => {
-                        return next(err);
-                      });
-                  });
+                        })
+                        .catch(err => {
+                          return next(err);
+                        });
+                    })
+                    .catch(err => {
+                      return next(err);
+                    });
+                  // });
                 } else {
                   Line.getTreeTotals(line.movement)
                     .then(lineTree => {
@@ -462,7 +468,7 @@ export async function updateOne(req, res, next) {
               },
               {
                 path: "movement",
-                select: "_id state"
+                select: "_id state id"
               },
               { path: "providers.user", select: "name emails idNumber" },
               { path: "providers.contact", select: "name emails idNumber" },
@@ -470,7 +476,7 @@ export async function updateOne(req, res, next) {
             ],
             err => {
               if (err) return next(err);
-              calculateTotalMovement(line.movement._id.toString())
+              calculateTotalMovement(line.movement.id)
                 .then(movement => {
                   res.send({ line, movement });
                   // res.send(lines);
