@@ -68,7 +68,7 @@ export const getByClientLine = async (req, res, next) => {
     .select("movement")
     .lean();
   Movement.find({ _id: { $in: lines.map(line => line.movement) }, isActive: true })
-    .select("name client responsable state total successPercentage")
+    .select("name client.user client.business client.contact  responsable.user responsable.business responsable.contact  state total successPercentage createdAt updatedAt")
     .exec((err, movements) => {
       if (err) next(err);
       res.send(movements);
