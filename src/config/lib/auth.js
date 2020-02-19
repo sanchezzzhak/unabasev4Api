@@ -69,7 +69,7 @@ export const sToken = (req, res, next) => {
         req.user = user;
         next();
       } else {
-        res.status(404).send({
+        res.status(403).send({
           msg: "Not user found for auth"
         });
       }
