@@ -22,28 +22,28 @@ const data = {
   name: "pedro perez"
 };
 
-export const registerWithout = api =>
-  it("REGISTER WITHOUT PASS a user without@auth", done => {
-    chai
-      .request(app)
-      .post("/auth/register")
-      .send({
-        name: data.name,
-        email: data.email1
-      })
-      .end((err, res) => {
-        if (err) {
-          console.log(err.response.status);
-          console.log(err.response.statusText);
-          console.log(err.response.data);
-        }
+// export const registerWithout = api =>
+//   it("REGISTER WITHOUT PASS a user without@auth", done => {
+//     chai
+//       .request(app)
+//       .post("/auth/register")
+//       .send({
+//         name: data.name,
+//         email: data.email1
+//       })
+//       .end((err, res) => {
+//         if (err) {
+//           console.log(err.response.status);
+//           console.log(err.response.statusText);
+//           console.log(err.response.data);
+//         }
 
-        res.should.have.status(200);
-        res.body.should.be.a("object");
-        // global.loginId = res.data._id;
-        done();
-      });
-  });
+//         res.should.have.status(200);
+//         res.body.should.be.a("object");
+//         // global.loginId = res.data._id;
+//         done();
+//       });
+//   });
 
 export const registerWith = api =>
   it("REGISTER WITH PASS a user with@auth", done => {

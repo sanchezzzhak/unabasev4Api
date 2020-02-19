@@ -19,13 +19,15 @@ beforeEach(done => {
     done();
   });
 });
-export const createBusiness = () => {
+// export const createBusiness = () => {
+describe("business create", () => {
   it("/POST business create@business", done => {
     chai
       .request(app)
       .post("/business")
       .send(testData())
       .end((err, res) => {
+        console.log(res);
         if (err) done(err);
         res.should.have.status(200);
         res.body.should.be.a("object");
@@ -34,7 +36,9 @@ export const createBusiness = () => {
         done();
       });
   });
-};
+});
+
+// };
 
 export const getBusiness = () => {
   it("/GET business get@business", done => {
