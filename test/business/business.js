@@ -9,11 +9,24 @@ import Business from "../../src/models/business";
 import User from "../../src/models/user";
 import testData from "./data";
 import userData from "../user/data";
-// let businessId;
-// let data = {
-//   password: "test123"
-// };
 
+let authUser = "";
+before(done => {
+  User.deleteMany({}, err => {
+    // done();
+    // const user = { username: userData().username, password: userData().password };
+    chai
+      .request(app)
+      .post("/auth/register")
+      .send({ username: userData().username, email: userData().emails.default })
+      .end(function(err, res) {
+        authUser = res.body.token;
+
+        chai.expect(res.statusCode).to.equal(200);
+        done();
+      });
+  });
+});
 beforeEach(done => {
   Business.deleteMany({}, err => {
     done();
@@ -25,9 +38,9 @@ describe("business create", () => {
     chai
       .request(app)
       .post("/business")
+      .set("authorization", authUser)
       .send(testData())
       .end((err, res) => {
-        console.log(res);
         if (err) done(err);
         res.should.have.status(200);
         res.body.should.be.a("object");
@@ -37,14 +50,15 @@ describe("business create", () => {
       });
   });
 });
-
 // };
 
-export const getBusiness = () => {
+// export const getBusiness = () => {
+describe("business get", () => {
   it("/GET business get@business", done => {
     chai
       .request(app)
       .get("/business")
+      .set("authorization", authUser)
 
       .end((err, res) => {
         if (err) done(err);
@@ -55,15 +69,18 @@ export const getBusiness = () => {
         done();
       });
   });
-};
+});
+// };
 
-export const getOneBusiness = () => {
+// export const getOneBusiness = () => {
+describe("business get", () => {
   it("/GET business getOne@business", done => {
     let business = new Business(testData());
     business.save((err, business) => {
       chai
         .request(app)
         .get("/business/" + business.id)
+        .set("authorization", authUser)
 
         .end((err, res) => {
           if (err) done(err);
@@ -73,15 +90,18 @@ export const getOneBusiness = () => {
         });
     });
   });
-};
+});
+// };
 
-export const updateOneBusiness = () => {
+// export const updateOneBusiness = () => {
+describe("business updateOne", () => {
   it("/GET business updateOne@business", done => {
     let business = new Business(testData());
     business.save((err, business) => {
       chai
         .request(app)
         .put("/business/" + business.id)
+        .set("authorization", authUser)
         .send(testData())
         .end((err, res) => {
           if (err) done(err);
@@ -93,9 +113,11 @@ export const updateOneBusiness = () => {
         });
     });
   });
-};
+});
+// };
 
-export const addUser = () => {
+// export const addUser = () => {
+describe("business addUser to business", () => {
   it("/PUT business addUser@business", done => {
     let businessDoc = new Business(testData());
     let userDoc = new User(userData());
@@ -105,6 +127,7 @@ export const addUser = () => {
         chai
           .request(app)
           .put("/business/user/" + business.id)
+          .set("authorization", authUser)
           .send({
             action: "add",
             user: user
@@ -119,4 +142,5 @@ export const addUser = () => {
       });
     });
   });
-};
+});
+// };

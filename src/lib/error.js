@@ -6,3 +6,4 @@ export const createError = (statusCode = 500, message = "server error.") => {
 };
 
 export const notFoundError = (msg = "Document(s) not found") => createError(404, msg);
+export const missingData = (msg = "Missing data") => createError(400, msg);

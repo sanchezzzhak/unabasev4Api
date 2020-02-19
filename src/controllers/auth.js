@@ -13,7 +13,7 @@ import UserPermission from "../models/userPermission";
 import { getUserData, generateToken } from "../lib/user";
 import { getLocationByIp } from "../lib/location";
 import Currency from "../models/currency";
-import { notFoundError, createError } from "../lib/error";
+import { notFoundError, createError, missingData } from "../lib/error";
 import { getCurrencyByLocation } from "../lib/currency";
 import { language } from "../language";
 export const google = (req, res, next) => {
@@ -267,6 +267,7 @@ export const verify = (req, res, next) => {
   });
 };
 export const register = (req, res, next) => {
+  if (!req.body.email) next(missingData(req.lg.user.missingEmail));
   let query = {
     $or: [
       {

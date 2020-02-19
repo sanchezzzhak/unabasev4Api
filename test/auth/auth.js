@@ -13,14 +13,17 @@ beforeEach(done => {
   });
 });
 
-export const registerWithout = () => {
+// export const registerWithout = () => {
+describe("auth without", () => {
+  // console.log("-------------------");
+  // console.log(userData().emails.default);
   it("REGISTER WITHOUT PASS a user without@auth", done => {
     chai
       .request(app)
       .post("/auth/register")
       .send({
-        name: userData.name,
-        email: userData.email1
+        name: userData().name,
+        email: userData().emails.default
       })
       .end((err, res) => {
         if (err) {
@@ -35,4 +38,5 @@ export const registerWithout = () => {
         done();
       });
   });
-};
+});
+// };

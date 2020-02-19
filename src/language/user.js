@@ -7,7 +7,8 @@ export default {
     successLogin: "te has logeado",
     verified: "cuenta verificada",
     notVerified: "la cuenta no se ha podido verificar",
-    businessNotNull: "Debe enviar una empresa."
+    businessNotNull: "Debe enviar una empresa.",
+    missingEmail: "Falta un email"
   },
   en: {
     notFound: "user not found",
@@ -19,6 +20,7 @@ export default {
     notVerified: "the account could not be verified",
     businessNotNull: "Business cannot be null.",
     alreadyExist: "User already exist.",
-    alreadyRegistered: "User already registered."
+    alreadyRegistered: "User already registered.",
+    missingEmail: "Missing email"
   }
 };
