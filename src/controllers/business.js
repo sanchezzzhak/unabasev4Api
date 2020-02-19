@@ -234,20 +234,20 @@ const ObjectId = Types.ObjectId;
 //     );
 //   }
 // };
-export const create = (req, res) => {
+export const create = (req, res, next) => {
   Business.findOne(
     {
       idNumber: req.body.idNumber
     },
     (err, business) => {
-      if (err) throw err;
+      if (err) next(err);
 
       if (business) {
         res.status(409).send({
           msg: "Business already exist"
         });
       } else if (typeof req.body.idNumber === "undefined") {
-        res.send({
+        res.status(400).send({
           msg: "You must enter an id number"
         });
       } else {
@@ -300,7 +300,7 @@ export const create = (req, res) => {
     }
   );
 };
-export const getOne = (req, res) => {
+export const getOne = (req, res, next) => {
   Business.findOne(
     {
       _id: req.params.id
@@ -326,7 +326,7 @@ export const getOne = (req, res) => {
     }
   );
 };
-export const updateOne = (req, res) => {
+export const updateOne = (req, res, next) => {
   Business.findOneAndUpdate(
     {
       _id: req.params.id
@@ -350,7 +350,7 @@ export const updateOne = (req, res) => {
       }
     });
 };
-export const get = (req, res) => {
+export const get = (req, res, next) => {
   logy("req ---> ", req);
   let rquery = ntype(req.query);
   let options = {};
@@ -376,7 +376,7 @@ export const get = (req, res) => {
 };
 // todo - user method can be used for the same action plus permissions asignment
 // HECTOR - RUTA QUE AGREGA UN USUARIO A UNA EMPRESA
-export const addUserToBusiness = (req, res) => {
+export const addUserToBusiness = (req, res, next) => {
   logy(req.body);
   let user = {
     description: req.body.role.name,
@@ -419,7 +419,7 @@ export const addUserToBusiness = (req, res) => {
   );
 };
 
-export const user = (req, res) => {
+export const user = (req, res, next) => {
   const action = req.body.action === "add" ? "$addToSet" : "$pull";
   let update = {
     [action]: {

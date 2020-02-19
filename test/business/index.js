@@ -2,17 +2,17 @@ import chai from "chai";
 import chaiHttp from "chai-http";
 import axios from "axios";
 chai.use(chaiHttp);
-import api from "../../src/config/api";
-import app from "../../src/app";
+
+import app from "../../src/server";
 import { testError } from "../testError";
 import Business from "../../src/models/business";
 import User from "../../src/models/user";
 import testData from "./data";
 import userData from "../user/data";
-let businessId;
-let data = {
-  password: "test123"
-};
+// let businessId;
+// let data = {
+//   password: "test123"
+// };
 
 beforeEach(done => {
   Business.deleteMany({}, err => {
@@ -26,8 +26,11 @@ export const createBusiness = () => {
       .post("/business")
       .send(testData())
       .end((err, res) => {
-        testError(err);
+        if (err) done(err);
         res.should.have.status(200);
+        res.body.should.be.a("object");
+        res.body.should.have.property("_id");
+        res.body.should.have.property("name");
         done();
       });
   });
@@ -40,9 +43,11 @@ export const getBusiness = () => {
       .get("/business")
 
       .end((err, res) => {
-        testError(err);
+        if (err) done(err);
         res.should.have.status(200);
         res.should.be.a("object");
+        res.body.should.have.property("total");
+        res.body.should.have.property("docs");
         done();
       });
   });
@@ -57,7 +62,7 @@ export const getOneBusiness = () => {
         .get("/business/" + business.id)
 
         .end((err, res) => {
-          testError(err);
+          if (err) done(err);
           res.should.have.status(200);
           res.should.be.a("object");
           done();
@@ -75,9 +80,11 @@ export const updateOneBusiness = () => {
         .put("/business/" + business.id)
         .send(testData())
         .end((err, res) => {
-          testError(err);
+          if (err) done(err);
           res.should.have.status(200);
           res.should.be.a("object");
+          res.body.should.have.property("_id");
+          res.body.should.have.property("name");
           done();
         });
     });
@@ -99,7 +106,7 @@ export const addUser = () => {
             user: user
           })
           .end((err, res) => {
-            testError(err);
+            if (err) done(err);
 
             res.should.have.status(200);
             res.should.be.a("object");
