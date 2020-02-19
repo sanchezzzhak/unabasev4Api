@@ -604,7 +604,7 @@ export const createRequest = async (req, res, next) => {
     .select("id name item")
     .exec();
   let countSuccess = true;
-  for (let provider of providers) {
+  for (let provider of req.body.providers) {
     try {
       let newMovement = new Movement({
         name: `Compra de ${sourceMovement.name}`,
