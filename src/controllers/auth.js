@@ -328,11 +328,13 @@ export const register = (req, res, next) => {
         newUser.security.updatedAt = new Date();
         newUser.security.isRandom = true;
         newUser.security.activateHash = activateHash;
+        newUser.security.hasPassword = false;
         newUser.isActive = false;
       } else {
         newUser.password = newUser.generateHash(req.body.password);
         newUser.security.updatedAt = new Date();
         newUser.security.isRandom = false;
+        newUser.security.hasPassword = true;
         newUser.isActive = true;
       }
       // set the user's local credentials
