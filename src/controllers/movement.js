@@ -618,7 +618,7 @@ export const createRequest = async (req, res, next) => {
           contact: provider.contact
         },
         creator: req.user.id,
-        state: "business",
+        state: "request",
         currency: sourceMovement.currency
       });
       let lines = [];
