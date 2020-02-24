@@ -45,9 +45,9 @@ export const sToken = (req, res, next) => {
     next();
   } else if (req.headers.authorization === "postmanvn4b4s3" || process.env.NODE_ENV === "test") {
     let query;
-    if (req.headers["proxy-authorization"]) {
+    if (req.headers["x-api-key"]) {
       query = {
-        _id: req.headers["proxy-authorization"]
+        _id: req.headers["x-api-key"]
       };
     } else {
       query = {

@@ -14,10 +14,14 @@ export const queryHelper = (query, options, regex = []) => {
   };
   // populate from url query
   let populate = "";
-  if (query.populate && query.populate !== "") {
-    populate = JSON.parse(query.populate);
-    delete query.populate;
-    result.options.populate.push(...populate);
+  try {
+    if (query.populate && query.populate !== "") {
+      populate = JSON.parse(query.populate);
+      delete query.populate;
+      result.options.populate.push(...populate);
+    }
+  } catch (err) {
+    console.log(err);
   }
 
   result.options.page = query.page || paginateConfig.page;
