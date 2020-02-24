@@ -506,6 +506,13 @@ export const updateOne = (req, res, next) => {
     });
   // }
 };
+
+export const nullMany = (req, res, next) => {
+  Movement.updateMany({ _id: { $in: req.body.movements } }, { isActive: false }).exec((err, data) => {
+    if (err) next(err);
+    res.send(data);
+  });
+};
 export const linkMovement = (req, res, next) => {
   Contact.find(
     {
