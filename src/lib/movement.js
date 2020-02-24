@@ -33,6 +33,7 @@ export const calculateTotalMovement = id => {
         percentage: 100 - [total.budget / (total.net / 100)]
       };
     }
+    Movement.findByIdAndUpdate(id, { $set: { "total.net": total.net, "total.budget": total.budget, "total.tax": total.tax, "total.profit": total.profit } }).exec();
     resolve({
       movement: {
         total
