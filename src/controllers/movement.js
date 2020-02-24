@@ -67,7 +67,14 @@ export const getByClientLine = async (req, res, next) => {
   const lines = await Line.find({ clientLine: req.params.id })
     .select("movement")
     .lean();
-  Movement.find({ _id: { $in: lines.map(line => line.movement) }, isActive: true })
+  const linesIds = lines.map(line => line.movement);
+  Movement.find({ _id: { $in: linesIds }, isActive: true })
+    .populate("responsable.user", "name")
+    .populate("responsable.contact", "name")
+    .populate("responsable.business", "name")
+    .populate("client.user", "name")
+    .populate("client.contact", "name")
+    .populate("client.business", "name")
     .select("name client.user client.business client.contact  responsable.user responsable.business responsable.contact  state total successPercentage createdAt updatedAt")
     .exec((err, movements) => {
       if (err) next(err);
