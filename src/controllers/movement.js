@@ -604,7 +604,7 @@ export const createExpense = async (req, res, next) => {
       lines.push(line);
     }
     let movement = await newMovement.save();
-    res.send({ success: sourceLines.length === lines.length });
+    res.send({ success: sourceLines.length === lines.length, movement });
   } catch (err) {
     next(err);
   }
