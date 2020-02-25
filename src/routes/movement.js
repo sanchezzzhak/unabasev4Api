@@ -14,7 +14,8 @@ import {
   createExpense,
   getByClientLine,
   createRequest,
-  nullMany
+  nullMany,
+  updateState
 } from "../controllers/movement";
 import { sToken } from "../config/lib/auth";
 import logger from "../lib/logger";
@@ -126,5 +127,6 @@ router.post("/request", createRequest);
 
 router.get("/line/client/:id", getByClientLine);
 router.put("/null/many", nullMany);
+router.put("/:id/:action", updateState);
 
 export default router;

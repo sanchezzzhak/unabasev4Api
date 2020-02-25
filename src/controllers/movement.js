@@ -506,6 +506,23 @@ export const updateOne = (req, res, next) => {
     });
   // }
 };
+export const updateState = async (req, res, next) => {
+  let sourceLines;
+  switch (req.params.action) {
+    case "approve":
+      sourceLines = await Line.find({ movement: req.params.id })
+        .select("id clientLine numbers quantity")
+        .exec();
+      for await (let sourceLine of sourceLines) {
+        Line.findByIdAndUpdate(sourceLine.clientLine, { "numbers.cost": sourceLine.numbers.price * sourceLine.quantity }).exec();
+      }
+      break;
+  }
+  Movement.findByIdAndUpdate({ _id: req.params.id }, { state: req.body.state }).exec((err, movement) => {
+    if (err) next(err);
+    res.send(movement);
+  });
+};
 
 export const nullMany = (req, res, next) => {
   Movement.updateMany({ _id: { $in: req.body.movements } }, { isActive: false }).exec((err, data) => {
