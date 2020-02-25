@@ -72,7 +72,8 @@ export const google = (req, res, next) => {
                   //     expiresIn: "3d"
                   //   }
                   // );
-                  req.user = user;
+                  req.user = userFound;
+                  req.user.id = req.user._id.toString() || null;
                   res.send({
                     token: generateToken(userFound),
                     user: userFound
@@ -150,6 +151,7 @@ export const password = (req, res, next) => {
             //   }
             // );
             req.user = user;
+            req.user.id = req.user._id.toString() || null;
             res.statusMessage = req.lg.user.successLogin;
             res.json({
               token: generateToken(user),
@@ -211,6 +213,7 @@ export const login = (req, res, next) => {
         //   }
         // );
         req.user = user;
+        req.user.id = req.user._id.toString() || null;
         res.statusMessage = req.lg.user.successLogin;
         delete user.password;
         res.json({
@@ -251,6 +254,7 @@ export const verify = (req, res, next) => {
           //   }
           // );
           req.user = user;
+          req.user.id = req.user._id.toString() || null;
           res.json({
             token: generateToken(user),
             user
@@ -386,6 +390,7 @@ export const register = (req, res, next) => {
         //     .catch(err => console.warn(err));
         // }
         req.user = user;
+        req.user.id = req.user._id.toString() || null;
         res.json({
           token: generateToken(user),
           user
