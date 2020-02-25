@@ -507,7 +507,9 @@ export const updateOne = (req, res, next) => {
   // }
 };
 export const updateState = async (req, res, next) => {
+  let movement = await Movement.findByIdAndUpdate({ _id: req.params.id }, { state: req.body.state }).exec();
   let sourceLines;
+  let lineUpdated;
   switch (req.params.action) {
     case "approve":
       await Line.findById(req.body.clientLine)
@@ -516,7 +518,8 @@ export const updateState = async (req, res, next) => {
           if (err) next(err);
           let total = line.expenses.reduce((prev, curr) => prev + curr.numbers.price * curr.quantity, 0);
           line.numbers.cost = total;
-          line.save();
+          await line.save();
+          res.send({ movement, line });
           // q.reduce((a,c) => a + (c.n.p * c.q), 0 )
         });
       // sourceLines = await Line.find({ movement: req.params.id })
@@ -529,10 +532,6 @@ export const updateState = async (req, res, next) => {
       // }
       break;
   }
-  Movement.findByIdAndUpdate({ _id: req.params.id }, { state: req.body.state }).exec((err, movement) => {
-    if (err) next(err);
-    res.send(movement);
-  });
 };
 
 export const nullMany = (req, res, next) => {
