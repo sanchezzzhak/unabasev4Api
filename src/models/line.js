@@ -36,6 +36,7 @@ const lineSchema = new Schema(
     parent: { type: String, ref: "Line" },
     requestedMovements: Array({ providor: { type: String, ref: "Contact" }, movement: { type: String, ref: "Movement" } }),
     clientLine: { type: String, ref: "Line" },
+    expenses: Array({ type: String, ref: "Line" }),
     // item: { type: String, ref: "Item" },
     item: { type: String, ref: "Item" },
     // movement: { type: String, ref: "Movement" },

@@ -510,12 +510,23 @@ export const updateState = async (req, res, next) => {
   let sourceLines;
   switch (req.params.action) {
     case "approve":
-      sourceLines = await Line.find({ movement: req.params.id })
-        .select("id clientLine numbers quantity")
-        .exec();
-      for await (let sourceLine of sourceLines) {
-        Line.findByIdAndUpdate(sourceLine.clientLine, { "numbers.cost": sourceLine.numbers.price * sourceLine.quantity }).exec();
-      }
+      await Line.findById(req.body.clientLine)
+        .populate("expenses", "numbers")
+        .exec(async (err, line) => {
+          if (err) next(err);
+          let total = line.expenses.reduce((prev, curr) => prev + curr.numbers.price * curr.quantity, 0);
+          line.numbers.cost = total;
+          line.save();
+          // q.reduce((a,c) => a + (c.n.p * c.q), 0 )
+        });
+      // sourceLines = await Line.find({ movement: req.params.id })
+      //   .select("id clientLine numbers quantity")
+      //   .exec();
+      // for await (let sourceLine of sourceLines) {
+      //   Line.findByIdAndUpdate(sourceLine.clientLine, { "numbers.cost": sourceLine.numbers.price * sourceLine.quantity }).exec((err, line) => {
+      //     if (err) next(err);
+      //   });
+      // }
       break;
   }
   Movement.findByIdAndUpdate({ _id: req.params.id }, { state: req.body.state }).exec((err, movement) => {
@@ -618,6 +629,7 @@ export const createExpense = async (req, res, next) => {
         creator: req.user.id
       });
       let line = await newLine.save();
+      await Line.findByIdAndUpdate(sourceLine.id, { $addToSet: { expenses: line._id } }).exec();
       lines.push(line);
     }
     let movement = await newMovement.save();
@@ -666,6 +678,7 @@ export const createRequest = async (req, res, next) => {
           creator: req.user.id
         });
         let line = await newLine.save();
+        await Line.findByIdAndUpdate(sourceLine.id, { $addToSet: { expenses: line._id } }).exec();
         lines.push(line);
       }
       let movement = await newMovement.save();
