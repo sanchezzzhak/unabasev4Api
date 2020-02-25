@@ -580,7 +580,7 @@ export const createExpense = async (req, res, next) => {
     let newMovement = new Movement({
       name: `Compra de ${sourceMovement.name}`,
       client: {
-        user: req.user.id,
+        user: req.user.id || req.user._id.toString(),
         business: req.user.scope.type === "business" ? req.user.scope.id : null
       },
       creator: req.user.id,
