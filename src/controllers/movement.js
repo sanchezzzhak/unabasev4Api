@@ -511,7 +511,7 @@ export const updateState = async (req, res, next) => {
   switch (req.params.action) {
     case "approve":
       await Line.findById(req.body.clientLine)
-        .populate("expenses", "numbers")
+        .populate("expenses", "numbers quantity")
         .exec(async (err, line) => {
           if (err) next(err);
           let total = line.expenses.reduce((prev, curr) => prev + curr.numbers.price * curr.quantity, 0);
