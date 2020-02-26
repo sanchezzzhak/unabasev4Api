@@ -9,7 +9,7 @@ use(chaiHttp);
 import user from "./modules/user";
 import { createBusiness, getBusiness, getOneBusiness, updateOneBusiness, addUser } from "./business/business";
 // import { registerWith, registerWithout, login } from "./modules/auth";
-import movement from "./modules/movement";
+// import movement from "./modules/movement";
 import tax from "./modules/tax";
 import item from "./modules/item";
 import currency from "./modules/currency";
@@ -18,6 +18,7 @@ import { init } from "./init";
 
 import api_doc from "unabase_api_doc";
 import { registerWithout } from "./auth/auth";
+import movement from "./movement/movement";
 
 const api = process.env.NODE_ENV === "dev" ? "https://dev.unabase.net" : "http://localhost:3000/";
 
