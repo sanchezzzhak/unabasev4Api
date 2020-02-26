@@ -311,10 +311,20 @@ Line.updateManyMod = items => {
 Line.updateClientLine = id => {
   return new Promise((resolve, reject) => {
     Line.findById(id)
-      .populate("expenses", "numbers quantity")
+      // .populate("expenses", "numbers quantity")
+      .populate({
+        path: "expenses",
+        select: "numbers quantity movement",
+        populate: {
+          path: "movement",
+          select: "state"
+        }
+      })
       .exec(async (err, line) => {
         if (err) reject(err);
-        let total = line.expenses.reduce((prev, curr) => prev + curr.numbers.price * curr.quantity, 0);
+        let total = line.expenses.reduce((prev, curr) => {
+          return curr.movement.state === "business" ? prev + curr.numbers.price * curr.quantity : 0;
+        }, 0);
         line.numbers.cost = total;
 
         await line.save();

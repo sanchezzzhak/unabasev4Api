@@ -642,6 +642,7 @@ export const createRequest = async (req, res, next) => {
     .select("id name item")
     .exec();
   let countSuccess = true;
+  let lines = [];
   for (let provider of req.body.providers) {
     try {
       let newMovement = new Movement({
@@ -659,7 +660,6 @@ export const createRequest = async (req, res, next) => {
         state: "request",
         currency: sourceMovement.currency
       });
-      let lines = [];
       for await (let sourceLine of sourceLines) {
         let newLine = new Line({
           item: sourceLine.item,
@@ -683,5 +683,5 @@ export const createRequest = async (req, res, next) => {
     }
   }
 
-  res.send({ success: countSuccess });
+  res.send({ success: countSuccess, expenses: lines });
 };
