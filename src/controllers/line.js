@@ -382,6 +382,11 @@ export async function updateOne(req, res, next) {
             { $fields: { _id: 1, state: 1 } }
           ).lean();
         }
+        if (line.clientLine) {
+          Line.updateClientLine(line.clientLine)
+            .then()
+            .catch();
+        }
         if (parentToUpdate !== "") {
           Line.updateParentTotal(line.parent, err => {
             if (err) return next(err);

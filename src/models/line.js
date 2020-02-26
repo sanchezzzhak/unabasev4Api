@@ -307,4 +307,19 @@ Line.updateManyMod = items => {
     });
   });
 };
+
+Line.updateClientLine = id => {
+  return new Promise((resolve, reject) => {
+    Line.findById(id)
+      .populate("expenses", "numbers quantity")
+      .exec(async (err, line) => {
+        if (err) reject(err);
+        let total = line.expenses.reduce((prev, curr) => prev + curr.numbers.price * curr.quantity, 0);
+        line.numbers.cost = total;
+        await line.save();
+        resolve(line);
+        // q.reduce((a,c) => a + (c.n.p * c.q), 0 )
+      });
+  });
+};
 export default Line;

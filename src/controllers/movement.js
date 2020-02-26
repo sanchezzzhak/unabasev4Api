@@ -512,24 +512,20 @@ export const updateState = async (req, res, next) => {
   let lineUpdated;
   switch (req.params.action) {
     case "approve":
-      await Line.findById(req.body.clientLine)
-        .populate("expenses", "numbers quantity")
-        .exec(async (err, line) => {
-          if (err) next(err);
-          let total = line.expenses.reduce((prev, curr) => prev + curr.numbers.price * curr.quantity, 0);
-          line.numbers.cost = total;
-          await line.save();
-          res.send({ movement, line });
-          // q.reduce((a,c) => a + (c.n.p * c.q), 0 )
-        });
-      // sourceLines = await Line.find({ movement: req.params.id })
-      //   .select("id clientLine numbers quantity")
-      //   .exec();
-      // for await (let sourceLine of sourceLines) {
-      //   Line.findByIdAndUpdate(sourceLine.clientLine, { "numbers.cost": sourceLine.numbers.price * sourceLine.quantity }).exec((err, line) => {
+      // await Line.findById(req.body.clientLine)
+      //   .populate("expenses", "numbers quantity")
+      //   .exec(async (err, line) => {
       //     if (err) next(err);
+      //     let total = line.expenses.reduce((prev, curr) => prev + curr.numbers.price * curr.quantity, 0);
+      //     line.numbers.cost = total;
+      //     await line.save();
+      //     res.send({ movement, line });
+      //     // q.reduce((a,c) => a + (c.n.p * c.q), 0 )
       //   });
-      // }
+
+      let line = await Line.updateClientLine(req.body.clientLine);
+
+      res.send({ movement, line });
       break;
   }
 };
