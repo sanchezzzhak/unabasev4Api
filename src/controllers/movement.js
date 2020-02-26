@@ -683,5 +683,5 @@ export const createRequest = async (req, res, next) => {
     }
   }
 
-  res.send({ success: countSuccess, expenses: lines });
+  res.send({ success: countSuccess, expenses: lines.map(line => line.id) });
 };
