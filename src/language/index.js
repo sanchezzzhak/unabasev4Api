@@ -1,5 +1,6 @@
 import user from "./user";
 import item from "./item";
+import movement from "./movement";
 export default (req, res, next) => {
   const locale = req.user?.language || req.locale?.language || "es";
   // if (typeof req.user !== "undefined") {
@@ -9,6 +10,6 @@ export default (req, res, next) => {
   // } else {
   //   req.lg = languages["es"];
   // }
-  req.lg = { user, item };
+  req.lg = { user, item, movement };
   next();
 };
