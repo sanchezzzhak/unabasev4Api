@@ -316,7 +316,9 @@ Line.updateClientLine = id => {
         if (err) reject(err);
         let total = line.expenses.reduce((prev, curr) => prev + curr.numbers.price * curr.quantity, 0);
         line.numbers.cost = total;
+
         await line.save();
+        console.log(`::------------ update client line(${line.name}) cost: ${total}  ------------::::`);
         resolve(line);
         // q.reduce((a,c) => a + (c.n.p * c.q), 0 )
       });
