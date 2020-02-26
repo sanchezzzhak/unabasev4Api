@@ -363,25 +363,17 @@ export async function move(req, res, next) {
 
 // TODO must be optimized ! ! !
 export async function updateOne(req, res, next) {
-  logy("-------------start updateOne");
-  // let movementType = req.body.movementType === "income" ? "sell" : "buy";
-  // let currency = typeof req.body.currency === "object" ? req.body.currency._id : req.body.currency;
-  // let item = typeof req.body.item === "object" ? req.body.item._id : req.body.item;
-  logy("before  update parent");
   const parentToUpdate = req.body.parent || "";
-  // if (req.body.numers.price)
   Line.findOneAndUpdate(
     {
       _id: req.params.id
     },
     req.body,
     { new: true },
-    // TODO return the new documetn
     async (err, line) => {
       if (err) return next(err);
 
       if (line) {
-        // let movement = await Movement.findById(line.movement, "_id state").lean();
         let movement;
         if (req.body.numbers?.price) {
           movement = await Movement.findOneAndUpdate(
@@ -391,12 +383,6 @@ export async function updateOne(req, res, next) {
           ).lean();
         }
         if (parentToUpdate !== "") {
-          // const updateOldParent = (oldParent, callback) => {
-          //   Line.updateParentTotal(oldParent, err => {
-          //     if (err) return next(err);
-          //     callback();
-          //   });
-          // };
           Line.updateParentTotal(line.parent, err => {
             if (err) return next(err);
             line.populate(
@@ -416,7 +402,6 @@ export async function updateOne(req, res, next) {
                 if (err) return next(err);
                 if (line.parent) {
                   await Line.updateParentTotal(parentToUpdate);
-                  // updateOldParent(parentToUpdate, () => {
                   Line.getTreeTotals(line.movement.id)
                     .then(lineTree => {
                       logy("before send responde");
@@ -435,7 +420,6 @@ export async function updateOne(req, res, next) {
                     .catch(err => {
                       return next(err);
                     });
-                  // });
                 } else {
                   Line.getTreeTotals(line.movement)
                     .then(lineTree => {
@@ -479,7 +463,6 @@ export async function updateOne(req, res, next) {
               calculateTotalMovement(line.movement.id)
                 .then(movement => {
                   res.send({ line, movement });
-                  // res.send(lines);
                 })
                 .catch(err => {
                   return next(err);
