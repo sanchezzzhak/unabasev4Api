@@ -33,6 +33,17 @@ router.get(
     description: "get one movement by id",
     module
   }),
+  validateParams(
+    [
+      {
+        param_key: "id",
+        required: true,
+        type: "string",
+        validator_functions: []
+      }
+    ],
+    "params"
+  ),
   getOne
 );
 
@@ -54,6 +65,17 @@ router.get(
     description: "get the list of movements with related contact",
     module
   }),
+  validateParams(
+    [
+      {
+        param_key: "id",
+        required: true,
+        type: "string",
+        validator_functions: []
+      }
+    ],
+    "params"
+  ),
   getRelated
 );
 router.get(
@@ -63,6 +85,17 @@ router.get(
     description: "get the list of movements",
     module
   }),
+  validateParams(
+    [
+      {
+        param_key: "state",
+        required: true,
+        type: "string",
+        validator_functions: []
+      }
+    ],
+    "params"
+  ),
   getPersonal
 );
 router.get(
@@ -72,6 +105,23 @@ router.get(
     description: "get the list of movements",
     module
   }),
+  validateParams(
+    [
+      {
+        param_key: "state",
+        required: true,
+        type: "string",
+        validator_functions: []
+      },
+      {
+        param_key: "id",
+        required: true,
+        type: "string",
+        validator_functions: []
+      }
+    ],
+    "params"
+  ),
   getBusiness
 );
 // router.get(
@@ -100,6 +150,17 @@ router.get(
     description: "create movement",
     module
   }),
+  validateParams(
+    [
+      {
+        param_key: "q",
+        required: true,
+        type: "string",
+        validator_functions: []
+      }
+    ],
+    "params"
+  ),
   find
 );
 router.get(
@@ -109,6 +170,17 @@ router.get(
     description: "find movements by item",
     module
   }),
+  validateParams(
+    [
+      {
+        param_key: "id",
+        required: true,
+        type: "string",
+        validator_functions: []
+      }
+    ],
+    "params"
+  ),
   byItem
 );
 
@@ -120,29 +192,169 @@ router.post(
     description: "create movement",
     module
   }),
-  validateParams([
-    {
-      param_key: "name",
-      required: true,
-      type: "string",
-      validator_functions: []
-    },
-    {
-      param_key: "state",
-      enum: ["request", "opportunity"],
-      required: true,
-      type: "string",
-      validator_functions: []
-    }
-  ]),
+  validateParams(
+    [
+      {
+        param_key: "name",
+        required: true,
+        type: "string",
+        validator_functions: []
+      },
+      {
+        param_key: "state",
+        enum: ["request", "opportunity"],
+        required: true,
+        type: "string",
+        validator_functions: []
+      }
+    ],
+    "body"
+  ),
   create
 );
-router.put("/:id", updateOne);
-router.post("/expense", createExpense);
-router.post("/request", createRequest);
+router.put(
+  "/:id",
+  validateParams(
+    [
+      {
+        param_key: "id",
+        required: true,
+        type: "string",
+        validator_functions: []
+      }
+    ],
+    "params"
+  ),
+  validateParams(
+    [
+      {
+        param_key: "name",
+        required: false,
+        type: "string",
+        validator_functions: []
+      }
+    ],
+    "body"
+  ),
+  updateOne
+);
+router.post(
+  "/expense",
 
-router.get("/line/client/:id", getByClientLine);
-router.put("/null/many", nullMany);
-router.put("/:id/:action", updateState);
+  validateParams(
+    [
+      {
+        param_key: "movement",
+        required: true,
+        type: "string",
+        validator_functions: []
+      },
+      {
+        param_key: "lines",
+        required: true,
+        type: "array",
+        validator_functions: []
+      }
+    ],
+    "body"
+  ),
+  createExpense
+);
+router.post(
+  "/request",
+  validateParams(
+    [
+      {
+        param_key: "movement",
+        required: true,
+        type: "string",
+        validator_functions: []
+      },
+      {
+        param_key: "lines",
+        required: true,
+        type: "array",
+        validator_functions: []
+      },
+      {
+        param_key: "providers",
+        required: true,
+        type: "array",
+        validator_functions: []
+      }
+    ],
+    "body"
+  ),
+  createRequest
+);
+
+router.get(
+  "/line/client/:id",
+  validateParams(
+    [
+      {
+        param_key: "id",
+        required: true,
+        type: "string",
+        validator_functions: []
+      }
+    ],
+    "params"
+  ),
+  getByClientLine
+);
+router.put(
+  "/null/many",
+  validateParams(
+    [
+      {
+        param_key: "movements",
+        required: true,
+        type: "array",
+        validator_functions: []
+      }
+    ],
+    "body"
+  ),
+  nullMany
+);
+router.put(
+  "/:id/:action",
+  validateParams(
+    [
+      {
+        param_key: "state",
+        required: true,
+        type: "string",
+        validator_functions: []
+      },
+      {
+        param_key: "clientLine",
+        required: true,
+        type: "string",
+        validator_functions: []
+      }
+    ],
+    "body"
+  ),
+  validateParams(
+    [
+      {
+        param_key: "id",
+        required: true,
+        type: "string",
+        validator_functions: []
+      },
+      {
+        param_key: "action",
+        required: true,
+        type: "string",
+        validator_functions: []
+      }
+    ],
+    "params"
+  ),
+  updateState
+);
 
 export default router;

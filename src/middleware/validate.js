@@ -1,8 +1,8 @@
-const validateParams = function(requestParams) {
+const validateParams = function(requestParams, toValidate) {
   return function(req, res, next) {
     for (let param of requestParams) {
-      if (checkParamPresent(Object.keys(req.body), param)) {
-        let reqParam = req.body[param.param_key];
+      if (checkParamPresent(Object.keys(req[toValidate]), param)) {
+        let reqParam = req[toValidate][param.param_key];
         if (!checkParamType(reqParam, param)) {
           return res.send(400, {
             status: 400,
