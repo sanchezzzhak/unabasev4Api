@@ -13,7 +13,7 @@ export const create = (req, res) => {
         if (err) {
           res.status(500).send({ msg: err });
         } else {
-          let comments = await Comments.find({ "from.id": comment.from.id, value: { $exists: 1 } }).exec();
+          let comments = await Comment.find({ "from.id": comment.from.id, value: { $exists: 1 } }).exec();
           const arraySum = array => array.reduce((a, b) => a + b, 0);
           let values = comments.map(comment => comment.value);
           let successPercentage = Math.round(arraySum(values) / (values.length / 100));
