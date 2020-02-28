@@ -147,7 +147,7 @@ export function checkParent(req, res, next) {
           cost: 0,
           budget: 0
         },
-        quantity: 0
+        quantity: 1
       },
       (err, parent) => {
         if (err) {
