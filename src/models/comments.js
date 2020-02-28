@@ -5,16 +5,16 @@ import { updateSuccessPercentage } from "../middleware/movement";
 
 const commentSchema = new Schema(
   {
-    creator: { type: Schema.Types.ObjectId, ref: "User" },
+    creator: { type: String, ref: "User" },
     from: {
-      id: { type: Schema.Types.ObjectId, refPath: "from.name" },
+      id: { type: String, refPath: "from.name" },
       name: { type: String }
     },
     schedule: { type: Date },
     isPrivate: { type: Boolean },
     text: { type: String, maxlength: 2000 },
-    parent: { type: Schema.Types.ObjectId, ref: "Comment" },
-    users: Array({ type: Schema.Types.ObjectId, ref: "User" }),
+    parent: { type: String, ref: "Comment" },
+    users: Array({ type: String, ref: "User" }),
     value: { type: Number, enum: [1, 0, -1] },
     type: { type: String, enum: ["call", "meeting", "email", "task", "schedule"] }
   },
