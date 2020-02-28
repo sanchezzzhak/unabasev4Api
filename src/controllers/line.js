@@ -489,13 +489,9 @@ export async function updateOne(req, res, next) {
 
   if (line) {
     // update the movement state if it is an opportunity or a request and we update the line price
-    let movement;
+
     if (req.body.numbers?.price) {
-      movement = await Movement.findOneAndUpdate(
-        { _id: line.movement, state: { $nin: ["business", "budget"] } },
-        { $set: { state: "budget" } },
-        { $fields: { _id: 1, state: 1 } }
-      ).lean();
+      await Movement.findOneAndUpdate({ _id: line.movement, state: { $nin: ["business", "budget"] } }, { $set: { state: "budget" } }).exec();
     }
     // update the cost to the clientLine
     if (line.clientLine) {
@@ -503,7 +499,6 @@ export async function updateOne(req, res, next) {
         .then()
         .catch();
     }
-    // if (parentToUpdate !== "") {
     await Line.updateParentTotal(line.parent);
     line.populate(
       [
@@ -521,52 +516,17 @@ export async function updateOne(req, res, next) {
       async err => {
         if (err) return next(err);
         if (line.parent) await Line.updateParentTotal(parentToUpdate);
-        Line.getTreeTotals(line.movement)
-          .then(lineTree => {
-            logy("before send responde");
-            calculateTotalMovement(req.body.movement)
-              .then(movement => {
-                res.send({
-                  line,
-                  lineTree,
-                  movement
-                });
-              })
-              .catch(err => {
-                return next(err);
-              });
-          })
-          .catch(err => {
-            return next(err);
-          });
+        let lineTree = await Line.getTreeTotals(line.movement);
+
+        logy("before send responde");
+        let movement = await calculateTotalMovement(req.body.movement);
+        res.send({
+          line,
+          lineTree,
+          movement
+        });
       }
     );
-    // } else {
-    //   line.populate(
-    //     [
-    //       {
-    //         path: "item"
-    //       },
-    //       {
-    //         path: "movement",
-    //         select: "_id state id"
-    //       },
-    //       { path: "providers.user", select: "name emails idNumber" },
-    //       { path: "providers.contact", select: "name emails idNumber" },
-    //       { path: "providers.business", select: "name emails idNumber" }
-    //     ],
-    //     err => {
-    //       if (err) return next(err);
-    //       calculateTotalMovement(line.movement.id)
-    //         .then(movement => {
-    //           res.send({ line, movement });
-    //         })
-    //         .catch(err => {
-    //           return next(err);
-    //         });
-    //     }
-    //   );
-    // }
   } else {
     return next(createError(404, req.lg.line.notFound));
   }
