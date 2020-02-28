@@ -583,7 +583,7 @@ export const requestBudget = async (req, res, next) => {
       .lean()
   ]);
   let movement = new Movement({
-    name: `Solicitud de ${req.user.name} / ${originMovement.name}`,
+    name: `${req.user.name} / ${originMovement.name}`,
     creator: req.user._id,
     currency: originMovement.currency,
     "client.user": req.user._id,
