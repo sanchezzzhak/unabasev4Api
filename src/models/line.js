@@ -160,8 +160,8 @@ Line.updateParentTotal = parentId => {
       //   priceSum += line.numbers.price * line.quantity;
       //   budgetSum += line.numbers.budget * line.quantity;
       // }
-      priceSum = lines.reduce((prev, curr) => prev + curr.numbers.price * curr.numbers.quantity, 0);
-      budgetSum = lines.reduce((prev, curr) => prev + curr.numbers.budget * curr.numbers.quantity, 0);
+      priceSum = lines.reduce((prev, curr) => prev + curr.numbers.price * curr.quantity, 0);
+      budgetSum = lines.reduce((prev, curr) => prev + curr.numbers.budget * curr.quantity, 0);
       costSum = lines.reduce((prev, curr) => prev + curr.numbers.cost, 0);
       Line.findByIdAndUpdate(
         parentId,
@@ -175,12 +175,10 @@ Line.updateParentTotal = parentId => {
         },
         async (err, parent) => {
           if (err) reject(err);
-          if (parent?.parent) {
-            await Line.updateParentTotal(parent.parent);
-          } else {
-            logy("End of updatePArentTotal/////////////////////////");
-            resolve(parent);
-          }
+          if (parent?.parent) await Line.updateParentTotal(parent.parent);
+
+          logy("End of updatePArentTotal/////////////////////////");
+          resolve(parent);
         }
       );
     });

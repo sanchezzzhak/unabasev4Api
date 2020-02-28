@@ -484,7 +484,7 @@ export async function move(req, res, next) {
 // }
 
 export async function updateOne(req, res, next) {
-  const parentToUpdate = req.body.parent || "";
+  const parentToUpdate = req.body.parent;
   let line = await Line.findOneAndUpdate({ _id: req.params.id }, req.body).exec();
 
   if (line) {
@@ -515,11 +515,11 @@ export async function updateOne(req, res, next) {
       ],
       async err => {
         if (err) return next(err);
-        if (line.parent) await Line.updateParentTotal(parentToUpdate);
-        let lineTree = await Line.getTreeTotals(line.movement);
+        if (req.body.parent) await Line.updateParentTotal(parentToUpdate);
+        let lineTree = await Line.getTreeTotals(line.movement.id);
 
         logy("before send responde");
-        let movement = await calculateTotalMovement(req.body.movement);
+        let movement = await calculateTotalMovement(line.movement.id);
         res.send({
           line,
           lineTree,
