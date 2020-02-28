@@ -42,7 +42,7 @@ const checkParamPresent = function(reqParams, paramObj) {
 };
 
 const checkParamType = function(reqParam, paramObj) {
-  const reqParamType = typeof reqParam;
+  const reqParamType = Array.isArray(reqParam) ? "array" : typeof reqParam;
   return reqParamType === paramObj.type;
 };
 
