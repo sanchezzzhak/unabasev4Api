@@ -20,6 +20,7 @@ import {
 import { sToken } from "../config/lib/auth";
 import logger from "../lib/logger";
 import { checkPermission } from "../middleware/permission";
+import { validateParams } from "../middleware/validate";
 let module = "movement";
 // if (process.env.NODE_ENV !== 'test') {
 
@@ -119,6 +120,21 @@ router.post(
     description: "create movement",
     module
   }),
+  validateParams([
+    {
+      param_key: "name",
+      required: true,
+      type: "string",
+      validator_functions: []
+    },
+    {
+      param_key: "state",
+      enum: ["request", "opportunity"],
+      required: true,
+      type: "string",
+      validator_functions: []
+    }
+  ]),
   create
 );
 router.put("/:id", updateOne);
