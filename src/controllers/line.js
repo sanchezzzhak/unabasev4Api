@@ -485,7 +485,7 @@ export async function move(req, res, next) {
 
 export async function updateOne(req, res, next) {
   const parentToUpdate = req.body.parent;
-  let line = await Line.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }).exec();
+  let line = await Line.findOneAndUpdate({ _id: req.params.id }, req.body).exec();
 
   if (line) {
     // update the movement state if it is an opportunity or a request and we update the line price
