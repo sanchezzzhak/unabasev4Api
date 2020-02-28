@@ -362,124 +362,130 @@ export async function move(req, res, next) {
 }
 
 // TODO must be optimized ! ! !
+
+// export async function updateOne(req, res, next) {
+//   const parentToUpdate = req.body.parent || "";
+//   Line.findOneAndUpdate(
+//     {
+//       _id: req.params.id
+//     },
+//     req.body,
+//     { new: true },
+//     async (err, line) => {
+//       if (err) return next(err);
+
+//       if (line) {
+//         let movement;
+//         if (req.body.numbers?.price) {
+//           movement = await Movement.findOneAndUpdate(
+//             { _id: line.movement, state: { $nin: ["business", "budget"] } },
+//             { $set: { state: "budget" } },
+//             { $fields: { _id: 1, state: 1 } }
+//           ).lean();
+//         }
+//         if (line.clientLine) {
+//           Line.updateClientLine(line.clientLine)
+//             .then()
+//             .catch();
+//         }
+//         if (parentToUpdate !== "") {
+//           Line.updateParentTotal(line.parent, err => {
+//             if (err) return next(err);
+//             line.populate(
+//               [
+//                 {
+//                   path: "item"
+//                 },
+//                 {
+//                   path: "movement",
+//                   select: "_id state"
+//                 },
+//                 { path: "providers.user", select: "name emails idNumber" },
+//                 { path: "providers.contact", select: "name emails idNumber" },
+//                 { path: "providers.business", select: "name emails idNumber" }
+//               ],
+//               async err => {
+//                 if (err) return next(err);
+//                 if (line.parent) {
+//                   await Line.updateParentTotal(parentToUpdate);
+//                   Line.getTreeTotals(line.movement.id)
+//                     .then(lineTree => {
+//                       logy("before send responde");
+//                       calculateTotalMovement(req.body.movement)
+//                         .then(movement => {
+//                           res.send({
+//                             line,
+//                             lineTree,
+//                             movement
+//                           });
+//                         })
+//                         .catch(err => {
+//                           return next(err);
+//                         });
+//                     })
+//                     .catch(err => {
+//                       return next(err);
+//                     });
+//                 } else {
+//                   Line.getTreeTotals(line.movement)
+//                     .then(lineTree => {
+//                       logy("before send responde");
+
+//                       calculateTotalMovement(req.body.movement)
+//                         .then(movement => {
+//                           res.send({
+//                             line,
+//                             lineTree,
+//                             movement
+//                           });
+//                         })
+//                         .catch(err => {
+//                           return next(err);
+//                         });
+//                     })
+//                     .catch(err => {
+//                       return next(err);
+//                     });
+//                 }
+//               }
+//             );
+//           });
+//         } else {
+//           line.populate(
+//             [
+//               {
+//                 path: "item"
+//               },
+//               {
+//                 path: "movement",
+//                 select: "_id state id"
+//               },
+//               { path: "providers.user", select: "name emails idNumber" },
+//               { path: "providers.contact", select: "name emails idNumber" },
+//               { path: "providers.business", select: "name emails idNumber" }
+//             ],
+//             err => {
+//               if (err) return next(err);
+//               calculateTotalMovement(line.movement.id)
+//                 .then(movement => {
+//                   res.send({ line, movement });
+//                 })
+//                 .catch(err => {
+//                   return next(err);
+//                 });
+//             }
+//           );
+//         }
+//       } else {
+//         return next(createError(404, req.lg.line.notFound));
+//       }
+//     }
+//   );
+// }
+
 export async function updateOne(req, res, next) {
   const parentToUpdate = req.body.parent || "";
-  Line.findOneAndUpdate(
-    {
-      _id: req.params.id
-    },
-    req.body,
-    { new: true },
-    async (err, line) => {
-      if (err) return next(err);
-
-      if (line) {
-        let movement;
-        if (req.body.numbers?.price) {
-          movement = await Movement.findOneAndUpdate(
-            { _id: line.movement, state: { $nin: ["business", "budget"] } },
-            { $set: { state: "budget" } },
-            { $fields: { _id: 1, state: 1 } }
-          ).lean();
-        }
-        if (line.clientLine) {
-          Line.updateClientLine(line.clientLine)
-            .then()
-            .catch();
-        }
-        if (parentToUpdate !== "") {
-          Line.updateParentTotal(line.parent, err => {
-            if (err) return next(err);
-            line.populate(
-              [
-                {
-                  path: "item"
-                },
-                {
-                  path: "movement",
-                  select: "_id state"
-                },
-                { path: "providers.user", select: "name emails idNumber" },
-                { path: "providers.contact", select: "name emails idNumber" },
-                { path: "providers.business", select: "name emails idNumber" }
-              ],
-              async err => {
-                if (err) return next(err);
-                if (line.parent) {
-                  await Line.updateParentTotal(parentToUpdate);
-                  Line.getTreeTotals(line.movement.id)
-                    .then(lineTree => {
-                      logy("before send responde");
-                      calculateTotalMovement(req.body.movement)
-                        .then(movement => {
-                          res.send({
-                            line,
-                            lineTree,
-                            movement
-                          });
-                        })
-                        .catch(err => {
-                          return next(err);
-                        });
-                    })
-                    .catch(err => {
-                      return next(err);
-                    });
-                } else {
-                  Line.getTreeTotals(line.movement)
-                    .then(lineTree => {
-                      logy("before send responde");
-
-                      calculateTotalMovement(req.body.movement)
-                        .then(movement => {
-                          res.send({
-                            line,
-                            lineTree,
-                            movement
-                          });
-                        })
-                        .catch(err => {
-                          return next(err);
-                        });
-                    })
-                    .catch(err => {
-                      return next(err);
-                    });
-                }
-              }
-            );
-          });
-        } else {
-          line.populate(
-            [
-              {
-                path: "item"
-              },
-              {
-                path: "movement",
-                select: "_id state id"
-              },
-              { path: "providers.user", select: "name emails idNumber" },
-              { path: "providers.contact", select: "name emails idNumber" },
-              { path: "providers.business", select: "name emails idNumber" }
-            ],
-            err => {
-              if (err) return next(err);
-              calculateTotalMovement(line.movement.id)
-                .then(movement => {
-                  res.send({ line, movement });
-                })
-                .catch(err => {
-                  return next(err);
-                });
-            }
-          );
-        }
-      } else {
-        return next(createError(404, req.lg.line.notFound));
-      }
-    }
-  );
+  let line = await Line.findOneAndUpdate({ _id: req.params.id }, req.body).exec();
 }
 
 export function deleteOne(req, res, next) {
