@@ -175,7 +175,7 @@ Line.updateParentTotal = parentId => {
         },
         async (err, parent) => {
           if (err) reject(err);
-          if (parent.parent) {
+          if (parent?.parent) {
             await Line.updateParentTotal(parent.parent);
           } else {
             logy("End of updatePArentTotal/////////////////////////");
