@@ -149,46 +149,42 @@ lineSchema.post("findOneAndUpdate", async function(doc, next) {
 
 const Line = mongoose.model("Line", lineSchema);
 
-Line.updateParentTotal = (parentId, callback) => {
-  Line.find(
-    {
-      parent: parentId
-    },
-    (err, lines) => {
-      if (err) {
-        callback(err);
-      } else {
-        let priceSum = 0;
-        let budgetSum = 0;
-        for (let line of lines) {
-          priceSum += line.numbers.price * line.quantity;
-          budgetSum += line.numbers.budget * line.quantity;
-        }
-        Line.findByIdAndUpdate(
-          parentId.toString(),
-          {
-            "numbers.price": priceSum,
-            "numbers.budget": budgetSum
-          },
-          {
-            new: true
-          },
-          (err, parent) => {
-            if (err) {
-              callback(err);
-            } else {
-              if (parent.parent) {
-                Line.updateParentTotal(parent.parent, callback);
-              } else {
-                logy("End of updatePArentTotal/////////////////////////");
-                if (callback) callback(null, parent);
-              }
-            }
+Line.updateParentTotal = parentId => {
+  return new Promise((resolve, reject) => {
+    Line.find({ parent: parentId }, (err, lines) => {
+      if (err) reject(err);
+      let priceSum = 0;
+      let budgetSum = 0;
+      let costSum = 0;
+      // for (let line of lines) {
+      //   priceSum += line.numbers.price * line.quantity;
+      //   budgetSum += line.numbers.budget * line.quantity;
+      // }
+      priceSum = lines.reduce((prev, curr) => prev + curr.numbers.price * curr.numbers.quantity, 0);
+      budgetSum = lines.reduce((prev, curr) => prev + curr.numbers.budget * curr.numbers.quantity, 0);
+      costSum = lines.reduce((prev, curr) => prev + curr.numbers.cost, 0);
+      Line.findByIdAndUpdate(
+        parentId,
+        {
+          "numbers.price": priceSum,
+          "numbers.budget": budgetSum,
+          "numbers.cost": costSum
+        },
+        {
+          new: true
+        },
+        async (err, parent) => {
+          if (err) reject(err);
+          if (parent.parent) {
+            await Line.updateParentTotal(parent.parent);
+          } else {
+            logy("End of updatePArentTotal/////////////////////////");
+            resolve(parent);
           }
-        );
-      }
-    }
-  );
+        }
+      );
+    });
+  });
 };
 
 Line.addParent = (children, parentId) => {
