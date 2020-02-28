@@ -61,7 +61,7 @@ export const google = (req, res, next) => {
                 // TODO verify link with user after modify the model of client.data to client.user
                 // linkMovement(user.emails.google, user);
                 user.activeScope = user._id;
-                user.save((err, userFound) => {
+                user.save(async (err, userFound) => {
                   if (err) next(err);
                   // const token = jwt.sign(
                   //   {
@@ -72,6 +72,12 @@ export const google = (req, res, next) => {
                   //     expiresIn: "3d"
                   //   }
                   // );
+                  await user.populate([
+                    {
+                      path: "scope.id",
+                      select: "name"
+                    }
+                  ]);
                   req.user = userFound;
                   req.user.id = req.user._id.toString() || null;
                   res.send({
@@ -140,7 +146,7 @@ export const password = (req, res, next) => {
           if (user.activeScope == "" || !user.activeScope || user.activeScope == null) {
             user.activeScope = user._id;
           }
-          user.save((err, user) => {
+          user.save(async (err, user) => {
             // const token = jwt.sign(
             //   {
             //     user
@@ -150,6 +156,12 @@ export const password = (req, res, next) => {
             //     expiresIn: "3d"
             //   }
             // );
+            await user.populate([
+              {
+                path: "scope.id",
+                select: "name"
+              }
+            ]);
             req.user = user;
             req.user.id = req.user._id.toString() || null;
             res.statusMessage = req.lg.user.successLogin;
@@ -212,6 +224,12 @@ export const login = (req, res, next) => {
         //     expiresIn: "3d"
         //   }
         // );
+        await user.populate([
+          {
+            path: "scope.id",
+            select: "name"
+          }
+        ]);
         req.user = user;
         req.user.id = req.user._id.toString() || null;
         res.statusMessage = req.lg.user.successLogin;
@@ -243,7 +261,7 @@ export const verify = (req, res, next) => {
         user.isActive = true;
         res.statusMessage = req.lg.user.verified;
 
-        user.save((err, user) => {
+        user.save(async (err, user) => {
           // const token = jwt.sign(
           //   {
           //     user
@@ -253,6 +271,12 @@ export const verify = (req, res, next) => {
           //     expiresIn: "3d"
           //   }
           // );
+          await user.populate([
+            {
+              path: "scope.id",
+              select: "name"
+            }
+          ]);
           req.user = user;
           req.user.id = req.user._id.toString() || null;
           res.json({
@@ -352,7 +376,7 @@ export const register = (req, res, next) => {
       });
 
       // save the user
-      newUser.save(function(err, user) {
+      newUser.save(async function(err, user) {
         if (err) throw err;
 
         // const token = jwt.sign(
@@ -389,6 +413,12 @@ export const register = (req, res, next) => {
         //     .then(res => logy(res))
         //     .catch(err => console.warn(err));
         // }
+        await user.populate([
+          {
+            path: "scope.id",
+            select: "name"
+          }
+        ]);
         req.user = user;
         req.user.id = req.user._id.toString() || null;
         res.json({

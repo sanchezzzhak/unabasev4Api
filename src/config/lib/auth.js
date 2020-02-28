@@ -61,19 +61,21 @@ export const sToken = (req, res, next) => {
         ]
       };
     }
-    User.findOne(query).exec((err, user) => {
-      if (err) {
-        logy("err find");
-        logy(err);
-      } else if (user) {
-        req.user = user;
-        next();
-      } else {
-        res.status(403).send({
-          msg: "Not user found for auth"
-        });
-      }
-    });
+    User.findOne(query)
+      .populate("scope.id", "name")
+      .exec((err, user) => {
+        if (err) {
+          logy("err find");
+          logy(err);
+        } else if (user) {
+          req.user = user;
+          next();
+        } else {
+          res.status(403).send({
+            msg: "Not user found for auth"
+          });
+        }
+      });
   } else {
     res.status(403).send({
       msg: "Not authorized2"
