@@ -501,7 +501,7 @@ export async function updateOne(req, res, next) {
     }
     // update oldParent
     await Line.updateParentTotal(line.parent);
-    line = Line.findById(line.id)
+    line = await Line.findById(line.id)
       .populate([
         {
           path: "item"
