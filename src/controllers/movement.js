@@ -644,8 +644,9 @@ export const createRequest = async (req, res, next) => {
   let lines = [];
   for (let provider of req.body.providers) {
     try {
+      let client = req.user.scope.type === "personal" ? req.user.name : req.user.scope.id.name;
       let newMovement = new Movement({
-        name: `Compra de ${sourceMovement.name}`,
+        name: `${sourceMovement.name} / ${client}`,
         client: {
           user: req.user.id || req.user._id.toString(),
           business: req.user.scope.type === "business" ? req.user.scope.id : null
