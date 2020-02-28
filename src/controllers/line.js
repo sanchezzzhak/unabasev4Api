@@ -508,13 +508,13 @@ export async function updateOne(req, res, next) {
         },
         {
           path: "movement",
-          select: "_id state"
+          select: "_id state id"
         },
         { path: "providers.user", select: "name emails idNumber" },
         { path: "providers.contact", select: "name emails idNumber" },
         { path: "providers.business", select: "name emails idNumber" }
       ])
-      .lean();
+      .exec();
     //update new parent
     if (line.parent) await Line.updateParentTotal(parentToUpdate);
     let lineTree = await Line.getTreeTotals(line.movement.id);
