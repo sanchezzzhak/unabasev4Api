@@ -8,7 +8,7 @@ export function updateSuccessPercentage(comment) {
   const from = comment.from;
   if (from.name === "movement") {
     logy(`update success % of movement ${from.name} // ${from.id}`);
-    Comments.find({ "from.id": ObjectId(`${from.id}`), value: { $exists: 1 } }, (err, comments) => {
+    Comments.find({ "from.id": from.id, value: { $exists: 1 } }, (err, comments) => {
       if (err) {
         logy(err);
       } else {
