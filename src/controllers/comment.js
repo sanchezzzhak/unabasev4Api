@@ -18,7 +18,7 @@ export const create = (req, res) => {
           let values = comments.map(comment => comment.value);
           let successPercentage = Math.round(arraySum(values) / (values.length / 100));
           successPercentage = successPercentage >= 0 ? successPercentage : 0;
-          let movement = await Movement.findByIdAndUpdate(comment.from.id, { successPercentage }, { select: "successPercentage" }).exec();
+          let movement = await Movement.findByIdAndUpdate(comment.from.id, { successPercentage }, { select: "successPercentage", new: true }).exec();
           res.send({ comment, movement });
         }
       });
