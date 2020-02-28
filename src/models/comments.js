@@ -38,7 +38,7 @@ commentSchema.pre("update", function(doc, next) {
 
 commentSchema.post("save", function(doc, next) {
   logy("commentSchema post has been saved++++++++++++++++++++++++");
-  updateSuccessPercentage(doc);
+  // updateSuccessPercentage(doc);
 
   next();
 });
