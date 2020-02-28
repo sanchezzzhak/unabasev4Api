@@ -485,7 +485,7 @@ export async function move(req, res, next) {
 
 export async function updateOne(req, res, next) {
   const parentToUpdate = req.body.parent;
-  let line = await Line.findOneAndUpdate({ _id: req.params.id }, req.body).exec();
+  let line = await Line.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }).exec();
 
   if (line) {
     // update the movement state if it is an opportunity or a request and we update the line price
@@ -499,9 +499,10 @@ export async function updateOne(req, res, next) {
         .then()
         .catch();
     }
+    // update oldParent
     await Line.updateParentTotal(line.parent);
-    line.populate(
-      [
+    line = Line.findById(line.id)
+      .populate([
         {
           path: "item"
         },
@@ -512,21 +513,46 @@ export async function updateOne(req, res, next) {
         { path: "providers.user", select: "name emails idNumber" },
         { path: "providers.contact", select: "name emails idNumber" },
         { path: "providers.business", select: "name emails idNumber" }
-      ],
-      async err => {
-        if (err) return next(err);
-        if (req.body.parent) await Line.updateParentTotal(parentToUpdate);
-        let lineTree = await Line.getTreeTotals(line.movement.id);
+      ])
+      .lean();
+    //update new parent
+    if (line.parent) await Line.updateParentTotal(parentToUpdate);
+    let lineTree = await Line.getTreeTotals(line.movement.id);
 
-        logy("before send responde");
-        let movement = await calculateTotalMovement(line.movement.id);
-        res.send({
-          line,
-          lineTree,
-          movement
-        });
-      }
-    );
+    logy("before send responde");
+    let movement = await calculateTotalMovement(line.movement.id);
+    res.send({
+      line,
+      lineTree,
+      movement
+    });
+    // line.populate(
+    //   [
+    //     {
+    //       path: "item"
+    //     },
+    //     {
+    //       path: "movement",
+    //       select: "_id state"
+    //     },
+    //     { path: "providers.user", select: "name emails idNumber" },
+    //     { path: "providers.contact", select: "name emails idNumber" },
+    //     { path: "providers.business", select: "name emails idNumber" }
+    //   ],
+    //   async err => {
+    //     if (err) return next(err);
+    //     if (req.body.parent) await Line.updateParentTotal(parentToUpdate);
+    //     let lineTree = await Line.getTreeTotals(line.movement.id);
+
+    //     logy("before send responde");
+    //     let movement = await calculateTotalMovement(line.movement.id);
+    //     res.send({
+    //       line,
+    //       lineTree,
+    //       movement
+    //     });
+    //   }
+    // );
   } else {
     return next(createError(404, req.lg.line.notFound));
   }
