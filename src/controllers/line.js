@@ -486,6 +486,90 @@ export async function move(req, res, next) {
 export async function updateOne(req, res, next) {
   const parentToUpdate = req.body.parent || "";
   let line = await Line.findOneAndUpdate({ _id: req.params.id }, req.body).exec();
+
+  if (line) {
+    // update the movement state if it is an opportunity or a request and we update the line price
+    let movement;
+    if (req.body.numbers?.price) {
+      movement = await Movement.findOneAndUpdate(
+        { _id: line.movement, state: { $nin: ["business", "budget"] } },
+        { $set: { state: "budget" } },
+        { $fields: { _id: 1, state: 1 } }
+      ).lean();
+    }
+    // update the cost to the clientLine
+    if (line.clientLine) {
+      Line.updateClientLine(line.clientLine)
+        .then()
+        .catch();
+    }
+    // if (parentToUpdate !== "") {
+    await Line.updateParentTotal(line.parent);
+    line.populate(
+      [
+        {
+          path: "item"
+        },
+        {
+          path: "movement",
+          select: "_id state"
+        },
+        { path: "providers.user", select: "name emails idNumber" },
+        { path: "providers.contact", select: "name emails idNumber" },
+        { path: "providers.business", select: "name emails idNumber" }
+      ],
+      async err => {
+        if (err) return next(err);
+        if (line.parent) await Line.updateParentTotal(parentToUpdate);
+        Line.getTreeTotals(line.movement)
+          .then(lineTree => {
+            logy("before send responde");
+            calculateTotalMovement(req.body.movement)
+              .then(movement => {
+                res.send({
+                  line,
+                  lineTree,
+                  movement
+                });
+              })
+              .catch(err => {
+                return next(err);
+              });
+          })
+          .catch(err => {
+            return next(err);
+          });
+      }
+    );
+    // } else {
+    //   line.populate(
+    //     [
+    //       {
+    //         path: "item"
+    //       },
+    //       {
+    //         path: "movement",
+    //         select: "_id state id"
+    //       },
+    //       { path: "providers.user", select: "name emails idNumber" },
+    //       { path: "providers.contact", select: "name emails idNumber" },
+    //       { path: "providers.business", select: "name emails idNumber" }
+    //     ],
+    //     err => {
+    //       if (err) return next(err);
+    //       calculateTotalMovement(line.movement.id)
+    //         .then(movement => {
+    //           res.send({ line, movement });
+    //         })
+    //         .catch(err => {
+    //           return next(err);
+    //         });
+    //     }
+    //   );
+    // }
+  } else {
+    return next(createError(404, req.lg.line.notFound));
+  }
 }
 
 export function deleteOne(req, res, next) {
