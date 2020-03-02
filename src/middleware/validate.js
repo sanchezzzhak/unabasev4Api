@@ -9,7 +9,7 @@ const validateParams = function(requestParams, toValidate) {
             result: `${param.param_key} is of type ` + `${typeof reqParam} but should be ${param.type}`
           });
         } else {
-          if (!runValidators(reqParam, param)) {
+          if (!runValidators(reqParam, param.validator_functions)) {
             return res.send(400, {
               status: 400,
               result: `Validation failed for ${param.param_key}`
@@ -46,8 +46,8 @@ const checkParamType = function(reqParam, paramObj) {
   return reqParamType === paramObj.type;
 };
 
-const runValidators = function(reqParam, paramObj) {
-  for (let validator of paramObj.validator_functions) {
+const runValidators = function(reqParam, validator_functions = []) {
+  for (let validator of validator_functions) {
     if (!validator(reqParam)) {
       return false;
     }
@@ -56,5 +56,5 @@ const runValidators = function(reqParam, paramObj) {
 };
 
 module.exports = {
-  validateParams: validateParams
+  validateParams
 };
