@@ -31,7 +31,17 @@ export const getOne = (req, res, next) => {
 };
 export const find = (req, res, next) => {
   let query = {
-    name: { $regex: req.params.q, $options: "i" }
+    $or: [
+      {
+        name: { $regex: req.params.q, $options: "i" }
+      },
+      {
+        prefix: { $regex: req.params.q, $options: "i" }
+      },
+      {
+        countryOrigin: { $regex: req.params.q, $options: "i" }
+      }
+    ]
   };
   Currency.paginate(query, {}, (err, items) => {
     if (err) next(err);
