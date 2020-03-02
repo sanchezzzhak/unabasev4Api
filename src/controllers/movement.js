@@ -658,7 +658,7 @@ export const createRequest = async (req, res, next) => {
         name: `${sourceMovement.name} / ${client}`,
         client: {
           user: req.user.id || req.user._id.toString(),
-          business: req.user.scope.type === "business" ? req.user.scope.id : null
+          business: req.user.scope.type === "business" ? req.user.scope.id.id : null
         },
         responsable: {
           user: provider.user,
