@@ -4,7 +4,7 @@ import mongoosePaginate from "mongoose-paginate-v2";
 import paginateConfig from "../config/paginate";
 const roleSchema = Schema({
   name: { type: String, required: true },
-  permissions: Array({ type: Schema.Types.ObjectId, ref: "Permission" })
+  permissions: Array({ type: String, ref: "Permission" })
 });
 roleSchema.plugin(mongoosePaginate);
 
