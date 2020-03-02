@@ -16,19 +16,186 @@ users.use(sToken);
 }
 
 */
-users.put("/password", password);
+users.put(
+  "/password",
+  validateParams(
+    [
+      {
+        param_key: "password",
+        required: true,
+        type: "string"
+      },
+      {
+        param_key: "newPassword",
+        required: false,
+        type: "string"
+      }
+    ],
+    "body"
+  ),
+  password
+);
 
 users.get("/", get);
 users.get("/lastItems", lastItems);
 users.get("/lastParents", lastParents);
 users.get("/logout", logout);
-users.get("/find/:q", find);
-users.get("/relations/:q", relationsFind);
-users.get("/:id", getOne);
-users.post("/restart/:q", restart);
-users.put("/business/:id", business);
-users.put("/user/:id", user);
-users.put("/scope/:id", scope);
-users.put("/:id", update);
+users.get(
+  "/find/:q",
+  validateParams(
+    [
+      {
+        param_key: "q",
+        required: true,
+        type: "string"
+      }
+    ],
+    "params"
+  ),
+  find
+);
+users.get(
+  "/relations/:q",
+  validateParams(
+    [
+      {
+        param_key: "q",
+        required: true,
+        type: "string"
+      }
+    ],
+    "params"
+  ),
+  relationsFind
+);
+users.get(
+  "/:id",
+  validateParams(
+    [
+      {
+        param_key: "id",
+        required: true,
+        type: "string"
+      }
+    ],
+    "params"
+  ),
+  getOne
+);
+users.post(
+  "/restart/:q",
+  validateParams(
+    [
+      {
+        param_key: "q",
+        required: true,
+        type: "string"
+      }
+    ],
+    "params"
+  ),
+  restart
+);
+users.put(
+  "/business/:id",
+  validateParams(
+    [
+      {
+        param_key: "id",
+        required: true,
+        type: "string"
+      }
+    ],
+    "params"
+  ),
+  validateParams(
+    [
+      {
+        param_key: "business",
+        required: true,
+        type: "string"
+      }
+    ],
+    "body"
+  ),
+  business
+);
+users.put(
+  "/user/:id",
+  validateParams(
+    [
+      {
+        param_key: "id",
+        required: true,
+        type: "string"
+      }
+    ],
+    "params"
+  ),
+  validateParams(
+    [
+      {
+        param_key: "user",
+        required: true,
+        type: "string"
+      }
+    ],
+    "body"
+  ),
+  user
+);
+users.put(
+  "/scope/:id",
+  validateParams(
+    [
+      {
+        param_key: "id",
+        required: true,
+        type: "string"
+      }
+    ],
+    "params"
+  ),
+  validateParams(
+    [
+      {
+        param_key: "type",
+        required: true,
+        type: "string"
+      },
+      {
+        param_key: "id",
+        required: true,
+        type: "string"
+      }
+    ],
+    "body"
+  ),
+  scope
+);
+users.put(
+  "/:id",
+  validateParams(
+    [
+      {
+        param_key: "id",
+        required: true,
+        type: "string"
+      }
+    ],
+    "params"
+  ),
+  validateParams(
+    [
+      {
+        param_key: "name",
+        required: false,
+        type: "string"
+      }
+    ],
+    "body"
+  ),
+  update
+);
 
 export default users;
