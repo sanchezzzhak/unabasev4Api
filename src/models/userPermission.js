@@ -5,9 +5,9 @@ import paginateConfig from "../config/paginate";
 import Permission from "./permission";
 
 const userPermissionSchema = Schema({
-  user: { type: Schema.Types.ObjectId, ref: "User" },
-  permission: { type: Schema.Types.ObjectId, ref: "Permission" },
-  business: { type: Schema.Types.ObjectId, ref: "Business" }
+  user: { type: String, ref: "User" },
+  permission: { type: String, ref: "Permission" },
+  business: { type: String, ref: "Business" }
 });
 
 userPermissionSchema.plugin(mongoosePaginate);
