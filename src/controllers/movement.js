@@ -654,6 +654,8 @@ export const createRequest = async (req, res, next) => {
   for (let provider of req.body.providers) {
     try {
       let client = req.user.scope.type === "personal" ? req.user.name : req.user.scope.id.name;
+      console.log("before create new movement : : : : : :  : : ---------->");
+      console.log(req.user.scope);
       let newMovement = new Movement({
         name: `${sourceMovement.name} / ${client}`,
         client: {
