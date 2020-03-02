@@ -47,22 +47,22 @@ currencies.post(
     [
       {
         param_key: "name",
-        required: false,
+        required: true,
         type: "string"
       },
       {
         param_key: "decimal",
-        required: false,
+        required: true,
         type: "string"
       },
       {
         param_key: "thousand",
-        required: false,
+        required: true,
         type: "string"
       },
       {
         param_key: "countryOrigin",
-        required: false,
+        required: true,
         type: "string"
       }
     ],
@@ -91,22 +91,22 @@ currencies.put(
     [
       {
         param_key: "name",
-        required: true,
+        required: false,
         type: "string"
       },
       {
         param_key: "decimal",
-        required: true,
+        required: false,
         type: "string"
       },
       {
         param_key: "thousand",
-        required: true,
+        required: false,
         type: "string"
       },
       {
         param_key: "countryOrigin",
-        required: true,
+        required: false,
         type: "string"
       }
     ],
