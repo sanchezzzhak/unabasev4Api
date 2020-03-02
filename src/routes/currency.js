@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { validateParams } from "../middleware/validate";
 const currencies = Router();
 
 import { get, create, updateOne, find, getOne, deleteOne } from "../controllers/currency";
