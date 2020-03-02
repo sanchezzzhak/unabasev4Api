@@ -193,8 +193,8 @@ export const update = (req, res, next) => {
       if (err) return next(err);
       try {
         let userPermissions = await UserPermission.find({
-          user: item._id,
-          business: item.scope.id
+          user: item._id.toString(),
+          business: item.scope.id._id.toString()
         })
           .select("permission")
           .populate("permission")
