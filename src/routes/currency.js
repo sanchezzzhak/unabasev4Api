@@ -23,6 +23,16 @@ currencies.get(
     description: "get one currency by id",
     module
   }),
+  validateParams(
+    [
+      {
+        param_key: "id",
+        required: true,
+        type: "string"
+      }
+    ],
+    "params"
+  ),
   getOne
 );
 currencies.post(
@@ -32,6 +42,31 @@ currencies.post(
     description: "create currency",
     module
   }),
+  validateParams(
+    [
+      {
+        param_key: "name",
+        required: false,
+        type: "string"
+      },
+      {
+        param_key: "decimal",
+        required: false,
+        type: "string"
+      },
+      {
+        param_key: "thousand",
+        required: false,
+        type: "string"
+      },
+      {
+        param_key: "countryOrigin",
+        required: false,
+        type: "string"
+      }
+    ],
+    "body"
+  ),
   create
 );
 currencies.put(
@@ -41,6 +76,41 @@ currencies.put(
     description: "update currency",
     module
   }),
+  validateParams(
+    [
+      {
+        param_key: "id",
+        required: true,
+        type: "string"
+      }
+    ],
+    "params"
+  ),
+  validateParams(
+    [
+      {
+        param_key: "name",
+        required: true,
+        type: "string"
+      },
+      {
+        param_key: "decimal",
+        required: true,
+        type: "string"
+      },
+      {
+        param_key: "thousand",
+        required: true,
+        type: "string"
+      },
+      {
+        param_key: "countryOrigin",
+        required: true,
+        type: "string"
+      }
+    ],
+    "body"
+  ),
   updateOne
 );
 currencies.get(
@@ -50,6 +120,16 @@ currencies.get(
     description: "find currencies",
     module
   }),
+  validateParams(
+    [
+      {
+        param_key: "q",
+        required: true,
+        type: "string"
+      }
+    ],
+    "params"
+  ),
   find
 );
 currencies.delete(
@@ -59,6 +139,16 @@ currencies.delete(
     description: "delete currency",
     module
   }),
+  validateParams(
+    [
+      {
+        param_key: "id",
+        required: true,
+        type: "string"
+      }
+    ],
+    "params"
+  ),
   deleteOne
 );
 
