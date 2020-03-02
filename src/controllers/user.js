@@ -194,7 +194,7 @@ export const update = (req, res, next) => {
       try {
         let userPermissions = await UserPermission.find({
           user: item._id.toString(),
-          business: item.scope.id._id.toString()
+          business: item.scope.id?._id.toString() || null
         })
           .select("permission")
           .populate("permission")
