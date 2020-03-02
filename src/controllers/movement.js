@@ -316,6 +316,11 @@ export const getOne = (req, res, next) => {
         path: "client.user",
         select: "isActive name  email phone creator user imgUrl emails phones type"
       },
+
+      {
+        path: "client.business",
+        select: "isActive name  email phone creator imgUrl emails phones"
+      },
       {
         path: "client.contact",
         select: "isActive name emails phones"
@@ -323,6 +328,10 @@ export const getOne = (req, res, next) => {
       {
         path: "responsable.user",
         select: "isActive name  email phone creator user imgUrl emails phones type"
+      },
+      {
+        path: "responsable.business",
+        select: "isActive name  email phone creator imgUrl emails phones"
       },
       {
         path: "creator",
