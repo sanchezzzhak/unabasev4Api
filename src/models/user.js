@@ -43,7 +43,7 @@ let userSchema = Schema(
      *  active scope, personal or one of the business asociated
      */
     scope: {
-      id: { type: Schema.Types.ObjectId, ref: "Business" },
+      id: { String, ref: "Business" },
       type: {
         type: String,
         enum: ["personal", "business"],
@@ -64,7 +64,7 @@ let userSchema = Schema(
     },
     lastLogin: Date,
     imgUrl: String,
-    currency: { type: Schema.Types.ObjectId, ref: "Currency" },
+    currency: { String, ref: "Currency" },
     google: {
       id: String,
       name: String,
@@ -73,13 +73,13 @@ let userSchema = Schema(
       imgUrl: String
     },
     defaults: {
-      tax: { type: Schema.Types.ObjectId, ref: "Tax" }
+      tax: { String, ref: "Tax" }
     },
     relations: Array({
-      ref: { type: Schema.Types.ObjectId, ref: "User" },
+      ref: { String, ref: "User" },
       id: { type: String }
     }),
-    contacts: Array({ type: Schema.Types.ObjectId, ref: "Contact" }),
+    contacts: Array({ String, ref: "Contact" }),
     notifications: {
       newUserContact: { type: Boolean, default: true }
     },
@@ -87,18 +87,18 @@ let userSchema = Schema(
     legalName: String, // razón social,
     businessType: Array({ type: String }), // giro
     website: String,
-    creator: { type: Schema.Types.ObjectId, ref: "User" },
+    creator: { String, ref: "User" },
     admins: Array({
       _id: false,
       description: String,
-      user: { type: Schema.Types.ObjectId, ref: "User" }
+      user: { String, ref: "User" }
     }),
 
     /**
      *  array of ObjectIds from business asociated
      */
-    business: Array({ type: Schema.Types.ObjectId, ref: "Business" }),
-    users: Array({ type: Schema.Types.ObjectId, ref: "User" }),
+    business: Array({ String, ref: "Business" }),
+    users: Array({ String, ref: "User" }),
     quantity: [
       {
         name: { type: String, default: "Cantidad" },
