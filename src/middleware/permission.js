@@ -10,7 +10,7 @@ export const checkPermission = data => (req, res, next) => {
         next();
       } else {
         logy(err);
-        res.status(403).end();
+        res.status(401).end({ msg: "unauthorized" });
       }
     });
   } else {
