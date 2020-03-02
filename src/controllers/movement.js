@@ -612,7 +612,7 @@ export const createExpense = async (req, res, next) => {
       name: `Compra de ${sourceMovement.name}`,
       client: {
         user: req.user.id || req.user._id.toString(),
-        business: req.user.scope.type === "business" ? req.user.scope.id.id : null
+        business: req.user.scope.type === "business" ? req.user.scope.id._id.toString() : null
       },
       creator: req.user.id,
       state: "business",
@@ -660,7 +660,7 @@ export const createRequest = async (req, res, next) => {
         name: `${sourceMovement.name} / ${client}`,
         client: {
           user: req.user.id || req.user._id.toString(),
-          business: req.user.scope.type === "business" ? req.user.scope.id.id : null
+          business: req.user.scope.type === "business" ? req.user.scope.id._id.toString() : null
         },
         responsable: {
           user: provider.user,
