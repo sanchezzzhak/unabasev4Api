@@ -1,6 +1,7 @@
 import { Router } from "express";
 const router = Router();
 import { subscribe, pushTest } from "../controllers/push";
+import { validateParams } from "../middleware/validate";
 
 router.post(
   "/subscribe",
