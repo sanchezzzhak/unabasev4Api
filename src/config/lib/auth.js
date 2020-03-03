@@ -31,6 +31,7 @@ export const sToken = (req, res, next) => {
   if (typeof req.token !== "undefined" && req.headers.authorization !== "postmanvn4b4s3") {
     jwt.verify(req.token, envar().SECRET, async (err, decoded) => {
       if (err) {
+        console.log(err);
         res.status(403).send({
           msg: "Not authorized1"
         });
