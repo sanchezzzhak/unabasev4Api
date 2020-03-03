@@ -54,7 +54,8 @@
     "regenerator-runtime": "^0.13.3",
     "save": "^2.4.0",
     "serve-favicon": "^2.5.0",
-    "unabase_api_doc": "*"
+    "unabase_api_doc": "*",
+    "web-push": "^3.4.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",

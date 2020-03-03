@@ -23,6 +23,8 @@ export default function envar() {
     DB_DEV4: process.env.DB_DEV4,
     DB_PROD: process.env.DB_PROD,
     DB_UNA: process.env.DB_UNA,
-    mailApiKey: process.env.mailApiKey
+    mailApiKey: process.env.mailApiKey,
+    VAPID_PUBLIC: process.env.VAPID_PUBLIC,
+    VAPID_PRIVATE: process.env.VAPID_PRIVATE
   };
 }

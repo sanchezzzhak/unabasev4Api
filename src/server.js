@@ -17,6 +17,8 @@ import cors from "cors";
 import morgan from "morgan";
 import localeMiddleware from "express-locale";
 import db from "./db";
+import webPush from "web-push";
+import envar from "./lib/envar";
 const env = process.env.NODE_ENV || "";
 /// database
 // logy("env");
@@ -119,7 +121,8 @@ import { handleError } from "./middleware/error";
 // logy(process.env);
 
 app.use("/", routes);
-
+console.log(envar());
+webPush.setVapidDetails("mailto:simon@unabase.com", envar().VAPID_PUBLIC, envar().VAPID_PRIVATE);
 // const schema = makeExecutableSchema({
 //   typeDefs,
 //   resolvers

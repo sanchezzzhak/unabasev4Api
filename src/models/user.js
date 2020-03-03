@@ -80,6 +80,9 @@ let userSchema = Schema(
       id: { type: String }
     }),
     contacts: Array({ type: String, ref: "Contact" }),
+    webpush: {
+      subscription: { type: Object }
+    },
     notifications: {
       newUserContact: { type: Boolean, default: true }
     },

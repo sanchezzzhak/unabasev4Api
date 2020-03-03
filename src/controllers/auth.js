@@ -33,7 +33,7 @@ export const google = (req, res, next) => {
       };
       User.findOne(
         query,
-        "isActive security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts",
+        "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts",
         async (err, user) => {
           if (err) next(err);
           if (!user) {
@@ -127,7 +127,7 @@ export const password = (req, res, next) => {
   logy("enter restart password");
   User.findById(
     req.params.id,
-    "isActive security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts",
+    "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts",
     function(err, user) {
       if (err) {
         res.status(500).send(err);
@@ -194,7 +194,7 @@ export const login = (req, res, next) => {
   };
   User.findOne(query)
     .select(
-      "isActive security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
+      "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
     )
     .populate("scope.id")
     .populate("currency")
