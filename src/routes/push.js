@@ -2,7 +2,9 @@ import { Router } from "express";
 const router = Router();
 import { subscribe, pushTest } from "../controllers/push";
 import { validateParams } from "../middleware/validate";
+import { sToken } from "../config/lib/auth";
 
+router.use(sToken);
 router.post(
   "/subscribe",
   validateParams(
