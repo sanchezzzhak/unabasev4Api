@@ -54,5 +54,6 @@ export const getUserPermission = user => {
 };
 
 export const generateToken = (user, expiresIn = "3d") => {
-  return jwt.sign({ user }, envar().SECRET, { expiresIn });
+  const toSing = { user: { user }, secret: envar().SECRET, expires: { expiresIn } };
+  return jwt.sign(toSing.user, toSing.secret, toSing.expires);
 };
