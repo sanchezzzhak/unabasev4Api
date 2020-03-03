@@ -31,9 +31,9 @@ export const sToken = (req, res, next) => {
   if (typeof req.token !== "undefined" && req.headers.authorization !== "postmanvn4b4s3") {
     jwt.verify(req.token, envar().SECRET, async (err, decoded) => {
       if (err) {
-        console.log(err);
         res.status(403).send({
-          msg: "Not authorized1"
+          msg: "Not authorized1",
+          err
         });
       } else {
         logy("decoded!");
@@ -73,8 +73,10 @@ export const sToken = (req, res, next) => {
       .populate("scope.id", "name")
       .exec((err, user) => {
         if (err) {
-          logy("err find");
-          logy(err);
+          res.status(403).send({
+            msg: "Not user found for auth",
+            err
+          });
         } else if (user) {
           req.user = user;
           next();
