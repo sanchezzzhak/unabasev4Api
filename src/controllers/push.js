@@ -25,4 +25,6 @@ export const pushTest = (req, res, next) => {
 
   // Pass object into sendNotification
   webpush.sendNotification(req.user.webpush.subscription, payload).catch(err => console.error(err));
+
+  res.status(201).json({});
 };
