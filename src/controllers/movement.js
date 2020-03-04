@@ -6,6 +6,7 @@ import Line from "../models/line";
 import { queryHelper } from "../lib/queryHelper";
 import { createError } from "../lib/error";
 import { sendPush } from "../lib/push";
+import User from "../models/user";
 
 export const getPersonal = (req, res, next) => {
   const select = "name client responsable createdAt updatedAt total state isActive dates successPercentage";
