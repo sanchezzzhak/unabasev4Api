@@ -5,6 +5,7 @@ const ObjectId = Types.ObjectId;
 import Line from "../models/line";
 import { queryHelper } from "../lib/queryHelper";
 import { createError } from "../lib/error";
+import { sendPush } from "../lib/push";
 
 export const getPersonal = (req, res, next) => {
   const select = "name client responsable createdAt updatedAt total state isActive dates successPercentage";
@@ -688,6 +689,11 @@ export const createRequest = async (req, res, next) => {
         lines.push(line);
       }
       let movement = await newMovement.save();
+      // PUSH NOTIFICATION
+      let user = await User.findById(provider.user)
+        .select("name webpush")
+        .lean();
+      sendPush({ title: "Te han invitado a licitar! " }, user);
       countSuccess = countSuccess && sourceLines.length === lines.length;
     } catch (err) {
       next(err);
