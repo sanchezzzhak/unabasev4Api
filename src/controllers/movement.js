@@ -691,10 +691,12 @@ export const createRequest = async (req, res, next) => {
       }
       let movement = await newMovement.save();
       // PUSH NOTIFICATION
-      let user = await User.findById(provider.user)
-        .select("name webpush")
-        .lean();
-      sendPush({ title: "Te han invitado a licitar! " }, user);
+      if (provider.user) {
+        let user = await User.findById(provider.user)
+          .select("name webpush")
+          .lean();
+        sendPush({ title: "Te han invitado a licitar! " }, user);
+      }
       countSuccess = countSuccess && sourceLines.length === lines.length;
     } catch (err) {
       next(err);
