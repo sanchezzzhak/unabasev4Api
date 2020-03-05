@@ -5,6 +5,8 @@ import User from "../models/user";
 export const subscribe = (req, res, next) => {
   // Get pushSubscription object
   // const subscription = req.body;
+  console.log(`::::::::::::::: ____________update subscription for ${req.user.name}`);
+  console.log(req.body.subscription);
   User.findByIdAndUpdate(req.user._id, { "webpush.subscription": req.body.subscription }).exec((err, user) => {
     if (err) next(err);
 
