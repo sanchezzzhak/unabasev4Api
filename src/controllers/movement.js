@@ -695,6 +695,7 @@ export const createRequest = async (req, res, next) => {
         let user = await User.findById(provider.user)
           .select("name webpush")
           .lean();
+
         sendPush(
           {
             title: "Te han invitado a licitar! ",

@@ -3,6 +3,7 @@ const router = Router();
 import { subscribe, pushTest } from "../controllers/push";
 import { validateParams } from "../middleware/validate";
 import { sToken } from "../config/lib/auth";
+import { detector } from "../middleware/device";
 
 router.use(sToken);
 router.post(
@@ -17,6 +18,7 @@ router.post(
     ],
     "body"
   ),
+  detector,
   subscribe
 );
 router.post(

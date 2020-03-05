@@ -7,8 +7,11 @@ export const sendPush = (payload, user) => {
   } catch (err) {
     console.log(err);
   }
-  if (user.webpush?.subscription) {
+  if (user.webpush?.devices) {
     // Pass object into sendNotification
-    webPush.sendNotification(user.webpush.subscription, payload).catch(err => console.error(err));
+    for await (let data of user.webpush.devices) {
+      webPush.sendNotification(data.subscription, payload).catch(err => console.error(err));
+    }
+    // webPush.sendNotification(user.webpush.subscription, payload).catch(err => console.error(err));
   }
 };

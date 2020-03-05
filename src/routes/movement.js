@@ -21,6 +21,7 @@ import { sToken } from "../config/lib/auth";
 import logger from "../lib/logger";
 import { checkPermission } from "../middleware/permission";
 import { validateParams } from "../middleware/validate";
+import { detector } from "../middleware/device";
 let module = "movement";
 // if (process.env.NODE_ENV !== 'test') {
 
