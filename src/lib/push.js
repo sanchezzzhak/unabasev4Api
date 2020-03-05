@@ -1,5 +1,5 @@
 import webPush from "web-push";
-export const sendPush = (payload, user) => {
+export const sendPush = (payload, options = {}, user) => {
   payload = JSON.stringify(payload);
   try {
     console.log(user);
@@ -8,5 +8,5 @@ export const sendPush = (payload, user) => {
     console.log(err);
   }
   // Pass object into sendNotification
-  webPush.sendNotification(user.webpush.subscription, payload).catch(err => console.error(err));
+  webPush.sendNotification(user.webpush.subscription, payload, options).catch(err => console.error(err));
 };
