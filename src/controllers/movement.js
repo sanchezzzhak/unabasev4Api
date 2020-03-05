@@ -697,9 +697,7 @@ export const createRequest = async (req, res, next) => {
           .lean();
         sendPush(
           {
-            title: "Te han invitado a licitar! "
-          },
-          {
+            title: "Te han invitado a licitar! ",
             actions: [{ action: "explore", title: "ver la solicitud", icon: "check" }]
           },
           user
