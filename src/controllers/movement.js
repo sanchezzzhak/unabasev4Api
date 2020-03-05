@@ -698,7 +698,7 @@ export const createRequest = async (req, res, next) => {
         sendPush(
           {
             title: "Te han invitado a licitar! ",
-            link: `${req.host}/movement/${movement._id.toString()}`
+            link: `/movement/${movement._id.toString()}`
           },
           user
         );
