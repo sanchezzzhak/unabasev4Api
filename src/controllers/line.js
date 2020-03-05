@@ -101,7 +101,7 @@ export function createMany(req, res, next) {
     ]);
 
     if (req.body.clientLine) {
-      let lineFound = await Line.findById(req.body.clientLine).lean();
+      let lineFound = await Line.findById(req.body.clientLine, { movement: 1 }).lean();
       for await (let line of lines) {
         let newLine = new Line({
           creator: req.user._id,
