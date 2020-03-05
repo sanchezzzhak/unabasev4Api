@@ -1,5 +1,5 @@
 import webPush from "web-push";
-export const sendPush = (payload, user) => {
+export const sendPush = async (payload, user) => {
   payload = JSON.stringify(payload);
   try {
     console.log(user);
