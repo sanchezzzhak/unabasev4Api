@@ -101,11 +101,13 @@ export function createMany(req, res, next) {
     ]);
 
     if (req.body.clientLine) {
+      let lineFound = await Line.findById(req.body.clientLine).lean();
       for await (let line of lines) {
         let newLine = new Line({
           creator: req.user._id,
           item: line.item,
           name: line.name,
+          movement: lineFound.movement,
           "numbers.cost": line.numbers.price * line.quantity
         });
         let clientLine = await newLine.save();
