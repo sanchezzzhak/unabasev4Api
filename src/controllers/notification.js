@@ -7,8 +7,12 @@ export const get = async (req, res, next) => {
       path: "movement",
       select: "name"
     },
+    // {
+    //   path: "user",
+    //   select: "name"
+    // },
     {
-      path: "user",
+      path: "from.user",
       select: "name"
     }
   ];
