@@ -317,7 +317,7 @@ Line.updateClientLine = id => {
       .exec(async (err, line) => {
         if (err) reject(err);
         let total = line.expenses.reduce((prev, curr) => {
-          return curr.movement.state === "business" ? prev + curr.numbers.price * curr.quantity : 0;
+          return curr.movement?.state === "business" ? prev + curr.numbers.price * curr.quantity : 0;
         }, 0);
         line.numbers.cost = total;
 
