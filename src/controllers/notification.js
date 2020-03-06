@@ -23,7 +23,7 @@ export const get = async (req, res, next) => {
 
 export const setRead = async (req, res, next) => {
   try {
-    let notification = await Notification.findByIdAndUpdate(req.params.id, { isRead: req.params.isRead }).lean();
+    let notification = await Notification.findByIdAndUpdate(req.params.id, { isRead: req.params.isRead === "true" ? true : false }).lean();
     res.send(notification);
   } catch (err) {
     next(err);
