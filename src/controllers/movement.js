@@ -7,6 +7,7 @@ import { queryHelper } from "../lib/queryHelper";
 import { createError } from "../lib/error";
 import { sendPush } from "../lib/push";
 import User from "../models/user";
+import Notification from "../models/notifications";
 
 export const getPersonal = (req, res, next) => {
   const select = "name client responsable createdAt updatedAt total state isActive dates successPercentage";
@@ -698,11 +699,18 @@ export const createRequest = async (req, res, next) => {
         let user = await User.findById(provider.user)
           .select("name webpush")
           .lean();
-
+        let link = `/income/${movement._id.toString()}`;
+        let notification = new Notification({
+          title: "Te han invitado a licitar! ",
+          user: user._id.toString(),
+          movement: movement._id.toString(),
+          link
+        });
+        await notification.save();
         sendPush(
           {
             title: "Te han invitado a licitar! ",
-            link: `/income/${movement._id.toString()}`
+            link
           },
           user
         );
