@@ -654,6 +654,7 @@ export const createExpense = async (req, res, next) => {
       lines.push(line);
     }
     let movement = await newMovement.save();
+
     res.send({ success: sourceLines.length === lines.length, movement });
   } catch (err) {
     next(err);
@@ -686,7 +687,7 @@ export const createRequest = async (req, res, next) => {
           contact: provider.contact
         },
         creator: req.user.id,
-        state: "request",
+        state: req.params.state,
         currency: sourceMovement.currency,
         request: {
           message: req.body.request.message

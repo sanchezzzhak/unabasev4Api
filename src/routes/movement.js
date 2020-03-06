@@ -262,7 +262,7 @@ router.post(
   createExpense
 );
 router.post(
-  "/request",
+  "/expense/:state",
   validateParams(
     [
       {
@@ -285,6 +285,16 @@ router.post(
       }
     ],
     "body"
+  ),
+  validateParams(
+    [
+      {
+        param_key: "state",
+        required: true,
+        type: "string"
+      }
+    ],
+    "params"
   ),
   createRequest
 );
