@@ -6,6 +6,10 @@ const notificationSchema = new Schema(
   {
     title: { type: String, required: true },
     body: { type: String },
+    from: {
+      user: { type: String, ref: "User" },
+      other: { type: String }
+    },
     user: { type: String, ref: "User" },
     users: Array({ type: String, ref: "User" }),
     link: { type: String },
