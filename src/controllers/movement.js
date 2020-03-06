@@ -7,7 +7,7 @@ import { queryHelper } from "../lib/queryHelper";
 import { createError } from "../lib/error";
 import { sendPush } from "../lib/push";
 import User from "../models/user";
-import Notification from "../models/notifications";
+import Notification from "../models/notification";
 
 export const getPersonal = (req, res, next) => {
   const select = "name client responsable createdAt updatedAt total state isActive dates successPercentage";

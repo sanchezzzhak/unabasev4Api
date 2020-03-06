@@ -1,4 +1,4 @@
-import Notification from "../models/notifications";
+import Notification from "../models/notification";
 import { queryHelper } from "../lib/queryHelper";
 
 export const get = async (req, res, next) => {
