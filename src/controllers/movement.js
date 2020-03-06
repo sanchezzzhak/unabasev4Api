@@ -681,7 +681,7 @@ export const createRequest = async (req, res, next) => {
           item: sourceLine.item,
           name: sourceLine.name,
           numbers: {
-            price: sourceLine.numbers.budget
+            price: req.body.setBudget ? sourceLine.numbers.budget : 0
           },
           requestedMovement: sourceMovement.id,
           clientLine: sourceLine.id,
