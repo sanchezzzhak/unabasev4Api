@@ -47,6 +47,9 @@ const movementSchema = new Schema(
         name: { type: String }
       }
     },
+    request: {
+      message: { type: String }
+    },
     editor: { type: String, ref: "User" },
 
     creator: { type: String, ref: "User" },
