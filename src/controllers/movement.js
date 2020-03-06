@@ -534,7 +534,10 @@ export const updateState = async (req, res, next) => {
           title,
           user: user._id.toString(),
           movement: movement._id.toString(),
-          link
+          link,
+          from: {
+            user: req.user._id.toString()
+          }
         });
         await notification.save();
         sendPush(
@@ -716,7 +719,10 @@ export const createRequest = async (req, res, next) => {
           title: "Te han invitado a licitar! ",
           user: user._id.toString(),
           movement: movement._id.toString(),
-          link
+          link,
+          from: {
+            user: req.user._id.toString()
+          }
         });
         await notification.save();
         sendPush(
