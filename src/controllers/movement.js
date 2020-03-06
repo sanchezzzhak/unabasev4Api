@@ -671,7 +671,10 @@ export const createRequest = async (req, res, next) => {
         },
         creator: req.user.id,
         state: "request",
-        currency: sourceMovement.currency
+        currency: sourceMovement.currency,
+        request: {
+          message: req.body.request.message
+        }
       });
       for await (let sourceLine of sourceLines) {
         let newLine = new Line({
