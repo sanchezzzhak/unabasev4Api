@@ -8,7 +8,7 @@ router.use(sToken);
 
 router.get("/", get);
 router.put(
-  "/read/:id/:isRead",
+  "/:id/:isRead",
 
   validateParams(
     [
