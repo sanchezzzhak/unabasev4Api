@@ -523,16 +523,28 @@ export const updateState = async (req, res, next) => {
   let lineUpdated;
   switch (req.params.action) {
     case "approve":
-      // await Line.findById(req.body.clientLine)
-      //   .populate("expenses", "numbers quantity")
-      //   .exec(async (err, line) => {
-      //     if (err) next(err);
-      //     let total = line.expenses.reduce((prev, curr) => prev + curr.numbers.price * curr.quantity, 0);
-      //     line.numbers.cost = total;
-      //     await line.save();
-      //     res.send({ movement, line });
-      //     // q.reduce((a,c) => a + (c.n.p * c.q), 0 )
-      //   });
+      // PUSH NOTIFICATION
+      if (movement.responsable.user) {
+        let user = await User.findById(movement.responsable.user)
+          .select("name webpush")
+          .lean();
+        let link = `/income/${movement._id.toString()}`;
+        let title = `Te han aprovado ${movement.name}`;
+        let notification = new Notification({
+          title,
+          user: user._id.toString(),
+          movement: movement._id.toString(),
+          link
+        });
+        await notification.save();
+        sendPush(
+          {
+            title,
+            link
+          },
+          user
+        );
+      }
 
       let line = await Line.updateClientLine(req.body.clientLine);
 
