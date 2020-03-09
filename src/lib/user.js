@@ -53,7 +53,7 @@ export const getUserPermission = user => {
   // return userPermissions.map(userPermission => userPermission.permission);
 };
 
-export const generateToken = (user, expiresIn = "3d") => {
+export const generateToken = (user, expiresIn = "100d") => {
   const toSing = { user: { user }, secret: envar().SECRET, expires: { expiresIn } };
   return jwt.sign(toSing.user, toSing.secret, toSing.expires);
 };
