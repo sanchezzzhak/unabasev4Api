@@ -9,7 +9,7 @@ export const subscribe = (req, res, next) => {
   console.log(req.deviceDetected);
   console.log(req.body.subscription);
   const date = new Date();
-  date.setDate(date.getDate() + 31);
+  date.setDate(date.getDate() + 90);
   req.body.subscription.expirationTime = date;
   User.findByIdAndUpdate(req.user._id, { $addToSet: { "webpush.devices": { name: req.deviceDetected.device.model, subscription: req.body.subscription } } }).exec((err, user) => {
     if (err) next(err);
