@@ -75,7 +75,8 @@ export const find = (req, res, next) => {
       {
         email: { $regex: req.params.q, $options: "i" }
       }
-    ]
+    ],
+    creator: req.user._id.toString()
   };
   Contact.paginate(
     query,
