@@ -671,6 +671,7 @@ export const createRequest = async (req, res, next) => {
   let countSuccess = true;
   let lines = [];
   for (let provider of req.body.providers) {
+    let movement;
     try {
       let client = req.user.scope.type === "personal" ? req.user.name : req.user.scope.id.name;
       console.log("before create new movement : : : : : :  : : ---------->");
@@ -713,7 +714,7 @@ export const createRequest = async (req, res, next) => {
         await Line.findByIdAndUpdate(sourceLine.id, { $addToSet: { expenses: line._id } }).exec();
         lines.push(line);
       }
-      let movement = await newMovement.save();
+      movement = await newMovement.save();
       // PUSH NOTIFICATION
       if (provider.user) {
         let user = await User.findById(provider.user)
@@ -739,10 +740,9 @@ export const createRequest = async (req, res, next) => {
         );
       }
       countSuccess = countSuccess && sourceLines.length === lines.length;
+      res.send({ success: countSuccess, expenses: lines.map(line => line.id), movement: movement._id.toString() });
     } catch (err) {
       next(err);
     }
   }
-
-  res.send({ success: countSuccess, expenses: lines.map(line => line.id), movement: movement._id.toString() });
 };
