@@ -666,7 +666,7 @@ export const createRequest = async (req, res, next) => {
     .select("id name currency")
     .exec();
   let sourceLines = await Line.find({ _id: { $in: req.body.lines } })
-    .select("id name item")
+    .select("id name item numbers")
     .exec();
   let countSuccess = true;
   let lines = [];
