@@ -529,7 +529,7 @@ export const updateState = async (req, res, next) => {
           .select("name webpush")
           .lean();
         let link = `/income/${movement._id.toString()}`;
-        let title = `Te han aprovado ${movement.name}`;
+        let title = `Te han aprobado ${movement.name}`;
         let notification = new Notification({
           title,
           user: user._id.toString(),
