@@ -744,5 +744,5 @@ export const createRequest = async (req, res, next) => {
     }
   }
 
-  res.send({ success: countSuccess, expenses: lines.map(line => line.id), movement });
+  res.send({ success: countSuccess, expenses: lines.map(line => line.id), movement: movement._id.toString() });
 };
