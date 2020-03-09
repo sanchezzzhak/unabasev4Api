@@ -675,6 +675,12 @@ export const createRequest = async (req, res, next) => {
       let client = req.user.scope.type === "personal" ? req.user.name : req.user.scope.id.name;
       console.log("before create new movement : : : : : :  : : ---------->");
       console.log(req.user.scope);
+      let request =
+        req.params.state === "request"
+          ? {
+              message: req.body.request?.message
+            }
+          : null;
       let newMovement = new Movement({
         name: `${sourceMovement.name} / ${client}`,
         client: {
@@ -689,9 +695,7 @@ export const createRequest = async (req, res, next) => {
         creator: req.user.id,
         state: req.params.state,
         currency: sourceMovement.currency,
-        request: {
-          message: req.body.request.message
-        }
+        request
       });
       for await (let sourceLine of sourceLines) {
         let newLine = new Line({
