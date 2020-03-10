@@ -11,11 +11,13 @@ export const subscribe = (req, res, next) => {
   const date = new Date();
   date.setDate(date.getDate() + 90);
   req.body.subscription.expirationTime = date;
-  User.findByIdAndUpdate(req.user._id, { $addToSet: { "webpush.devices": { name: req.deviceDetected.device.model, subscription: req.body.subscription } } }).exec((err, user) => {
-    if (err) next(err);
+  User.findByIdAndUpdate(req.user._id, { $addToSet: { "webpush.devices": { name: req.deviceDetected.device.model, subscription: req.body.subscription, isActive: true } } }).exec(
+    (err, user) => {
+      if (err) next(err);
 
-    res.status(201).json({});
-  });
+      res.status(201).json({});
+    }
+  );
   // Send 201 - resource created
 
   // // Create payload
