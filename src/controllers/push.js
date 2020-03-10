@@ -1,23 +1,30 @@
 import webPush from "web-push";
 import envar from "../lib/envar";
 import User from "../models/user";
+import { createError } from "../lib/error";
 
 export const subscribe = (req, res, next) => {
   // Get pushSubscription object
   // const subscription = req.body;
-  console.log(`::::::::::::::: ____________update subscription for ${req.user.name}`);
-  console.log(req.deviceDetected);
-  console.log(req.body.subscription);
-  const date = new Date();
-  date.setDate(date.getDate() + 90);
-  req.body.subscription.expirationTime = date;
-  User.findByIdAndUpdate(req.user._id, { $addToSet: { "webpush.devices": { name: req.deviceDetected.device.model, subscription: req.body.subscription, isActive: true } } }).exec(
-    (err, user) => {
-      if (err) next(err);
+  const devices = req.user.webpush.devices;
+  const device = devices.filter(device => device.subscription.endpoint === req.body.subscription.endpoint);
+  if (!device.length) {
+    console.log(`::::::::::::::: ____________update subscription for ${req.user.name}`);
+    console.log(req.deviceDetected);
+    console.log(req.body.subscription);
+    const date = new Date();
+    date.setDate(date.getDate() + 90);
+    req.body.subscription.expirationTime = date;
+    User.findByIdAndUpdate(req.user._id, { $addToSet: { "webpush.devices": { name: req.deviceDetected.device.model, subscription: req.body.subscription, isActive: true } } }).exec(
+      (err, user) => {
+        if (err) next(err);
 
-      res.status(201).json({});
-    }
-  );
+        res.status(201).json({});
+      }
+    );
+  } else {
+    next(createError(409, "subscription already exists"));
+  }
   // Send 201 - resource created
 
   // // Create payload
