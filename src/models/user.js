@@ -83,7 +83,8 @@ let userSchema = Schema(
     webpush: {
       devices: Array({
         name: { type: String },
-        subscription: { type: Object }
+        subscription: { type: Object },
+        isActive: { type: Boolean }
       })
     },
     notifications: {
