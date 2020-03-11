@@ -163,28 +163,22 @@ export const user = (req, res, next) => {
       new: true
     },
     (err, item) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-        User.findByIdAndUpdate(
-          req.body.user,
-          {
-            [action]: {
-              business: item._id
-            }
-          },
-          {
-            new: true
-          },
-          (err, user) => {
-            if (err) {
-              res.status(500).send(err);
-            } else {
-              res.send(item);
-            }
+      if (err) next(err);
+      User.findByIdAndUpdate(
+        req.body.user,
+        {
+          [action]: {
+            business: item._id
           }
-        );
-      }
+        },
+        {
+          new: true
+        },
+        (err, user) => {
+          if (err) next(err);
+          res.send(item);
+        }
+      );
     }
   );
 };
