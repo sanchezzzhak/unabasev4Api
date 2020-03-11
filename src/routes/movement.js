@@ -39,8 +39,7 @@ router.get(
       {
         param_key: "id",
         required: true,
-        type: "string",
-        validator_functions: []
+        type: "string"
       }
     ],
     "params"
@@ -71,8 +70,7 @@ router.get(
       {
         param_key: "id",
         required: true,
-        type: "string",
-        validator_functions: []
+        type: "string"
       }
     ],
     "params"
@@ -91,8 +89,7 @@ router.get(
       {
         param_key: "state",
         required: true,
-        type: "string",
-        validator_functions: []
+        type: "string"
       }
     ],
     "params"
@@ -111,14 +108,12 @@ router.get(
       {
         param_key: "state",
         required: true,
-        type: "string",
-        validator_functions: []
+        type: "string"
       },
       {
         param_key: "id",
         required: true,
-        type: "string",
-        validator_functions: []
+        type: "string"
       }
     ],
     "params"
@@ -156,8 +151,7 @@ router.get(
       {
         param_key: "q",
         required: true,
-        type: "string",
-        validator_functions: []
+        type: "string"
       }
     ],
     "params"
@@ -176,8 +170,7 @@ router.get(
       {
         param_key: "id",
         required: true,
-        type: "string",
-        validator_functions: []
+        type: "string"
       }
     ],
     "params"
@@ -198,15 +191,13 @@ router.post(
       {
         param_key: "name",
         required: true,
-        type: "string",
-        validator_functions: []
+        type: "string"
       },
       {
         param_key: "state",
         enum: ["request", "opportunity"],
         required: true,
-        type: "string",
-        validator_functions: []
+        type: "string"
       }
     ],
     "body"
@@ -220,8 +211,7 @@ router.put(
       {
         param_key: "id",
         required: true,
-        type: "string",
-        validator_functions: []
+        type: "string"
       }
     ],
     "params"
@@ -231,8 +221,7 @@ router.put(
       {
         param_key: "name",
         required: false,
-        type: "string",
-        validator_functions: []
+        type: "string"
       }
     ],
     "body"
@@ -247,14 +236,12 @@ router.post(
       {
         param_key: "movement",
         required: true,
-        type: "string",
-        validator_functions: []
+        type: "string"
       },
       {
         param_key: "lines",
         required: true,
-        type: "array",
-        validator_functions: []
+        type: "array"
       }
     ],
     "body"
@@ -268,20 +255,17 @@ router.post(
       {
         param_key: "movement",
         required: true,
-        type: "string",
-        validator_functions: []
+        type: "string"
       },
       {
         param_key: "lines",
         required: true,
-        type: "array",
-        validator_functions: []
+        type: "array"
       },
       {
         param_key: "providers",
         required: true,
-        type: "array",
-        validator_functions: []
+        type: "array"
       }
     ],
     "body"
@@ -306,8 +290,7 @@ router.get(
       {
         param_key: "id",
         required: true,
-        type: "string",
-        validator_functions: []
+        type: "string"
       }
     ],
     "params"
@@ -321,8 +304,7 @@ router.put(
       {
         param_key: "movements",
         required: true,
-        type: "array",
-        validator_functions: []
+        type: "array"
       }
     ],
     "body"
@@ -336,14 +318,12 @@ router.put(
       {
         param_key: "state",
         required: true,
-        type: "string",
-        validator_functions: []
+        type: "string"
       },
       {
         param_key: "clientLine",
         required: true,
-        type: "string",
-        validator_functions: []
+        type: "string"
       }
     ],
     "body"
@@ -353,14 +333,12 @@ router.put(
       {
         param_key: "id",
         required: true,
-        type: "string",
-        validator_functions: []
+        type: "string"
       },
       {
         param_key: "action",
         required: true,
-        type: "string",
-        validator_functions: []
+        type: "string"
       }
     ],
     "params"
