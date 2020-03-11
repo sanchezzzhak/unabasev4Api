@@ -31,6 +31,16 @@ auth.put(
     description: "verify a user with local strategy",
     module
   }),
+  validateParams(
+    [
+      {
+        param_key: "id",
+        required: true,
+        type: "string"
+      }
+    ],
+    "params"
+  ),
   verify
 );
 
@@ -41,6 +51,16 @@ auth.post(
     description: "register a user with local strategy",
     module
   }),
+  validateParams(
+    [
+      {
+        param_key: "email",
+        required: true,
+        type: "string"
+      }
+    ],
+    "body"
+  ),
   register
 );
 
@@ -51,6 +71,16 @@ auth.post(
     description: "restart a password",
     module
   }),
+  validateParams(
+    [
+      {
+        param_key: "id",
+        required: true,
+        type: "string"
+      }
+    ],
+    "params"
+  ),
   password
 );
 
@@ -63,6 +93,21 @@ auth.post(
     description: "login a user with local strategy",
     module
   }),
+  validateParams(
+    [
+      {
+        param_key: "username",
+        required: true,
+        type: "string"
+      },
+      {
+        param_key: "password",
+        required: true,
+        type: "string"
+      }
+    ],
+    "body"
+  ),
   login
 );
 
