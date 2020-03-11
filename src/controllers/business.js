@@ -150,48 +150,48 @@ export const get = (req, res, next) => {
 };
 // todo - user method can be used for the same action plus permissions asignment
 // HECTOR - RUTA QUE AGREGA UN USUARIO A UNA EMPRESA
-export const addUserToBusiness = (req, res, next) => {
-  logy(req.body);
-  let user = {
-    description: req.body.role.name,
-    user: req.body.userToAdd
-  };
-  Business.findByIdAndUpdate(
-    req.params.id,
-    {
-      $push: {
-        users: user
-      }
-    },
-    {
-      new: true
-    },
-    (err, company) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-        let permissionsArray = new Array();
-        for (let index = 0; index < req.body.role.permissions.length; index++) {
-          let permission = {
-            user: req.body.userToAdd._id,
-            business: req.body.business._id,
-            permission: req.body.role.permissions[index]._id
-          };
-          permissionsArray.push(permission);
-        }
-        User.addBusiness(req.body.userToAdd._id, req.body.business._id).exec();
-        UserPermissions.insertMany(permissionsArray, function(err, permissions) {
-          if (err) {
-            res.status(500).send(err);
-            logy(err);
-          } else {
-            res.send(permissions);
-          }
-        });
-      }
-    }
-  );
-};
+// export const addUserToBusiness = (req, res, next) => {
+//   logy(req.body);
+//   let user = {
+//     description: req.body.role.name,
+//     user: req.body.userToAdd
+//   };
+//   Business.findByIdAndUpdate(
+//     req.params.id,
+//     {
+//       $push: {
+//         users: user
+//       }
+//     },
+//     {
+//       new: true
+//     },
+//     (err, company) => {
+//       if (err) {
+//         res.status(500).send(err);
+//       } else {
+//         let permissionsArray = new Array();
+//         for (let index = 0; index < req.body.role.permissions.length; index++) {
+//           let permission = {
+//             user: req.body.userToAdd._id,
+//             business: req.body.business._id,
+//             permission: req.body.role.permissions[index]._id
+//           };
+//           permissionsArray.push(permission);
+//         }
+//         User.addBusiness(req.body.userToAdd._id, req.body.business._id).exec();
+//         UserPermissions.insertMany(permissionsArray, function(err, permissions) {
+//           if (err) {
+//             res.status(500).send(err);
+//             logy(err);
+//           } else {
+//             res.send(permissions);
+//           }
+//         });
+//       }
+//     }
+//   );
+// };
 
 export const user = (req, res, next) => {
   const action = req.body.action === "add" ? "$addToSet" : "$pull";
