@@ -5,6 +5,7 @@ import gauth from "../config/auth";
 import { verify, register, password, login, google, googleCallback, errUser } from "../controllers/auth";
 import User from "../models/user";
 import logger from "../lib/logger";
+import { validateParams } from "../middleware/validate";
 // import passport from "../config/passport";
 import passport from "passport";
 const auth = Router();
