@@ -322,7 +322,7 @@ export const getOne = (req, res, next) => {
 
       {
         path: "client.business",
-        select: "isActive name  email phone creator imgUrl emails phones"
+        select: "isActive name  email phone creator imgUrl emails phones idNumber"
       },
       {
         path: "client.contact",
@@ -334,7 +334,7 @@ export const getOne = (req, res, next) => {
       },
       {
         path: "responsable.business",
-        select: "isActive name  email phone creator imgUrl emails phones"
+        select: "isActive name  email phone creator imgUrl emails phones idNumber"
       },
       {
         path: "creator",
