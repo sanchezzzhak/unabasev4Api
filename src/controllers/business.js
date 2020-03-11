@@ -1,12 +1,10 @@
 // @ts-nocheck
-import ntype from "normalize-type";
+
 import Contact from "../models/contact";
 import Business from "../models/business";
 import User from "../models/user";
-import UserPermissions from "../models/userPermission";
-import business from "../routes/business";
-import { Types } from "mongoose";
-const ObjectId = Types.ObjectId;
+import { queryHelper } from "../lib/queryHelper";
+import { createError } from "../lib/error";
 
 export const create = (req, res, next) => {
   Business.findOne(
@@ -16,61 +14,39 @@ export const create = (req, res, next) => {
     (err, business) => {
       if (err) next(err);
 
-      if (business) {
-        res.status(409).send({
-          msg: "Business already exist"
+      if (business) next(createError(409, req.lg.business.alreadyExist));
+
+      let newBusiness = new Business(req.body);
+      newBusiness.creator = req.user.id;
+
+      newBusiness.users = [
+        {
+          description: "creator",
+          user: req.user.id
+        }
+      ];
+      newBusiness.save((err, business) => {
+        if (err) next(err);
+        let contact = new Contact();
+        contact.name = business.name;
+        contact.business = business._id;
+        contact.type = "Business";
+        contact.save();
+        User.addBusiness(req.user._id, business._id, () => {
+          newBusiness.populate(
+            [
+              {
+                path: "users.user",
+                select: "name  phone email imgUrl emails type"
+              }
+            ],
+            err => {
+              if (err) next(err);
+              res.send(business);
+            }
+          );
         });
-      } else if (typeof req.body.idNumber === "undefined") {
-        res.status(400).send({
-          msg: "You must enter an id number"
-        });
-      } else {
-        let newBusiness = new Business(req.body);
-        newBusiness.creator = req.user._id;
-        logy("//");
-        logy(req.user._id);
-        newBusiness.users = [
-          {
-            description: "creator",
-            user: req.user._id
-          }
-        ];
-        logy(newBusiness.users);
-        newBusiness.save((err, business) => {
-          if (err) {
-            logy(err);
-            res.status(500).end({
-              err
-            });
-          } else {
-            let contact = new Contact();
-            contact.name = business.name;
-            contact.business = business._id;
-            contact.type = "Business";
-            contact.save();
-            User.addBusiness(req.user._id, business._id, () => {
-              newBusiness.populate(
-                [
-                  {
-                    path: "users.user",
-                    select: "name  phone email imgUrl emails type"
-                  }
-                ],
-                err => {
-                  if (err) {
-                    logy(err);
-                    res.status(500).end({
-                      err
-                    });
-                  } else {
-                    res.send(business);
-                  }
-                }
-              );
-            });
-          }
-        });
-      }
+      });
     }
   );
 };
@@ -80,23 +56,19 @@ export const getOne = (req, res, next) => {
       _id: req.params.id
     },
     (err, business) => {
-      if (err) {
-        res.status(500).send(err);
-      } else if (business) {
-        business.populate(
-          [
-            {
-              path: "users.user",
-              select: "name  phone email imgUrl emails type"
-            }
-          ],
-          err => {
-            res.send(business);
+      if (err) next(err);
+      if (!business) next(createError(404, req.lg.business.notExist));
+      business.populate(
+        [
+          {
+            path: "users.user",
+            select: "name  phone email imgUrl emails type"
           }
-        );
-      } else {
-        res.status(404).end("business not found");
-      }
+        ],
+        err => {
+          res.send(business);
+        }
+      );
     }
   );
 };
@@ -117,35 +89,17 @@ export const updateOne = (req, res, next) => {
       }
     ])
     .exec((err, item) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-        res.send(item);
-      }
+      if (err) next(err);
+      res.send(item);
     });
 };
 export const get = (req, res, next) => {
-  logy("req ---> ", req);
-  let rquery = ntype(req.query);
-  let options = {};
-  options.page = rquery.page || 1;
-  options.limit = rquery.limit || 20;
-  delete rquery.page;
-  delete rquery.limit;
+  req.query["users.user"] = req.user.id;
+  let helper = queryHelper(req.query, {});
 
-  rquery.$or = [
-    {
-      "users.user": ObjectId(`${req.user._id}`)
-    }
-  ];
-
-  Business.paginate(rquery, options, (err, item) => {
-    if (err) {
-      logy(err);
-      res.status(500).end(req);
-    } else {
-      res.send(item);
-    }
+  Business.paginate(helper.query, helper.optionsoptions, (err, item) => {
+    if (err) next(err);
+    res.send(item);
   });
 };
 // todo - user method can be used for the same action plus permissions asignment
