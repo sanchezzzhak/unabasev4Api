@@ -37,10 +37,6 @@ export const google = (req, res, next) => {
         async (err, user) => {
           if (err) next(err);
           if (!user) {
-            // const location = await getLocationByIp(req);
-            // const countryOrigin = location.data.country ? location.data.country.toLowerCase() : "chile";
-            // const currency = await Currency.findOne({ countryOrigin }).exec();
-
             let newUser = new User();
             newUser.currency = await getCurrencyByLocation(req);
             // (newUser.google = newUser.username = req.body.google.email.slice(0, req.body.google.email.indexOf("@"))), (newUser.google = req.body.google);
@@ -63,15 +59,7 @@ export const google = (req, res, next) => {
                 user.activeScope = user._id;
                 user.save(async (err, userFound) => {
                   if (err) next(err);
-                  // const token = jwt.sign(
-                  //   {
-                  //     user: userFound
-                  //   },
-                  //   envar().SECRET,
-                  //   {
-                  //     expiresIn: "3d"
-                  //   }
-                  // );
+
                   await user.populate([
                     {
                       path: "scope.id",
@@ -91,12 +79,7 @@ export const google = (req, res, next) => {
             user.google.id = data.data.sub;
             user.lastLogin = Date.now();
             user.save();
-            // const token = jwt.sign(
-            //   {
-            //     user: getUserData(user)
-            //   },
-            //   envar().SECRET
-            // );
+
             user.populate(
               [
                 {
@@ -129,54 +112,32 @@ export const password = (req, res, next) => {
     req.params.id,
     "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts",
     function(err, user) {
-      if (err) {
-        res.status(500).send(err);
-      } else if (!user) {
-        res.statusMessage = req.lg.user.notFound;
-        res.statusText = req.lg.user.notFound;
-        res.status(404).send({
-          err: req.lg.user.notFound
-        });
-      } else {
-        user.security.hash = user.generateHash(newPassword);
+      if (err) next(err);
+      if (!user) next(createError(404, req.lg.user.notFound));
 
-        const isActive = user.isActive;
-        if (isActive) {
-          user.lastLogin = Date.now();
-          if (user.activeScope == "" || !user.activeScope || user.activeScope == null) {
-            user.activeScope = user._id;
-          }
-          user.save(async (err, user) => {
-            // const token = jwt.sign(
-            //   {
-            //     user
-            //   },
-            //   envar().SECRET,
-            //   {
-            //     expiresIn: "3d"
-            //   }
-            // );
-            await user.populate([
-              {
-                path: "scope.id",
-                select: "name"
-              }
-            ]);
-            req.user = user;
-            req.user.id = req.user._id.toString() || null;
-            res.statusMessage = req.lg.user.successLogin;
-            res.json({
-              token: generateToken(user),
-              user
-            });
-          });
-        } else if (!isActive) {
-          res.statusMessage = req.lg.user.notActive;
-          res.status(401).send({
-            err: req.lg.user.notActive
-          });
-        }
+      user.security.hash = user.generateHash(newPassword);
+
+      if (user.isActive) next(createError(401, req.lg.user.notActive));
+
+      user.lastLogin = Date.now();
+      if (user.activeScope == "" || !user.activeScope || user.activeScope == null) {
+        user.activeScope = user._id;
       }
+      user.save(async (err, user) => {
+        await user.populate([
+          {
+            path: "scope.id",
+            select: "name"
+          }
+        ]);
+        req.user = user;
+        req.user.id = req.user._id.toString() || null;
+        res.statusMessage = req.lg.user.successLogin;
+        res.json({
+          token: generateToken(user),
+          user
+        });
+      });
     }
   );
 };
@@ -205,25 +166,15 @@ export const login = (req, res, next) => {
       // if no user is found, return the message
       if (!user) next(notFoundError());
       const isValid = typeof req.body.password !== "undefined" ? await User.validPassword(user._id.toString(), req.body.password) : false;
-      // const isValid = typeof req.body.password !== "undefined" ? user.validPassword(req.body.password) : false;
       delete user.password;
       if (!isValid) next(createError(403, req.lg.user.wrongPassword));
       if (!user.isActive) next(createError(401, req.lg.user.notActive));
-      // if (isValid && user.isActive) {
+
       user.lastLogin = Date.now();
       if (user.activeScope == "" || !user.activeScope || user.activeScope == null) {
         user.activeScope = user._id;
       }
       user.save(async (err, user) => {
-        // const token = jwt.sign(
-        //   {
-        //     user
-        //   },
-        //   envar().SECRET,
-        //   {
-        //     expiresIn: "3d"
-        //   }
-        // );
         await user.populate([
           {
             path: "scope.id",
@@ -239,63 +190,33 @@ export const login = (req, res, next) => {
           user
         });
       });
-      // } else if (!isValid) {
-      //   res.statusMessage = req.lg.user.wrongPassword;
-      //   res.status(403).send({
-      //     err: req.lg.user.wrongPassword
-      //   });
-      // } else if (!user.isActive) {
-      //   res.statusMessage = req.lg.user.notActive;
-      //   res.status(401).send({
-      //     err: req.lg.user.notActive
-      //   });
-      // }
     });
 };
 export const verify = (req, res, next) => {
   User.findById(req.params.id, (err, user) => {
-    if (err) {
-      res.status(500).send(err);
-    } else if (user) {
-      if (user.security.activateHash === req.body.hash) {
-        user.isActive = true;
-        res.statusMessage = req.lg.user.verified;
+    if (err) next(err);
+    if (!user) next(createError(404, req.lg.user.notFound));
+    if (user.security.activateHash !== req.body.hash) next(createError(403, req.lg.user.notVerified));
+    user.isActive = true;
+    res.statusMessage = req.lg.user.verified;
 
-        user.save(async (err, user) => {
-          // const token = jwt.sign(
-          //   {
-          //     user
-          //   },
-          //   envar().SECRET,
-          //   {
-          //     expiresIn: "3d"
-          //   }
-          // );
-          await user.populate([
-            {
-              path: "scope.id",
-              select: "name"
-            }
-          ]);
-          req.user = user;
-          req.user.id = req.user._id.toString() || null;
-          res.json({
-            token: generateToken(user),
-            user
-          });
-        });
-      } else {
-        res.statusMessage = req.lg.user.notVerified;
-        res.status(404).end();
-      }
-    } else {
-      res.statusMessage = req.lg.user.notFound;
-      res.status(404).end();
-    }
+    user.save(async (err, user) => {
+      await user.populate([
+        {
+          path: "scope.id",
+          select: "name"
+        }
+      ]);
+      req.user = user;
+      req.user.id = req.user._id.toString() || null;
+      res.json({
+        token: generateToken(user),
+        user
+      });
+    });
   });
 };
 export const register = (req, res, next) => {
-  if (!req.body.email) next(missingData(req.lg.user.missingEmail));
   let query = {
     $or: [
       {
@@ -312,127 +233,99 @@ export const register = (req, res, next) => {
     if (err) return next(err);
 
     // check to see if theres already a user with that email
-    if (user) {
-      // return done(null, false, req.flash('signupMessage', 'El nombre de usuario ya fue elegido.'));
-      res.statusMessage = req.lg.user.alreadyExist;
-      res.status(409);
-      let msg;
-      if (user.username === req.body.username) {
-        msg = req.lg.user.alreadyExist;
-      } else {
-        msg = req.lg.user.alreadyRegistered;
-      }
-      res.send({
-        msg
-      });
-    } else {
-      // if there is no user with that email
-      // create the user
-      let newUser = new User();
+    if (user) next(createError(409, user.username === req.body.username ? req.lg.user.alreadyExist : req.lg.user.alreadyRegistered));
 
-      // const location = await getLocationByIp(req);
-      // const countryOrigin = location.data.country ? location.data.country.toLowerCase() : "chile";
-      // const currency = await Currency.findOne({ countryOrigin }).exec();
+    // if there is no user with that email
+    // create the user
+    let newUser = new User();
 
-      newUser.currency = await getCurrencyByLocation(req);
-      let password;
-      let activateHash;
-      logy(req.body.password);
+    newUser.currency = await getCurrencyByLocation(req);
+    let password;
+    let activateHash;
+    logy(req.body.password);
 
-      // if the user register without password, we generate one random, and ask to verify the account
-      if (typeof req.body.password === "undefined" || req.body.password === null) {
-        password = Math.random()
+    // if the user register without password, we generate one random, and ask to verify the account
+    if (typeof req.body.password === "undefined" || req.body.password === null) {
+      password = Math.random()
+        .toString(36)
+        .substring(2, 15);
+      activateHash =
+        Math.random()
+          .toString(36)
+          .substring(2, 15) +
+        Math.random()
           .toString(36)
           .substring(2, 15);
-        activateHash =
-          Math.random()
-            .toString(36)
-            .substring(2, 15) +
-          Math.random()
-            .toString(36)
-            .substring(2, 15);
 
-        newUser.password = newUser.generateHash(password);
-        newUser.security.updatedAt = new Date();
-        newUser.security.isRandom = true;
-        newUser.security.activateHash = activateHash;
-        newUser.security.hasPassword = false;
-        newUser.isActive = false;
-      } else {
-        newUser.password = newUser.generateHash(req.body.password);
-        newUser.security.updatedAt = new Date();
-        newUser.security.isRandom = false;
-        newUser.security.hasPassword = true;
-        newUser.isActive = true;
-      }
-      // set the user's local credentials
-      newUser.username = req.body.username || req.body.email.slice(0, req.body.email.indexOf("@"));
-
-      newUser.name = req.body.name;
-
-      newUser.emails.push({
-        email: req.body.email,
-        label: "default"
-      });
-
-      // save the user
-      newUser.save(async function(err, user) {
-        if (err) throw err;
-
-        // const token = jwt.sign(
-        //   {
-        //     user
-        //   },
-        //   envar().SECRET,
-        //   {
-        //     expiresIn: "3d"
-        //   }
-        // );
-        user.activeScope = user._id;
-        user.save();
-        // TODO, send email asking to verify account if the password is generated by the system.
-        // if (user.security.isRandom) {
-        //   const { text, subject } = template().register({
-        //     password,
-        //     origin: req.headers.origin,
-        //     lang: req.locale.language,
-        //     activateHash,
-        //     id: user._id,
-        //     name: req.body.name
-        //   });
-        //   logy("text");
-        //   logy(text);
-
-        //   let msg = {
-        //     to: req.body.email,
-        //     subject: subject,
-        //     html: text
-        //   };
-
-        //   send(msg)
-        //     .then(res => logy(res))
-        //     .catch(err => console.warn(err));
-        // }
-        await user.populate([
-          {
-            path: "scope.id",
-            select: "name"
-          }
-        ]);
-        req.user = user;
-        req.user.id = req.user._id.toString() || null;
-        res.json({
-          token: generateToken(user),
-          user
-        });
-      });
+      newUser.password = newUser.generateHash(password);
+      newUser.security.updatedAt = new Date();
+      newUser.security.isRandom = true;
+      newUser.security.activateHash = activateHash;
+      newUser.security.hasPassword = false;
+      newUser.isActive = false;
+    } else {
+      newUser.password = newUser.generateHash(req.body.password);
+      newUser.security.updatedAt = new Date();
+      newUser.security.isRandom = false;
+      newUser.security.hasPassword = true;
+      newUser.isActive = true;
     }
+    // set the user's local credentials
+    newUser.username = req.body.username || req.body.email.slice(0, req.body.email.indexOf("@"));
+
+    newUser.name = req.body.name;
+
+    newUser.emails.push({
+      email: req.body.email,
+      label: "default"
+    });
+
+    // save the user
+    newUser.save(async function(err, user) {
+      if (err) throw err;
+
+      user.activeScope = user._id;
+      user.save();
+      // TODO, send email asking to verify account if the password is generated by the system.
+      // if (user.security.isRandom) {
+      //   const { text, subject } = template().register({
+      //     password,
+      //     origin: req.headers.origin,
+      //     lang: req.locale.language,
+      //     activateHash,
+      //     id: user._id,
+      //     name: req.body.name
+      //   });
+      //   logy("text");
+      //   logy(text);
+
+      //   let msg = {
+      //     to: req.body.email,
+      //     subject: subject,
+      //     html: text
+      //   };
+
+      //   send(msg)
+      //     .then(res => logy(res))
+      //     .catch(err => console.warn(err));
+      // }
+      await user.populate([
+        {
+          path: "scope.id",
+          select: "name"
+        }
+      ]);
+      req.user = user;
+      req.user.id = req.user._id.toString() || null;
+      res.json({
+        token: generateToken(user),
+        user
+      });
+    });
   });
 };
-export const googleCallback = (req, res, next) => {
+export const googleCallback = async (req, res, next) => {
   // Successful authentication, redirect home.
-  // req.session.access_token = req.user.accessToken;
-  // req.session.access_token = req.user.google.accessToken;
   logger("callbackg");
   if (typeof req.user.history.emailUrl != "undefined") {
     let url = req.user.history.emailUrl;
@@ -441,14 +334,14 @@ export const googleCallback = (req, res, next) => {
         "history.emailUrl": ""
       }
     };
-    User.findOneAndUpdate(
+    await User.findOneAndUpdate(
       {
         _id: req.user._id
       },
       update,
       {},
       (err, user) => {
-        if (err) log(err);
+        if (err) next(err);
         log("user.username");
         log(user.username);
       }
@@ -461,16 +354,14 @@ export const googleCallback = (req, res, next) => {
         "history.inviteUrl": ""
       }
     };
-    User.findOneAndUpdate(
+    await User.findOneAndUpdate(
       {
         _id: req.user._id
       },
       update,
       {},
       (err, user) => {
-        if (err) log(err);
-        log("user.username");
-        log(user.username);
+        if (err) next(err);
       }
     );
     res.redirect(url);
