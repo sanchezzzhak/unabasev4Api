@@ -57,17 +57,20 @@ export const create = async (req, res, next) => {
 export const password = (req, res, next) => {
   const { password, newPassword } = req.body;
 
-  User.findById(req.user._id, function(err, user) {
+  User.findById(req.user._id, async (err, user) => {
     if (err) next(err);
     if (!user) next(notFoundError());
     if (typeof user.password == "undefined" || user.password === null) {
-      res.status(200).send({
-        msg: "password created"
-      });
-
       user.password = user.generateHash(newPassword.toString());
       user.security.hasPassword = true;
-      user.save();
+      try {
+        await user.save();
+        res.status(200).send({
+          msg: "password created"
+        });
+      } catch (err) {
+        next(err);
+      }
     } else if (password && user.validPassword(password.toString())) {
       user.password = user.generateHash(newPassword.toString());
       user.save();
