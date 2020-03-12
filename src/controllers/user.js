@@ -57,7 +57,7 @@ export const create = async (req, res, next) => {
 export const password = (req, res, next) => {
   const { password, newPassword } = req.body;
 
-  User.findById(req.user._id, async (err, user) => {
+  User.findById(req.user._id, { password: 1 }, async (err, user) => {
     if (err) next(err);
     if (!user) next(notFoundError());
     if (typeof user.password == "undefined" || user.password === null) {
