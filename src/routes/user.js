@@ -22,12 +22,12 @@ users.put(
     [
       {
         param_key: "password",
-        required: true,
+        required: false,
         type: "string"
       },
       {
         param_key: "newPassword",
-        required: false,
+        required: true,
         type: "string"
       }
     ],
