@@ -129,7 +129,7 @@ export function createMany(req, res, next) {
 export function group(req, res, next) {
   let line = new Line(req.body);
   line.creator = req.user._id;
-  line.save((err, line) => {
+  line.save(err => {
     if (err) return next(err);
     Line.updateMany(
       {
@@ -172,11 +172,11 @@ export function group(req, res, next) {
 export function createParent(req, res, next) {
   let parent = new Line(req.body.parent);
   parent.creator = req.user._id;
-  parent.save((err, line) => {
+  parent.save(err => {
     if (err) return next(err);
     for (let child of req.body.children) {
       child.creator = req.user._id;
-      child.parent = line._id;
+      child.parent = parent._id;
     }
     Line.insertMany(req.body.children, async (err, lines) => {
       if (err) return next(err);
@@ -196,7 +196,7 @@ export function create(req, res, next) {
 
   let line = new Line(req.body);
   line.creator = req.user._id;
-  line.save((err, line) => {
+  line.save(err => {
     if (err) return next(err);
     if (line.parent) {
       Line.findByIdAndUpdate(line.parent, {

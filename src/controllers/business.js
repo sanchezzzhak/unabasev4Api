@@ -26,14 +26,14 @@ export const create = (req, res, next) => {
           user: req.user.id
         }
       ];
-      newBusiness.save((err, business) => {
+      newBusiness.save(err => {
         if (err) next(err);
         let contact = new Contact();
-        contact.name = business.name;
-        contact.business = business._id;
+        contact.name = newBusiness.name;
+        contact.business = newBusiness._id;
         contact.type = "Business";
         contact.save();
-        User.addBusiness(req.user._id, business._id, () => {
+        User.addBusiness(req.user._id, newBusiness._id, () => {
           newBusiness.populate(
             [
               {
@@ -43,7 +43,7 @@ export const create = (req, res, next) => {
             ],
             err => {
               if (err) next(err);
-              res.send(business);
+              res.send(newBusiness);
             }
           );
         });

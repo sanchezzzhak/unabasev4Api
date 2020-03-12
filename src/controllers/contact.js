@@ -46,17 +46,17 @@ export const create = async (req, res, next) => {
   let contact = new Contact(req.body);
   contact.creator = req.user._id;
   contact.user = userId ? userId._id : null;
-  contact.save((err, item) => {
+  contact.save(err => {
     if (err) next(err);
-    if (item.user && item.user !== "") {
-      User.findByIdAndUpdate(item.user, { $addToSet: { contacts: item._id } }, { new: true }, (err, user) => {
+    if (contact.user && contact.user !== "") {
+      User.findByIdAndUpdate(contact.user, { $addToSet: { contacts: contact._id } }, { new: true }, (err, user) => {
         if (err) next(err);
-        item.populate([{ path: "user", select: "name google imgUrl emails" }], err => {
-          res.send(item);
+        contact.populate([{ path: "user", select: "name google imgUrl emails" }], err => {
+          res.send(contact);
         });
       });
     } else {
-      res.send(item);
+      res.send(contact);
     }
   });
 };

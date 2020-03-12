@@ -5,7 +5,7 @@ import Line from "../models/line";
 export const create = (req, res) => {
   let comment = new Comment(req.body);
   comment.creator = req.user._id;
-  comment.save((err, comment) => {
+  comment.save(err => {
     if (err) {
       res.status(500).send({ msg: err });
     } else {

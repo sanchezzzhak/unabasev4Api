@@ -17,9 +17,9 @@ export const get = (req, res, next) => {
 export const create = (req, res, next) => {
   let currency = new Currency();
   Object.assign(currency, req.body);
-  currency.save((err, item) => {
+  currency.save(err => {
     if (err) next(err);
-    res.send(item);
+    res.send(currency);
   });
 };
 

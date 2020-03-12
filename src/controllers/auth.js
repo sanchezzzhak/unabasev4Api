@@ -51,13 +51,13 @@ export const google = (req, res, next) => {
               label: "google"
             });
             newUser.name = req.body.google.name;
-            newUser.save((err, user) => {
+            newUser.save(err => {
               if (err) next(err);
               if (user) {
                 // TODO verify link with user after modify the model of client.data to client.user
                 // linkMovement(user.emails.google, user);
                 user.activeScope = user._id;
-                user.save(async (err, userFound) => {
+                user.save(async err => {
                   if (err) next(err);
 
                   await user.populate([
@@ -66,11 +66,11 @@ export const google = (req, res, next) => {
                       select: "name"
                     }
                   ]);
-                  req.user = userFound;
+                  req.user = user;
                   req.user.id = req.user._id.toString() || null;
                   res.send({
-                    token: generateToken(userFound),
-                    user: userFound
+                    token: generateToken(user),
+                    user: user
                   });
                 });
               }
@@ -123,7 +123,7 @@ export const password = (req, res, next) => {
       if (user.activeScope == "" || !user.activeScope || user.activeScope == null) {
         user.activeScope = user._id;
       }
-      user.save(async (err, user) => {
+      user.save(async err => {
         await user.populate([
           {
             path: "scope.id",
@@ -174,7 +174,7 @@ export const login = (req, res, next) => {
       if (user.activeScope == "" || !user.activeScope || user.activeScope == null) {
         user.activeScope = user._id;
       }
-      user.save(async (err, user) => {
+      user.save(async err => {
         await user.populate([
           {
             path: "scope.id",
