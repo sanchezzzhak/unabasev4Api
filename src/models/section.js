@@ -6,6 +6,7 @@ import paginateConfig from "../config/paginate";
 const sectionSchema = Schema(
   {
     name: { type: String },
+    isActive: { type: Boolean, default: true },
     users: Array({ type: String, ref: "User" })
   },
   { timestamps: true }
