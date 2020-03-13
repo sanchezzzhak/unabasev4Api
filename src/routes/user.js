@@ -1,7 +1,7 @@
 import { Router } from "express";
 const users = Router();
 import { validateParams } from "../middleware/validate";
-import { create, get, logout, find, getOne, password, update, business, scope, user, restart, relationsFind, lastItems, lastParents } from "../controllers/user";
+import { create, get, logout, find, getOne, password, update, business, scope, user, restart, relationsFind, lastItems, lastParents, connections } from "../controllers/user";
 
 import { sToken } from "../config/lib/auth";
 users.post("/", create);
@@ -198,4 +198,5 @@ users.put(
   update
 );
 
+users.get("/connections", connections);
 export default users;
