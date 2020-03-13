@@ -50,7 +50,15 @@ export const google = (req, res, next) => {
               email: req.body.google.email,
               label: "google"
             });
-            newUser.name = req.body.google.name;
+            let names = req.body.google.name.split(" ");
+            newUser.name = {
+              first: names[0]
+            };
+
+            newUser.middle = names.length > 2 ? names[1] : null;
+            newUser.last = names.length > 2 ? names[2] : names[1];
+            newUser.secondLast = names[3] || null;
+
             newUser.save(err => {
               if (err) next(err);
               if (user) {
