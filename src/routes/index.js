@@ -35,6 +35,7 @@ import report from "./report";
 import push from "./push";
 import notification from "./notification";
 import section from "./section";
+import itemAlias from "./itemAlias";
 import { parseQueryUrl } from "../middleware/parseQueryUrl";
 
 // TODO verify session for all routes
@@ -59,6 +60,7 @@ routes.use("/reports", report);
 routes.use("/push", push);
 routes.use("/notifications", notification);
 routes.use("/sections", section);
+routes.use("/itemAlias", itemAlias);
 routes.post("/t", (req, res) => {
   res.send({ body: req.body, headers: req.headers });
 });
