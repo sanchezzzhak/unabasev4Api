@@ -3,7 +3,7 @@ import UserPermission from "../models/userPermission";
 import Role from "../models/role";
 import { queryHelper } from "../lib/queryHelper";
 
-export const create = (req, res) => {
+export const create = (req, res, next) => {
   Permission.create(req.body, (err, permission) => {
     if (err) return next(err);
     res.send(permission);
