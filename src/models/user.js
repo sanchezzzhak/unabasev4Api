@@ -85,6 +85,7 @@ let userSchema = Schema(
       ref: { type: String, ref: "User" },
       id: { type: String }
     }),
+    connections: Array({ type: String, ref: "User" }),
     contacts: Array({ type: String, ref: "Contact" }),
     webpush: {
       devices: Array({

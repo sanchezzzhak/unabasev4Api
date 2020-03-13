@@ -35,6 +35,7 @@ module.exports.checkAccess = (id, errorMsg) => {
   };
 };
 
+// DERECATED
 module.exports.isAuth = (req, res, next) => {
   let guestId;
   let invite;
