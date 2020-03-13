@@ -11,7 +11,13 @@ const salt = bcrypt.genSaltSync(10);
 let userSchema = Schema(
   {
     isActive: { type: Boolean, default: true },
-    name: String,
+    // name: String,
+    name: {
+      first: { type: String },
+      middle: { type: String },
+      last: { type: String },
+      secondLast: { type: String }
+    },
     username: { type: String },
     language: { type: String, default: "es" },
     password: { type: String, select: false },
