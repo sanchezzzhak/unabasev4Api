@@ -175,6 +175,7 @@ export const login = (req, res, next) => {
         user.activeScope = user._id;
       }
       user.save(async err => {
+        if (err) next(err);
         await user.populate([
           {
             path: "scope.id",
