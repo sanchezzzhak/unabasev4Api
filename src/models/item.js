@@ -7,6 +7,7 @@ const itemSchema = new Schema(
   {
     isActive: { type: Boolean, default: true },
     children: Array({ type: String, ref: "Item" }),
+    verified: { type: Boolean, default: false },
     name: String,
     creator: { type: String, ref: "User" },
     quantity: {
