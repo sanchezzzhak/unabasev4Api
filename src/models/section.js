@@ -10,3 +10,9 @@ const sectionSchema = Schema(
   },
   { timestamps: true }
 );
+sectionSchema.plugin(mongoosePaginate);
+
+mongoosePaginate.paginate.options = paginateConfig;
+const Section = mongoose.model("Section", sectionSchema);
+
+export default Section;
