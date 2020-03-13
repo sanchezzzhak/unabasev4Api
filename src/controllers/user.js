@@ -447,3 +447,12 @@ export const lastParents = (req, res, next) => {
         });
     });
 };
+
+export const connections = async (req, res, next) => {
+  try {
+    let connections = User.paginate({ connections: req.user.id }, { name: 1 }).lean();
+    res.send(connections);
+  } catch (err) {
+    next(err);
+  }
+};
