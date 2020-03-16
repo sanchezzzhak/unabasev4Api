@@ -17,7 +17,6 @@ beforeEach(done => {
     if (err) done(err);
     done();
   });
-  done(err);
 });
 
 describe("auth without", () => {

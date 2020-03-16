@@ -18,7 +18,7 @@ before(done => {
         authUser = res.body.token;
 
         chai.expect(res.statusCode).to.equal(200);
-        Movement.deleteMany({}, err => {
+        Section.deleteMany({}, err => {
           done();
         });
       });

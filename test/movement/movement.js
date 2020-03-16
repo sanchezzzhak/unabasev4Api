@@ -14,6 +14,7 @@ before(done => {
       .post("/auth/register")
       .send({ username: userData().username, email: userData().emails.default })
       .end(function(err, res) {
+        if (err) done(err);
         authUser = res.body.token;
 
         chai.expect(res.statusCode).to.equal(200);
