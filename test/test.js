@@ -19,6 +19,7 @@ import { init } from "./init";
 import api_doc from "unabase_api_doc";
 import { registerWithout } from "./auth/auth";
 import movement from "./movement/movement";
+import section from "./section/section";
 
 const api = process.env.NODE_ENV === "dev" ? "https://dev.unabase.net" : "http://localhost:3000/";
 
