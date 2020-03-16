@@ -53,3 +53,5 @@ router.post(
   ),
   create
 );
+
+export default router;
