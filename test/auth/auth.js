@@ -13,8 +13,11 @@ const emailLogin = userData().emails.default;
 
 beforeEach(done => {
   User.deleteMany({}, err => {
+    console.log(err);
+    if (err) done(err);
     done();
   });
+  done(err);
 });
 
 describe("auth without", () => {
