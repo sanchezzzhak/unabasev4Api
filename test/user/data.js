@@ -2,7 +2,7 @@ import rand from "../lib/random";
 
 export default () => {
   return {
-    name: "test business" + rand.text(),
+    name: rand.text(),
     username: rand.text(),
     password: rand.text(),
     idnumber: rand.number(),

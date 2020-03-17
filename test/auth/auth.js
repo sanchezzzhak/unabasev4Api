@@ -25,7 +25,12 @@ describe("auth without", () => {
       .request(app)
       .post("/auth/register")
       .send({
-        name: 123,
+        name: {
+          first: userData().name,
+          middle: userData().name,
+          last: userData().name,
+          secondLast: userData().name
+        },
         email: userData().emails.default
       })
       .end((err, res) => {
@@ -49,7 +54,12 @@ describe("auth with password", () => {
       .request(app)
       .post("/auth/register")
       .send({
-        name: userData().name,
+        name: {
+          first: userData().name,
+          middle: userData().name,
+          last: userData().name,
+          secondLast: userData().name
+        },
         email: userData().emails.default,
         password: userData().password
       })
