@@ -37,15 +37,20 @@ export const sToken = (req, res, next) => {
         });
       } else {
         logy("decoded!");
-        const authUser = await User.findById(decoded.user._id)
-          .select(
-            "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
-          )
-          .populate("scope.id", "name id _id")
-          .lean();
-        authUser.id = authUser._id.toString();
-        req.user = authUser;
-        next();
+        try {
+          console.log(decoded);
+          const authUser = await User.findById(decoded.user._id)
+            .select(
+              "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
+            )
+            .populate("scope.id", "name id _id")
+            .lean();
+          authUser.id = authUser._id.toString();
+          req.user = authUser;
+          next();
+        } catch (err) {
+          next(err);
+        }
       }
     });
     // next();
