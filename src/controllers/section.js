@@ -2,7 +2,7 @@ import Section from "../models/section";
 
 export const get = async (req, res, next) => {
   try {
-    let sections = await Section.paginate({}).lean();
+    let sections = await Section.paginate({}).then({});
     res.send(sections);
   } catch (err) {
     next(err);
