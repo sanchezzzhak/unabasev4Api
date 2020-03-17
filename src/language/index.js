@@ -11,6 +11,6 @@ export default (req, res, next) => {
   // } else {
   //   req.lg = languages["es"];
   // }
-  req.lg = { user, item, movement, business };
+  req.lg = { user: user[locale], item: item[locale], movement: movement[locale], business: business[locale] };
   next();
 };
