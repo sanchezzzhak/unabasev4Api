@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 
 import envar from "../../lib/envar";
 import User from "../../models/user";
+import { createError } from "../../lib/error";
 
 export const isAuth = (req, res, next) => {
   if (req.isAuthenticated() || req.method === "OPTIONS" || req.headers.authorization === "postmanvn4b4s3") {
@@ -30,27 +31,22 @@ export const sToken = (req, res, next) => {
   req.token = req.headers.authorization;
   if (typeof req.token !== "undefined" && req.headers.authorization !== "postmanvn4b4s3") {
     jwt.verify(req.token, envar().SECRET, async (err, decoded) => {
-      if (err) {
-        res.status(401).send({
-          msg: "Not authorized1",
-          err
-        });
-      } else {
-        logy("decoded!");
-        try {
-          console.log(decoded);
-          const authUser = await User.findById(decoded.user._id)
-            .select(
-              "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
-            )
-            .populate("scope.id", "name id _id")
-            .lean();
-          authUser.id = authUser._id.toString();
-          req.user = authUser;
-          next();
-        } catch (err) {
-          next(err);
-        }
+      if (err) next(createError(401, "Not authorized1"));
+
+      try {
+        // console.log(decoded);
+        let authUser = await User.findById(decoded.user._id)
+          .select(
+            "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
+          )
+          .populate("scope.id", "name id _id")
+          .lean();
+
+        authUser.id = authUser._id.toString();
+        req.user = authUser;
+        next();
+      } catch (err) {
+        next(err);
       }
     });
     // next();
