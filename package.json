@@ -10,7 +10,7 @@
     "test": "NODE_ENV=dev mocha-parallel-tests --exit --timeout 20000 --require  babel-core/register --exclude /modules --require @babel/polyfill",
     "testl": "NODE_ENV=local mocha-parallel-tests --exit --timeout 20000 --require  babel-core/register --exclude /modules --require @babel/polyfill",
     "tdev": "NODE_ENV=dev mocha-parallel-tests --exit --timeout 20000 --require  babel-core/register --exclude /modules --require @babel/polyfill --grep",
-    "testg": "NODE_ENV=test mocha-parallel-tests --exit --timeout 20000 --require @babel/register --exclude /modules --require @babel/polyfill --grep",
+    "testg": "NODE_ENV=test mocha-parallel-tests __tests__ --recursive  --exit --timeout 20000 --require @babel/register --exclude /modules --require @babel/polyfill --grep",
     "start3": "nodemon ./src/app",
     "dev": "NODE_ENV=dev nodemon   ./src/app  --exec babel-node",
     "una": "NODE_ENV=una nodemon   ./src/app  --exec babel-node",
@@ -20,7 +20,8 @@
     "build-babel": "babel -d ./build ./src -s",
     "build": "npm run clean && npm run build-babel & scp -r /home/simon/sys/apiv4/build  devs@m.unabase.cl:/home/devs/api/",
     "sbuild": "npm run clean && npm run build-babel",
-    "start": "npm run build-babel && node ./build/app.js"
+    "start": "npm run build-babel && node ./build/app.js",
+    "jest": "jest --detectOpenHandles"
   },
   "dependencies": {
     "@babel/runtime": "^7.8.4",

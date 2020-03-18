@@ -23,7 +23,11 @@ const validateParams = function(requestParams, toValidate) {
           }
         }
       } else if (param.required) {
-        return res.send(400, {
+        // return res.send(400, {
+        //   status: 400,
+        //   result: `Missing Parameter ${param.param_key}`
+        // });
+        return res.status(400).send({
           status: 400,
           result: `Missing Parameter ${param.param_key}`
         });

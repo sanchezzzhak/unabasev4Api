@@ -20,7 +20,7 @@ export const getOne = async (req, res, next) => {
 
 export const updateOne = async (req, res, next) => {
   try {
-    let section = await Section.findByIdAndUpdate(req.params.id, req.body).lean();
+    let section = await Section.findByIdAndUpdate(req.params.id, req.body, { new: true }).lean();
     res.send(section);
   } catch (err) {
     next(err);

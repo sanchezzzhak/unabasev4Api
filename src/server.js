@@ -121,7 +121,7 @@ import { handleError } from "./middleware/error";
 // logy(process.env);
 
 app.use("/", routes);
-console.log(envar());
+// console.log(envar());
 webPush.setVapidDetails("mailto:simon@unabase.com", envar().VAPID_PUBLIC, envar().VAPID_PRIVATE);
 // const schema = makeExecutableSchema({
 //   typeDefs,
