@@ -2,7 +2,7 @@ import Section from "../models/section";
 
 export const get = async (req, res, next) => {
   try {
-    let sections = await Section.paginate({}).then({});
+    let sections = await Section.paginate({}, { populate: [{ path: "users", select: "name" }] }).then({});
     res.send(sections);
   } catch (err) {
     next(err);
@@ -11,7 +11,9 @@ export const get = async (req, res, next) => {
 
 export const getOne = async (req, res, next) => {
   try {
-    let section = await Section.findById(req.params.id).lean();
+    let section = await Section.findById(req.params.id)
+      .populate([{ path: "users", select: "name" }])
+      .lean();
     res.send(section);
   } catch (err) {
     next(err);
