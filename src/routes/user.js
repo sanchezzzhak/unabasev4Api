@@ -190,7 +190,7 @@ users.put(
       {
         param_key: "name",
         required: false,
-        type: "string"
+        type: "object"
       }
     ],
     "body"
