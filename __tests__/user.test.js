@@ -2,22 +2,26 @@ import request from "./request";
 import userData from "../lib/user/data";
 import User from "../src/models/user";
 let authUser = "";
+let data = userData();
 before(done => {
-  request
-    .post("/auth/register")
-    .send({ username: userData().username, email: userData().emails.default })
-    .end(function(err, res) {
-      if (err) done(err);
-      authUser = res.body.token;
-      res.status.should.equal(200);
-      done();
-    });
+  User.deleteMany({}, err => {
+    if (err) done(err);
+    request
+      .post("/auth/register")
+      .send({ username: userData().username, email: userData().emails.default, password: data.password })
+      .end(function(err, res) {
+        if (err) done(err);
+        authUser = res.body;
+        res.status.should.equal(200);
+        done();
+      });
+  });
 });
 describe("****   USER   ****", () => {
   it("LIST all users @user", done => {
     request
       .get("/users")
-      .set("authorization", authUser)
+      .set("authorization", authUser.token)
 
       .end((err, res) => {
         if (err) done(err);
@@ -34,11 +38,56 @@ describe("****   USER   ****", () => {
       if (err) done(err);
       request
         .put("/users/" + user.id)
-        .set("authorization", authUser)
+        .set("authorization", authUser.token)
         .send(update)
         .end((err, res) => {
           if (err) done(err);
-          console.log(res);
+          res.status.should.equal(200);
+          res.body.should.be.a("object");
+          done();
+        });
+    });
+  });
+  it("CHANGE PASSWORD of a user password@user", done => {
+    let update = userData();
+
+    request
+      .put("/users/password")
+      .set("authorization", authUser.token)
+      .send({
+        password: data.password,
+        newPassword: update.password
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        res.status.should.equal(200);
+        res.body.should.be.a("object");
+        done();
+      });
+  });
+  it("CREATE PASSWORD of a user passwordCreate@user", done => {
+    let user = new User(userData(false));
+    // let old = userData();
+    let update = userData();
+
+    // request
+    //   .post("/auth/register")
+    //   .send({ username: userData().username, email: userData().emails.default, password: data.password })
+    //   .end(function(err, res) {
+    //     if (err) done(err);
+    //     authUser = res.body;
+    //     res.status.should.equal(200);
+    //     done();
+    //   });
+    user.save(err => {
+      request
+        .put("/users/password")
+        .set("authorization", authUser.token)
+        .send({
+          newPassword: update.password
+        })
+        .end((err, res) => {
+          if (err) done(err);
           res.status.should.equal(200);
           res.body.should.be.a("object");
           done();
