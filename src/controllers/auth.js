@@ -254,7 +254,7 @@ export const register = (req, res, next) => {
     logy(req.body.password);
 
     // if the user register without password, we generate one random, and ask to verify the account
-    if (typeof req.body.password === "undefined" || req.body.password === null) {
+    if ((typeof req.body.password === "undefined" || req.body.password === null) && typeof req.body.noPassword === "undefined") {
       password = Math.random()
         .toString(36)
         .substring(2, 15);
@@ -272,7 +272,7 @@ export const register = (req, res, next) => {
       newUser.security.activateHash = activateHash;
       newUser.security.hasPassword = false;
       newUser.isActive = false;
-    } else {
+    } else if (typeof req.body.noPassword === "undefined") {
       newUser.password = newUser.generateHash(req.body.password);
       newUser.security.updatedAt = new Date();
       newUser.security.isRandom = false;
