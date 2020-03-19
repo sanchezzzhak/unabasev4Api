@@ -287,7 +287,25 @@ export const find = (req, res, next) => {
             }
           },
           {
-            name: {
+            "name.first": {
+              $regex: req.params.q,
+              $options: "i"
+            }
+          },
+          {
+            "name.middle": {
+              $regex: req.params.q,
+              $options: "i"
+            }
+          },
+          {
+            "name.last": {
+              $regex: req.params.q,
+              $options: "i"
+            }
+          },
+          {
+            "name.secondLast": {
               $regex: req.params.q,
               $options: "i"
             }
