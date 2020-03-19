@@ -26,60 +26,18 @@ before(done => {
 //   });
 // });
 
-it("CREATE MOVEMENT  create@movement", done => {
-  request
-    .post("/movements")
-    .set("authorization", authUser)
-    .send({
-      name: "asd",
-      description: "",
-      dates: {},
-      state: "opportunity",
-      currency: ""
-    })
-    .end((err, res) => {
-      if (err) done(err);
-
-      res.status.should.equal(200);
-      res.body.should.be.a("object");
-      done();
-    });
-});
-
-it("LIST MOVEMENT  list@movement", done => {
-  request
-    .get("/movements")
-    .set("authorization", authUser)
-
-    .end((err, res) => {
-      if (err) done(err);
-
-      res.status.should.equal(200);
-      res.body.should.be.a("object");
-      res.body.docs.should.be.a("array");
-      done();
-    });
-});
-
-it("UPDATE MOVEMENT  update@movement", done => {
-  let movement = new Movement({
-    name: "asd",
-    description: "",
-    dates: {},
-    state: "opportunity"
-  });
-  movement.save((err, movement) => {
-    if (err) done(err);
+describe("****   MOVEMENT   ****", () => {
+  it("CREATE MOVEMENT  create@movement", done => {
     request
-      .put("/movements/" + movement.id)
+      .post("/movements")
       .set("authorization", authUser)
       .send({
         name: "asd",
         description: "",
         dates: {},
-        state: "opportunity"
+        state: "opportunity",
+        currency: ""
       })
-
       .end((err, res) => {
         if (err) done(err);
 
@@ -88,47 +46,91 @@ it("UPDATE MOVEMENT  update@movement", done => {
         done();
       });
   });
-});
 
-it("NULL MOVEMENT  null@movement", done => {
-  let movement = new Movement({
-    name: "asd",
-    description: "",
-    dates: {},
-    state: "opportunity"
-  });
-  movement.save((err, movement) => {
-    if (err) done(err);
-
+  it("LIST MOVEMENT  list@movement", done => {
     request
-      .put("/movements/" + movement.id)
+      .get("/movements")
       .set("authorization", authUser)
-      .send({
-        isActive: false
-      })
 
       .end((err, res) => {
         if (err) done(err);
 
         res.status.should.equal(200);
         res.body.should.be.a("object");
+        res.body.docs.should.be.a("array");
         done();
       });
   });
-});
 
-it("FIND MOVEMENT  find@movement", done => {
-  request
-    .get("/movements")
-    .set("authorization", authUser)
+  it("UPDATE MOVEMENT  update@movement", done => {
+    let movement = new Movement({
+      name: "asd",
+      description: "",
+      dates: {},
+      state: "opportunity"
+    });
+    movement.save((err, movement) => {
+      if (err) done(err);
+      request
+        .put("/movements/" + movement.id)
+        .set("authorization", authUser)
+        .send({
+          name: "asd",
+          description: "",
+          dates: {},
+          state: "opportunity"
+        })
 
-    .end((err, res) => {
+        .end((err, res) => {
+          if (err) done(err);
+
+          res.status.should.equal(200);
+          res.body.should.be.a("object");
+          done();
+        });
+    });
+  });
+
+  it("NULL MOVEMENT  null@movement", done => {
+    let movement = new Movement({
+      name: "asd",
+      description: "",
+      dates: {},
+      state: "opportunity"
+    });
+    movement.save((err, movement) => {
       if (err) done(err);
 
-      res.status.should.equal(200);
-      res.body.should.be.a("object");
-      res.body.docs.should.be.a("array");
+      request
+        .put("/movements/" + movement.id)
+        .set("authorization", authUser)
+        .send({
+          isActive: false
+        })
 
-      done();
+        .end((err, res) => {
+          if (err) done(err);
+
+          res.status.should.equal(200);
+          res.body.should.be.a("object");
+          done();
+        });
     });
+  });
+
+  it("FIND MOVEMENT  find@movement", done => {
+    request
+      .get("/movements")
+      .set("authorization", authUser)
+
+      .end((err, res) => {
+        if (err) done(err);
+
+        res.status.should.equal(200);
+        res.body.should.be.a("object");
+        res.body.docs.should.be.a("array");
+
+        done();
+      });
+  });
 });

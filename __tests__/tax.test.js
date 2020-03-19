@@ -1,14 +1,15 @@
 import request from "./request";
-import Movement from "../src/models/movement";
-import User from "../src/models/user";
 import userData from "../lib/user/data";
-import Item from "../src/models/item";
+import Tax from "../src/models/tax";
 let authUser = "";
+
 let data = {
-  name: "test item name"
+  name: "test tax name",
+  number: 17
 };
 let update = {
-  name: "updated item name"
+  name: "update tax name",
+  number: 15
 };
 before(done => {
   request
@@ -18,53 +19,46 @@ before(done => {
       if (err) done(err);
       authUser = res.body.token;
       res.status.should.equal(200);
-      Movement.deleteMany({}, err => {
-        done();
-      });
+      done();
     });
 });
 
-describe("****   ITEM   ****", () => {
-  it("CREATE ITEM  create@item", done => {
+describe("****   TAX   ****", () => {
+  it("CREATE a @tax", done => {
     request
-      .post("/items")
+      .post("/taxes")
       .set("authorization", authUser)
       .send(data)
       .end((err, res) => {
         if (err) done(err);
-
         res.status.should.equal(200);
         res.body.should.be.a("object");
         done();
       });
   });
-  it("LIST ITEM  list@item", done => {
+  it("LIST all taxes @tax", done => {
     request
-      .get("/items")
+      .get("/taxes")
       .set("authorization", authUser)
 
       .end((err, res) => {
         if (err) done(err);
-
         res.status.should.equal(200);
         res.body.should.be.a("object");
-        res.body.docs.should.be.a("array");
         done();
       });
   });
 
-  it("UPDATE ITEM  update@item", done => {
-    let item = new Item(data);
-    item.save(err => {
+  it("UPDATE  a update@tax", done => {
+    let tax = new Tax(data);
+    tax.save(err => {
       if (err) done(err);
       request
-        .put("/items/" + item.id)
+        .put("/taxes/" + tax.id)
         .set("authorization", authUser)
         .send(update)
-
         .end((err, res) => {
           if (err) done(err);
-
           res.status.should.equal(200);
           res.body.should.be.a("object");
           done();
@@ -72,9 +66,9 @@ describe("****   ITEM   ****", () => {
     });
   });
 
-  it("FIND BY QUERY items - name find@item", done => {
+  it("FIND BY QUERY taxes - name find@tax", done => {
     request
-      .get("/items/find/" + data.name.slice(3, 7))
+      .get("/taxes/find/" + data.name.slice(3, 7))
       .set("authorization", authUser)
 
       .end((err, res) => {
@@ -84,16 +78,17 @@ describe("****   ITEM   ****", () => {
         done();
       });
   });
-  it("GET ONE item by id getOne@item", done => {
-    let item = new Item(data);
-    item.save(err => {
+  it("GET ONE tax by id getOne@tax", done => {
+    let tax = new Tax(data);
+
+    tax.save(err => {
+      if (err) done(err);
       request
-        .get("/items/" + item.id)
+        .get("/taxes/" + tax.id)
         .set("authorization", authUser)
 
         .end((err, res) => {
           if (err) done(err);
-
           res.status.should.equal(200);
           res.body.should.be.a("object");
           done();

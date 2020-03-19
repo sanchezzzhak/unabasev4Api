@@ -16,58 +16,60 @@ before(done => {
     });
 });
 
-it("CREATE SECTION  create@section", done => {
-  request
-    .post("/sections")
-    .set("authorization", authUser)
-    .send({
-      name: "new section"
-    })
-    .end((err, res) => {
-      if (err) done(err);
-
-      res.status.should.equal(200);
-      res.body.should.be.a("object");
-      done();
-    });
-});
-it("LIST SECTION  list@section", done => {
-  request
-    .get("/sections")
-    .set("authorization", authUser)
-
-    .end((err, res) => {
-      if (err) done(err);
-
-      res.status.should.equal(200);
-      res.body.should.be.a("object");
-      res.body.docs.should.be.a("array");
-      done();
-    });
-});
-
-it("UPDATE SECTION  update@section", done => {
-  let section = new Section({
-    name: "this is a section"
-  });
-  section.save((err, section) => {
-    if (err) done(err);
+describe("****   SECTION   ****", () => {
+  it("CREATE SECTION  create@section", done => {
     request
-      .put("/sections/" + section.id)
+      .post("/sections")
       .set("authorization", authUser)
       .send({
-        name: "updated section"
+        name: "new section"
       })
+      .end((err, res) => {
+        if (err) done(err);
+
+        res.status.should.equal(200);
+        res.body.should.be.a("object");
+        done();
+      });
+  });
+  it("LIST SECTION  list@section", done => {
+    request
+      .get("/sections")
+      .set("authorization", authUser)
 
       .end((err, res) => {
         if (err) done(err);
 
         res.status.should.equal(200);
         res.body.should.be.a("object");
-        res.body.name.should.be.a("string");
-        // res.body.name.equal("updated section");
-        expect(res.body.name).to.equal("updated section");
+        res.body.docs.should.be.a("array");
         done();
       });
+  });
+
+  it("UPDATE SECTION  update@section", done => {
+    let section = new Section({
+      name: "this is a section"
+    });
+    section.save((err, section) => {
+      if (err) done(err);
+      request
+        .put("/sections/" + section.id)
+        .set("authorization", authUser)
+        .send({
+          name: "updated section"
+        })
+
+        .end((err, res) => {
+          if (err) done(err);
+
+          res.status.should.equal(200);
+          res.body.should.be.a("object");
+          res.body.name.should.be.a("string");
+          // res.body.name.equal("updated section");
+          expect(res.body.name).to.equal("updated section");
+          done();
+        });
+    });
   });
 });
