@@ -65,27 +65,40 @@ describe("****   USER   ****", () => {
         done();
       });
   });
+  //TODO refactor so the test can use ther authuser global of this file
   it("CREATE PASSWORD of a user passwordCreate@user", done => {
-    let user = new User(userData(false));
-    // let old = userData();
-    let update = userData();
+    request
+      .post("/auth/register")
+      .send({ username: userData().username, email: userData().emails.default, noPassword: true })
+      .end(function(err, res) {
+        if (err) done(err);
+        let newUser = res.body;
+        res.status.should.equal(200);
 
-    // request
-    //   .post("/auth/register")
-    //   .send({ username: userData().username, email: userData().emails.default, password: data.password })
-    //   .end(function(err, res) {
-    //     if (err) done(err);
-    //     authUser = res.body;
-    //     res.status.should.equal(200);
-    //     done();
-    //   });
+        let update = userData();
+        request
+          .put("/users/password")
+          .set("authorization", newUser.token)
+          .send({
+            newPassword: update.password
+          })
+          .end((err, res) => {
+            if (err) done(err);
+            res.status.should.equal(200);
+            res.body.should.be.a("object");
+            done();
+          });
+      });
+  });
+  it("GET ONE user by id getOne@user", done => {
+    let user = new User(data);
+
     user.save(err => {
+      if (err) done(err);
       request
-        .put("/users/password")
+        .get("/users/" + user.id)
         .set("authorization", authUser.token)
-        .send({
-          newPassword: update.password
-        })
+
         .end((err, res) => {
           if (err) done(err);
           res.status.should.equal(200);
@@ -93,5 +106,18 @@ describe("****   USER   ****", () => {
           done();
         });
     });
+  });
+
+  it("FIND BY QUERY users -  name, username, email, idnumber find@user", done => {
+    request
+      .get("/users/find/" + data.name.first.slice(3, 7))
+      .set("authorization", authUser.token)
+
+      .end((err, res) => {
+        if (err) done(err);
+        res.status.should.equal(200);
+        res.body.should.be.a("object");
+        done();
+      });
   });
 });
