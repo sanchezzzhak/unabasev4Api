@@ -5,15 +5,17 @@ import User from "../src/models/user";
 let authUser = "";
 
 before(done => {
-  request
-    .post("/auth/register")
-    .send({ username: userData().username, email: userData().emails.default, name: userData().name })
-    .end(function(err, res) {
-      if (err) done(err);
-      authUser = res.body;
-      res.status.should.equal(200);
-      done();
-    });
+  User.deleteMany({}, err => {
+    request
+      .post("/auth/register")
+      .send({ username: userData().username, email: userData().emails.default, name: userData().name })
+      .end(function(err, res) {
+        if (err) done(err);
+        authUser = res.body;
+        res.status.should.equal(200);
+        done();
+      });
+  });
 });
 
 describe("****   RELATION   ****", () => {
