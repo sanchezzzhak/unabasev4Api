@@ -4,7 +4,7 @@ import mongooseConfig from "../config/paginate";
 
 const relationSchema = Schema(
   {
-    isActive: { type: Boolean, default: false },
+    isActive: { type: Boolean },
     petitioner: { type: String, ref: "User" },
     receptor: { type: String, ref: "User" }
   },
