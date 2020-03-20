@@ -1,4 +1,4 @@
-import { Schema, mongoose } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 import mongooseConfig from "../config/paginate";
 
