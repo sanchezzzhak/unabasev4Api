@@ -474,3 +474,15 @@ export const connections = async (req, res, next) => {
     next(err);
   }
 };
+
+export const getUsername = async (req, res, next) => {
+  try {
+    let user = await User.findOne({ username: req.params.username })
+      .select("name username imgUrl google.email google.imgUrl ")
+      .exec();
+    if (!user) next(notFoundError());
+    res.send(user);
+  } catch (err) {
+    next(err);
+  }
+};

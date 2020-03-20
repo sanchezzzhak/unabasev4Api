@@ -108,6 +108,24 @@ describe("****   USER   ****", () => {
     });
   });
 
+  it("GET ONE user by username NO_AUTH username@user", done => {
+    let user = new User(data);
+
+    user.save(err => {
+      if (err) done(err);
+      request
+        .get("/users/profile/" + data.username)
+        // .set("authorization", authUser.token)
+
+        .end((err, res) => {
+          if (err) done(err);
+          res.status.should.equal(200);
+          res.body.should.be.a("object");
+          done();
+        });
+    });
+  });
+
   it("FIND BY QUERY users -  name, username, email, idnumber find@user", done => {
     request
       .get("/users/find/" + data.name.first.slice(3, 7))
