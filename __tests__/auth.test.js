@@ -5,18 +5,18 @@ describe("****   AUTH   ****", () => {
   it("REGISTER WITHOUT PASS a user without@auth", done => {
     request
       .post("/auth/register")
+      .set("Accept", "application/json")
       .send({
         name: {
-          first: userData().name,
-          middle: userData().name,
-          last: userData().name,
-          secondLast: userData().name
+          first: userData().name.first,
+          middle: userData().name.middle,
+          last: userData().name.last,
+          secondLast: userData().name.secondLast
         },
         email: userData().emails.default
       })
       .end((err, res) => {
         if (err) done(err);
-        // console.log(res.body);
         res.body.should.be.a("object");
         res.body.token.should.be.a("string");
         res.body.user.should.be.a("object");
@@ -31,10 +31,10 @@ describe("****   AUTH   ****", () => {
       .post("/auth/register")
       .send({
         name: {
-          first: userData().name,
-          middle: userData().name,
-          last: userData().name,
-          secondLast: userData().name
+          first: userData().name.first,
+          middle: userData().name.middle,
+          last: userData().name.last,
+          secondLast: userData().name.secondLast
         },
         email: userData().emails.default,
         password: userData().password
