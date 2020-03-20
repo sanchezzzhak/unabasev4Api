@@ -60,3 +60,5 @@ router.put(
   ),
   stateChange
 );
+
+export default router;
