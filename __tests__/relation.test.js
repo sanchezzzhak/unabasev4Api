@@ -46,6 +46,29 @@ describe("****   RELATION   ****", () => {
         done();
       });
   });
+  it("GET one relation getOne@relation", done => {
+    let user = new User(userData());
+    user.save(err => {
+      let relation = new Relation({
+        petitioner: authUser.user.id,
+        receptor: user.id
+      });
+      relation.save(err => {
+        if (err) done(err);
+
+        request
+          .get("/relations/" + relation.id)
+          .set("authorization", authUser.token)
+
+          .end((err, res) => {
+            if (err) done(err);
+            res.status.should.equal(200);
+            res.body.should.be.a("object");
+            done();
+          });
+      });
+    });
+  });
   it("Delete a relation by id delete@relation", done => {
     let user = new User(userData());
     user.save(err => {
