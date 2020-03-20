@@ -62,7 +62,7 @@ routes.use("/push", push);
 routes.use("/notifications", notification);
 routes.use("/sections", section);
 routes.use("/itemAlias", itemAlias);
-routes.use("relations", relation);
+routes.use("/relations", relation);
 routes.post("/t", (req, res) => {
   res.send({ body: req.body, headers: req.headers });
 });

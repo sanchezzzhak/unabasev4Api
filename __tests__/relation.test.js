@@ -18,7 +18,8 @@ before(done => {
 describe("****   RELATION   ****", () => {
   it("LIST all users get@relation", done => {
     request
-      .get("/relations?petioner=" + authUser.user._id.toString())
+      // .get("/relations?petioner=" + authUser.user._id.toString())
+      .get("/relations")
       .set("authorization", authUser.token)
 
       .end((err, res) => {
