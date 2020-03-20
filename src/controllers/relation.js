@@ -29,6 +29,14 @@ export const deleteOne = async (req, res, next) => {
     next(err);
   }
 };
+export const deleteAll = async (req, res, next) => {
+  try {
+    await Relation.deleteMany({ receptor: req.user.id }).exec();
+    res.send({ success: true });
+  } catch (err) {
+    next(err);
+  }
+};
 
 export const get = async (req, res, next) => {
   let populate = [
