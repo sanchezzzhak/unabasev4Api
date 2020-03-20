@@ -37,7 +37,7 @@ router.delete(
   deleteOne
 );
 router.put(
-  "/state/:state",
+  "/state",
   validateParams(
     [
       {

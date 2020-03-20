@@ -80,7 +80,7 @@ describe("****   RELATION   ****", () => {
         if (err) done(err);
 
         request
-          .delete("/relations/state")
+          .put("/relations/state")
           .set("authorization", authUser.token)
 
           .send({
