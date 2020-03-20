@@ -2,7 +2,7 @@ import { Schema, mongoose } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 import mongooseConfig from "../config/paginate";
 
-const relationSchema = new Schema(
+const relationSchema = Schema(
   {
     isActive: { type: Boolean, default: false },
     petitioner: { type: String, ref: "User" },
