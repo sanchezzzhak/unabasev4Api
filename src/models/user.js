@@ -18,7 +18,7 @@ let userSchema = Schema(
       last: { type: String },
       secondLast: { type: String }
     },
-    username: { type: String },
+    username: { type: String, unique: true },
     language: { type: String, default: "es" },
     password: { type: String, select: false },
     security: {
