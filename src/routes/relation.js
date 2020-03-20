@@ -1,13 +1,27 @@
 import { Router } from "express";
 import { sToken } from "../config/lib/auth";
 import { validateParams } from "../middleware/validate";
-import { create, deleteOne, get, stateChange, deleteAll } from "../controllers/relation";
+import { create, deleteOne, get, stateChange, deleteAll, getOne } from "../controllers/relation";
 const router = Router();
 
 const module = "relation";
 router.use(sToken);
 
 router.get("/", get);
+router.get(
+  "/:id",
+  validateParams(
+    [
+      {
+        param_key: "id",
+        required: true,
+        type: "string"
+      }
+    ],
+    "params"
+  ),
+  getOne
+);
 router.post(
   "/",
   validateParams(
