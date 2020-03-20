@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { sToken } from "../config/lib/auth";
 import { validateParams } from "../middleware/validate";
-import { create, deleteOne, get, stateChange } from "../controllers/relation";
+import { create, deleteOne, get, stateChange, deleteAll } from "../controllers/relation";
 const router = Router();
 
 const module = "relation";
@@ -36,6 +36,7 @@ router.delete(
   ),
   deleteOne
 );
+router.delete("/", deleteAll);
 router.put(
   "/state",
   validateParams(
