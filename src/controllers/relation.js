@@ -37,7 +37,25 @@ export const deleteAll = async (req, res, next) => {
     next(err);
   }
 };
-
+export const getOne = (req, res, next) => {
+  try {
+    let relation = await Relation.findById(req.params.id)
+      .populate([
+        {
+          path: "receptor",
+          select: "name"
+        },
+        {
+          path: "petitioner",
+          select: "name"
+        }
+      ])
+      .lean();
+      res.send(relation)
+  } catch (err) {
+    next(err);
+  }
+};
 export const get = async (req, res, next) => {
   let populate = [
     {
