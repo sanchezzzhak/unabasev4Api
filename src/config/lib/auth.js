@@ -27,7 +27,7 @@ export const cToken = (req, res, next) => {
     }
   });
 };
-export const sToken = (req, res, next) => {
+export const sToken = async (req, res, next) => {
   req.token = req.headers.authorization;
   if (typeof req.token !== "undefined" && req.headers.authorization !== "postmanvn4b4s3") {
     jwt.verify(req.token, envar().SECRET, async (err, decoded) => {
