@@ -195,7 +195,7 @@ router.post(
       },
       {
         param_key: "state",
-        enum: ["request", "opportunity"],
+        enum: ["request", "opportunity", "business"],
         required: true,
         type: "string"
       }
