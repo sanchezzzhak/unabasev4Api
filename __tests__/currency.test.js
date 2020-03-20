@@ -22,15 +22,17 @@ let update = {
   countryOrigin: "peru"
 };
 before(done => {
-  request
-    .post("/auth/register")
-    .send({ username: userData().username, email: userData().emails.default })
-    .end(function(err, res) {
-      if (err) done(err);
-      authUser = res.body.token;
-      res.status.should.equal(200);
-      done();
-    });
+  User.deleteMany({}, err => {
+    request
+      .post("/auth/register")
+      .send({ username: userData().username, email: userData().emails.default })
+      .end(function(err, res) {
+        if (err) done(err);
+        authUser = res.body.token;
+        res.status.should.equal(200);
+        done();
+      });
+  });
 });
 
 describe("****   CURRENCY   ****", () => {
