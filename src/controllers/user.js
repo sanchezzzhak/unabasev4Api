@@ -478,7 +478,7 @@ export const connections = async (req, res, next) => {
 export const getUsername = async (req, res, next) => {
   try {
     let user = await User.findOne({ username: req.params.username })
-      .select("name username imgUrl google.email google.imgUrl ")
+      .select("name username imgUrl google.email google.imgUrl otherAccounts")
       .exec();
     if (!user) next(notFoundError());
     res.send(user);
