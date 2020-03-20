@@ -37,7 +37,7 @@ export const deleteAll = async (req, res, next) => {
     next(err);
   }
 };
-export const getOne = (req, res, next) => {
+export const getOne = async (req, res, next) => {
   try {
     let relation = await Relation.findById(req.params.id)
       .populate([
@@ -51,7 +51,7 @@ export const getOne = (req, res, next) => {
         }
       ])
       .lean();
-      res.send(relation)
+    res.send(relation);
   } catch (err) {
     next(err);
   }
