@@ -7,7 +7,7 @@ let authUser = "";
 before(done => {
   request
     .post("/auth/register")
-    .send({ username: userData().username, email: userData().emails.default })
+    .send({ username: userData().username, email: userData().emails.default, name: userData().name })
     .end(function(err, res) {
       if (err) done(err);
       authUser = res.body;

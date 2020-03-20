@@ -1,5 +1,8 @@
 import Relation from "../models/relation";
 import { queryHelper } from "../lib/queryHelper";
+import { sendPush } from "../lib/push";
+import Notification from "../models/notification";
+import User from "../models/user";
 
 export const create = async (req, res, next) => {
   let relation = new Relation({
@@ -8,6 +11,29 @@ export const create = async (req, res, next) => {
   });
   try {
     await relation.save();
+    let user = await User.findById(req.body.receptor)
+      .select("name webpush")
+      .lean();
+    let link = ``;
+    console.log(req.user);
+    let title = `${req.user.name.first} ${req.user.name.second} te ha enviado una solicitud de conexión`;
+    let notification = new Notification({
+      title,
+      user: user._id.toString(),
+      // movement: movement._id.toString(),
+      link,
+      from: {
+        user: req.user._id.toString()
+      }
+    });
+    await notification.save();
+    sendPush(
+      {
+        title,
+        link
+      },
+      user
+    );
     res.send(relation);
   } catch (err) {
     next(err);
