@@ -45,6 +45,11 @@ router.put(
         param_key: "petitioner",
         required: true,
         type: "string"
+      },
+      {
+        param_key: "state",
+        required: true,
+        type: "boolean"
       }
     ],
     "body"
