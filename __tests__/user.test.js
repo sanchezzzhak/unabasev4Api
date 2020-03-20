@@ -4,18 +4,26 @@ import User from "../src/models/user";
 let authUser = "";
 let data = userData();
 before(done => {
-  User.deleteMany({}, err => {
-    if (err) done(err);
-    request
-      .post("/auth/register")
-      .send({ username: userData().username, email: userData().emails.default, password: data.password })
-      .end(function(err, res) {
-        if (err) done(err);
-        authUser = res.body;
-        res.status.should.equal(200);
-        done();
-      });
-  });
+  // User.deleteMany({}, err => {
+  // if (err) {
+  //   console.log("-------errr");
+  //   console.log(err);
+  //   done(err);
+  // }
+  request
+    .post("/auth/register")
+    .send({ username: userData().username, email: userData().emails.default, password: data.password })
+    .end(function(err, res) {
+      if (err) {
+        console.log("-------errr");
+        console.log(err);
+        done(err);
+      }
+      authUser = res.body;
+      res.status.should.equal(200);
+      done();
+    });
+  // });
 });
 describe("****   USER   ****", () => {
   it("LIST all users @user", done => {
@@ -24,7 +32,9 @@ describe("****   USER   ****", () => {
       .set("authorization", authUser.token)
 
       .end((err, res) => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
         res.status.should.equal(200);
         res.body.should.be.a("object");
         done();
@@ -35,13 +45,21 @@ describe("****   USER   ****", () => {
     let user = new User(userData());
     let update = userData();
     user.save(err => {
-      if (err) done(err);
+      if (err) {
+        console.log("-------errr");
+        console.log(err);
+        done(err);
+      }
       request
         .put("/users/" + user.id)
         .set("authorization", authUser.token)
         .send(update)
         .end((err, res) => {
-          if (err) done(err);
+          if (err) {
+            console.log("-------errr");
+            console.log(err);
+            done(err);
+          }
           res.status.should.equal(200);
           res.body.should.be.a("object");
           done();
@@ -59,7 +77,9 @@ describe("****   USER   ****", () => {
         newPassword: update.password
       })
       .end((err, res) => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
         res.status.should.equal(200);
         res.body.should.be.a("object");
         done();
@@ -71,7 +91,9 @@ describe("****   USER   ****", () => {
       .post("/auth/register")
       .send({ username: userData().username, email: userData().emails.default, noPassword: true })
       .end(function(err, res) {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
         let newUser = res.body;
         res.status.should.equal(200);
 
@@ -83,7 +105,11 @@ describe("****   USER   ****", () => {
             newPassword: update.password
           })
           .end((err, res) => {
-            if (err) done(err);
+            if (err) {
+              console.log("-------errr");
+              console.log(err);
+              done(err);
+            }
             res.status.should.equal(200);
             res.body.should.be.a("object");
             done();
@@ -94,13 +120,21 @@ describe("****   USER   ****", () => {
     let user = new User(data);
 
     user.save(err => {
-      if (err) done(err);
+      if (err) {
+        console.log("-------errr");
+        console.log(err);
+        done(err);
+      }
       request
         .get("/users/" + user.id)
         .set("authorization", authUser.token)
 
         .end((err, res) => {
-          if (err) done(err);
+          if (err) {
+            console.log("-------errr");
+            console.log(err);
+            done(err);
+          }
           res.status.should.equal(200);
           res.body.should.be.a("object");
           done();
@@ -113,7 +147,11 @@ describe("****   USER   ****", () => {
     let user = new User(data);
 
     user.save(err => {
-      if (err) done(err);
+      if (err) {
+        console.log("-------errr");
+        console.log(err);
+        done(err);
+      }
       console.log("------ err1");
       console.log(err);
       request
@@ -121,7 +159,11 @@ describe("****   USER   ****", () => {
         // .set("authorization", authUser.token)
 
         .end((err, res) => {
-          if (err) done(err);
+          if (err) {
+            console.log("-------errr");
+            console.log(err);
+            done(err);
+          }
           console.log("------ err2");
           console.log(err);
           res.status.should.equal(200);
@@ -137,7 +179,9 @@ describe("****   USER   ****", () => {
       .set("authorization", authUser.token)
 
       .end((err, res) => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
         res.status.should.equal(200);
         res.body.should.be.a("object");
         done();

@@ -11,6 +11,7 @@
     "testl": "NODE_ENV=local mocha-parallel-tests --exit --timeout 20000 --require  babel-core/register --exclude /modules --require @babel/polyfill",
     "tdev": "NODE_ENV=dev mocha-parallel-tests --exit --timeout 20000 --require  babel-core/register --exclude /modules --require @babel/polyfill --grep",
     "testg": "NODE_ENV=test mocha-parallel-tests __tests__ --recursive  --exit --timeout 20000 --require @babel/register --exclude /modules --require @babel/polyfill --grep",
+    "mocha": "NODE_ENV=test mocha __tests__ --recursive  --exit --timeout 20000 --require @babel/register --exclude /modules --require @babel/polyfill",
     "start3": "nodemon ./src/app",
     "dev": "NODE_ENV=dev nodemon   ./src/app  --exec babel-node",
     "una": "NODE_ENV=una nodemon   ./src/app  --exec babel-node",

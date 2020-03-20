@@ -16,7 +16,11 @@ before(done => {
     .post("/auth/register")
     .send({ username: userData().username, email: userData().emails.default })
     .end(function(err, res) {
-      if (err) done(err);
+      if (err) {
+        console.log("-------errr");
+        console.log(err);
+        done(err);
+      }
       authUser = res.body.token;
       res.status.should.equal(200);
       done();
@@ -30,7 +34,9 @@ describe("****   TAX   ****", () => {
       .set("authorization", authUser)
       .send(data)
       .end((err, res) => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
         res.status.should.equal(200);
         res.body.should.be.a("object");
         done();
@@ -42,7 +48,9 @@ describe("****   TAX   ****", () => {
       .set("authorization", authUser)
 
       .end((err, res) => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
         res.status.should.equal(200);
         res.body.should.be.a("object");
         done();
@@ -52,13 +60,21 @@ describe("****   TAX   ****", () => {
   it("UPDATE  a update@tax", done => {
     let tax = new Tax(data);
     tax.save(err => {
-      if (err) done(err);
+      if (err) {
+        console.log("-------errr");
+        console.log(err);
+        done(err);
+      }
       request
         .put("/taxes/" + tax.id)
         .set("authorization", authUser)
         .send(update)
         .end((err, res) => {
-          if (err) done(err);
+          if (err) {
+            console.log("-------errr");
+            console.log(err);
+            done(err);
+          }
           res.status.should.equal(200);
           res.body.should.be.a("object");
           done();
@@ -72,7 +88,9 @@ describe("****   TAX   ****", () => {
       .set("authorization", authUser)
 
       .end((err, res) => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
         res.status.should.equal(200);
         res.body.should.be.a("object");
         done();
@@ -82,13 +100,21 @@ describe("****   TAX   ****", () => {
     let tax = new Tax(data);
 
     tax.save(err => {
-      if (err) done(err);
+      if (err) {
+        console.log("-------errr");
+        console.log(err);
+        done(err);
+      }
       request
         .get("/taxes/" + tax.id)
         .set("authorization", authUser)
 
         .end((err, res) => {
-          if (err) done(err);
+          if (err) {
+            console.log("-------errr");
+            console.log(err);
+            done(err);
+          }
           res.status.should.equal(200);
           res.body.should.be.a("object");
           done();

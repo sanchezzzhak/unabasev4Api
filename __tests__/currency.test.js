@@ -23,17 +23,21 @@ let update = {
   countryOrigin: "peru"
 };
 before(done => {
-  User.deleteMany({}, err => {
-    request
-      .post("/auth/register")
-      .send({ username: userData().username, email: userData().emails.default })
-      .end(function(err, res) {
-        if (err) done(err);
-        authUser = res.body.token;
-        res.status.should.equal(200);
-        done();
-      });
-  });
+  // User.deleteMany({}, err => {
+  request
+    .post("/auth/register")
+    .send({ username: userData().username, email: userData().emails.default })
+    .end(function(err, res) {
+      if (err) {
+        console.log("-------errr");
+        console.log(err);
+        done(err);
+      }
+      authUser = res.body.token;
+      res.status.should.equal(200);
+      done();
+    });
+  // });
 });
 
 describe("****   CURRENCY   ****", () => {
@@ -51,7 +55,9 @@ describe("****   CURRENCY   ****", () => {
         countryOrigin: data.countryOrigin
       })
       .end((err, res) => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
         res.status.should.equal(200);
         res.body.should.be.a("object");
         done();
@@ -63,7 +69,9 @@ describe("****   CURRENCY   ****", () => {
       .set("authorization", authUser)
 
       .end((err, res) => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
         res.status.should.equal(200);
         res.body.should.be.a("object");
         done();
@@ -81,7 +89,11 @@ describe("****   CURRENCY   ****", () => {
       countryOrigin: data.countryOrigin
     });
     currency.save(err => {
-      if (err) done(err);
+      if (err) {
+        console.log("-------errr");
+        console.log(err);
+        done(err);
+      }
       request
         .put("/currencies/" + currency.id)
         .set("authorization", authUser)
@@ -95,7 +107,11 @@ describe("****   CURRENCY   ****", () => {
           countryOrigin: update.countryOrigin
         })
         .end((err, res) => {
-          if (err) done(err);
+          if (err) {
+            console.log("-------errr");
+            console.log(err);
+            done(err);
+          }
           res.status.should.equal(200);
           res.body.should.be.a("object");
           done();
@@ -109,7 +125,9 @@ describe("****   CURRENCY   ****", () => {
       .set("authorization", authUser)
 
       .end((err, res) => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
         res.status.should.equal(200);
         res.body.should.be.a("object");
         done();
@@ -128,13 +146,21 @@ describe("****   CURRENCY   ****", () => {
     });
 
     currency.save(err => {
-      if (err) done(err);
+      if (err) {
+        console.log("-------errr");
+        console.log(err);
+        done(err);
+      }
       request
         .get("/currencies/" + currency.id)
         .set("authorization", authUser)
 
         .end((err, res) => {
-          if (err) done(err);
+          if (err) {
+            console.log("-------errr");
+            console.log(err);
+            done(err);
+          }
           res.status.should.equal(200);
           res.body.should.be.a("object");
           done();

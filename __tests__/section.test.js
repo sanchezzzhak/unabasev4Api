@@ -9,7 +9,11 @@ before(done => {
     .post("/auth/register")
     .send({ username: userData().username, email: userData().emails.default })
     .end(function(err, res) {
-      if (err) done(err);
+      if (err) {
+        console.log("-------errr");
+        console.log(err);
+        done(err);
+      }
       authUser = res.body.token;
       res.status.should.equal(200);
       done();
@@ -25,7 +29,9 @@ describe("****   SECTION   ****", () => {
         name: "new section"
       })
       .end((err, res) => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
 
         res.status.should.equal(200);
         res.body.should.be.a("object");
@@ -38,7 +44,9 @@ describe("****   SECTION   ****", () => {
       .set("authorization", authUser)
 
       .end((err, res) => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
 
         res.status.should.equal(200);
         res.body.should.be.a("object");
@@ -52,7 +60,11 @@ describe("****   SECTION   ****", () => {
       name: "this is a section"
     });
     section.save((err, section) => {
-      if (err) done(err);
+      if (err) {
+        console.log("-------errr");
+        console.log(err);
+        done(err);
+      }
       request
         .put("/sections/" + section.id)
         .set("authorization", authUser)
@@ -61,7 +73,11 @@ describe("****   SECTION   ****", () => {
         })
 
         .end((err, res) => {
-          if (err) done(err);
+          if (err) {
+            console.log("-------errr");
+            console.log(err);
+            done(err);
+          }
 
           res.status.should.equal(200);
           res.body.should.be.a("object");

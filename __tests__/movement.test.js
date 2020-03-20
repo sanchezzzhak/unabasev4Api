@@ -6,19 +6,23 @@ import userData from "../lib/user/data";
 let authUser = "";
 
 before(done => {
-  User.deleteMany({}, err => {
-    request
-      .post("/auth/register")
-      .send({ username: userData().username, email: userData().emails.default })
-      .end(function(err, res) {
-        if (err) done(err);
-        authUser = res.body.token;
-        res.status.should.equal(200);
-        Movement.deleteMany({}, err => {
-          done();
-        });
+  // User.deleteMany({}, err => {
+  request
+    .post("/auth/register")
+    .send({ username: userData().username, email: userData().emails.default })
+    .end(function(err, res) {
+      if (err) {
+        console.log("-------errr");
+        console.log(err);
+        done(err);
+      }
+      authUser = res.body.token;
+      res.status.should.equal(200);
+      Movement.deleteMany({}, err => {
+        done();
       });
-  });
+    });
+  // });
 });
 // beforeEach(done => {
 //   Movement.deleteMany({}, err => {
@@ -39,7 +43,9 @@ describe("****   MOVEMENT   ****", () => {
         currency: ""
       })
       .end((err, res) => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
 
         res.status.should.equal(200);
         res.body.should.be.a("object");
@@ -53,7 +59,9 @@ describe("****   MOVEMENT   ****", () => {
       .set("authorization", authUser)
 
       .end((err, res) => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
 
         res.status.should.equal(200);
         res.body.should.be.a("object");
@@ -70,7 +78,11 @@ describe("****   MOVEMENT   ****", () => {
       state: "opportunity"
     });
     movement.save((err, movement) => {
-      if (err) done(err);
+      if (err) {
+        console.log("-------errr");
+        console.log(err);
+        done(err);
+      }
       request
         .put("/movements/" + movement.id)
         .set("authorization", authUser)
@@ -82,7 +94,11 @@ describe("****   MOVEMENT   ****", () => {
         })
 
         .end((err, res) => {
-          if (err) done(err);
+          if (err) {
+            console.log("-------errr");
+            console.log(err);
+            done(err);
+          }
 
           res.status.should.equal(200);
           res.body.should.be.a("object");
@@ -99,7 +115,11 @@ describe("****   MOVEMENT   ****", () => {
       state: "opportunity"
     });
     movement.save((err, movement) => {
-      if (err) done(err);
+      if (err) {
+        console.log("-------errr");
+        console.log(err);
+        done(err);
+      }
 
       request
         .put("/movements/" + movement.id)
@@ -109,7 +129,11 @@ describe("****   MOVEMENT   ****", () => {
         })
 
         .end((err, res) => {
-          if (err) done(err);
+          if (err) {
+            console.log("-------errr");
+            console.log(err);
+            done(err);
+          }
 
           res.status.should.equal(200);
           res.body.should.be.a("object");
@@ -124,7 +148,9 @@ describe("****   MOVEMENT   ****", () => {
       .set("authorization", authUser)
 
       .end((err, res) => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
 
         res.status.should.equal(200);
         res.body.should.be.a("object");

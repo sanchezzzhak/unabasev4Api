@@ -16,7 +16,9 @@ describe("****   AUTH   ****", () => {
         email: userData().emails.default
       })
       .end((err, res) => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
         res.body.should.be.a("object");
         res.body.token.should.be.a("string");
         res.body.user.should.be.a("object");
@@ -40,7 +42,9 @@ describe("****   AUTH   ****", () => {
         password: userData().password
       })
       .end((err, res) => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
         res.body.should.be.a("object");
         res.body.token.should.be.a("string");
         res.body.user.should.be.a("object");

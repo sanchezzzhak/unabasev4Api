@@ -15,7 +15,11 @@ before(done => {
     .post("/auth/register")
     .send({ username: userData().username, email: userData().emails.default })
     .end(function(err, res) {
-      if (err) done(err);
+      if (err) {
+        console.log("-------errr");
+        console.log(err);
+        done(err);
+      }
       authUser = res.body.token;
       res.status.should.equal(200);
       Movement.deleteMany({}, err => {
@@ -31,7 +35,9 @@ describe("****   ITEM   ****", () => {
       .set("authorization", authUser)
       .send(data)
       .end((err, res) => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
 
         res.status.should.equal(200);
         res.body.should.be.a("object");
@@ -44,7 +50,9 @@ describe("****   ITEM   ****", () => {
       .set("authorization", authUser)
 
       .end((err, res) => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
 
         res.status.should.equal(200);
         res.body.should.be.a("object");
@@ -56,14 +64,22 @@ describe("****   ITEM   ****", () => {
   it("UPDATE ITEM  update@item", done => {
     let item = new Item(data);
     item.save(err => {
-      if (err) done(err);
+      if (err) {
+        console.log("-------errr");
+        console.log(err);
+        done(err);
+      }
       request
         .put("/items/" + item.id)
         .set("authorization", authUser)
         .send(update)
 
         .end((err, res) => {
-          if (err) done(err);
+          if (err) {
+            console.log("-------errr");
+            console.log(err);
+            done(err);
+          }
 
           res.status.should.equal(200);
           res.body.should.be.a("object");
@@ -78,7 +94,9 @@ describe("****   ITEM   ****", () => {
       .set("authorization", authUser)
 
       .end((err, res) => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
         res.status.should.equal(200);
         res.body.should.be.a("object");
         done();
@@ -92,7 +110,11 @@ describe("****   ITEM   ****", () => {
         .set("authorization", authUser)
 
         .end((err, res) => {
-          if (err) done(err);
+          if (err) {
+            console.log("-------errr");
+            console.log(err);
+            done(err);
+          }
 
           res.status.should.equal(200);
           res.body.should.be.a("object");

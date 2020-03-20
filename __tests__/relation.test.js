@@ -5,17 +5,19 @@ import User from "../src/models/user";
 let authUser = "";
 
 before(done => {
-  User.deleteMany({}, err => {
-    request
-      .post("/auth/register")
-      .send({ username: userData().username, email: userData().emails.default, name: userData().name })
-      .end(function(err, res) {
-        if (err) done(err);
-        authUser = res.body;
-        res.status.should.equal(200);
-        done();
-      });
-  });
+  // User.deleteMany({}, err => {
+  request
+    .post("/auth/register")
+    .send({ username: userData().username, email: userData().emails.default, name: userData().name })
+    .end(function(err, res) {
+      if (err) {
+        done(err);
+      }
+      authUser = res.body;
+      res.status.should.equal(200);
+      done();
+    });
+  // });
 });
 
 describe("****   RELATION   ****", () => {
@@ -29,7 +31,9 @@ describe("****   RELATION   ****", () => {
           receptor: user._id.toString()
         })
         .end((err, res) => {
-          if (err) done(err);
+          if (err) {
+            done(err);
+          }
           res.status.should.equal(200);
           res.body.should.be.a("object");
           done();
@@ -42,7 +46,9 @@ describe("****   RELATION   ****", () => {
       .set("authorization", authUser.token)
 
       .end((err, res) => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
         res.status.should.equal(200);
         res.body.should.be.a("object");
         done();
@@ -56,14 +62,18 @@ describe("****   RELATION   ****", () => {
         receptor: user.id
       });
       relation.save(err => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
 
         request
           .get("/relations/" + relation.id)
           .set("authorization", authUser.token)
 
           .end((err, res) => {
-            if (err) done(err);
+            if (err) {
+              done(err);
+            }
             res.status.should.equal(200);
             res.body.should.be.a("object");
             done();
@@ -79,14 +89,18 @@ describe("****   RELATION   ****", () => {
         receptor: user.id
       });
       relation.save(err => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
 
         request
           .delete("/relations/" + relation.id)
           .set("authorization", authUser.token)
 
           .end((err, res) => {
-            if (err) done(err);
+            if (err) {
+              done(err);
+            }
             res.status.should.equal(200);
             res.body.should.be.a("object");
             done();
@@ -102,7 +116,9 @@ describe("****   RELATION   ****", () => {
         receptor: authUser.user.id
       });
       relation.save(err => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
 
         request
           .put("/relations/state")
@@ -113,7 +129,9 @@ describe("****   RELATION   ****", () => {
             state: false
           })
           .end((err, res) => {
-            if (err) done(err);
+            if (err) {
+              done(err);
+            }
             res.status.should.equal(200);
             res.body.should.be.a("object");
             done();
@@ -128,7 +146,9 @@ describe("****   RELATION   ****", () => {
       .set("authorization", authUser.token)
 
       .end((err, res) => {
-        if (err) done(err);
+        if (err) {
+          done(err);
+        }
         res.status.should.equal(200);
         res.body.should.be.a("object");
         done();
