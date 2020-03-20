@@ -73,8 +73,8 @@ describe("****   RELATION   ****", () => {
     let user = new User(userData());
     user.save(err => {
       let relation = new Relation({
-        petitioner: authUser.user.id,
-        receptor: user.id
+        petitioner: user.id,
+        receptor: authUser.user.id
       });
       relation.save(err => {
         if (err) done(err);
@@ -95,5 +95,18 @@ describe("****   RELATION   ****", () => {
           });
       });
     });
+  });
+
+  it("Delete all relation deleteAll@relation", done => {
+    request
+      .delete("/relations")
+      .set("authorization", authUser.token)
+
+      .end((err, res) => {
+        if (err) done(err);
+        res.status.should.equal(200);
+        res.body.should.be.a("object");
+        done();
+      });
   });
 });
