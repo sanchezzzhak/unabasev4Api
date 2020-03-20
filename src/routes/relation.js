@@ -48,16 +48,6 @@ router.put(
     ],
     "body"
   ),
-  validateParams(
-    [
-      {
-        param_key: "state",
-        required: true,
-        type: "string"
-      }
-    ],
-    "params"
-  ),
   stateChange
 );
 
