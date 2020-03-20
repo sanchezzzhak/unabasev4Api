@@ -1,6 +1,7 @@
 import request from "./request";
 import userData from "../lib/user/data";
 import Currency from "../src/models/currency";
+import User from "../src/models/user";
 let authUser = "";
 
 let data = {

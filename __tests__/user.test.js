@@ -109,16 +109,21 @@ describe("****   USER   ****", () => {
   });
 
   it("GET ONE user by username NO_AUTH username@user", done => {
+    let data = userData();
     let user = new User(data);
 
     user.save(err => {
       if (err) done(err);
+      console.log("------ err1");
+      console.log(err);
       request
         .get("/users/profile/" + data.username)
         // .set("authorization", authUser.token)
 
         .end((err, res) => {
           if (err) done(err);
+          console.log("------ err2");
+          console.log(err);
           res.status.should.equal(200);
           res.body.should.be.a("object");
           done();

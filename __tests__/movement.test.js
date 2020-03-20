@@ -6,19 +6,19 @@ import userData from "../lib/user/data";
 let authUser = "";
 
 before(done => {
-  // User.deleteMany({}, err => {
-  request
-    .post("/auth/register")
-    .send({ username: userData().username, email: userData().emails.default })
-    .end(function(err, res) {
-      if (err) done(err);
-      authUser = res.body.token;
-      res.status.should.equal(200);
-      Movement.deleteMany({}, err => {
-        done();
+  User.deleteMany({}, err => {
+    request
+      .post("/auth/register")
+      .send({ username: userData().username, email: userData().emails.default })
+      .end(function(err, res) {
+        if (err) done(err);
+        authUser = res.body.token;
+        res.status.should.equal(200);
+        Movement.deleteMany({}, err => {
+          done();
+        });
       });
-    });
-  // });
+  });
 });
 // beforeEach(done => {
 //   Movement.deleteMany({}, err => {
