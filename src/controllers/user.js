@@ -13,6 +13,7 @@ import { notFoundError, createError } from "../lib/error";
 import { getLocationByIp } from "../lib/location";
 import Currency from "../models/currency";
 import { getCurrencyByLocation } from "../lib/currency";
+import Relation from "../models/relation";
 
 // TODO verify that the password is not returning to the client
 export const create = async (req, res, next) => {
@@ -480,8 +481,9 @@ export const getUsername = async (req, res, next) => {
     let user = await User.findOne({ username: req.params.username })
       .select("name username imgUrl google.email google.imgUrl otherAccounts")
       .exec();
+    let relation = await Relation.findOne({ petitioner: req.user.id, receptor: user.id }, { isActive: 1 }).lean();
     if (!user) next(notFoundError());
-    res.send(user);
+    res.send({ user, relation });
   } catch (err) {
     next(err);
   }
