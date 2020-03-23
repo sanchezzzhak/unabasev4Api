@@ -33,7 +33,8 @@ export const create = async (req, res, next) => {
       link,
       from: {
         user: req.user._id.toString()
-      }
+      },
+      relation: relation._id
     });
     await notification.save();
     sendPush(
