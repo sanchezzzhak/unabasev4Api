@@ -126,7 +126,7 @@ describe("****   RELATION   ****", () => {
 
           .send({
             petitioner: user.id,
-            state: false
+            isActive: false
           })
           .end((err, res) => {
             if (err) {
