@@ -111,7 +111,7 @@ export const get = async (req, res, next) => {
     next(err);
   }
 };
-export const getUserRelations = async (req, res, next) => {
+export const getAccepted = async (req, res, next) => {
   let populate = [
     {
       path: "receptor",
