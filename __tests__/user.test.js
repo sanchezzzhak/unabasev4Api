@@ -148,24 +148,16 @@ describe("****   USER   ****", () => {
 
     user.save(err => {
       if (err) {
-        console.log("-------errr");
-        console.log(err);
         done(err);
       }
-      console.log("------ err1");
-      console.log(err);
       request
         .get("/users/profile/" + data.username)
         // .set("authorization", authUser.token)
 
         .end((err, res) => {
           if (err) {
-            console.log("-------errr");
-            console.log(err);
             done(err);
           }
-          console.log("------ err2");
-          console.log(err);
           res.status.should.equal(200);
           res.body.should.be.a("object");
           done();
