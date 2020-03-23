@@ -50,7 +50,7 @@ export const create = async (req, res, next) => {
 };
 export const stateChange = async (req, res, next) => {
   try {
-    let relation = await Relation.findOneAndUpdate({ receptor: req.user.id, petitioner: req.body.petitioner, isActive: req.body.state }).exec();
+    let relation = await Relation.findOneAndUpdate({ receptor: req.user.id, petitioner: req.body.petitioner, isActive: req.body.isActive }).exec();
     res.send(relation);
   } catch (err) {
     next(err);

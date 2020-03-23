@@ -61,7 +61,7 @@ router.put(
         type: "string"
       },
       {
-        param_key: "state",
+        param_key: "isActive",
         required: true,
         type: "boolean"
       }
