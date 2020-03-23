@@ -54,6 +54,20 @@ describe("****   RELATION   ****", () => {
         done();
       });
   });
+  it("LIST all users accepted relations accepted@relation", done => {
+    request
+      .get("/relations/accepted")
+      .set("authorization", authUser.token)
+
+      .end((err, res) => {
+        if (err) {
+          done(err);
+        }
+        res.status.should.equal(200);
+        res.body.should.be.a("object");
+        done();
+      });
+  });
   it("GET one relation getOne@relation", done => {
     let user = new User(userData());
     user.save(err => {
