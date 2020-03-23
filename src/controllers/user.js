@@ -14,6 +14,7 @@ import { getLocationByIp } from "../lib/location";
 import Currency from "../models/currency";
 import { getCurrencyByLocation } from "../lib/currency";
 import Relation from "../models/relation";
+import Movement from "../models/movement";
 
 // TODO verify that the password is not returning to the client
 export const create = async (req, res, next) => {
