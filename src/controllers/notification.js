@@ -17,7 +17,7 @@ export const get = async (req, res, next) => {
     }
   ];
   let select = "-user";
-  let helper = queryHelper(req.query, { populate, select });
+  let helper = queryHelper({ ...req.query, user: req.user.id }, { populate, select });
   try {
     let notifications = await Notification.paginate(helper.query, helper.options);
     res.send(notifications);
