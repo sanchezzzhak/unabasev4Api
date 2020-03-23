@@ -3,8 +3,17 @@ import { queryHelper } from "../lib/queryHelper";
 import { sendPush } from "../lib/push";
 import Notification from "../models/notification";
 import User from "../models/user";
+import { createError } from "../lib/error";
 
 export const create = async (req, res, next) => {
+  let exists = await Relation.findOne(
+    {
+      petitioner: req.user.id,
+      receptor: req.body.receptor
+    },
+    { id: 1 }
+  ).lean();
+  if (exists) next(createError(409, "Relations already exists"));
   let relation = new Relation({
     petitioner: req.user.id,
     receptor: req.body.receptor
@@ -16,7 +25,7 @@ export const create = async (req, res, next) => {
       .lean();
     let link = ``;
     console.log(req.user);
-    let title = `${req.user.name.first} ${req.user.name.second} te ha enviado una solicitud de conexión`;
+    let title = `${req.user.name.first} ${req.user.name.second || ""} te ha enviado una solicitud de conexión`;
     let notification = new Notification({
       title,
       user: user._id.toString(),
