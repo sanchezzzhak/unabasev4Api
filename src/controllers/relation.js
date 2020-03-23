@@ -111,3 +111,22 @@ export const get = async (req, res, next) => {
     next(err);
   }
 };
+export const getUserRelations = async (req, res, next) => {
+  let populate = [
+    {
+      path: "receptor",
+      select: "name"
+    },
+    {
+      path: "petitioner",
+      select: "name"
+    }
+  ];
+  let helper = queryHelper(req.query, { populate });
+  try {
+    let relations = await Relation.paginate({ $or: [{ petitioner: req.user.id }, { receptor: req.user.id }], isActive: true }, helper.options).then({});
+    res.send(relations);
+  } catch (err) {
+    next(err);
+  }
+};
