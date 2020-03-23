@@ -14,7 +14,8 @@ const notificationSchema = new Schema(
     users: Array({ type: String, ref: "User" }),
     link: { type: String },
     isRead: { type: Boolean, default: false },
-    movement: { type: String, ref: "Movement" }
+    movement: { type: String, ref: "Movement" },
+    relation: { type: String, ref: "Relation" }
   },
   { timestamps: true }
 );
