@@ -336,6 +336,11 @@ export const find = (req, res, next) => {
       populate: [
         {
           path: "business"
+        },
+        {
+          path: "sections",
+          select: "name",
+          match: { isActive: true }
         }
       ],
       select:
