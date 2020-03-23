@@ -30,6 +30,7 @@ let userSchema = Schema(
     idNumber: { type: String },
     phones: [{ _id: false, phone: String, label: String }],
     emails: [{ _id: false, email: String, label: String }],
+    sections: Array({ type: String, ref: "Section" }),
     otherAccounts: {
       instagram: String,
       twitter: String,
