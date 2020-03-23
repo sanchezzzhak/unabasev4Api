@@ -479,7 +479,15 @@ export const connections = async (req, res, next) => {
 export const getUsername = async (req, res, next) => {
   try {
     let user = await User.findOne({ username: req.params.username })
+      .populate([
+        {
+          path: "sections",
+          select: "name",
+          match: { isActive: true }
+        }
+      ])
       .select("name username imgUrl google.email google.imgUrl otherAccounts")
+
       .exec();
     let incomes = Movement.find({ "responsable.user": user.id, isActive: true, state: "business" }, { id: 1 }).lean();
     let outcomes = Movement.find({ "client.user": user.id, isActive: true, state: "business" }, { id: 1 }).lean();
