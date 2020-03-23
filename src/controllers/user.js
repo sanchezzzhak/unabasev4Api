@@ -481,9 +481,11 @@ export const getUsername = async (req, res, next) => {
     let user = await User.findOne({ username: req.params.username })
       .select("name username imgUrl google.email google.imgUrl otherAccounts")
       .exec();
+    let incomes = Movement.find({ "responsable.user": user.id, isActive: true, state: "business" }, { id: 1 }).lean();
+    let outcomes = Movement.find({ "client.user": user.id, isActive: true, state: "business" }, { id: 1 }).lean();
     let relation = await Relation.findOne({ petitioner: req.user.id, receptor: user.id }, { isActive: 1 }).lean();
     if (!user) next(notFoundError());
-    res.send({ user, relation });
+    res.send({ user, relation, incomes, outcomes });
   } catch (err) {
     next(err);
   }
