@@ -136,7 +136,7 @@ export const getAccepted = async (req, res, next) => {
   let populate = [
     {
       path: "receptor",
-      select: "name"
+      select: "name imgUrl google.imgUrl emails phones"
     },
     {
       path: "petitioner",
