@@ -170,6 +170,7 @@ export const login = (req, res, next) => {
     )
     .populate("scope.id")
     .populate("currency")
+    .populate("sections")
     .exec(async (err, user) => {
       // if there are any errors, return the error before anything else
       if (err) return next(err);
@@ -191,9 +192,6 @@ export const login = (req, res, next) => {
           {
             path: "scope.id",
             select: "name"
-          },
-          {
-            path: "sections"
           }
         ]);
         req.user = user;
