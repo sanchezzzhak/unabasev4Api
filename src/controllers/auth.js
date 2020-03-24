@@ -33,7 +33,7 @@ export const google = (req, res, next) => {
       };
       User.findOne(
         query,
-        "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts",
+        "isActive webpush security.hasPassword sections security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts",
         async (err, user) => {
           if (err) next(err);
           if (!user) {
@@ -72,6 +72,9 @@ export const google = (req, res, next) => {
                     {
                       path: "scope.id",
                       select: "name"
+                    },
+                    {
+                      path: "sections"
                     }
                   ]);
                   req.user = user;
@@ -163,7 +166,7 @@ export const login = (req, res, next) => {
   };
   User.findOne(query)
     .select(
-      "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
+      "isActive webpush security.hasPassword sections security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
     )
     .populate("scope.id")
     .populate("currency")
@@ -188,6 +191,9 @@ export const login = (req, res, next) => {
           {
             path: "scope.id",
             select: "name"
+          },
+          {
+            path: "sections"
           }
         ]);
         req.user = user;
