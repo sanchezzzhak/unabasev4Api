@@ -10,7 +10,7 @@ export const get = async (req, res, next) => {
 };
 export const find = async (req, res, next) => {
   try {
-    let sections = await Section.paginate({ name: { $regex: req.params.q, $options: i } }, { select: "name" }).lean();
+    let sections = await Section.paginate({ name: { $regex: req.params.q, $options: "i" } }, { select: "name" }).then({});
     res.send(sections);
   } catch (err) {
     next(err);
