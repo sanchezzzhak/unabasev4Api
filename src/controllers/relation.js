@@ -140,7 +140,7 @@ export const getAccepted = async (req, res, next) => {
     },
     {
       path: "petitioner",
-      select: "name"
+      select: "name imgUrl google.imgUrl emails phones"
     }
   ];
   let helper = queryHelper(req.query, { populate });
