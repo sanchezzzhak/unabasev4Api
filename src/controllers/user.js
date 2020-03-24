@@ -492,7 +492,7 @@ export const getUsername = async (req, res, next) => {
           match: { isActive: true }
         }
       ])
-      .select("name username imgUrl google.email google.imgUrl otherAccounts createdAt")
+      .select("name username imgUrl google.email google.imgUrl otherAccounts createdAt address")
 
       .exec();
     let incomes = await Movement.find({ "responsable.user": user.id, isActive: true, state: "business" }).countDocuments();
