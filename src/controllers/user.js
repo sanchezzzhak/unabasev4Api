@@ -190,10 +190,11 @@ export const update = (req, res, next) => {
     }
   )
     .select(
-      "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
+      "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts sections"
     )
     .populate("currency")
     .populate("scope.id")
+    .populate("sections")
     .exec(async (err, item) => {
       if (err) return next(err);
       try {
