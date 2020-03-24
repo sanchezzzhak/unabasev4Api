@@ -24,7 +24,6 @@ export const create = async (req, res, next) => {
       .select("name webpush")
       .lean();
     let link = ``;
-    console.log(req.user);
     let title = `${req.user.name.first} ${req.user.name.second || ""} te ha enviado una solicitud de conexión`;
     let notification = new Notification({
       title,
@@ -52,6 +51,28 @@ export const create = async (req, res, next) => {
 export const stateChange = async (req, res, next) => {
   try {
     let relation = await Relation.findOneAndUpdate({ receptor: req.user.id, petitioner: req.body.petitioner, isActive: req.body.isActive }).exec();
+    let petitioner = await User.findById(req.body.petitioner)
+      .select("name webpush")
+      .lean();
+    let title = `${req.user.name.first} ${req.user.name.second || ""} ha ${req.body.isActive ? "aceptado" : "rechazado"} tu solicitud de conexión`;
+    let notification = new Notification({
+      title,
+      user: petitioner.id.toString(),
+      // movement: movement._id.toString(),
+      link: "",
+      from: {
+        user: req.user.id
+      },
+      relation: relation._id
+    });
+    await notification.save();
+    sendPush(
+      {
+        title,
+        link: ""
+      },
+      petitioner
+    );
     res.send(relation);
   } catch (err) {
     next(err);
