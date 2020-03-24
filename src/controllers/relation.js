@@ -57,7 +57,7 @@ export const stateChange = async (req, res, next) => {
     let title = `${req.user.name.first} ${req.user.name.second || ""} ha ${req.body.isActive ? "aceptado" : "rechazado"} tu solicitud de conexión`;
     let notification = new Notification({
       title,
-      user: petitioner.id.toString(),
+      user: petitioner._id.toString(),
       // movement: movement._id.toString(),
       link: "",
       from: {
