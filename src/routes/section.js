@@ -10,11 +10,11 @@ router.use(sToken);
 
 router.get("/", get);
 router.get(
-  "/:id",
+  "/find/:q",
   validateParams(
     [
       {
-        param_key: "id",
+        param_key: "q",
         required: true,
         type: "string"
       }
