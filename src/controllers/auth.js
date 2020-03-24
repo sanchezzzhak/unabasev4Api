@@ -33,8 +33,10 @@ export const google = (req, res, next) => {
       };
       User.findOne(
         query,
-        "isActive webpush security.hasPassword sections security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts",
-        async (err, user) => {
+        "isActive webpush security.hasPassword sections security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
+      )
+        .populate("sections")
+        .exec(async (err, user) => {
           if (err) next(err);
           if (!user) {
             let newUser = new User();
@@ -108,8 +110,7 @@ export const google = (req, res, next) => {
               }
             );
           }
-        }
-      );
+        });
     })
     .catch(err => {
       return next(err);
