@@ -3,7 +3,9 @@ import userData from "../lib/user/data";
 import Section from "../src/models/section";
 
 let authUser = "";
-
+let data = {
+  name: "photographer"
+};
 before(done => {
   request
     .post("/auth/register")
@@ -54,10 +56,31 @@ describe("****   SECTION   ****", () => {
         done();
       });
   });
+  it("FIND SECTION  find@section", done => {
+    let section = new Section({
+      name: data.name
+    });
+    section.save(err => {
+      if (err) done(err);
+      request
+        .get("/sections/find/" + data.name.slice(0, 4))
+        .set("authorization", authUser)
+
+        .end((err, res) => {
+          if (err) {
+            done(err);
+          }
+          res.status.should.equal(200);
+          res.body.should.be.a("object");
+          res.body.docs.should.be.a("array");
+          done();
+        });
+    });
+  });
 
   it("UPDATE SECTION  update@section", done => {
     let section = new Section({
-      name: "this is a section"
+      name: data.name
     });
     section.save((err, section) => {
       if (err) {
