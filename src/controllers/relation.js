@@ -100,11 +100,11 @@ export const getOne = async (req, res, next) => {
       .populate([
         {
           path: "receptor",
-          select: "name"
+          select: "name imgUrl google.imgUrl emails phones"
         },
         {
           path: "petitioner",
-          select: "name"
+          select: "name imgUrl google.imgUrl emails phones"
         }
       ])
       .lean();
@@ -117,11 +117,11 @@ export const get = async (req, res, next) => {
   let populate = [
     {
       path: "receptor",
-      select: "name"
+      select: "name imgUrl google.imgUrl emails phones"
     },
     {
       path: "petitioner",
-      select: "name"
+      select: "name imgUrl google.imgUrl emails phones"
     }
   ];
   let helper = queryHelper(req.query, { populate });
