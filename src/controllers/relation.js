@@ -104,7 +104,11 @@ export const getOne = async (req, res, next) => {
         },
         {
           path: "petitioner",
-          select: "name imgUrl google.imgUrl emails phones"
+          select: "name imgUrl google.imgUrl emails phones address otherAccounts sections",
+
+          populate: {
+            path: "sections"
+          }
         }
       ])
       .lean();
