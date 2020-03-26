@@ -136,11 +136,17 @@ export const getAccepted = async (req, res, next) => {
   let populate = [
     {
       path: "receptor",
-      select: "name imgUrl google.imgUrl emails phones sections"
+      select: "name imgUrl google.imgUrl emails phones sections",
+      populate: {
+        path: "sections"
+      }
     },
     {
       path: "petitioner",
-      select: "name imgUrl google.imgUrl emails phones sections"
+      select: "name imgUrl google.imgUrl emails phones sections",
+      populate: {
+        path: "sections"
+      }
     }
   ];
   let helper = queryHelper(req.query, { populate });
