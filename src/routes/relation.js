@@ -9,6 +9,7 @@ router.use(sToken);
 
 router.get("/", get);
 // router.get("/accepted", getAccepted); DEPRECATED
+router.get("/state/:state", getByState);
 router.get(
   "/:id",
   validateParams(
