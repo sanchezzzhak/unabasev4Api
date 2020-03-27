@@ -20,7 +20,7 @@ export const find = async (req, res, next) => {
 export const getOne = async (req, res, next) => {
   try {
     let section = await Section.findById(req.params.id)
-      .populate([{ path: "users", select: "name" }])
+      .populate([{ path: "users", select: "username name imgUrl google.imgUrl emails phones sections" }])
       .lean();
     res.send(section);
   } catch (err) {
