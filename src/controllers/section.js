@@ -23,7 +23,7 @@ export const getOne = async (req, res, next) => {
     let section = await Section.findById(req.params.id)
       .populate([{ path: "users", select: "username name imgUrl google.imgUrl emails phones sections" }])
       .lean();
-    let users = await User.find({ sections: { $in: [section._id] } })
+    let users = await User.find({ sections: { $in: [section._id] }, _id: { $ne: req.user._id.toString() } })
       .select("username name imgUrl google.imgUrl emails phones sections")
       .lean();
     section.users = users;
