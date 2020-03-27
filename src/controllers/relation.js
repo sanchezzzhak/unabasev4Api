@@ -50,7 +50,7 @@ export const create = async (req, res, next) => {
 };
 export const stateChange = async (req, res, next) => {
   try {
-    let relation = await Relation.findOneAndUpdate({ receptor: req.user.id, petitioner: req.body.petitioner }, { isActive: req.body.isActive }).exec();
+    let relation = await Relation.findOneAndUpdate({ receptor: req.user.id, petitioner: req.body.petitioner }, { isActive: req.body.isActive }, { new: true }).lean();
     let petitioner = await User.findById(req.body.petitioner)
       .select("name webpush")
       .lean();
