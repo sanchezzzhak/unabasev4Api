@@ -77,6 +77,26 @@ describe("****   SECTION   ****", () => {
         });
     });
   });
+  it("GET ONE section  getOne@section", done => {
+    let section = new Section({
+      name: data.name
+    });
+    section.save(err => {
+      if (err) done(err);
+      request
+        .get("/sections/" + section._id)
+        .set("authorization", authUser)
+
+        .end((err, res) => {
+          if (err) {
+            done(err);
+          }
+          res.status.should.equal(200);
+          res.body.should.be.a("object");
+          done();
+        });
+    });
+  });
 
   it("UPDATE SECTION  update@section", done => {
     let section = new Section({
