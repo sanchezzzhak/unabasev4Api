@@ -8,7 +8,7 @@ const module = "relation";
 router.use(sToken);
 
 router.get("/", get);
-router.get("/accepted", getAccepted);
+// router.get("/accepted", getAccepted); DEPRECATED
 router.get(
   "/:id",
   validateParams(
