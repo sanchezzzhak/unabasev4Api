@@ -205,7 +205,7 @@ export const update = (req, res, next) => {
           .select("permission")
           .populate("permission")
           .exec();
-        // let user = getUserData(item);
+
         let permissions = userPermissions.map(userPermission => userPermission.permission);
         item.permissions = permissions;
         res.send(item);
