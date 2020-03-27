@@ -329,6 +329,9 @@ export const find = (req, res, next) => {
       },
       {
         type
+      },
+      {
+        _id: { $ne: req.user._id.toString() }
       }
     ]
   };
