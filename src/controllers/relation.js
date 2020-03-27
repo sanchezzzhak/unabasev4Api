@@ -136,6 +136,8 @@ export const get = async (req, res, next) => {
     next(err);
   }
 };
+
+// TODO DEPRECATED
 export const getAccepted = async (req, res, next) => {
   let populate = [
     {
