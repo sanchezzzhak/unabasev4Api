@@ -1,4 +1,5 @@
 import Section from "../models/section";
+import User from "../models/user";
 
 export const get = async (req, res, next) => {
   try {
@@ -22,6 +23,10 @@ export const getOne = async (req, res, next) => {
     let section = await Section.findById(req.params.id)
       .populate([{ path: "users", select: "username name imgUrl google.imgUrl emails phones sections" }])
       .lean();
+    let users = await User.find({ sections: { $in: [section._id] } })
+      .select("username name imgUrl google.imgUrl emails phones sections")
+      .lean();
+    section.users = users;
     res.send(section);
   } catch (err) {
     next(err);
