@@ -163,3 +163,40 @@ export const getAccepted = async (req, res, next) => {
     next(err);
   }
 };
+export const getByState = async (req, res, next) => {
+  let state;
+  switch (req.params.state) {
+    case "accepted":
+      state = { isActive: true };
+      break;
+    case "rejected":
+      state = { isActive: false };
+      break;
+    case "pending":
+      state = { isActive: { $exists: false } };
+      break;
+  }
+  let populate = [
+    {
+      path: "receptor",
+      select: "name imgUrl google.imgUrl emails phones sections",
+      populate: {
+        path: "sections"
+      }
+    },
+    {
+      path: "petitioner",
+      select: "name imgUrl google.imgUrl emails phones sections",
+      populate: {
+        path: "sections"
+      }
+    }
+  ];
+  let helper = queryHelper(req.query, { populate });
+  try {
+    let relations = await Relation.paginate({ $or: [{ petitioner: req.user.id }, { receptor: req.user.id }], ...state }, helper.options).then({});
+    res.send(relations);
+  } catch (err) {
+    next(err);
+  }
+};
