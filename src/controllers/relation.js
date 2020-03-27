@@ -164,16 +164,16 @@ export const getAccepted = async (req, res, next) => {
   }
 };
 export const getByState = async (req, res, next) => {
-  let state;
+  let query;
   switch (req.params.state) {
     case "accepted":
-      state = { isActive: true };
+      query = { $or: [{ petitioner: req.user.id }, { receptor: req.user.id }], isActive: true };
       break;
     case "rejected":
-      state = { isActive: false };
+      query = { $or: [{ petitioner: req.user.id }, { receptor: req.user.id }], isActive: false };
       break;
     case "pending":
-      state = { isActive: { $exists: false } };
+      query = { receptor: req.user.id, isActive: { $exists: false } };
       break;
   }
   let populate = [
@@ -192,9 +192,9 @@ export const getByState = async (req, res, next) => {
       }
     }
   ];
-  let helper = queryHelper(req.query, { populate });
+  let helper = queryHelper({}, { populate });
   try {
-    let relations = await Relation.paginate({ $or: [{ petitioner: req.user.id }, { receptor: req.user.id }], ...state }, helper.options).then({});
+    let relations = await Relation.paginate(query, helper.options).then({});
     res.send(relations);
   } catch (err) {
     next(err);
