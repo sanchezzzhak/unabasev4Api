@@ -68,7 +68,7 @@ describe("****   RELATION   ****", () => {
   //       done();
   //     });
   // });
-  it("LIST all relations by state state@relation", done => {
+  it("LIST all relations by state byState@relation", done => {
     request
       .get("/relations/state/accepted")
       .set("authorization", authUser.token)
@@ -138,30 +138,38 @@ describe("****   RELATION   ****", () => {
   });
   it("change state of a relation state@relation", done => {
     let user = new User(userData());
+    let isActive = false;
     user.save(err => {
       let relation = new Relation({
         petitioner: user.id,
-        receptor: authUser.user.id
+        receptor: authUser.user._id.toString()
       });
       relation.save(err => {
         if (err) {
           done(err);
         }
-
         request
           .put("/relations/state")
           .set("authorization", authUser.token)
 
           .send({
             petitioner: user.id,
-            isActive: false
+            isActive
           })
           .end((err, res) => {
             if (err) {
               done(err);
             }
+            console.log(res.body);
             res.status.should.equal(200);
             res.body.should.be.a("object");
+            res.body.should.have.property("petitioner");
+            res.body.should.have.property("receptor");
+            res.body.should.have.property("isActive");
+            res.body.petitioner.should.be.a("string");
+            res.body.receptor.should.be.a("string");
+            res.body.isActive.should.be.a("boolean");
+            res.body.isActive.should.equal(isActive);
             done();
           });
       });
