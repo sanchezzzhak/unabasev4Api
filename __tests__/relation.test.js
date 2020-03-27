@@ -54,9 +54,23 @@ describe("****   RELATION   ****", () => {
         done();
       });
   });
-  it("LIST all users accepted relations accepted@relation", done => {
+  // it("LIST all users accepted relations accepted@relation", done => {
+  //   request
+  //     .get("/relations/accepted")
+  //     .set("authorization", authUser.token)
+
+  //     .end((err, res) => {
+  //       if (err) {
+  //         done(err);
+  //       }
+  //       res.status.should.equal(200);
+  //       res.body.should.be.a("object");
+  //       done();
+  //     });
+  // });
+  it("LIST all relations by state state@relation", done => {
     request
-      .get("/relations/accepted")
+      .get("/relations/state/accepted")
       .set("authorization", authUser.token)
 
       .end((err, res) => {
