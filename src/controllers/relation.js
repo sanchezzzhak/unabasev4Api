@@ -179,14 +179,14 @@ export const getByState = async (req, res, next) => {
   let populate = [
     {
       path: "receptor",
-      select: "name imgUrl google.imgUrl emails phones sections",
+      select: "username name imgUrl google.imgUrl emails phones sections",
       populate: {
         path: "sections"
       }
     },
     {
       path: "petitioner",
-      select: "name imgUrl google.imgUrl emails phones sections",
+      select: "username name imgUrl google.imgUrl emails phones sections",
       populate: {
         path: "sections"
       }
