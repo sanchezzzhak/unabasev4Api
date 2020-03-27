@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { sToken } from "../config/lib/auth";
 import { validateParams } from "../middleware/validate";
-import { create, deleteOne, get, stateChange, deleteAll, getOne, getAccepted } from "../controllers/relation";
+import { create, deleteOne, get, stateChange, deleteAll, getOne, getAccepted, getByState } from "../controllers/relation";
 const router = Router();
 
 const module = "relation";
