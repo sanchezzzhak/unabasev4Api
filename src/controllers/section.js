@@ -44,7 +44,7 @@ export const getOne = async (req, res, next) => {
     })
       .select("username name imgUrl google.imgUrl emails phones sections")
       .lean();
-    res.send({ section, related, others });
+    res.send({ section, related, others, common: [] });
   } catch (err) {
     next(err);
   }
