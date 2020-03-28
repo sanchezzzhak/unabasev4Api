@@ -93,6 +93,10 @@ describe("****   SECTION   ****", () => {
           }
           res.status.should.equal(200);
           res.body.should.be.a("object");
+          res.body.section.should.be.a("object");
+          res.body.related.should.be.a("array");
+          res.body.others.should.be.a("array");
+          res.body.common.should.be.a("array");
           done();
         });
     });
