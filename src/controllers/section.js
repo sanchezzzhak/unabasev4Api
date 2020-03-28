@@ -1,5 +1,6 @@
 import Section from "../models/section";
 import User from "../models/user";
+import Realtion from "../models/Realtion";
 
 export const get = async (req, res, next) => {
   try {
