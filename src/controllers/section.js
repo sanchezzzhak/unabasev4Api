@@ -34,13 +34,17 @@ export const getOne = async (req, res, next) => {
     let petitioners = relations.map(relation => relation.petitioner);
     petitioners = petitioners.filter(petitioner => petitioner !== req.user._id.toString());
     // find users with the sections and that have a relation with the current user
-    let users = await User.find({
+    let related = await User.find({
       $and: [{ sections: { $in: [section._id] }, _id: { $ne: req.user._id.toString() } }, { $or: [{ _id: { $in: petitioners } }, { _id: { $in: receptors } }] }]
     })
       .select("username name imgUrl google.imgUrl emails phones sections")
       .lean();
-    section.users = users;
-    res.send(section);
+    let others = await User.find({
+      $and: [{ sections: { $in: [section._id] }, _id: { $ne: req.user._id.toString() } }, { $or: [{ _id: { $nin: petitioners } }, { _id: { $nin: receptors } }] }]
+    })
+      .select("username name imgUrl google.imgUrl emails phones sections")
+      .lean();
+    res.send({ section, related, others });
   } catch (err) {
     next(err);
   }
