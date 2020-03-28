@@ -40,7 +40,8 @@ export const getOne = async (req, res, next) => {
       .select("username name imgUrl google.imgUrl emails phones sections")
       .lean();
     let others = await User.find({
-      $and: [{ sections: { $in: [section._id] }, _id: { $ne: req.user._id.toString() } }, { $or: [{ _id: { $nin: petitioners } }, { _id: { $nin: receptors } }] }]
+      $and: [{ sections: { $in: [section._id] }, _id: { $ne: req.user._id.toString() } }, { _id: { $nin: petitioners } }, { _id: { $nin: receptors } }]
+      // $and: [{ sections: { $in: [section._id] }, _id: { $ne: req.user._id.toString() } }, { $or: [{ _id: { $nin: petitioners } }, { _id: { $nin: receptors } }] }]
     })
       .select("username name imgUrl google.imgUrl emails phones sections")
       .lean();
