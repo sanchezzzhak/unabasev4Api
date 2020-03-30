@@ -352,6 +352,7 @@ export const find = async (req, res, next) => {
     }).then({});
     // TODO refactor so the query is not that large and slow
     // find relation by every user found
+    let docs = [];
     for await (let user of users.docs) {
       let relation = await Relation.findOne({
         $or: [
@@ -361,8 +362,11 @@ export const find = async (req, res, next) => {
       })
         .select("isActive")
         .exec();
+      console.log(relation);
       if (relation?.isActive) user.relation = relation;
+      docs.push({ ...user, relation });
     }
+    users.docs = docs;
     res.send(users);
   } catch (err) {
     next(err);
