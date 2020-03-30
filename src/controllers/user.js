@@ -355,8 +355,8 @@ export const find = async (req, res, next) => {
     for await (let user of users.docs) {
       let relation = await Relation.findOne({
         $or: [
-          { petitioner: req.user.id, receptor: user._id, isActive: true },
-          { petitioner: user._id, receptor: req.user.id, isActive: true }
+          { petitioner: req.user.id, receptor: user._id },
+          { petitioner: user._id, receptor: req.user.id }
         ]
       })
         .select("isActive")
