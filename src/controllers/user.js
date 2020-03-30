@@ -363,7 +363,7 @@ export const find = async (req, res, next) => {
         .select("isActive")
         .exec();
       console.log(relation);
-      if (relation?.isActive) user.relation = relation;
+      if (relation) user.relation = relation;
       docs.push({ ...user, relation });
     }
     users.docs = docs;
