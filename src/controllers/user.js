@@ -277,7 +277,7 @@ export const scope = (req, res, next) => {
     }
   );
 };
-export const find = (req, res, next) => {
+export const find = async (req, res, next) => {
   const type = req.query.type || "personal";
   let query = {
     $and: [
@@ -335,9 +335,8 @@ export const find = (req, res, next) => {
       }
     ]
   };
-  User.paginate(
-    query,
-    {
+  try {
+    let users = await User.paginate(query, {
       populate: [
         {
           path: "business"
@@ -350,18 +349,24 @@ export const find = (req, res, next) => {
       ],
       select:
         "isActive security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
-    },
-    async (err, items) => {
-      if (err) next(err);
-      let users = [];
-      // items.docs.forEach(item => {
-      //   // users.push(getUserData(item));
-      //   users.push(user);
-      // });
-      // items.docs = users;
-      res.send(items);
+    }).then({});
+    // TODO refactor so the query is not that large and slow
+    // find relation by every user found
+    for await (let user of users.docs) {
+      let relation = await Relation.findOne({
+        $or: [
+          { petitioner: req.user.id, receptor: user._id, isActive: true },
+          { petitioner: user._id, receptor: req.user.id, isActive: true }
+        ]
+      })
+        .select("isActive")
+        .exec();
+      if (relation?.isActive) user.relation = relation;
     }
-  );
+    res.send(users);
+  } catch (err) {
+    next(err);
+  }
 };
 export const relationsFind = (req, res, next) => {
   let query = {
