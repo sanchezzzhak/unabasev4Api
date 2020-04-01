@@ -31,12 +31,34 @@ let userSchema = Schema(
     phones: [{ _id: false, phone: String, label: String }],
     emails: [{ _id: false, email: String, label: String }],
     sections: Array({ type: String, ref: "Section" }),
+    // otherAccounts: {
+    //   instagram: String,
+    //   twitter: String,
+    //   facebook: String,
+    //   web: String,
+    //   linkedin: String
+    // },
     otherAccounts: {
-      instagram: String,
-      twitter: String,
-      facebook: String,
-      web: String,
-      linkedin: String
+      instagram: {
+        url: { type: String },
+        token: { type: String }
+      },
+      twitter: {
+        url: { type: String },
+        token: { type: String }
+      },
+      facebook: {
+        url: { type: String },
+        token: { type: String }
+      },
+      web: {
+        url: { type: String },
+        token: { type: String }
+      },
+      linkedin: {
+        url: { type: String },
+        token: { type: String }
+      }
     },
     /**
      *     enum: ['personal', 'business']
