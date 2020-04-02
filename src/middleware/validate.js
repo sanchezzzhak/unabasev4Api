@@ -1,3 +1,5 @@
+import checkObjectId from "../lib/db/checkObjectId";
+
 const validateParams = function(requestParams, toValidate) {
   return function(req, res, next) {
     for (let param of requestParams) {
@@ -47,7 +49,7 @@ const checkParamPresent = function(reqParams, paramObj) {
 
 const checkParamType = function(reqParam, paramObj) {
   const reqParamType = Array.isArray(reqParam) ? "array" : typeof reqParam;
-  return reqParamType === paramObj.type;
+  return paramObj.type === "objectid" ? checkObjectId(reqParam) : reqParamType === paramObj.type;
 };
 
 const runValidators = function(reqParam, validator_functions = []) {
