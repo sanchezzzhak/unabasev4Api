@@ -37,6 +37,7 @@ import notification from "./notification";
 import section from "./section";
 import itemAlias from "./itemAlias";
 import relation from "./relation";
+import link from "./link";
 import userNoAuth from "./user_noAuth";
 import { parseQueryUrl } from "../middleware/parseQueryUrl";
 
@@ -64,6 +65,7 @@ routes.use("/notifications", notification);
 routes.use("/sections", section);
 routes.use("/itemAlias", itemAlias);
 routes.use("/relations", relation);
+routes.use("/links", link);
 routes.use("/", userNoAuth);
 routes.post("/t", (req, res) => {
   res.send({ body: req.body, headers: req.headers });
