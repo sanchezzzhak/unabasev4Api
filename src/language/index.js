@@ -2,6 +2,7 @@ import user from "./user";
 import item from "./item";
 import movement from "./movement";
 import business from "./business";
+import document from "./document";
 export default (req, res, next) => {
   const locale = req.user?.language || req.locale?.language || "es";
   // if (typeof req.user !== "undefined") {
@@ -11,6 +12,6 @@ export default (req, res, next) => {
   // } else {
   //   req.lg = languages["es"];
   // }
-  req.lg = { user: user[locale], item: item[locale], movement: movement[locale], business: business[locale] };
+  req.lg = { user: user[locale], item: item[locale], movement: movement[locale], business: business[locale], document: document[locale] };
   next();
 };
