@@ -103,6 +103,64 @@ describe("****   LINK   ****", () => {
     });
   });
 
+  it("GET BY USER  getUser@link", done => {
+    let user = new User(userData());
+    user.save(err => {
+      if (err) done(err);
+      let section = new Section({
+        name: sectionData.name
+      });
+
+      data.user = user._id;
+
+      let link = new Link(data);
+
+      link.save(err => {
+        request
+          .get("/links/user/" + user._id)
+          .set("authorization", authUser.token)
+          .end((err, res) => {
+            if (err) {
+              done(err);
+            }
+            res.status.should.equal(200);
+            res.body.should.be.a("object");
+            done();
+          });
+      });
+    });
+  });
+  it("GET BY MEMBER  getMember@link", done => {
+    let user = new User(userData());
+    user.save(err => {
+      if (err) done(err);
+      let section = new Section({
+        name: sectionData.name
+      });
+
+      data.user = authUser.user._id;
+
+      data.members.push({
+        user: user._id.toString(),
+        positions: [section._id.toString()]
+      });
+      let link = new Link(data);
+
+      link.save(err => {
+        request
+          .get("/links/member/" + user._id)
+          .set("authorization", authUser.token)
+          .end((err, res) => {
+            if (err) {
+              done(err);
+            }
+            res.status.should.equal(200);
+            res.body.should.be.a("object");
+            done();
+          });
+      });
+    });
+  });
   it("DELETE ONE LINK  delete@link", done => {
     let link = new Link(data);
     link.save(err => {
