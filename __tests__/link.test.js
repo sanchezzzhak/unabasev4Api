@@ -7,11 +7,13 @@ let authUser = "";
 let data = {
   url: "https://myurl.com",
   name: "testing link",
+  description: "this is my work ",
   type: "video",
   members: []
 };
 let updateData = {
   url: "https://myurlUpdated.com",
+  description: "this is my last work updated",
   name: "updated testing link",
   type: "image",
   members: []
@@ -192,8 +194,6 @@ describe("****   LINK   ****", () => {
           if (err) {
             done(err);
           }
-          console.log(err);
-          console.log(res.body);
           res.status.should.equal(200);
           res.body.should.be.a("object");
           done();
