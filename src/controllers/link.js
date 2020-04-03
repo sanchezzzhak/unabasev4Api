@@ -26,7 +26,31 @@ export const get = async (req, res, next) => {
     next(err);
   }
 };
+export const getByMember = async (req, res, next) => {
+  let select = "name imgUrl google.imgUrl emails phones address otherAccounts sections";
+  try {
+    let links = await Link.paginate(
+      { "members.user": req.params.member },
+      { populate: [{ path: "user", select }, { path: "members.user", select }, { path: "members.positions" }, { path: "contact" }] }
+    ).then({});
+    res.send(links);
+  } catch (err) {
+    next(err);
+  }
+};
 
+export const getByUser = async (req, res, next) => {
+  let select = "name imgUrl google.imgUrl emails phones address otherAccounts sections";
+  try {
+    let links = await Link.paginate(
+      { user: req.params.user },
+      { populate: [{ path: "user", select }, { path: "members.user", select }, { path: "members.positions" }, { path: "contact" }] }
+    ).then({});
+    res.send(links);
+  } catch (err) {
+    next(err);
+  }
+};
 export const getOne = async (req, res, next) => {
   try {
     let link = await Link.findById(req.params.id)
