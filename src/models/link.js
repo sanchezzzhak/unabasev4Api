@@ -5,6 +5,7 @@ import mongooseConfig from "../config/paginate";
 const linkSchema = Schema(
   {
     user: { type: String, ref: "User" },
+    description: { type: String },
     url: { type: String },
     name: { type: String },
     type: { type: String, enum: ["image", "video"] },
