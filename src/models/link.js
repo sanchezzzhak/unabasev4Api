@@ -12,8 +12,9 @@ const linkSchema = Schema(
     members: Array({
       user: { type: String, ref: "User" },
       contact: { type: String, ref: "Contact" },
-      positions: Array({ type: String, ref: "Section" })
-    })
+      positions: Array({ type: String, ref: "Section" }),
+      main: { type: Boolean, default: false },
+    }),
   },
   { timestamps: true }
 );
