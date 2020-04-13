@@ -7,7 +7,7 @@ export const create = async (req, res, next) => {
   if (exists) next(createError(409, "Link already exists"));
   let link = new Link({
     ...req.body,
-    user: req.user._id.toString()
+    user: req.user._id.toString(),
   });
   try {
     await link.save();
@@ -30,7 +30,8 @@ export const getByMember = async (req, res, next) => {
   let select = "name imgUrl google.imgUrl emails phones address otherAccounts sections";
   try {
     let links = await Link.paginate(
-      { "members.user": req.params.member },
+      // get member with main true
+      { members: { $elemMatch: { $and: [{ user: req.params.member }, { main: false }] } } },
       { populate: [{ path: "user", select }, { path: "members.user", select }, { path: "members.positions" }, { path: "contact" }] }
     ).then({});
     res.send(links);
@@ -43,7 +44,7 @@ export const getByUser = async (req, res, next) => {
   let select = "name imgUrl google.imgUrl emails phones address otherAccounts sections";
   try {
     let links = await Link.paginate(
-      { user: req.params.user },
+      { $and: [{ user: req.params.user }, { members: { $elemMatch: { $and: [{ user: req.params.member }, { main: true }] } } }] },
       { populate: [{ path: "user", select }, { path: "members.user", select }, { path: "members.positions" }, { path: "contact" }] }
     ).then({});
     res.send(links);
@@ -56,11 +57,11 @@ export const getOne = async (req, res, next) => {
     let link = await Link.findById(req.params.id)
       .populate([
         {
-          path: "members.user"
+          path: "members.user",
         },
         {
-          path: "members.positions"
-        }
+          path: "members.positions",
+        },
       ])
       .lean();
     if (!link) next(createError(404, req.lg.document.notFound));
@@ -88,11 +89,17 @@ export const updateOne = async (req, res, next) => {
   }
 };
 
+export const setMain = async (req, res, next) => {
+  try {
+    let link = await Link.findOneAndUpdate({ _id: req.body.id, "members.user": req.user._id }, { $set: { "members.$.main": req.body.main } }, { new: true }).lean();
+    res.send(link);
+  } catch (err) {
+    next(err);
+  }
+};
 export const addMember = async (req, res, next) => {
   try {
-    let link = await Link.findById(req.params.id)
-      .select("members")
-      .exec();
+    let link = await Link.findById(req.params.id).select("members").exec();
     let member = link.members.find(member => member.user === req.body.user);
     if (member) {
       link = await Link.findOneAndUpdate({ _id: req.params.id, "members.user": member.user }, { $set: { "members.$.positions": req.body.positions } }, { new: true }).exec();
