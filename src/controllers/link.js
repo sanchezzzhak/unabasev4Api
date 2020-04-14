@@ -44,7 +44,7 @@ export const getByUser = async (req, res, next) => {
   let select = "name imgUrl google.imgUrl emails phones address otherAccounts sections";
   try {
     let links = await Link.paginate(
-      { $or: [{ user: req.params.user }, { members: { $elemMatch: { $and: [{ user: req.params.member }, { main: true }] } } }] },
+      { $or: [{ user: req.params.user }, { members: { $elemMatch: { user: req.params.user, main: true } } }] },
       { populate: [{ path: "user", select }, { path: "members.user", select }, { path: "members.positions" }, { path: "contact" }] }
     ).then({});
     res.send(links);
