@@ -3,8 +3,8 @@ import { queryHelper } from "../lib/queryHelper";
 import { createError } from "../lib/error";
 
 export const create = async (req, res, next) => {
-  let exists = await Link.findOne({ url: req.body.url }, { id: 1 }).lean();
-  if (exists) next(createError(409, "Link already exists"));
+  // let exists = await Link.findOne({ url: req.body.url }, { id: 1 }).lean();
+  // if (exists) next(createError(409, "Link already exists"));
   let link = new Link({
     ...req.body,
     user: req.user._id.toString(),
