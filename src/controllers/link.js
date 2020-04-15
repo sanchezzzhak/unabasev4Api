@@ -54,7 +54,7 @@ export const getByUser = async (req, res, next) => {
   }
 };
 export const getOne = async (req, res, next) => {
-  let select = "name imgUrl google.imgUrl emails phones address otherAccounts sections";
+  let select = "username name imgUrl google.imgUrl emails phones address otherAccounts sections";
   let link;
   try {
     link = await Link.findById(req.params.id)
@@ -62,6 +62,7 @@ export const getOne = async (req, res, next) => {
         {
           path: "members.user",
           select,
+          populate: [{ path: "sections", select: "name isActive" }],
         },
         {
           path: "members.positions",
