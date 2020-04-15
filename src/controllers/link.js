@@ -1,4 +1,5 @@
 import Link from "../models/link";
+import Relation from "../models/relation";
 import { queryHelper } from "../lib/queryHelper";
 import { createError } from "../lib/error";
 
@@ -53,19 +54,39 @@ export const getByUser = async (req, res, next) => {
   }
 };
 export const getOne = async (req, res, next) => {
+  let select = "name imgUrl google.imgUrl emails phones address otherAccounts sections";
+  let link;
   try {
-    let link = await Link.findById(req.params.id)
+    link = await Link.findById(req.params.id)
       .populate([
         {
           path: "members.user",
+          select,
         },
         {
           path: "members.positions",
+          select,
         },
       ])
       .lean();
     if (!link) next(createError(404, req.lg.document.notFound));
-    else res.send(link);
+    else {
+      for await (let member of link.members) {
+        let relation = await Relation.findOne(
+          {
+            $or: [
+              { petitioner: member.user._id, receptor: req.user._id },
+              { petitioner: req.user._id, receptor: member.user._id },
+            ],
+            isActive: true,
+          },
+          { isActive: true }
+        ).lean();
+        let index = link.members.findIndex(m => m.user._id === member.user._id);
+        link.members[index].relation = relation;
+      }
+      res.send(link);
+    }
   } catch (err) {
     next(err);
   }
