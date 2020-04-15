@@ -23,7 +23,7 @@ export const getOne = async (req, res, next) => {
   try {
     // find the selection by the id pass in params
     let section = await Section.findById(req.params.id)
-      .populate([{ path: "users", select: "username name imgUrl google.imgUrl emails phones sections" }])
+      .populate([{ path: "users", select: "username name imgUrl google.imgUrl emails phones sections", populate: [{ path: "sections", select: "name isActive" }] }])
       .lean();
     // find relations active for the current user
     let relations = await Relation.find({ $or: [{ petitioner: req.user._id.toString() }, { receptor: req.user._id.toString() }], isActive: true }).lean();
@@ -35,15 +35,17 @@ export const getOne = async (req, res, next) => {
     petitioners = petitioners.filter(petitioner => petitioner !== req.user._id.toString());
     // find users with the sections and that have a relation with the current user
     let related = await User.find({
-      $and: [{ sections: { $in: [section._id] }, _id: { $ne: req.user._id.toString() } }, { $or: [{ _id: { $in: petitioners } }, { _id: { $in: receptors } }] }]
+      $and: [{ sections: { $in: [section._id] }, _id: { $ne: req.user._id.toString() } }, { $or: [{ _id: { $in: petitioners } }, { _id: { $in: receptors } }] }],
     })
       .select("username name imgUrl google.imgUrl emails phones sections")
+      .populate([{ path: "sections", select: "name isActive" }])
       .lean();
     let others = await User.find({
-      $and: [{ sections: { $in: [section._id] }, _id: { $ne: req.user._id.toString() } }, { _id: { $nin: petitioners } }, { _id: { $nin: receptors } }]
+      $and: [{ sections: { $in: [section._id] }, _id: { $ne: req.user._id.toString() } }, { _id: { $nin: petitioners } }, { _id: { $nin: receptors } }],
       // $and: [{ sections: { $in: [section._id] }, _id: { $ne: req.user._id.toString() } }, { $or: [{ _id: { $nin: petitioners } }, { _id: { $nin: receptors } }] }]
     })
       .select("username name imgUrl google.imgUrl emails phones sections")
+      .populate([{ path: "sections", select: "name isActive" }])
       .lean();
     res.send({ section, related, others, common: [] });
   } catch (err) {
