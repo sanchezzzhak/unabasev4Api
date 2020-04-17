@@ -1,12 +1,18 @@
 import { Router } from "express";
 import { sToken } from "../config/lib/auth";
 import { validateParams } from "../middleware/validate";
-import { create, addMember, deleteOne, get, getOne, updateOne, removeMember, getByMember, getByUser, setMain } from "../controllers/link";
+import { create, addMember, deleteOne, get, getOne, updateOne, removeMember, getByMember, getByUser, setMain, getRelated } from "../controllers/link";
 
 const router = Router();
 router.use(sToken);
 
 router.get("/", get);
+
+router.get(
+  "/related",
+
+  getRelated
+);
 router.get(
   "/:id",
   validateParams(
@@ -35,6 +41,7 @@ router.get(
   ),
   getByMember
 );
+
 router.get(
   "/user/:user",
   validateParams(
