@@ -92,7 +92,18 @@ export const getOne = async (req, res, next) => {
     next(err);
   }
 };
-
+export const getRelated = async (req, res, next) => {
+  try {
+    let relations = await Relation.find({ $or: [{ petitioner: req.user.id }, { receptor: req.user.id }], isActive: true }, { petitioner: 1, receptor: 1 }).lean();
+    let users = relations.map(relation => (relation.petitioner === req.user.id ? relation.receptor : relation.petitioner));
+    let links = await Link.find({ "members.user": { $in: users } })
+      .sort({ createdAt: -1 })
+      .lean();
+    res.send(links);
+  } catch (err) {
+    next(err);
+  }
+};
 export const deleteOne = async (req, res, next) => {
   try {
     await Link.findByIdAndDelete(req.params.id).exec();
