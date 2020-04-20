@@ -36,7 +36,7 @@ export const google = (req, res, next) => {
         "isActive webpush security.hasPassword sections security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
       )
         .populate("sections")
-        .lean(async (err, user) => {
+        .exec(async (err, user) => {
           if (err) next(err);
           if (!user) {
             let newUser = new User();
