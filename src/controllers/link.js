@@ -94,10 +94,12 @@ export const getOne = async (req, res, next) => {
 };
 export const getRelated = async (req, res, next) => {
   try {
+    let select = "name imgUrl google.imgUrl emails phones address otherAccounts sections";
     let relations = await Relation.find({ $or: [{ petitioner: req.user.id }, { receptor: req.user.id }], isActive: true }, { petitioner: 1, receptor: 1 }).lean();
     let users = relations.map(relation => (relation.petitioner === req.user.id ? relation.receptor : relation.petitioner));
     let links = await Link.find({ "members.user": { $in: users } })
       .sort({ createdAt: -1 })
+      .populate([{ path: "members.user", select }, { path: "members.positions" }])
       .lean();
     res.send(links);
   } catch (err) {
