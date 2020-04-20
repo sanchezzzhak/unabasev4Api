@@ -105,12 +105,10 @@ export const google = (req, res, next) => {
               async err => {
                 let relations = await Relation.countDocuments({ $or: [{ petitioner: user._id }, { receptor: user._id }], isActive: true }).exec();
                 user.relations = relations;
+                Object.assign(user, { relations });
                 res.send({
                   token: generateToken(getUserData(user)),
-                  user: {
-                    ...user,
-                    relations,
-                  },
+                  user,
                 });
               }
             );
