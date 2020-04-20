@@ -7,7 +7,7 @@ export const subscribe = (req, res, next) => {
   // Get pushSubscription object
   // const subscription = req.body;
   const devices = req.user.webpush.devices;
-  const device = devices.filter(device => device.subscription.endpoint === req.body.subscription.endpoint);
+  const device = devices.filter(device => device.subscription.endpoint === req.body.subscription?.endpoint);
   if (!device.length) {
     console.log(`::::::::::::::: ____________update subscription for ${req.user.name}`);
     console.log(req.deviceDetected);
