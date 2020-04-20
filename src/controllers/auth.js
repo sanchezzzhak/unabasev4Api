@@ -16,7 +16,7 @@ import Currency from "../models/currency";
 import { notFoundError, createError, missingData } from "../lib/error";
 import { getCurrencyByLocation } from "../lib/currency";
 import { language } from "../language";
-export const google = (req, res, next) => {
+export const google = async (req, res, next) => {
   let url = gauth.googleAuth.endpoint + req.body.token;
 
   axios(url)
@@ -94,16 +94,9 @@ export const google = (req, res, next) => {
             let relations = await Relation.countDocuments({ $or: [{ petitioner: user._id }, { receptor: user._id }], isActive: true }).exec();
             user.google.id = data.data.sub;
             user.lastLogin = Date.now();
+            user.test = "test";
             await user.save();
 
-            // await user.populate([
-            //   {
-            //     path: "currency",
-            //   },
-            //   {
-            //     path: "scope.id",
-            //   },
-            // ]);
             user.relations = relations;
             res.send({
               token: generateToken(getUserData(user)),
