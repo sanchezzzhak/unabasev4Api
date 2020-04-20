@@ -107,7 +107,10 @@ export const google = (req, res, next) => {
                 user.relations = relations;
                 res.send({
                   token: generateToken(getUserData(user)),
-                  user,
+                  user: {
+                    ...user,
+                    relations,
+                  },
                 });
               }
             );
