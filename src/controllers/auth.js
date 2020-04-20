@@ -89,6 +89,7 @@ export const google = (req, res, next) => {
               }
             });
           } else {
+            let relations = await Relation.countDocuments({ $or: [{ petitioner: user._id }, { receptor: user._id }], isActive: true }).exec();
             user.google.id = data.data.sub;
             user.lastLogin = Date.now();
             user.save();
@@ -103,7 +104,6 @@ export const google = (req, res, next) => {
                 },
               ],
               async err => {
-                let relations = await Relation.countDocuments({ $or: [{ petitioner: user._id }, { receptor: user._id }], isActive: true }).exec();
                 user.relations = relations;
                 Object.assign(user, { relations: relations });
                 console.log("user--------");
