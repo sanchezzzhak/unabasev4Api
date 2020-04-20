@@ -97,6 +97,7 @@ export const google = async (req, res, next) => {
             user.test = "test";
             await user.save();
 
+            user = user.toJSON();
             user.relations = relations;
             res.send({
               token: generateToken(getUserData(user)),
@@ -146,7 +147,7 @@ export const password = (req, res, next) => {
     }
   );
 };
-export const login = (req, res, next) => {
+export const login = async (req, res, next) => {
   let query = {
     $or: [
       {
@@ -180,18 +181,18 @@ export const login = (req, res, next) => {
       if (user.activeScope == "" || !user.activeScope || user.activeScope == null) {
         user.activeScope = user._id;
       }
+
       user.save(async err => {
         if (err) next(err);
-        await user.populate([
-          {
-            path: "scope.id",
-            select: "name",
-          },
-        ]);
+        let relations = await Relation.countDocuments({ $or: [{ petitioner: user._id }, { receptor: user._id }], isActive: true }).exec();
+
         req.user = user;
         req.user.id = req.user._id.toString() || null;
         res.statusMessage = req.lg.user.successLogin;
         delete user.password;
+        user = user.toJSON();
+        user.relations = relations;
+
         res.json({
           token: generateToken(user),
           user,
