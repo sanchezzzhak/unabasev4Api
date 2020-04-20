@@ -94,27 +94,19 @@ export const google = (req, res, next) => {
             user.lastLogin = Date.now();
             user.save();
 
-            user.populate(
-              [
-                {
-                  path: "currency",
-                },
-                {
-                  path: "scope.id",
-                },
-              ],
-              async err => {
-                user.relations = relations;
-                Object.assign(user, { relations: relations });
-                console.log("user--------");
-                console.log(user);
-                console.log(relations);
-                res.send({
-                  token: generateToken(getUserData(user)),
-                  user,
-                });
-              }
-            );
+            await user.populate([
+              {
+                path: "currency",
+              },
+              {
+                path: "scope.id",
+              },
+            ]);
+            user.relations = relations;
+            res.send({
+              token: generateToken(getUserData(user)),
+              user,
+            });
           }
         });
     })
