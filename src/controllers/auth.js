@@ -5,7 +5,7 @@ import axios from "axios";
 import mailer from "../lib/mailer_deprecated";
 import { send } from "../config/mailer";
 import template from "../lib/mails";
-
+import Relation from "../models/relation";
 import { linkMovement } from "./movement";
 
 import envar from "../lib/envar";
