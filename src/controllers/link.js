@@ -99,7 +99,7 @@ export const getRelated = async (req, res, next) => {
     let users = relations.map(relation => (relation.petitioner === req.user.id ? relation.receptor : relation.petitioner));
     let links = await Link.find({ "members.user": { $in: users } })
       .sort({ createdAt: -1 })
-      .populate([{ path: "members.user", select }, { path: "members.positions" }, { path: "user", select }])
+      .populate([{ path: "members.user", select }, { path: "members.positions" }, { path: "user", select, populate: [{ path: "sections" }] }])
       .lean();
     res.send(links);
   } catch (err) {
