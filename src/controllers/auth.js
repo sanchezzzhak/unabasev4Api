@@ -36,6 +36,8 @@ export const google = (req, res, next) => {
         "isActive webpush security.hasPassword sections security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
       )
         .populate("sections")
+        .populate("currency")
+        .populate("scope.id")
         .exec(async (err, user) => {
           if (err) next(err);
           if (!user) {
@@ -92,16 +94,16 @@ export const google = (req, res, next) => {
             let relations = await Relation.countDocuments({ $or: [{ petitioner: user._id }, { receptor: user._id }], isActive: true }).exec();
             user.google.id = data.data.sub;
             user.lastLogin = Date.now();
-            user.save();
+            await user.save();
 
-            await user.populate([
-              {
-                path: "currency",
-              },
-              {
-                path: "scope.id",
-              },
-            ]);
+            // await user.populate([
+            //   {
+            //     path: "currency",
+            //   },
+            //   {
+            //     path: "scope.id",
+            //   },
+            // ]);
             user.relations = relations;
             res.send({
               token: generateToken(getUserData(user)),
