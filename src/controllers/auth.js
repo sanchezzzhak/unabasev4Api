@@ -108,6 +108,7 @@ export const google = (req, res, next) => {
                 Object.assign(user, { relations });
                 console.log("user--------");
                 console.log(user);
+                console.log(relations);
                 res.send({
                   token: generateToken(getUserData(user)),
                   user,
