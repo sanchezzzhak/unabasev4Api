@@ -24,12 +24,12 @@ export const google = (req, res, next) => {
       let query = {
         $or: [
           {
-            "google.id": data.data.sub
+            "google.id": data.data.sub,
           },
           {
-            "google.email": data.data.email
-          }
-        ]
+            "google.email": data.data.email,
+          },
+        ],
       };
       User.findOne(
         query,
@@ -50,11 +50,11 @@ export const google = (req, res, next) => {
             newUser.imgUrl = req.body.google.imgUrl;
             newUser.emails.push({
               email: req.body.google.email,
-              label: "google"
+              label: "google",
             });
             let names = req.body.google.name.split(" ");
             newUser.name = {
-              first: names[0]
+              first: names[0],
             };
 
             newUser.middle = names.length > 2 ? names[1] : null;
@@ -73,17 +73,17 @@ export const google = (req, res, next) => {
                   await user.populate([
                     {
                       path: "scope.id",
-                      select: "name"
+                      select: "name",
                     },
                     {
-                      path: "sections"
-                    }
+                      path: "sections",
+                    },
                   ]);
                   req.user = user;
                   req.user.id = req.user._id.toString() || null;
                   res.send({
                     token: generateToken(user),
-                    user: user
+                    user: user,
                   });
                 });
               }
@@ -96,16 +96,18 @@ export const google = (req, res, next) => {
             user.populate(
               [
                 {
-                  path: "currency"
+                  path: "currency",
                 },
                 {
-                  path: "scope.id"
-                }
+                  path: "scope.id",
+                },
               ],
-              err => {
+              async err => {
+                let relations = await Relation.countDocuments({ $or: [{ petitioner: user._id }, { receptor: user._id }], isActive: true }).exec();
+                user.relations = relations;
                 res.send({
                   token: generateToken(getUserData(user)),
-                  user
+                  user,
                 });
               }
             );
@@ -123,7 +125,7 @@ export const password = (req, res, next) => {
   User.findById(
     req.params.id,
     "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts",
-    function(err, user) {
+    function (err, user) {
       if (err) next(err);
       if (!user) next(createError(404, req.lg.user.notFound));
 
@@ -139,15 +141,15 @@ export const password = (req, res, next) => {
         await user.populate([
           {
             path: "scope.id",
-            select: "name"
-          }
+            select: "name",
+          },
         ]);
         req.user = user;
         req.user.id = req.user._id.toString() || null;
         res.statusMessage = req.lg.user.successLogin;
         res.json({
           token: generateToken(user),
-          user
+          user,
         });
       });
     }
@@ -157,13 +159,13 @@ export const login = (req, res, next) => {
   let query = {
     $or: [
       {
-        username: req.body.username
+        username: req.body.username,
       },
       {
-        "emails.email": req.body.username
-      }
+        "emails.email": req.body.username,
+      },
     ],
-    type: "personal"
+    type: "personal",
   };
   User.findOne(query)
     .select(
@@ -192,8 +194,8 @@ export const login = (req, res, next) => {
         await user.populate([
           {
             path: "scope.id",
-            select: "name"
-          }
+            select: "name",
+          },
         ]);
         req.user = user;
         req.user.id = req.user._id.toString() || null;
@@ -201,7 +203,7 @@ export const login = (req, res, next) => {
         delete user.password;
         res.json({
           token: generateToken(user),
-          user
+          user,
         });
       });
     });
@@ -218,14 +220,14 @@ export const verify = (req, res, next) => {
       await user.populate([
         {
           path: "scope.id",
-          select: "name"
-        }
+          select: "name",
+        },
       ]);
       req.user = user;
       req.user.id = req.user._id.toString() || null;
       res.json({
         token: generateToken(user),
-        user
+        user,
       });
     });
   });
@@ -234,15 +236,15 @@ export const register = (req, res, next) => {
   let query = {
     $or: [
       {
-        username: req.body.username
+        username: req.body.username,
       },
       {
-        "emails.email": req.body.email
-      }
-    ]
+        "emails.email": req.body.email,
+      },
+    ],
   };
 
-  User.findOne(query, async function(err, user) {
+  User.findOne(query, async function (err, user) {
     // if there are any errors, return the error
     if (err) return next(err);
 
@@ -260,16 +262,8 @@ export const register = (req, res, next) => {
 
     // if the user register without password, we generate one random, and ask to verify the account
     if ((typeof req.body.password === "undefined" || req.body.password === null) && typeof req.body.noPassword === "undefined") {
-      password = Math.random()
-        .toString(36)
-        .substring(2, 15);
-      activateHash =
-        Math.random()
-          .toString(36)
-          .substring(2, 15) +
-        Math.random()
-          .toString(36)
-          .substring(2, 15);
+      password = Math.random().toString(36).substring(2, 15);
+      activateHash = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
       newUser.password = newUser.generateHash(password);
       newUser.security.updatedAt = new Date();
@@ -291,11 +285,11 @@ export const register = (req, res, next) => {
 
     newUser.emails.push({
       email: req.body.email,
-      label: "default"
+      label: "default",
     });
 
     // save the user
-    newUser.save(async function(err, user) {
+    newUser.save(async function (err, user) {
       if (err) throw err;
 
       user.activeScope = user._id;
@@ -326,14 +320,14 @@ export const register = (req, res, next) => {
       await user.populate([
         {
           path: "scope.id",
-          select: "name"
-        }
+          select: "name",
+        },
       ]);
       req.user = user;
       req.user.id = req.user._id.toString() || null;
       res.json({
         token: generateToken(user),
-        user
+        user,
       });
     });
   });
@@ -345,12 +339,12 @@ export const googleCallback = async (req, res, next) => {
     let url = req.user.history.emailUrl;
     let update = {
       $unset: {
-        "history.emailUrl": ""
-      }
+        "history.emailUrl": "",
+      },
     };
     await User.findOneAndUpdate(
       {
-        _id: req.user._id
+        _id: req.user._id,
       },
       update,
       {},
@@ -365,12 +359,12 @@ export const googleCallback = async (req, res, next) => {
     let url = req.user.history.inviteUrl;
     let update = {
       $unset: {
-        "history.inviteUrl": ""
-      }
+        "history.inviteUrl": "",
+      },
     };
     await User.findOneAndUpdate(
       {
-        _id: req.user._id
+        _id: req.user._id,
       },
       update,
       {},
