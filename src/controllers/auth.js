@@ -106,6 +106,8 @@ export const google = (req, res, next) => {
                 let relations = await Relation.countDocuments({ $or: [{ petitioner: user._id }, { receptor: user._id }], isActive: true }).exec();
                 user.relations = relations;
                 Object.assign(user, { relations });
+                console.log("user--------");
+                console.log(user);
                 res.send({
                   token: generateToken(getUserData(user)),
                   user,
