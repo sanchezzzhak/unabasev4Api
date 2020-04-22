@@ -20,7 +20,7 @@ export const google = async (req, res, next) => {
   let url = gauth.googleAuth.endpoint + req.body.token;
 
   axios(url)
-    .then(data => {
+    .then(async data => {
       let query = {
         $or: [
           {
@@ -31,80 +31,59 @@ export const google = async (req, res, next) => {
           }
         ]
       };
-      User.findOne(
+      let user = await User.findOne(
         query,
         "isActive webpush security.hasPassword sections security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
       )
         .populate("sections")
         .populate("currency")
         .populate("scope.id")
-        .exec(async (err, user) => {
-          if (err) next(err);
-          if (!user) {
-            let newUser = new User();
-            newUser.currency = await getCurrencyByLocation(req);
-            // (newUser.google = newUser.username = req.body.google.email.slice(0, req.body.google.email.indexOf("@"))), (newUser.google = req.body.google);
+        .exec();
+      if (!user?._id) {
+        user = new User();
+        user.currency = await getCurrencyByLocation(req);
 
-            newUser.username = req.body.google.email.slice(0, req.body.google.email.indexOf("@"));
-            newUser.google = req.body.google;
-            newUser.google.id = data.data.sub;
-            newUser.emails = [];
-            newUser.imgUrl = req.body.google.imgUrl;
-            newUser.emails.push({
-              email: req.body.google.email,
-              label: "google"
-            });
-            let names = req.body.google.name.split(" ");
-            newUser.name = {
-              first: names[0]
-            };
-
-            newUser.middle = names.length > 2 ? names[1] : null;
-            newUser.last = names.length > 2 ? names[2] : names[1];
-            newUser.secondLast = names[3] || null;
-
-            newUser.save(err => {
-              if (err) next(err);
-              if (user) {
-                // TODO verify link with user after modify the model of client.data to client.user
-                // linkMovement(user.emails.google, user);
-                user.activeScope = user._id;
-                user.save(async err => {
-                  if (err) next(err);
-
-                  await user.populate([
-                    {
-                      path: "scope.id",
-                      select: "name"
-                    },
-                    {
-                      path: "sections"
-                    }
-                  ]);
-                  req.user = user;
-                  req.user.id = req.user._id.toString() || null;
-                  res.send({
-                    token: generateToken(user),
-                    user: user
-                  });
-                });
-              }
-            });
-          } else {
-            let relations = await Relation.countDocuments({ $or: [{ petitioner: user._id }, { receptor: user._id }], isActive: true }).exec();
-            user.google.id = data.data.sub;
-            user.lastLogin = Date.now();
-            user.test = "test";
-            await user.save();
-
-            user = user.toJSON();
-            user.relations = relations;
-            res.send({
-              token: generateToken(getUserData(user)),
-              user
-            });
-          }
+        user.username = req.body.google.email.slice(0, req.body.google.email.indexOf("@"));
+        user.google = req.body.google;
+        user.google.id = data.data.sub;
+        user.emails = [];
+        user.imgUrl = req.body.google.imgUrl;
+        user.emails.push({
+          email: req.body.google.email,
+          label: "google"
         });
+        let names = req.body.google.name.split(" ");
+        user.name = {
+          first: names[0]
+        };
+
+        user.middle = names.length > 2 ? names[1] : null;
+        user.last = names.length > 2 ? names[2] : names[1];
+        user.secondLast = names[3] || null;
+
+        // TODO verify link with user after modify the model of client.data to client.user
+        // linkMovement(user.emails.google, user);
+        await user.save();
+
+        req.user = user;
+        req.user.id = req.user._id.toString() || null;
+        res.send({
+          token: generateToken(user),
+          user: user
+        });
+      } else {
+        let relations = await Relation.countDocuments({ $or: [{ petitioner: user._id }, { receptor: user._id }], isActive: true }).exec();
+        user.google.id = data.data.sub;
+        user.lastLogin = Date.now();
+        await user.save();
+
+        user = user.toJSON();
+        user.relations = relations;
+        res.send({
+          token: generateToken(getUserData(user)),
+          user
+        });
+      }
     })
     .catch(err => {
       return next(err);
