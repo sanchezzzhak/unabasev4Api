@@ -277,6 +277,21 @@ export const scope = (req, res, next) => {
     }
   );
 };
+export const findByEmail = async (req, res, next) => {
+  try {
+    let user = await User.findOne({
+      "emails.email": {
+        $regex: req.params.email,
+        $options: "i"
+      }
+    })
+      .select("isActive name")
+      .lean();
+    res.send(user);
+  } catch (err) {
+    next(err);
+  }
+};
 export const find = async (req, res, next) => {
   const type = req.query.type || "personal";
   let query = {
