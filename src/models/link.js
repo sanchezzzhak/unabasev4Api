@@ -9,6 +9,7 @@ const linkSchema = Schema(
     url: { type: String },
     name: { type: String },
     type: { type: String },
+    cover: { type: String },
     members: Array({
       user: { type: String, ref: "User" },
       contact: { type: String, ref: "Contact" },
