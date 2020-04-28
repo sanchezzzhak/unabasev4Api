@@ -90,6 +90,6 @@
     "typescript": "^3.7.3"
   },
   "engines": {
-    "yarn": "YARN NO LONGER USED - use npm instead."
+    "node": "10.16.3"
   }
 }
