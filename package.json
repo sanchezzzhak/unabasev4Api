@@ -12,7 +12,8 @@
     "local": "NODE_ENV=local nodemon   ./src/app  --exec babel-node",
     "clean": "rm -rf build && mkdir build",
     "build-babel": "babel -d ./build ./src -s",
-    "start": "npm run build-babel && node ./build/app.js",
+    "build": "babel -d ./build ./src -s",
+    "start": "node ./build/app.js",
     "deploy:gcp": "npm run test && git push live"
   },
   "dependencies": {
