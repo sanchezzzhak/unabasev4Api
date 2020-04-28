@@ -13,10 +13,8 @@ before(done => {
   request
     .post("/auth/register")
     .send({ username: userData().username, email: userData().emails.default, password: data.password })
-    .end(function(err, res) {
+    .end(function (err, res) {
       if (err) {
-        console.log("-------errr");
-        console.log(err);
         done(err);
       }
       authUser = res.body;
@@ -46,8 +44,6 @@ describe("****   USER   ****", () => {
     let update = userData();
     user.save(err => {
       if (err) {
-        console.log("-------errr");
-        console.log(err);
         done(err);
       }
       request
@@ -56,8 +52,6 @@ describe("****   USER   ****", () => {
         .send(update)
         .end((err, res) => {
           if (err) {
-            console.log("-------errr");
-            console.log(err);
             done(err);
           }
           res.status.should.equal(200);
@@ -90,7 +84,7 @@ describe("****   USER   ****", () => {
     request
       .post("/auth/register")
       .send({ username: userData().username, email: userData().emails.default, noPassword: true })
-      .end(function(err, res) {
+      .end(function (err, res) {
         if (err) {
           done(err);
         }
@@ -106,8 +100,6 @@ describe("****   USER   ****", () => {
           })
           .end((err, res) => {
             if (err) {
-              console.log("-------errr");
-              console.log(err);
               done(err);
             }
             res.status.should.equal(200);
@@ -121,8 +113,6 @@ describe("****   USER   ****", () => {
 
     user.save(err => {
       if (err) {
-        console.log("-------errr");
-        console.log(err);
         done(err);
       }
       request
@@ -131,8 +121,6 @@ describe("****   USER   ****", () => {
 
         .end((err, res) => {
           if (err) {
-            console.log("-------errr");
-            console.log(err);
             done(err);
           }
           res.status.should.equal(200);
