@@ -277,6 +277,21 @@ export const scope = (req, res, next) => {
     }
   );
 };
+export const findByEmail = async (req, res, next) => {
+  try {
+    let user = await User.findOne({
+      "emails.email": {
+        $regex: req.params.email,
+        $options: "i"
+      }
+    })
+      .select("isActive name")
+      .lean();
+    res.send(user);
+  } catch (err) {
+    next(err);
+  }
+};
 export const find = async (req, res, next) => {
   const type = req.query.type || "personal";
   let query = {
@@ -511,19 +526,19 @@ export const getUsername = async (req, res, next) => {
     let incomes = await Movement.find({ "responsable.user": user.id, isActive: true, state: "business" }).countDocuments();
     let outcomes = await Movement.find({ "client.user": user.id, isActive: true, state: "business" }).countDocuments();
     let relations = await Relation.find({ $or: [{ petitioner: user.id }, { receptor: user.id }], isActive: true }).countDocuments();
-    let relation = await Relation.findOne(
-      {
-        $or: [
-          { receptor: req.user.id, petitioner: user.id },
-          { petitioner: req.user.id, receptor: user.id }
-        ]
-      },
-      {
-        isActive: 1
-      }
-    ).lean();
+    // let relation = await Relation.findOne(
+    //   {
+    //     $or: [
+    //       { receptor: req.user.id, petitioner: user.id },
+    //       { petitioner: req.user.id, receptor: user.id }
+    //     ]
+    //   },
+    //   {
+    //     isActive: 1
+    //   }
+    // ).lean();
     if (!user) next(notFoundError());
-    res.send({ user, relation, relations, incomes, outcomes });
+    res.send({ user, relations, incomes, outcomes });
   } catch (err) {
     next(err);
   }

@@ -43,6 +43,7 @@ import { parseQueryUrl } from "../middleware/parseQueryUrl";
 
 // TODO verify session for all routes
 
+routes.use("/", userNoAuth);
 routes.use("/auth", auth);
 routes.use("/users", user);
 routes.use("/business", business);
@@ -66,7 +67,6 @@ routes.use("/sections", section);
 routes.use("/itemAlias", itemAlias);
 routes.use("/relations", relation);
 routes.use("/links", link);
-routes.use("/", userNoAuth);
 routes.post("/t", (req, res) => {
   res.send({ body: req.body, headers: req.headers });
 });

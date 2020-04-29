@@ -8,13 +8,14 @@ const linkSchema = Schema(
     description: { type: String },
     url: { type: String },
     name: { type: String },
-    type: { type: String, enum: ["image", "video"] },
+    type: { type: String },
+    cover: { type: String },
     members: Array({
       user: { type: String, ref: "User" },
       contact: { type: String, ref: "Contact" },
       positions: Array({ type: String, ref: "Section" }),
-      main: { type: Boolean, default: false },
-    }),
+      main: { type: Boolean, default: false }
+    })
   },
   { timestamps: true }
 );

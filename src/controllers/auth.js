@@ -20,91 +20,70 @@ export const google = async (req, res, next) => {
   let url = gauth.googleAuth.endpoint + req.body.token;
 
   axios(url)
-    .then(data => {
+    .then(async data => {
       let query = {
         $or: [
           {
-            "google.id": data.data.sub,
+            "google.id": data.data.sub
           },
           {
-            "google.email": data.data.email,
-          },
-        ],
+            "google.email": data.data.email
+          }
+        ]
       };
-      User.findOne(
+      let user = await User.findOne(
         query,
         "isActive webpush security.hasPassword sections security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
       )
         .populate("sections")
         .populate("currency")
         .populate("scope.id")
-        .exec(async (err, user) => {
-          if (err) next(err);
-          if (!user) {
-            let newUser = new User();
-            newUser.currency = await getCurrencyByLocation(req);
-            // (newUser.google = newUser.username = req.body.google.email.slice(0, req.body.google.email.indexOf("@"))), (newUser.google = req.body.google);
+        .exec();
+      if (!user?._id) {
+        user = new User();
+        user.currency = await getCurrencyByLocation(req);
 
-            newUser.username = req.body.google.email.slice(0, req.body.google.email.indexOf("@"));
-            newUser.google = req.body.google;
-            newUser.google.id = data.data.sub;
-            newUser.emails = [];
-            newUser.imgUrl = req.body.google.imgUrl;
-            newUser.emails.push({
-              email: req.body.google.email,
-              label: "google",
-            });
-            let names = req.body.google.name.split(" ");
-            newUser.name = {
-              first: names[0],
-            };
-
-            newUser.middle = names.length > 2 ? names[1] : null;
-            newUser.last = names.length > 2 ? names[2] : names[1];
-            newUser.secondLast = names[3] || null;
-
-            newUser.save(err => {
-              if (err) next(err);
-              if (user) {
-                // TODO verify link with user after modify the model of client.data to client.user
-                // linkMovement(user.emails.google, user);
-                user.activeScope = user._id;
-                user.save(async err => {
-                  if (err) next(err);
-
-                  await user.populate([
-                    {
-                      path: "scope.id",
-                      select: "name",
-                    },
-                    {
-                      path: "sections",
-                    },
-                  ]);
-                  req.user = user;
-                  req.user.id = req.user._id.toString() || null;
-                  res.send({
-                    token: generateToken(user),
-                    user: user,
-                  });
-                });
-              }
-            });
-          } else {
-            let relations = await Relation.countDocuments({ $or: [{ petitioner: user._id }, { receptor: user._id }], isActive: true }).exec();
-            user.google.id = data.data.sub;
-            user.lastLogin = Date.now();
-            user.test = "test";
-            await user.save();
-
-            user = user.toJSON();
-            user.relations = relations;
-            res.send({
-              token: generateToken(getUserData(user)),
-              user,
-            });
-          }
+        user.username = req.body.google.email.slice(0, req.body.google.email.indexOf("@"));
+        user.google = req.body.google;
+        user.google.id = data.data.sub;
+        user.emails = [];
+        user.imgUrl = req.body.google.imgUrl;
+        user.emails.push({
+          email: req.body.google.email,
+          label: "google"
         });
+        let names = req.body.google.name.split(" ");
+        user.name = {
+          first: names[0]
+        };
+
+        user.middle = names.length > 2 ? names[1] : null;
+        user.last = names.length > 2 ? names[2] : names[1];
+        user.secondLast = names[3] || null;
+
+        // TODO verify link with user after modify the model of client.data to client.user
+        // linkMovement(user.emails.google, user);
+        await user.save();
+
+        req.user = user;
+        req.user.id = req.user._id.toString() || null;
+        res.send({
+          token: generateToken(user),
+          user: user
+        });
+      } else {
+        let relations = await Relation.countDocuments({ $or: [{ petitioner: user._id }, { receptor: user._id }], isActive: true }).exec();
+        user.google.id = data.data.sub;
+        user.lastLogin = Date.now();
+        await user.save();
+
+        user = user.toJSON();
+        user.relations = relations;
+        res.send({
+          token: generateToken(getUserData(user)),
+          user
+        });
+      }
     })
     .catch(err => {
       return next(err);
@@ -133,15 +112,15 @@ export const password = (req, res, next) => {
         await user.populate([
           {
             path: "scope.id",
-            select: "name",
-          },
+            select: "name"
+          }
         ]);
         req.user = user;
         req.user.id = req.user._id.toString() || null;
         res.statusMessage = req.lg.user.successLogin;
         res.json({
           token: generateToken(user),
-          user,
+          user
         });
       });
     }
@@ -151,13 +130,13 @@ export const login = async (req, res, next) => {
   let query = {
     $or: [
       {
-        username: req.body.username,
+        username: req.body.username
       },
       {
-        "emails.email": req.body.username,
-      },
+        "emails.email": req.body.username
+      }
     ],
-    type: "personal",
+    type: "personal"
   };
   User.findOne(query)
     .select(
@@ -195,7 +174,7 @@ export const login = async (req, res, next) => {
 
         res.json({
           token: generateToken(user),
-          user,
+          user
         });
       });
     });
@@ -212,36 +191,35 @@ export const verify = (req, res, next) => {
       await user.populate([
         {
           path: "scope.id",
-          select: "name",
-        },
+          select: "name"
+        }
       ]);
       req.user = user;
       req.user.id = req.user._id.toString() || null;
       res.json({
         token: generateToken(user),
-        user,
+        user
       });
     });
   });
 };
-export const register = (req, res, next) => {
+export const register = async (req, res, next) => {
   let query = {
     $or: [
       {
-        username: req.body.username,
+        username: req.body.username
       },
       {
-        "emails.email": req.body.email,
-      },
-    ],
+        "emails.email": req.body.email
+      }
+    ]
   };
 
-  User.findOne(query, async function (err, user) {
-    // if there are any errors, return the error
-    if (err) return next(err);
+  try {
+    let user = await User.findOne(query).select("_id").lean();
 
     // check to see if theres already a user with that email
-    if (user) next(createError(409, user.username === req.body.username ? req.lg.user.alreadyExist : req.lg.user.alreadyRegistered));
+    if (user?._id) next(createError(409, user.username === req.body.username ? req.lg.user.alreadyExist : req.lg.user.alreadyRegistered));
 
     // if there is no user with that email
     // create the user
@@ -277,52 +255,25 @@ export const register = (req, res, next) => {
 
     newUser.emails.push({
       email: req.body.email,
-      label: "default",
+      label: "default"
     });
 
+    newUser.activeScope = newUser._id;
     // save the user
-    newUser.save(async function (err, user) {
-      if (err) throw err;
+    await newUser.save();
 
-      user.activeScope = user._id;
-      user.save();
-      // TODO, send email asking to verify account if the password is generated by the system.
-      // if (user.security.isRandom) {
-      //   const { text, subject } = template().register({
-      //     password,
-      //     origin: req.headers.origin,
-      //     lang: req.locale.language,
-      //     activateHash,
-      //     id: user._id,
-      //     name: req.body.name
-      //   });
-      //   logy("text");
-      //   logy(text);
+    // TODO, send email asking to verify account if the password is generated by the system.
 
-      //   let msg = {
-      //     to: req.body.email,
-      //     subject: subject,
-      //     html: text
-      //   };
-
-      //   send(msg)
-      //     .then(res => logy(res))
-      //     .catch(err => console.warn(err));
-      // }
-      await user.populate([
-        {
-          path: "scope.id",
-          select: "name",
-        },
-      ]);
-      req.user = user;
-      req.user.id = req.user._id.toString() || null;
-      res.json({
-        token: generateToken(user),
-        user,
-      });
+    req.user = newUser;
+    req.user.id = req.user._id.toString() || null;
+    res.json({
+      token: generateToken(newUser),
+      user: newUser
     });
-  });
+  } catch (err) {
+    // if there are any errors, return the error
+    next(err);
+  }
 };
 export const googleCallback = async (req, res, next) => {
   // Successful authentication, redirect home.
@@ -331,12 +282,12 @@ export const googleCallback = async (req, res, next) => {
     let url = req.user.history.emailUrl;
     let update = {
       $unset: {
-        "history.emailUrl": "",
-      },
+        "history.emailUrl": ""
+      }
     };
     await User.findOneAndUpdate(
       {
-        _id: req.user._id,
+        _id: req.user._id
       },
       update,
       {},
@@ -351,12 +302,12 @@ export const googleCallback = async (req, res, next) => {
     let url = req.user.history.inviteUrl;
     let update = {
       $unset: {
-        "history.inviteUrl": "",
-      },
+        "history.inviteUrl": ""
+      }
     };
     await User.findOneAndUpdate(
       {
-        _id: req.user._id,
+        _id: req.user._id
       },
       update,
       {},
