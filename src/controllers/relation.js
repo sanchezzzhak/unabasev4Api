@@ -146,6 +146,26 @@ export const get = async (req, res, next) => {
   }
 };
 
+export const getByUser = async (req, res, next) => {
+  let populate = [
+    {
+      path: "receptor",
+      select: "name imgUrl google.imgUrl emails phones"
+    },
+    {
+      path: "petitioner",
+      select: "name imgUrl google.imgUrl emails phones"
+    }
+  ];
+  let helper = queryHelper({ isActive: true, $or: [{ receptor: req.params.user }, { petitioner: req.params.user }] }, { populate });
+  try {
+    let relations = await Relation.paginate(helper.query, helper.options).then({});
+    res.send(relations);
+  } catch (err) {
+    next(err);
+  }
+};
+
 // TODO DEPRECATED
 export const getAccepted = async (req, res, next) => {
   let populate = [
