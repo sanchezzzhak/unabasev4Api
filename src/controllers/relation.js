@@ -36,7 +36,7 @@ export const create = async (req, res, next) => {
     await notification.save();
     sendPush(
       {
-        title,
+        body: title,
         link
       },
       user
@@ -64,7 +64,7 @@ export const stateChange = async (req, res, next) => {
     await notification.save();
     sendPush(
       {
-        title,
+        body: title,
         link: ""
       },
       petitioner
