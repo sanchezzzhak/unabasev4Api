@@ -20,9 +20,7 @@ export const create = async (req, res, next) => {
   });
   try {
     await relation.save();
-    let user = await User.findById(req.body.receptor)
-      .select("name webpush")
-      .lean();
+    let user = await User.findById(req.body.receptor).select("name webpush").lean();
     let link = ``;
     let title = `${req.user.name.first} ${req.user.name.second || ""} te ha enviado una solicitud de conexión`;
     let notification = new Notification({
@@ -51,9 +49,7 @@ export const create = async (req, res, next) => {
 export const stateChange = async (req, res, next) => {
   try {
     let relation = await Relation.findOneAndUpdate({ receptor: req.user.id, petitioner: req.body.petitioner }, { isActive: req.body.isActive }, { new: true }).lean();
-    let petitioner = await User.findById(req.body.petitioner)
-      .select("name webpush")
-      .lean();
+    let petitioner = await User.findById(req.body.petitioner).select("name webpush").lean();
     let title = `${req.user.name.first} ${req.user.name.second || ""} ha ${req.body.isActive ? "aceptado" : "rechazado"} tu solicitud de conexión`;
     let notification = new Notification({
       title,
@@ -82,6 +78,19 @@ export const deleteOne = async (req, res, next) => {
   try {
     await Relation.findByIdAndDelete(req.params.id).exec();
     res.send({ success: true });
+  } catch (err) {
+    next(err);
+  }
+};
+export const disconnect = async (req, res, next) => {
+  try {
+    let result = await Relation.findOneAndDelete({
+      $or: [
+        { petitioner: req.user.id, receptor: req.params.user },
+        { petitioner: req.params.user, receptor: req.user.id }
+      ]
+    }).exec();
+    res.status(result ? 200 : 404).send({ success: result ? true : false });
   } catch (err) {
     next(err);
   }

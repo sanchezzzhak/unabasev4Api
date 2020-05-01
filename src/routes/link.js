@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { sToken } from "../config/lib/auth";
 import { validateParams } from "../middleware/validate";
-import { create, addMember, deleteOne, get, getOne, updateOne, removeMember, getByMember, getByUser, setMain, getRelated } from "../controllers/link";
+import { find, create, addMember, deleteOne, get, getOne, updateOne, removeMember, getByMember, getByUser, setMain, getRelated } from "../controllers/link";
 
 const router = Router();
 router.use(sToken);
@@ -14,19 +14,34 @@ router.get(
   getRelated
 );
 router.get(
+  "/find/:q",
+  validateParams(
+    [
+      {
+        param_key: "q",
+        required: true,
+        type: "string"
+      }
+    ],
+    "params"
+  ),
+  find
+);
+router.get(
   "/:id",
   validateParams(
     [
       {
         param_key: "id",
         required: true,
-        type: "objectid",
-      },
+        type: "objectid"
+      }
     ],
     "params"
   ),
   getOne
 );
+
 router.get(
   "/member/:member",
   validateParams(
@@ -34,8 +49,8 @@ router.get(
       {
         param_key: "member",
         required: true,
-        type: "objectid",
-      },
+        type: "objectid"
+      }
     ],
     "params"
   ),
@@ -49,8 +64,8 @@ router.get(
       {
         param_key: "user",
         required: true,
-        type: "objectid",
-      },
+        type: "objectid"
+      }
     ],
     "params"
   ),
@@ -63,13 +78,13 @@ router.post(
       {
         param_key: "url",
         required: true,
-        type: "string",
+        type: "string"
       },
       {
         param_key: "type",
         required: true,
-        type: "string",
-      },
+        type: "string"
+      }
     ],
     "body"
   ),
@@ -82,13 +97,13 @@ router.put(
       {
         param_key: "id",
         required: true,
-        type: "objectid",
+        type: "objectid"
       },
       {
         param_key: "main",
         required: true,
-        type: "boolean",
-      },
+        type: "boolean"
+      }
     ],
     "body"
   ),
@@ -101,8 +116,8 @@ router.put(
       {
         param_key: "id",
         required: true,
-        type: "objectid",
-      },
+        type: "objectid"
+      }
     ],
     "params"
   ),
@@ -116,8 +131,8 @@ router.put(
       {
         param_key: "id",
         required: true,
-        type: "objectid",
-      },
+        type: "objectid"
+      }
     ],
     "params"
   ),
@@ -130,8 +145,8 @@ router.put(
       {
         param_key: "id",
         required: true,
-        type: "objectid",
-      },
+        type: "objectid"
+      }
     ],
     "params"
   ),
@@ -140,8 +155,8 @@ router.put(
       {
         param_key: "user",
         required: true,
-        type: "objectid",
-      },
+        type: "objectid"
+      }
     ],
     "body"
   ),
@@ -154,8 +169,8 @@ router.delete(
       {
         param_key: "id",
         required: true,
-        type: "objectid",
-      },
+        type: "objectid"
+      }
     ],
     "params"
   ),
