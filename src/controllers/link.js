@@ -8,7 +8,7 @@ export const create = async (req, res, next) => {
   // if (exists) next(createError(409, "Link already exists"));
   let link = new Link({
     ...req.body,
-    user: req.user._id.toString(),
+    user: req.user._id.toString()
   });
   try {
     await link.save();
@@ -33,7 +33,7 @@ export const getByMember = async (req, res, next) => {
     let links = await Link.paginate(
       // get member with main true
       { members: { $elemMatch: { $and: [{ user: req.params.member }, { main: false }] } } },
-      { populate: [{ path: "user", select }, { path: "members.user", select }, { path: "members.positions" }, { path: "contact" }] }
+      { populate: [{ path: "user", select }, { path: "members.user", select }, { path: "members.positions" }, { path: "contact" }], sort: "-createdAt" }
     ).then({});
     res.send(links);
   } catch (err) {
@@ -46,7 +46,7 @@ export const getByUser = async (req, res, next) => {
   try {
     let links = await Link.paginate(
       { $or: [{ user: req.params.user }, { members: { $elemMatch: { user: req.params.user, main: true } } }] },
-      { populate: [{ path: "user", select }, { path: "members.user", select }, { path: "members.positions" }, { path: "contact" }] }
+      { populate: [{ path: "user", select }, { path: "members.user", select }, { path: "members.positions" }, { path: "contact" }], sort: "-createdAt" }
     ).then({});
     res.send(links);
   } catch (err) {
@@ -62,12 +62,12 @@ export const getOne = async (req, res, next) => {
         {
           path: "members.user",
           select,
-          populate: [{ path: "sections", select: "name isActive" }],
+          populate: [{ path: "sections", select: "name isActive" }]
         },
         {
           path: "members.positions",
-          select,
-        },
+          select
+        }
       ])
       .lean();
     if (!link) next(createError(404, req.lg.document.notFound));
@@ -77,9 +77,9 @@ export const getOne = async (req, res, next) => {
           {
             $or: [
               { petitioner: member.user._id, receptor: req.user._id },
-              { petitioner: req.user._id, receptor: member.user._id },
+              { petitioner: req.user._id, receptor: member.user._id }
             ],
-            isActive: true,
+            isActive: true
           },
           { isActive: true }
         ).lean();
