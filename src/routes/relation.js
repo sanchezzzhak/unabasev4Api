@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { sToken } from "../config/lib/auth";
 import { validateParams } from "../middleware/validate";
-import { create, deleteOne, get, stateChange, deleteAll, getOne, getAccepted, getByState } from "../controllers/relation";
+import { create, deleteOne, get, stateChange, deleteAll, getOne, getAccepted, getByState, disconnect } from "../controllers/relation";
+
 const router = Router();
 
 const module = "relation";
@@ -51,6 +52,21 @@ router.delete(
     "params"
   ),
   deleteOne
+);
+
+router.delete(
+  "/disconnect/:user",
+  validateParams(
+    [
+      {
+        param_key: "user",
+        required: true,
+        type: "objectid"
+      }
+    ],
+    "params"
+  ),
+  disconnect
 );
 router.delete("/", deleteAll);
 router.put(
