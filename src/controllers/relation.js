@@ -36,7 +36,7 @@ export const create = async (req, res, next) => {
     await notification.save();
     sendPush(
       {
-        title,
+        body: title,
         link
       },
       user
@@ -64,7 +64,7 @@ export const stateChange = async (req, res, next) => {
     await notification.save();
     sendPush(
       {
-        title,
+        body: title,
         link: ""
       },
       petitioner
@@ -138,6 +138,26 @@ export const get = async (req, res, next) => {
     }
   ];
   let helper = queryHelper(req.query, { populate });
+  try {
+    let relations = await Relation.paginate(helper.query, helper.options).then({});
+    res.send(relations);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getByUser = async (req, res, next) => {
+  let populate = [
+    {
+      path: "receptor",
+      select: "name imgUrl google.imgUrl emails phones"
+    },
+    {
+      path: "petitioner",
+      select: "name imgUrl google.imgUrl emails phones"
+    }
+  ];
+  let helper = queryHelper({ isActive: true, $or: [{ receptor: req.params.user }, { petitioner: req.params.user }] }, { populate });
   try {
     let relations = await Relation.paginate(helper.query, helper.options).then({});
     res.send(relations);

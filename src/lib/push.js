@@ -1,5 +1,6 @@
 import webPush from "web-push";
 export const sendPush = async (payload, user) => {
+  payload.title = payload.title || "Unabase.com";
   payload = JSON.stringify(payload);
   try {
     console.log(user);
