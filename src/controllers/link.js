@@ -156,3 +156,29 @@ export const removeMember = async (req, res, next) => {
     next(err);
   }
 };
+
+export const find = async (req, res, next) => {
+  let query = {
+    $or: [
+      {
+        description: {
+          $regex: req.params.q,
+          $options: "i"
+        }
+      },
+      {
+        name: {
+          $regex: req.params.q,
+          $options: "i"
+        }
+      }
+    ]
+  };
+
+  try {
+    let links = await Link.find(query).lean();
+    res.send(links);
+  } catch (err) {
+    next(err);
+  }
+};
