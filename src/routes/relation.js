@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { sToken } from "../config/lib/auth";
 import { validateParams } from "../middleware/validate";
-import { create, deleteOne, get, stateChange, deleteAll, getOne, getAccepted, getByState, disconnect } from "../controllers/relation";
+import { create, deleteOne, get, stateChange, deleteAll, getOne, getAccepted, getByState, disconnect, getByUser } from "../controllers/relation";
 
 const router = Router();
 
@@ -11,6 +11,20 @@ router.use(sToken);
 router.get("/", get);
 // router.get("/accepted", getAccepted); DEPRECATED
 router.get("/state/:state", getByState);
+router.get(
+  "/user/:user",
+  validateParams(
+    [
+      {
+        param_key: "user",
+        required: true,
+        type: "objectid"
+      }
+    ],
+    "params"
+  ),
+  getByUser
+);
 router.get(
   "/:id",
   validateParams(
