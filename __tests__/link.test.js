@@ -6,7 +6,7 @@ import Link from "../src/models/link";
 let authUser = "";
 let data = {
   url: "https://myurl.com",
-  name: "testing link",
+  name: "testing link mypro",
   description: "this is my work ",
   type: "video",
   members: []
@@ -27,7 +27,7 @@ before(done => {
     request
       .post("/auth/register")
       .send({ username: userData().username, email: userData().emails.default, name: userData().name })
-      .end(function(err, res) {
+      .end(function (err, res) {
         if (err) {
           done(err);
         }
@@ -92,6 +92,25 @@ describe("****   LINK   ****", () => {
       if (err) done(err);
       request
         .get("/links/" + link._id)
+        .set("authorization", authUser.token)
+
+        .end((err, res) => {
+          if (err) {
+            done(err);
+          }
+          res.status.should.equal(200);
+          res.body.should.be.a("object");
+          done();
+        });
+    });
+  });
+
+  it("FIND LINKS find@link", done => {
+    let link = new Link(data);
+    link.save(err => {
+      if (err) done(err);
+      request
+        .get("/links/find/" + data.name.slice(-5))
         .set("authorization", authUser.token)
 
         .end((err, res) => {
