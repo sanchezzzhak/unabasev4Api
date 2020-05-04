@@ -8,8 +8,16 @@ import { createError } from "../lib/error";
 export const create = async (req, res, next) => {
   let exists = await Relation.findOne(
     {
-      petitioner: req.user.id,
-      receptor: req.body.receptor
+      $or: [
+        {
+          petitioner: req.user.id,
+          receptor: req.body.receptor
+        },
+        {
+          receptor: req.user.id,
+          petitioner: req.body.receptor
+        }
+      ]
     },
     { id: 1 }
   ).lean();

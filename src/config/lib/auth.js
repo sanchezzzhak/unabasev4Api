@@ -29,7 +29,7 @@ export const cToken = (req, res, next) => {
 };
 export const isAuthOptional = async (req, res, next) => {
   req.token = req.headers.authorization;
-  if (typeof req.token !== "undefined") {
+  if (typeof req.token !== "undefined" && req.token !== "") {
     let decoded = jwt.verify(req.token, envar().SECRET);
     let authUser;
 
@@ -56,7 +56,7 @@ export const isAuthOptional = async (req, res, next) => {
 };
 export const sToken = async (req, res, next) => {
   req.token = req.headers.authorization;
-  if (typeof req.token !== "undefined" && req.headers.authorization !== "postmanvn4b4s3") {
+  if (typeof req.token !== "undefined" && req.token !== "") {
     let decoded = jwt.verify(req.token, envar().SECRET);
     let authUser;
 
@@ -77,41 +77,6 @@ export const sToken = async (req, res, next) => {
     // next();
   } else if (req.method === "OPTIONS") {
     next();
-  } else if (req.headers.authorization === "postmanvn4b4s3" || process.env.NODE_ENV === "test") {
-    let query;
-    if (req.headers["x-api-key"]) {
-      query = {
-        _id: req.headers["x-api-key"]
-      };
-    } else {
-      query = {
-        $or: [
-          {
-            "emails.email": {
-              $regex: "mail",
-              $options: "i"
-            }
-          }
-        ]
-      };
-    }
-    User.findOne(query)
-      .populate("scope.id", "name")
-      .exec((err, user) => {
-        if (err) {
-          res.status(403).send({
-            msg: "Not user found for auth",
-            err
-          });
-        } else if (user) {
-          req.user = user;
-          next();
-        } else {
-          res.status(403).send({
-            msg: "Not user found for auth"
-          });
-        }
-      });
   } else {
     res.status(403).send({
       msg: "Not authorized2"
