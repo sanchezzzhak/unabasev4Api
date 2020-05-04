@@ -176,7 +176,7 @@ export const find = async (req, res, next) => {
   };
 
   try {
-    let links = await Link.find(query).lean();
+    let links = await Link.paginate(query).then({});
     res.send(links);
   } catch (err) {
     next(err);
