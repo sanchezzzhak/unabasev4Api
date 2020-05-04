@@ -5,19 +5,19 @@ import User from "../src/models/user";
 let authUser = "";
 
 before(done => {
-  // User.deleteMany({}, err => {
-  request
-    .post("/auth/register")
-    .send({ username: userData().username, email: userData().emails.default, name: userData().name })
-    .end(function(err, res) {
-      if (err) {
-        done(err);
-      }
-      authUser = res.body;
-      res.status.should.equal(200);
-      done();
-    });
-  // });
+  Relation.deleteMany({}, err => {
+    request
+      .post("/auth/register")
+      .send({ username: userData().username, email: userData().emails.default, name: userData().name })
+      .end(function (err, res) {
+        if (err) {
+          done(err);
+        }
+        authUser = res.body;
+        res.status.should.equal(200);
+        done();
+      });
+  });
 });
 
 describe("****   RELATION   ****", () => {
@@ -54,20 +54,7 @@ describe("****   RELATION   ****", () => {
         done();
       });
   });
-  // it("LIST all users accepted relations accepted@relation", done => {
-  //   request
-  //     .get("/relations/accepted")
-  //     .set("authorization", authUser.token)
 
-  //     .end((err, res) => {
-  //       if (err) {
-  //         done(err);
-  //       }
-  //       res.status.should.equal(200);
-  //       res.body.should.be.a("object");
-  //       done();
-  //     });
-  // });
   it("LIST all relations by state byState@relation", done => {
     request
       .get("/relations/state/accepted")
@@ -104,6 +91,36 @@ describe("****   RELATION   ****", () => {
             }
             res.status.should.equal(200);
             res.body.should.be.a("object");
+            done();
+          });
+      });
+    });
+  });
+
+  it("GET USER RELATIONS getByUser@relation", done => {
+    let user = new User(userData());
+    user.save(err => {
+      let relation = new Relation({
+        petitioner: authUser.user.id,
+        receptor: user.id,
+        isActive: true
+      });
+      relation.save(err => {
+        if (err) {
+          done(err);
+        }
+        console.log(user._id);
+        request
+          .get("/relations/user/" + user._id)
+          .set("authorization", authUser.token)
+
+          .end((err, res) => {
+            if (err) {
+              done(err);
+            }
+            res.status.should.equal(200);
+            res.body.should.be.a("object");
+            res.body.total.should.equal(1);
             done();
           });
       });
