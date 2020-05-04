@@ -523,21 +523,21 @@ export const getUsername = async (req, res, next) => {
       .select("name username imgUrl google.email google.imgUrl otherAccounts createdAt address sections")
 
       .exec();
+    if (!user) next(notFoundError());
     let incomes = await Movement.find({ "responsable.user": user.id, isActive: true, state: "business" }).countDocuments();
     let outcomes = await Movement.find({ "client.user": user.id, isActive: true, state: "business" }).countDocuments();
     let relations = await Relation.find({ $or: [{ petitioner: user.id }, { receptor: user.id }], isActive: true }).countDocuments();
-    // let relation = await Relation.findOne(
-    //   {
-    //     $or: [
-    //       { receptor: req.user.id, petitioner: user.id },
-    //       { petitioner: req.user.id, receptor: user.id }
-    //     ]
-    //   },
-    //   {
-    //     isActive: 1
-    //   }
-    // ).lean();
-    if (!user) next(notFoundError());
+    let relation = await Relation.findOne(
+      {
+        $or: [
+          { receptor: req.user.id, petitioner: user.id },
+          { petitioner: req.user.id, receptor: user.id }
+        ]
+      },
+      {
+        isActive: 1
+      }
+    ).lean();
     res.send({ user, relations, incomes, outcomes });
   } catch (err) {
     next(err);
