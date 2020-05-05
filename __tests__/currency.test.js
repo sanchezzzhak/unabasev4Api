@@ -27,13 +27,13 @@ before(done => {
   request
     .post("/auth/register")
     .send({ username: userData().username, email: userData().emails.default })
-    .end(function(err, res) {
+    .end(function (err, res) {
       if (err) {
         console.log("-------errr");
         console.log(err);
         done(err);
       }
-      authUser = res.body.token;
+      authUser = res.body.access_token;
       res.status.should.equal(200);
       done();
     });

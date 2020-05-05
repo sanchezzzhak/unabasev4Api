@@ -3,8 +3,8 @@ import logger from "../lib/logger";
 const router = Router();
 import { get, find, update, create, findUsersByPermission, getUserRoles } from "../controllers/permission";
 let module = "permission";
-import { sToken } from "../config/lib/auth";
-router.use(sToken);
+import { isAuth } from "../config/lib/auth";
+
 // router
 // TODO route can be replaced and can be use the find route with params
 //HECTOR -  USUARIOS QUE TIENEN UN PERMISO DENTRO DE LA EMPRESA (ESPECIFICO)

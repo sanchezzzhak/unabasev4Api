@@ -1,17 +1,14 @@
 import { Router } from "express";
-const contacts = Router();
+const router = Router();
 import { get, getOne, find, updateOne, create, findSelf, byItem } from "../controllers/contact";
 
-import { sToken } from "../config/lib/auth";
-contacts.use(sToken);
+router.post("/", create);
+router.get("/", get);
+router.get("/self/:q", findSelf);
+router.get("/self", findSelf);
+router.get("/find/:q", find);
+router.get("/:id", getOne);
+router.put("/:id", updateOne);
+router.get("/item/:id", byItem);
 
-contacts.post("/", create);
-contacts.get("/", get);
-contacts.get("/self/:q", findSelf);
-contacts.get("/self", findSelf);
-contacts.get("/find/:q", find);
-contacts.get("/:id", getOne);
-contacts.put("/:id", updateOne);
-contacts.get("/item/:id", byItem);
-
-export default contacts;
+export default router;

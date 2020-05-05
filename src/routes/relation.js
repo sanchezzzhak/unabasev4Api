@@ -1,12 +1,11 @@
 import { Router } from "express";
-import { sToken } from "../config/lib/auth";
+import { isAuth } from "../config/lib/auth";
 import { validateParams } from "../middleware/validate";
 import { create, deleteOne, get, stateChange, deleteAll, getOne, getAccepted, getByState, disconnect, getByUser } from "../controllers/relation";
 
 const router = Router();
 
 const module = "relation";
-router.use(sToken);
 
 router.get("/", get);
 // router.get("/accepted", getAccepted); DEPRECATED

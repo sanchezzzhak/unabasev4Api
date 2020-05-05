@@ -27,7 +27,7 @@ describe("****   USER   ****", () => {
   it("LIST all users @user", done => {
     request
       .get("/users")
-      .set("authorization", authUser.token)
+      .set("authorization", authUser.access_token)
 
       .end((err, res) => {
         if (err) {
@@ -48,7 +48,7 @@ describe("****   USER   ****", () => {
       }
       request
         .put("/users/" + user.id)
-        .set("authorization", authUser.token)
+        .set("authorization", authUser.access_token)
         .send(update)
         .end((err, res) => {
           if (err) {
@@ -65,7 +65,7 @@ describe("****   USER   ****", () => {
 
     request
       .put("/users/password")
-      .set("authorization", authUser.token)
+      .set("authorization", authUser.access_token)
       .send({
         password: data.password,
         newPassword: update.password
@@ -94,7 +94,7 @@ describe("****   USER   ****", () => {
         let update = userData();
         request
           .put("/users/password")
-          .set("authorization", newUser.token)
+          .set("authorization", newUser.access_token)
           .send({
             newPassword: update.password
           })
@@ -117,7 +117,7 @@ describe("****   USER   ****", () => {
       }
       request
         .get("/users/" + user.id)
-        .set("authorization", authUser.token)
+        .set("authorization", authUser.access_token)
 
         .end((err, res) => {
           if (err) {
@@ -140,7 +140,7 @@ describe("****   USER   ****", () => {
       }
       request
         .get("/users/profile/" + data.username)
-        // .set("authorization", authUser.token)
+        // .set("authorization", authUser.access_token)
 
         .end((err, res) => {
           if (err) {
@@ -156,7 +156,7 @@ describe("****   USER   ****", () => {
   it("FIND BY QUERY users -  name, username, email, idnumber find@user", done => {
     request
       .get("/users/find/" + data.name.first.slice(3, 7))
-      .set("authorization", authUser.token)
+      .set("authorization", authUser.access_token)
 
       .end((err, res) => {
         if (err) {

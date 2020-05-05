@@ -1,14 +1,13 @@
 import { Router } from "express";
 import { validateParams } from "../middleware/validate";
-const currencies = Router();
+const router = Router();
 
 import { get, create, updateOne, find, getOne, deleteOne } from "../controllers/currency";
 
 import logger from "../lib/logger";
-import { sToken } from "../config/lib/auth";
-currencies.use(sToken);
+
 let module = "currencies";
-currencies.get(
+router.get(
   "/",
   logger({
     name: "list currencies",
@@ -17,7 +16,7 @@ currencies.get(
   }),
   get
 );
-currencies.get(
+router.get(
   "/:id",
   logger({
     name: "get one",
@@ -36,7 +35,7 @@ currencies.get(
   ),
   getOne
 );
-currencies.post(
+router.post(
   "/",
   logger({
     name: "create",
@@ -70,7 +69,7 @@ currencies.post(
   ),
   create
 );
-currencies.put(
+router.put(
   "/:id",
   logger({
     name: "update",
@@ -114,7 +113,7 @@ currencies.put(
   ),
   updateOne
 );
-currencies.get(
+router.get(
   "/find/:q",
   logger({
     name: "find",
@@ -133,7 +132,7 @@ currencies.get(
   ),
   find
 );
-currencies.delete(
+router.delete(
   "/:id",
   logger({
     name: "delete",
@@ -153,4 +152,4 @@ currencies.delete(
   deleteOne
 );
 
-export default currencies;
+export default router;

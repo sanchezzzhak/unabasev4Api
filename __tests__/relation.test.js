@@ -26,7 +26,7 @@ describe("****   RELATION   ****", () => {
     user.save(err => {
       request
         .post("/relations")
-        .set("authorization", authUser.token)
+        .set("authorization", authUser.access_token)
         .send({
           receptor: user._id.toString()
         })
@@ -43,7 +43,7 @@ describe("****   RELATION   ****", () => {
   it("LIST all users get@relation", done => {
     request
       .get("/relations?petioner=" + authUser.user._id.toString())
-      .set("authorization", authUser.token)
+      .set("authorization", authUser.access_token)
 
       .end((err, res) => {
         if (err) {
@@ -58,7 +58,7 @@ describe("****   RELATION   ****", () => {
   it("LIST all relations by state byState@relation", done => {
     request
       .get("/relations/state/accepted")
-      .set("authorization", authUser.token)
+      .set("authorization", authUser.access_token)
 
       .end((err, res) => {
         if (err) {
@@ -83,7 +83,7 @@ describe("****   RELATION   ****", () => {
 
         request
           .get("/relations/" + relation.id)
-          .set("authorization", authUser.token)
+          .set("authorization", authUser.access_token)
 
           .end((err, res) => {
             if (err) {
@@ -112,7 +112,7 @@ describe("****   RELATION   ****", () => {
         console.log(user._id);
         request
           .get("/relations/user/" + user._id)
-          .set("authorization", authUser.token)
+          .set("authorization", authUser.access_token)
 
           .end((err, res) => {
             if (err) {
@@ -140,7 +140,7 @@ describe("****   RELATION   ****", () => {
 
         request
           .delete("/relations/" + relation.id)
-          .set("authorization", authUser.token)
+          .set("authorization", authUser.access_token)
 
           .end((err, res) => {
             if (err) {
@@ -167,7 +167,7 @@ describe("****   RELATION   ****", () => {
         }
         request
           .put("/relations/state")
-          .set("authorization", authUser.token)
+          .set("authorization", authUser.access_token)
 
           .send({
             petitioner: user.id,
@@ -196,7 +196,7 @@ describe("****   RELATION   ****", () => {
   it("Delete all relation deleteAll@relation", done => {
     request
       .delete("/relations")
-      .set("authorization", authUser.token)
+      .set("authorization", authUser.access_token)
 
       .end((err, res) => {
         if (err) {
