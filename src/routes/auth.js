@@ -1,12 +1,10 @@
-import axios from "axios";
 import { Router } from "express";
-import jwt from "jsonwebtoken";
-import gauth from "../config/auth";
-import { verify, register, password, login, google, googleCallback, errUser } from "../controllers/auth";
-import User from "../models/user";
+
+import { verify, register, password, login, google, googleCallback, errUser, refreshToken } from "../controllers/auth";
+
 import logger from "../lib/logger";
 import { validateParams } from "../middleware/validate";
-// import passport from "../config/passport";
+
 import passport from "passport";
 const auth = Router();
 let module = "auth";
@@ -88,6 +86,25 @@ auth.post(
 // auth.get('/errUser', errUser);
 
 auth.post(
+  "/refresh",
+  logger({
+    name: "refresh",
+    description: "refresh a token",
+    module
+  }),
+  validateParams(
+    [
+      {
+        param_key: "refresh_token",
+        required: true,
+        type: "string"
+      }
+    ],
+    "body"
+  ),
+  refreshToken
+);
+auth.post(
   "/login",
   logger({
     name: "login",
@@ -116,7 +133,7 @@ auth.post("/login2", passport.authenticate("local", { successRedirect: "/", fail
 
 auth.get("/google", passport.authenticate("google", { scope: ["profile", "email", "openid", "https://www.googleapis.com/auth/calendar.events"] }));
 
-auth.get("/google/callback", passport.authenticate("google", { failureRedirect: "/login2" }), function(req, res) {
+auth.get("/google/callback", passport.authenticate("google", { failureRedirect: "/login2" }), function (req, res) {
   // Successful authentication, redirect home.
   res.redirect("/");
 });
