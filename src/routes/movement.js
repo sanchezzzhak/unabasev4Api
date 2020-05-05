@@ -17,15 +17,13 @@ import {
   nullMany,
   updateState
 } from "../controllers/movement";
-import { sToken } from "../config/lib/auth";
+import { isAuth } from "../config/lib/auth";
 import logger from "../lib/logger";
 import { checkPermission } from "../middleware/permission";
 import { validateParams } from "../middleware/validate";
 import { detector } from "../middleware/device";
 let module = "movement";
 // if (process.env.NODE_ENV !== 'test') {
-
-router.use(sToken);
 
 router.get(
   "/:id",

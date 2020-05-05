@@ -1,10 +1,9 @@
 import { Router } from "express";
 import { get, setRead } from "../controllers/notification";
 import { validateParams } from "../middleware/validate";
-import { sToken } from "../config/lib/auth";
+import { isAuth } from "../config/lib/auth";
 
 const router = Router();
-router.use(sToken);
 
 router.get("/", get);
 router.put(

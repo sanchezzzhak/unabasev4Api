@@ -1,8 +1,8 @@
 import { Router } from "express";
 const router = Router();
 import { main } from "../controllers/report";
-import { sToken } from "../config/lib/auth";
-router.use(sToken);
+import { isAuth } from "../config/lib/auth";
+
 router.get("/", main);
 
 export default router;

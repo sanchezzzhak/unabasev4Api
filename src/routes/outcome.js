@@ -1,8 +1,6 @@
-import { Router } from 'express';
+import { Router } from "express";
 const outcomes = Router();
-import { gets, getFilter, get, update } from '../../controllers/outcome';
-import { cToken } from '../../config/lib/auth';
-users.use(cToken);
+import { gets, getFilter, get, update } from "../../controllers/outcome";
 
 /*
 {
@@ -13,9 +11,9 @@ users.use(cToken);
 }
 
 */
-users.get('/', gets);
-users.post('/', getFilter);
-users.get('/:id', get);
-users.put('/', update);
+users.get("/", gets);
+users.post("/", getFilter);
+users.get("/:id", get);
+users.put("/", update);
 
 export default outcomes;

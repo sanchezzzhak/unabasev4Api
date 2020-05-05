@@ -1,13 +1,11 @@
 import { create, deleteOne, getFrom, updateOne } from "../controllers/comment";
 import { Router } from "express";
-const comment = Router();
+const router = Router();
 let module = "comment";
 
-import { sToken } from "../config/lib/auth";
-comment.use(sToken);
-comment.post("/", create);
-comment.delete("/:id", deleteOne);
-comment.get("/:id/:name", getFrom);
-comment.put("/:id", updateOne);
+router.post("/", create);
+router.delete("/:id", deleteOne);
+router.get("/:id/:name", getFrom);
+router.put("/:id", updateOne);
 
-export default comment;
+export default router;

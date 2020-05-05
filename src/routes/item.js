@@ -1,12 +1,10 @@
 import { Router } from "express";
-const items = Router();
-import { sToken } from "../config/lib/auth";
+const router = Router();
 import logger from "../lib/logger";
 
-items.use(sToken);
 import { get, create, updateOne, findOne, getOne, find } from "../controllers/item";
 let module = "items";
-items.get(
+router.get(
   "/",
   logger({
     name: "list",
@@ -15,7 +13,7 @@ items.get(
   }),
   get
 );
-items.post(
+router.post(
   "/",
   logger({
     name: "create",
@@ -24,7 +22,7 @@ items.post(
   }),
   create
 );
-items.put(
+router.put(
   "/:id",
   logger({
     name: "update",
@@ -33,7 +31,7 @@ items.put(
   }),
   updateOne
 );
-items.get(
+router.get(
   "/find/:q",
   logger({
     name: "find",
@@ -42,7 +40,7 @@ items.get(
   }),
   find
 );
-items.get(
+router.get(
   "/:id",
   logger({
     name: "getOne",
@@ -52,4 +50,4 @@ items.get(
   getOne
 );
 
-export default items;
+export default router;

@@ -1,12 +1,11 @@
 import { Router } from "express";
-const business = Router();
+const router = Router();
 import { get, gets, create, getOne, updateOne, user, addUserToBusiness } from "../controllers/business";
-import { sToken } from "../config/lib/auth";
+
 import { validateParams } from "../middleware/validate";
 
-business.use(sToken);
-business.get("/", get);
-business.post(
+router.get("/", get);
+router.post(
   "/",
   validateParams(
     [
@@ -25,7 +24,7 @@ business.post(
   ),
   create
 );
-business.get(
+router.get(
   "/:id",
   validateParams(
     [
@@ -39,7 +38,7 @@ business.get(
   ),
   getOne
 );
-business.put(
+router.put(
   "/:id",
   validateParams(
     [
@@ -53,7 +52,7 @@ business.put(
   ),
   updateOne
 );
-business.put(
+router.put(
   "/user/:id",
   validateParams(
     [
@@ -84,7 +83,7 @@ business.put(
 );
 
 // HECTOR - RUTA QUE AGREGA UN USUARIO A UNA EMPRESA
-// business.put('/addUser/:id', addUserToBusiness);
-// business
+// router.put('/addUser/:id', addUserToBusiness);
+// router
 
-export default business;
+export default router;

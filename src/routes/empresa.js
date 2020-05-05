@@ -3,12 +3,10 @@ import { Router } from "express";
 const router = Router();
 
 import { get, getOne } from "../controllers/empresa";
-import { sToken } from "../config/lib/auth";
+import { isAuth } from "../config/lib/auth";
 import logger from "../lib/logger";
 
 let module = "siiBusiness";
-
-router.use(sToken);
 
 router.get(
   "/:q",

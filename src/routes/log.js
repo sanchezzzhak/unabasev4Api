@@ -1,13 +1,10 @@
-import { Router } from 'express';
-const logs = Router();
-import { get, getOne, create, find } from '../controllers/log';
-import { sToken } from '../config/lib/auth';
+import { Router } from "express";
+const router = Router();
+import { get, getOne, create, find } from "../controllers/log";
 
-logs.use(sToken);
+router.get("/", get);
+router.get("/:id", getOne);
+router.post("/", create);
+router.get("/find/:q", find);
 
-logs.get('/', get);
-logs.get('/:id', getOne);
-logs.post('/', create);
-logs.get('/find/:q', find);
-
-export default logs;
+export default router;

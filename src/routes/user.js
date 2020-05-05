@@ -1,11 +1,9 @@
 import { Router } from "express";
-const users = Router();
+const router = Router();
 import { validateParams } from "../middleware/validate";
 import { create, get, logout, find, getOne, password, update, business, scope, user, restart, relationsFind, lastItems, lastParents, connections } from "../controllers/user";
 
-import { sToken } from "../config/lib/auth";
-users.post("/", create);
-users.use(sToken);
+router.post("/", create);
 
 /*
 {
@@ -16,7 +14,7 @@ users.use(sToken);
 }
 
 */
-users.put(
+router.put(
   "/password",
   validateParams(
     [
@@ -36,11 +34,11 @@ users.put(
   password
 );
 
-users.get("/", get);
-users.get("/lastItems", lastItems);
-users.get("/lastParents", lastParents);
-users.get("/logout", logout);
-users.get(
+router.get("/", get);
+router.get("/lastItems", lastItems);
+router.get("/lastParents", lastParents);
+router.get("/logout", logout);
+router.get(
   "/find/:q",
   validateParams(
     [
@@ -54,7 +52,7 @@ users.get(
   ),
   find
 );
-users.get(
+router.get(
   "/relations/:q",
   validateParams(
     [
@@ -68,7 +66,7 @@ users.get(
   ),
   relationsFind
 );
-users.get(
+router.get(
   "/:id",
   validateParams(
     [
@@ -82,7 +80,7 @@ users.get(
   ),
   getOne
 );
-users.post(
+router.post(
   "/restart/:q",
   validateParams(
     [
@@ -96,7 +94,7 @@ users.post(
   ),
   restart
 );
-users.put(
+router.put(
   "/business/:id",
   validateParams(
     [
@@ -120,7 +118,7 @@ users.put(
   ),
   business
 );
-users.put(
+router.put(
   "/user/:id",
   validateParams(
     [
@@ -144,7 +142,7 @@ users.put(
   ),
   user
 );
-users.put(
+router.put(
   "/scope/:id",
   validateParams(
     [
@@ -173,7 +171,7 @@ users.put(
   ),
   scope
 );
-users.put(
+router.put(
   "/:id",
   validateParams(
     [
@@ -198,5 +196,5 @@ users.put(
   update
 );
 
-users.get("/connections", connections);
-export default users;
+router.get("/connections", connections);
+export default router;

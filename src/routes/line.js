@@ -1,18 +1,16 @@
 import { Router } from "express";
-const lines = Router();
+const router = Router();
 import { create, get, updateOne, deleteOne, createMany, updateMany, deleteMany, group, move, createParent, getLinesByMovement, requestBudget } from "../controllers/line";
 import { checkItem, updateMovementState, updateTotalMovement, updateItemLastPrice, checkParent, updateOldParent, getCurrencyFromMovement } from "../middleware/line";
 
 import { validateParams } from "../middleware/validate";
-import { sToken } from "../config/lib/auth";
-import logger from "../lib/logger";
 
-lines.use(sToken);
+import logger from "../lib/logger";
 
 let module = "line";
 
-lines.get("/", logger({ name: "list lines", description: "get the list of lines", module }), get);
-lines.get(
+router.get("/", logger({ name: "list lines", description: "get the list of lines", module }), get);
+router.get(
   "/movement/:movement",
   validateParams(
     [
@@ -28,7 +26,7 @@ lines.get(
   logger({ name: "get lines by movement", description: "get the list of lines", module }),
   getLinesByMovement
 );
-lines.post(
+router.post(
   "/",
   [
     logger({
@@ -58,7 +56,7 @@ lines.post(
   ),
   create
 );
-lines.post(
+router.post(
   "/parent",
   [
     logger({
@@ -87,7 +85,7 @@ lines.post(
   ),
   createParent
 );
-lines.put(
+router.put(
   "/move",
   [
     logger({
@@ -128,7 +126,7 @@ lines.put(
   ),
   move
 );
-lines.post(
+router.post(
   "/group",
   [
     logger({
@@ -151,7 +149,7 @@ lines.post(
   ),
   group
 );
-lines.post(
+router.post(
   "/many",
 
   logger({
@@ -182,7 +180,7 @@ lines.post(
   ),
   createMany
 );
-lines.put(
+router.put(
   "/many",
   logger({
     name: "create line",
@@ -208,7 +206,7 @@ lines.put(
   ),
   updateMany
 );
-lines.delete(
+router.delete(
   "/many",
   logger({
     name: "create line",
@@ -234,7 +232,7 @@ lines.delete(
   ),
   deleteMany
 );
-lines.put(
+router.put(
   "/:id",
   logger({
     name: "updateOne lines",
@@ -275,7 +273,7 @@ lines.put(
   ),
   updateOne
 );
-lines.delete(
+router.delete(
   "/:id",
   logger({
     name: "delete one line",
@@ -296,7 +294,7 @@ lines.delete(
   deleteOne
 );
 
-lines.post(
+router.post(
   "/request-budget",
   logger({
     name: "request budget",
@@ -329,4 +327,4 @@ lines.post(
   requestBudget
 );
 
-export default lines;
+export default router;
