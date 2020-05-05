@@ -56,7 +56,7 @@ describe("****   LINK   ****", () => {
         });
         request
           .post("/links")
-          .set("authorization", authUser.token)
+          .set("authorization", authUser.access_token)
           .send(data)
           .end((err, res) => {
             if (err) {
@@ -73,7 +73,7 @@ describe("****   LINK   ****", () => {
   it("LIST LINK  list@link", done => {
     request
       .get("/links")
-      .set("authorization", authUser.token)
+      .set("authorization", authUser.access_token)
 
       .end((err, res) => {
         if (err) {
@@ -92,7 +92,7 @@ describe("****   LINK   ****", () => {
       if (err) done(err);
       request
         .get("/links/" + link._id)
-        .set("authorization", authUser.token)
+        .set("authorization", authUser.access_token)
 
         .end((err, res) => {
           if (err) {
@@ -111,7 +111,7 @@ describe("****   LINK   ****", () => {
       if (err) done(err);
       request
         .get("/links/find/" + data.name.slice(-5))
-        .set("authorization", authUser.token)
+        .set("authorization", authUser.access_token)
 
         .end((err, res) => {
           if (err) {
@@ -139,7 +139,7 @@ describe("****   LINK   ****", () => {
       link.save(err => {
         request
           .get("/links/user/" + user._id)
-          .set("authorization", authUser.token)
+          .set("authorization", authUser.access_token)
           .end((err, res) => {
             if (err) {
               done(err);
@@ -170,7 +170,7 @@ describe("****   LINK   ****", () => {
       link.save(err => {
         request
           .get("/links/member/" + user._id)
-          .set("authorization", authUser.token)
+          .set("authorization", authUser.access_token)
           .end((err, res) => {
             if (err) {
               done(err);
@@ -188,7 +188,7 @@ describe("****   LINK   ****", () => {
       if (err) done(err);
       request
         .delete("/links/" + link._id)
-        .set("authorization", authUser.token)
+        .set("authorization", authUser.access_token)
 
         .end((err, res) => {
           if (err) {
@@ -207,7 +207,7 @@ describe("****   LINK   ****", () => {
       if (err) done(err);
       request
         .put("/links/" + link._id.toString())
-        .set("authorization", authUser.token)
+        .set("authorization", authUser.access_token)
         .send(updateData)
         .end((err, res) => {
           if (err) {
@@ -239,7 +239,7 @@ describe("****   LINK   ****", () => {
           };
           request
             .put("/links/member/add/" + link._id)
-            .set("authorization", authUser.token)
+            .set("authorization", authUser.access_token)
             .send(data)
             .end((err, res) => {
               if (err) {
@@ -277,7 +277,7 @@ describe("****   LINK   ****", () => {
           };
           request
             .put("/links/member/remove/" + link._id)
-            .set("authorization", authUser.token)
+            .set("authorization", authUser.access_token)
             .send({
               user: user._id.toString()
             })

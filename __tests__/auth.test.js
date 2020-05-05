@@ -20,7 +20,8 @@ describe("****   AUTH   ****", () => {
           done(err);
         }
         res.body.should.be.a("object");
-        res.body.token.should.be.a("string");
+        res.body.access_token.should.be.a("string");
+        res.body.refresh_token.should.be.a("string");
         res.body.user.should.be.a("object");
         res.body.user.security.hasPassword.should.be.false;
         res.body.user.security.isRandom.should.be.true;
@@ -46,7 +47,7 @@ describe("****   AUTH   ****", () => {
           done(err);
         }
         res.body.should.be.a("object");
-        res.body.token.should.be.a("string");
+        res.body.access_token.should.be.a("string");
         res.body.user.should.be.a("object");
         res.body.user.security.hasPassword.should.be.true;
         res.body.user.security.isRandom.should.be.false;
