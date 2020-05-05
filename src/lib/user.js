@@ -1,7 +1,5 @@
 import UserPermission from "../models/userPermission";
 
-import jwt from "jsonwebtoken";
-import envar from "./envar";
 export const getUserData = data => {
   let user = {
     _id: data._id,
@@ -49,11 +47,4 @@ export const getUserPermission = user => {
         resolve(userPermissions.map(userPermission => userPermission.permission));
       });
   });
-
-  // return userPermissions.map(userPermission => userPermission.permission);
-};
-
-export const generateToken = (user, expiresIn = "100d") => {
-  const toSing = { user: { user }, secret: envar().SECRET, expires: { expiresIn } };
-  return jwt.sign(toSing.user, toSing.secret, toSing.expires);
 };
