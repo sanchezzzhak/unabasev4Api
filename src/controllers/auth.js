@@ -18,7 +18,7 @@ import { getCurrencyByLocation } from "../lib/currency";
 import { language } from "../language";
 import { getTokenByRefresh, refreshTokenGen, accessTokenGen } from "../config/lib/auth";
 export const google = async (req, res, next) => {
-  let url = gauth.googleAuth.endpoint + req.body.access_token;
+  let url = gauth.googleAuth.endpoint + req.body.token;
 
   axios(url)
     .then(async data => {
@@ -89,8 +89,6 @@ export const google = async (req, res, next) => {
       }
     })
     .catch(err => {
-      console.log("error from google");
-      console.log(err);
       return next(err);
     });
 };
