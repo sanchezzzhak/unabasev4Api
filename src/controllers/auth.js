@@ -89,6 +89,8 @@ export const google = async (req, res, next) => {
       }
     })
     .catch(err => {
+      console.log("error from google");
+      console.log(err);
       return next(err);
     });
 };
