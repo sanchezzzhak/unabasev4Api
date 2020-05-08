@@ -17,6 +17,9 @@ import { notFoundError, createError, missingData } from "../lib/error";
 import { getCurrencyByLocation } from "../lib/currency";
 import { language } from "../language";
 import { getTokenByRefresh, refreshTokenGen, accessTokenGen } from "../config/lib/auth";
+
+const USER_DATA_SELECT =
+  "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts sections";
 export const google = async (req, res, next) => {
   let url = gauth.googleAuth.endpoint + req.body.token;
 
@@ -32,14 +35,7 @@ export const google = async (req, res, next) => {
           }
         ]
       };
-      let user = await User.findOne(
-        query,
-        "isActive webpush security.hasPassword sections security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
-      )
-        .populate("sections")
-        .populate("currency")
-        .populate("scope.id")
-        .exec();
+      let user = await User.findOne(query, USER_DATA_SELECT).populate("sections").populate("currency").populate("scope.id").exec();
       if (!user?._id) {
         user = new User();
         user.currency = await getCurrencyByLocation(req);
@@ -96,39 +92,35 @@ export const google = async (req, res, next) => {
 export const password = (req, res, next) => {
   const { newPassword } = req.body;
   logy("enter restart password");
-  User.findById(
-    req.params.id,
-    "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts",
-    function (err, user) {
-      if (err) next(err);
-      if (!user) next(createError(404, req.lg.user.notFound));
+  User.findById(req.params.id, USER_DATA_SELECT, function (err, user) {
+    if (err) next(err);
+    if (!user) next(createError(404, req.lg.user.notFound));
 
-      user.security.hash = user.generateHash(newPassword);
+    user.security.hash = user.generateHash(newPassword);
 
-      if (user.isActive) next(createError(401, req.lg.user.notActive));
+    if (user.isActive) next(createError(401, req.lg.user.notActive));
 
-      user.lastLogin = Date.now();
-      if (user.activeScope == "" || !user.activeScope || user.activeScope == null) {
-        user.activeScope = user._id;
-      }
-      user.save(async err => {
-        await user.populate([
-          {
-            path: "scope.id",
-            select: "name"
-          }
-        ]);
-        req.user = user;
-        req.user.id = req.user._id.toString() || null;
-        res.statusMessage = req.lg.user.successLogin;
-        res.json({
-          access_token: accessTokenGen(user, true),
-          refresh_token: refreshTokenGen(user),
-          user
-        });
-      });
+    user.lastLogin = Date.now();
+    if (user.activeScope == "" || !user.activeScope || user.activeScope == null) {
+      user.activeScope = user._id;
     }
-  );
+    user.save(async err => {
+      await user.populate([
+        {
+          path: "scope.id",
+          select: "name"
+        }
+      ]);
+      req.user = user;
+      req.user.id = req.user._id.toString() || null;
+      res.statusMessage = req.lg.user.successLogin;
+      res.json({
+        access_token: accessTokenGen(user, true),
+        refresh_token: refreshTokenGen(user),
+        user
+      });
+    });
+  });
 };
 export const login = async (req, res, next) => {
   let query = {
@@ -143,9 +135,7 @@ export const login = async (req, res, next) => {
     type: "personal"
   };
   User.findOne(query)
-    .select(
-      "isActive webpush security.hasPassword sections security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
-    )
+    .select(USER_DATA_SELECT)
     .populate("scope.id")
     .populate("currency")
     .populate("sections")
