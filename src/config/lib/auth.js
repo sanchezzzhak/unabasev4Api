@@ -10,13 +10,9 @@ const decodeFunc = token => {
   return jwt.verify(token, envar().SECRET);
 };
 const encodeFunc = (toSing, expiresIn) => {
-  console.log("toSing");
-  console.log(toSing);
   return jwt.sign(toSing, envar().SECRET, { expiresIn });
 };
 const accessToken = (user, tokenFresh = false) => {
-  console.log("user --- ");
-  console.log(user);
   return encodeFunc({ ...user, tokenFresh }, "1d");
 };
 
