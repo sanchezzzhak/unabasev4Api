@@ -96,7 +96,33 @@ describe("****   RELATION   ****", () => {
       });
     });
   });
+  it("DISCONNECT   disconnect@relation", done => {
+    let user = new User(userData());
+    user.save(err => {
+      let relation = new Relation({
+        petitioner: authUser.user.id,
+        receptor: user.id
+      });
+      relation.save(err => {
+        if (err) {
+          done(err);
+        }
+        request
+          .delete("/relations/disconnect/" + user.id)
+          .set("authorization", authUser.access_token)
 
+          .end((err, res) => {
+            if (err) {
+              done(err);
+            }
+            res.status.should.equal(200);
+            res.body.should.be.a("object");
+            res.body.success.should.be.a("boolean");
+            done();
+          });
+      });
+    });
+  });
   it("GET USER RELATIONS getByUser@relation", done => {
     let user = new User(userData());
     user.save(err => {
