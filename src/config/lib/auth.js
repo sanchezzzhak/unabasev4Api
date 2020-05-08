@@ -54,11 +54,10 @@ export const getTokenByRefresh = refresh => {
 export const isAuthOptional = async (req, res, next) => {
   req.access_token = req.headers.authorization;
   if (typeof req.access_token !== "undefined" && req.access_token !== "") {
-    let decoded = decodeFunc(req.access_token);
-    let authUser;
-
     try {
-      authUser = await User.findOne({ _id: decoded._id })
+      let decoded = decodeFunc(req.access_token);
+
+      let authUser = await User.findOne({ _id: decoded._id })
         .select(
           "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
         )
@@ -69,6 +68,7 @@ export const isAuthOptional = async (req, res, next) => {
       req.user = authUser;
       next();
     } catch (err) {
+      console.log(err);
       next(createError(401, "Not authorized."));
     }
     // next();
