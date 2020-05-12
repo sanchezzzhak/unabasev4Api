@@ -7,13 +7,17 @@ import { createError } from "../../lib/error";
 
 // funcs to decoded, encoded and generate accessToken
 const decodeFunc = token => {
-  return jwt.verify(token, envar().SECRET);
+    try {
+        return jwt.verify(token, envar().SECRET);
+    } catch (err) {
+        return err;
+    }
 };
 const encodeFunc = (toSing, expiresIn) => {
-  return jwt.sign(toSing, envar().SECRET, { expiresIn });
+    return jwt.sign(toSing, envar().SECRET, { expiresIn });
 };
 const accessToken = (user, tokenFresh = false) => {
-  return encodeFunc({ ...user, tokenFresh }, "1d");
+    return encodeFunc({ ...user, tokenFresh }, "1d");
 };
 
 // export the functions to decoded, encoded and generate accessToken
@@ -23,17 +27,15 @@ export const accessTokenGen = accessToken;
 
 // export the functions to generate refresh_token and get access with the refresh_token
 export const refreshTokenGen = user => {
-  return encodeFunc(user, "60d");
+    return encodeFunc(user, "60d");
 };
 export const getTokenByRefresh = refresh => {
-  let payload = decodeFunc(refresh);
-  delete payload.iat;
-  delete payload.exp;
-  delete payload.nbf;
-  delete payload.jti;
-  console.log("decoded payload");
-  console.log(payload);
-  return accessToken(payload);
+    let payload = decodeFunc(refresh);
+    delete payload.iat;
+    delete payload.exp;
+    delete payload.nbf;
+    delete payload.jti;
+    return accessToken(payload);
 };
 
 // export const isAuth = (req, res, next) => {
@@ -48,59 +50,61 @@ export const getTokenByRefresh = refresh => {
 // };
 
 export const isAuthOptional = async (req, res, next) => {
-  req.access_token = req.headers.authorization;
-  if (typeof req.access_token !== "undefined" && req.access_token !== "") {
-    try {
-      let decoded = decodeFunc(req.access_token);
+    req.access_token = req.headers.authorization;
+    if (typeof req.access_token !== "undefined" && req.access_token !== "") {
+        let decoded;
+        try {
+            decoded = decodeFunc(req.access_token);
 
-      let authUser = await User.findOne({ _id: decoded._id })
-        .select(
-          "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
-        )
-        .populate("scope.id", "name id _id")
-        .exec();
+            let authUser = await User.findOne({ _id: decoded._id })
+                .select(
+                    "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
+                )
+                .populate("scope.id", "name id _id")
+                .exec();
 
-      authUser.id = authUser._id.toString();
-      req.user = authUser;
-      next();
-    } catch (err) {
-      console.log(err);
-      next(createError(401, "Not authorized."));
+            authUser.id = authUser._id.toString();
+            req.user = authUser;
+            next();
+        } catch (err) {
+            let message = decoded.name === "TokenExpiredError" ? "The token has expired" : "Not authorized.";
+            next(createError(401, message));
+        }
+        // next();
+    } else if (req.method === "OPTIONS") {
+        next();
+    } else {
+        next();
     }
-    // next();
-  } else if (req.method === "OPTIONS") {
-    next();
-  } else {
-    next();
-  }
 };
 
 export const isAuth = async (req, res, next) => {
-  req.access_token = req.headers.authorization;
-  if (typeof req.access_token !== "undefined" && req.access_token !== "") {
-    let decoded = decodeFunc(req.access_token);
-    let authUser;
-    try {
-      authUser = await User.findOne({ _id: decoded._id })
-        .select(
-          "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
-        )
-        .populate("scope.id", "name id _id")
-        .exec();
+    req.access_token = req.headers.authorization;
+    if (typeof req.access_token !== "undefined" && req.access_token !== "") {
+        let decoded = decodeFunc(req.access_token);
 
-      authUser.id = authUser._id.toString();
-      req.user = authUser;
-      next();
-    } catch (err) {
-      console.log(err);
-      next(createError(401, "Not authorized."));
+        let authUser;
+        try {
+            authUser = await User.findOne({ _id: decoded._id })
+                .select(
+                    "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
+                )
+                .populate("scope.id", "name id _id")
+                .exec();
+
+            authUser.id = authUser._id.toString();
+            req.user = authUser;
+            next();
+        } catch (err) {
+            let message = decoded.name === "TokenExpiredError" ? "The token has expired" : "Not authorized.";
+            next(createError(401, message));
+        }
+        // next();
+    } else if (req.method === "OPTIONS") {
+        next();
+    } else {
+        res.status(401).send({
+            msg: "Not authorized, client must send an access token."
+        });
     }
-    // next();
-  } else if (req.method === "OPTIONS") {
-    next();
-  } else {
-    res.status(401).send({
-      msg: "Not authorized, client must send an access token."
-    });
-  }
 };
