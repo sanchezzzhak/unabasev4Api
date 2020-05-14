@@ -12,21 +12,17 @@ export const upload = file => {
             secretAccessKey: IAM_USER_SECRET,
             Bucket: BUCKET_NAME_FILES
         });
-        s3bucket.createBucket(
-            {
+        s3bucket.createBucket(() => {
+            let params = {
+                Bucket: BUCKET_NAME_FILES,
+                Key: file.filename,
+                Body: file.buffer,
                 ACL: "public-read"
-            },
-            () => {
-                let params = {
-                    Bucket: BUCKET_NAME_FILES,
-                    Key: file.filename,
-                    Body: file.buffer
-                };
-                s3bucket.upload(params, (err, data) => {
-                    if (err) reject(err);
-                    resolve(data);
-                });
-            }
-        );
+            };
+            s3bucket.upload(params, (err, data) => {
+                if (err) reject(err);
+                resolve(data);
+            });
+        });
     });
 };
