@@ -1,6 +1,17 @@
 import { Router } from "express";
+import filesConfig from "../config/files.json";
 import multer from "multer";
-const upload = multer();
+const limits = { fileSize: filesConfig.profile.maxsize };
+const fileFilter = (req, file, cb) => {
+    let formats = ["image/jpg", "image/jpeg", "image/png", "image/svg"];
+    if (!formats.includes(file.mimetype)) {
+        cb(createError(400, "Illegal file format."), false);
+    } else {
+        cb(null, true);
+    }
+};
+
+const upload = multer({ limits, fileFilter });
 const router = Router();
 import { validateParams } from "../middleware/validate";
 import {
@@ -21,6 +32,7 @@ import {
     connections,
     profilePhoto
 } from "../controllers/user";
+import { createError } from "../lib/error";
 
 router.post("/", create);
 
