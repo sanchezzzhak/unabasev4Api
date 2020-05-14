@@ -86,29 +86,17 @@ export const password = (req, res, next) => {
     });
 };
 export const profilePhoto = async (req, res, next) => {
-    let data;
     try {
-        let now = new Date();
         let lastIndex = req.file.originalname.lastIndexOf(".");
         let name = req.file.originalname.slice(0, lastIndex);
         let ext = req.file.originalname.slice(lastIndex + 1);
         let resp = await upload({
-            filename: `user/${req.user._id}/profile/${name}-${now.getTime()}.${ext}`,
+            filename: `user/profile/${req.user._id}.${ext}`,
             buffer: req.file.buffer
         });
-        let file = new Files({
-            size: req.file.size,
-            user: req.user._id,
-            internalPath: "user/profile/photo",
-            type: req.file.mimetype,
-            name: name,
-            url: resp.Location,
-            tag: resp.eTag,
-            bucketName: resp.Bucket,
-            ext
-        });
-        await file.save();
-        res.send(file);
+        let user = await User.findByIdAndUpdate(req.user._id, { imgUrl: resp.Location }, { new: true }).select("imgUrl").exec();
+
+        res.send(user);
     } catch (err) {
         next(err);
     }
