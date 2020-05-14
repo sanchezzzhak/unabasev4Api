@@ -1,5 +1,5 @@
 import { Router } from "express";
-import filesConfig from "../config/files.json";
+import filesConfig from "../config/files";
 import multer from "multer";
 const limits = { fileSize: filesConfig.profile.maxsize };
 const fileFilter = (req, file, cb) => {
