@@ -7,13 +7,13 @@ routes.use(language);
 routes.use(parseQueryUrl);
 
 routes.get("/", (req, res) => {
-  logy(req.headers.host);
-  res.send({ msg: `Unabase api. ${process.env.NODE_ENV}` });
+    logy(req.headers.host);
+    res.send({ msg: `Unabase api. ${process.env.NODE_ENV}` });
 });
 
 routes.get("/isAuth", isAuth, (req, res) => {
-  res.statusMessage = "authenticated";
-  res.send(req.user.getUser());
+    res.statusMessage = "authenticated";
+    res.send(req.user.getUser());
 });
 import auth from "./auth";
 import user from "./user";
@@ -43,7 +43,7 @@ import { parseQueryUrl } from "../middleware/parseQueryUrl";
 
 // TODO verify session for all routes
 
-routes.use("/", isAuthOptional, userNoAuth);
+routes.use("/", userNoAuth);
 routes.use("/auth", auth);
 routes.use("/users", isAuth, user);
 routes.use("/business", isAuth, business);
@@ -69,7 +69,7 @@ routes.use("/relations", isAuth, relation);
 routes.use("/links", isAuth, link);
 
 routes.post("/t", (req, res) => {
-  res.send({ body: req.body, headers: req.headers });
+    res.send({ body: req.body, headers: req.headers });
 });
 
 export default routes;
