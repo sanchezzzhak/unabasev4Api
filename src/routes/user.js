@@ -30,7 +30,8 @@ import {
     lastItems,
     lastParents,
     connections,
-    profilePhoto
+    profilePhoto,
+    findByNoRelation
 } from "../controllers/user";
 import { createError } from "../lib/error";
 
@@ -45,6 +46,7 @@ router.post("/", create);
 }
 
 */
+router.get("/notconnected", findByNoRelation);
 router.put("/profile/photo", upload.single("photo"), profilePhoto);
 router.put(
     "/password",
