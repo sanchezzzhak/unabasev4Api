@@ -563,3 +563,27 @@ export const getUsername = async (req, res, next) => {
         next(err);
     }
 };
+
+export const findByNoRelation = async (req, res, next) => {
+    try {
+        // find relations pending or accepted with the logged user
+        let connected = await Relation.find({ $or: [{ petitioner: req.user.id }, { receptor: req.user.id }], isActive: true })
+            .select("petitioner receptor")
+            .lean();
+        // filter the ids of the users in the before mentioned relations
+        let connectedUsers = connected.map(relation => (relation.receptor === req.user._id.toString() ? relation.petitioner : relation.receptor));
+        // count the users that not have any relation with the logged user
+        let count = await User.count({ _id: { $nin: connectedUsers } }).exec({});
+        // limit the user to return
+        let limit = 10;
+        // total pages for the limit
+        let pages = count / limit;
+        // if the count is more than 10, the page to return is the floor of the random between 1 and pages minus 1, if not, the page to return is 1 (e.g. count 59 / limit 10 = 5.9 -> Math.floor(Math.random() * (5.9 - 1 - 1) + 1) = [1:4])
+        let page = count > 10 ? Math.floor(Math.random() * (pages - 1 - 1) + 1) : 1;
+        let users = await User.paginate({ _id: { $nin: connectedUsers } }, { select: "name username", limit, page }).then({});
+
+        res.send({ users });
+    } catch (err) {
+        next(err);
+    }
+};
