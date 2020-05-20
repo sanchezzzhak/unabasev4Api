@@ -582,10 +582,10 @@ export const findByNoRelation = async (req, res, next) => {
         let page = count > 10 ? Math.floor(Math.random() * (pages - 1 - 1) + 1) : 1;
         let users = await User.paginate(
             { _id: { $nin: connectedUsers } },
-            { select: "name username imgUrl sections", populate: [{ path: "sections", select: "name" }], limit, page }
+            { select: "name username imgUrl sections relationsCount", populate: [{ path: "sections", select: "name" }], limit, page }
         ).then({});
 
-        res.send({ users });
+        res.send(users);
     } catch (err) {
         next(err);
     }
