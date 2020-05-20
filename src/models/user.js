@@ -6,6 +6,7 @@ import paginateConfig from "../config/paginate";
 import bcrypt from "bcryptjs";
 import { getUserData } from "../lib/user";
 import UserPermission from "./userPermission";
+import Relation from "./relation";
 const Schema = mongoose.Schema;
 const salt = bcrypt.genSaltSync(10);
 let userSchema = Schema(
@@ -102,6 +103,7 @@ let userSchema = Schema(
             id: { type: String }
         }),
         connections: Array({ type: String, ref: "User" }),
+        relationsCount: { type: Number },
         contacts: Array({ type: String, ref: "Contact" }),
         webpush: {
             devices: Array({
@@ -202,6 +204,15 @@ userSchema.methods.validPassword = function (password) {
 const User = mongoose.model("User", userSchema);
 
 export default User;
+User.updateRelationsCount = user => {
+    Relation.countDocuments({ $or: [{ petitioner: user }, { receptor: user }], isActive: true }).exec((err, relationsCount) => {
+        if (err) {
+            console.log(err);
+        } else {
+            User.findByIdAndUpdate(user, { relationsCount }).exec();
+        }
+    });
+};
 User.validPassword = async (id, password) => {
     const user = await User.findById(id, "password").exec();
     let valid = false;
