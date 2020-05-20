@@ -580,7 +580,10 @@ export const findByNoRelation = async (req, res, next) => {
         let pages = count / limit;
         // if the count is more than 10, the page to return is the floor of the random between 1 and pages minus 1, if not, the page to return is 1 (e.g. count 59 / limit 10 = 5.9 -> Math.floor(Math.random() * (5.9 - 1 - 1) + 1) = [1:4])
         let page = count > 10 ? Math.floor(Math.random() * (pages - 1 - 1) + 1) : 1;
-        let users = await User.paginate({ _id: { $nin: connectedUsers } }, { select: "name username", limit, page }).then({});
+        let users = await User.paginate(
+            { _id: { $nin: connectedUsers } },
+            { select: "name username imgUrl sections", populate: [{ path: "sections", select: "name" }], limit, page }
+        ).then({});
 
         res.send({ users });
     } catch (err) {
