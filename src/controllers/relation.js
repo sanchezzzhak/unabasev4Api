@@ -58,6 +58,8 @@ export const stateChange = async (req, res, next) => {
     try {
         let relation = await Relation.findOneAndUpdate({ receptor: req.user.id, petitioner: req.body.petitioner }, { isActive: req.body.isActive }, { new: true }).lean();
         let petitioner = await User.findById(req.body.petitioner).select("name webpush").lean();
+        User.updateRelationsCount(req.body.petitioner);
+        User.updateRelationsCount(req.user._id.toString());
         let title = `${req.user.name.first} ${req.user.name.second || ""} ha ${req.body.isActive ? "aceptado" : "rechazado"} tu solicitud de conexión`;
         let notification = new Notification({
             title,
@@ -85,6 +87,7 @@ export const stateChange = async (req, res, next) => {
 export const deleteOne = async (req, res, next) => {
     try {
         await Relation.findByIdAndDelete(req.params.id).exec();
+        User.updateRelationsCount(req.user._id.toString());
         res.send({ success: true });
     } catch (err) {
         next(err);
@@ -98,6 +101,9 @@ export const disconnect = async (req, res, next) => {
                 { petitioner: req.params.user, receptor: req.user.id }
             ]
         }).exec();
+
+        User.updateRelationsCount(req.params.user);
+        User.updateRelationsCount(req.user._id.toString());
         res.status(result ? 200 : 404).send({ success: result ? true : false });
     } catch (err) {
         next(err);
@@ -106,6 +112,7 @@ export const disconnect = async (req, res, next) => {
 export const deleteAll = async (req, res, next) => {
     try {
         await Relation.deleteMany({ receptor: req.user.id }).exec();
+        User.updateRelationsCount(req.user._id.toString());
         res.send({ success: true });
     } catch (err) {
         next(err);
