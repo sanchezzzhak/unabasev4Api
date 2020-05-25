@@ -28,7 +28,8 @@ export const get = async (req, res, next) => {
   }
 };
 export const getByMember = async (req, res, next) => {
-  let select = "name imgUrl google.imgUrl emails phones address otherAccounts sections";
+  let select = "name imgUrl google.imgUrl emails phones address otherAccounts sections main";
+  
   try {
     let links = await Link.paginate(
       // get member with main true

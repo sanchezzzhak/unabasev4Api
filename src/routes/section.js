@@ -2,12 +2,25 @@ import { Router } from "express";
 import { isAuth } from "../config/lib/auth";
 import logger from "../lib/logger";
 import { validateParams } from "../middleware/validate";
-import { get, getOne, updateOne, create, find } from "../controllers/section";
+import { get, getOne, updateOne, create, find, getRandomSections } from "../controllers/section";
 let module = "section";
 
 const router = Router();
 
 router.get("/", get);
+router.get("/random/:n",
+validateParams(
+  [
+    {
+      param_key: "n",
+      required: true,
+      type: "string"
+    }
+  ],
+  "params"
+),
+getRandomSections);
+
 router.get(
   "/find/:q",
   validateParams(
@@ -66,5 +79,11 @@ router.post(
   ),
   create
 );
+
+
+
+
+
+
 
 export default router;

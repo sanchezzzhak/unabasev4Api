@@ -20,6 +20,7 @@ export default function envar() {
     DB_DEV: process.env.DB_DEV,
     mailApiKey: process.env.mailApiKey,
     VAPID_PUBLIC: process.env.VAPID_PUBLIC,
-    VAPID_PRIVATE: process.env.VAPID_PRIVATE
+    VAPID_PRIVATE: process.env.VAPID_PRIVATE,
+    
   };
 }

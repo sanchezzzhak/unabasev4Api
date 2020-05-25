@@ -3,6 +3,7 @@ import User from "../models/user";
 import Relation from "../models/relation";
 
 export const get = async (req, res, next) => {
+  
   try {
     let sections = await Section.paginate({}, { populate: [{ path: "users", select: "name" }] }).then({});
     res.send(sections);
@@ -12,12 +13,27 @@ export const get = async (req, res, next) => {
 };
 export const find = async (req, res, next) => {
   try {
-    let sections = await Section.paginate({ name: { $regex: req.params.q, $options: "i" } }, { select: "name" }).then({});
+    let sections = await Section.paginate({ name: { $regex: req.params.q, $options: "i" } }, { select: "name"  }).then({});
     res.send(sections);
   } catch (err) {
     next(err);
   }
 };
+
+// GET SECTIONS (LIMIT, RANDOM)
+export const getRandomSections = async (req, res, next) => {
+  
+  try {
+  let count =  await Section.countDocuments();
+  let random = Math.floor(Math.random() * count);
+
+   let sections = await Section.find().skip(random).limit(parseInt(req.params.n));
+    res.send(sections);
+  } catch (err) {
+    next(err);
+  }
+};
+
 
 export const getOne = async (req, res, next) => {
   try {
