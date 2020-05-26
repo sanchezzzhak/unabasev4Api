@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { isAuth } from "../config/lib/auth";
 import { validateParams } from "../middleware/validate";
-import { find, create, addMember, deleteOne, get, getOne, updateOne, removeMember, getByMember, getByUser, setMain, getRelated } from "../controllers/link";
+import { find, create, addMember, deleteOne, get, getOne, updateOne, removeMember, getByMember, getByUser, setMain, getRelated, getOneByUrl } from "../controllers/link";
 
 const router = Router();
 
@@ -12,6 +12,12 @@ router.get(
 
   getRelated
 );
+
+
+
+router.get("/url",  getOneByUrl );
+
+
 router.get(
   "/find/:q",
   validateParams(
@@ -40,6 +46,9 @@ router.get(
   ),
   getOne
 );
+
+
+
 
 router.get(
   "/member/:member",

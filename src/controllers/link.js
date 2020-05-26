@@ -93,6 +93,22 @@ export const getOne = async (req, res, next) => {
     next(err);
   }
 };
+
+
+
+// =========================
+// GET LINK BY URL
+// =========================
+export const getOneByUrl = async (req, res, next) => {
+  let link;
+  try {
+    link = await Link.find( { url: req.query.url } ).select(['name', 'url', 'type'])
+    res.send(link);
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const getRelated = async (req, res, next) => {
   try {
     let select = "name imgUrl google.imgUrl emails phones address otherAccounts sections";
