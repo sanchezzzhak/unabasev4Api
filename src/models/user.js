@@ -35,6 +35,10 @@ let userSchema = Schema({
         type: String,
         unique: true,
     },
+    description: {
+        type: String,
+        default: ''
+    },
     language: {
         type: String,
         default: "es",
@@ -282,6 +286,7 @@ userSchema.methods.getUser = function () {
         isActive: this.isActive,
         name: this.name,
         username: this.username,
+        description: this.description,
         idNumber: this.idNumber,
         phones: this.phones,
         emails: this.emails,

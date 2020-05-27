@@ -104,10 +104,11 @@ app.use(function(req, res, next) {
   // if (allowedOrigins.indexOf(origin) > -1) {
   //   res.header('Access-Control-Allow-Origin', origin);
   // }
-  // res.header('Access-Control-Allow-Origin', true);
-  res.header("Access-Control-Allow-Origin", "*");
   // res.header('Access-Control-Allow-Origin', mainConfig.web);
   // res.header('Access-Control-Allow-Credentials', true);
+  // res.header('Access-Control-Allow-Origin', true);
+  res.header("Access-Control-Allow-Origin", "*");
+
   res.header("Access-Control-Allow-Methods", ["POST", "GET", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]);
   res.header("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
 

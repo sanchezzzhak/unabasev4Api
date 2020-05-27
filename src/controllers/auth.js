@@ -19,7 +19,7 @@ import { language } from "../language";
 import { getTokenByRefresh, refreshTokenGen, accessTokenGen } from "../config/lib/auth";
 
 const USER_DATA_SELECT =
-  "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts sections";
+  "isActive webpush security.hasPassword security.isRandom isActive name username description idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts sections";
 export const google = async (req, res, next) => {
   let url = gauth.googleAuth.endpoint + req.body.token;
 
@@ -36,6 +36,7 @@ export const google = async (req, res, next) => {
         ]
       };
       let user = await User.findOne(query, USER_DATA_SELECT).populate("sections").populate("currency").populate("scope.id").exec();
+      console.log(user);
       if (!user?._id) {
         user = new User();
         user.currency = await getCurrencyByLocation(req);

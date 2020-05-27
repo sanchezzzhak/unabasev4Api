@@ -68,6 +68,10 @@ export const getOne = async (req, res, next) => {
         {
           path: "members.positions",
           select
+        },
+        {
+          path: "user",
+          select: 'name imgUrl'
         }
       ])
       .lean();
