@@ -87,7 +87,7 @@ export const isAuth = async (req, res, next) => {
         try {
             authUser = await User.findOne({ _id: decoded._id })
                 .select(
-                    "isActive webpush security.hasPassword security.isRandom isActive name username description idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
+                    "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts"
                 )
                 .populate("scope.id", "name id _id")
                 .exec();
