@@ -13,7 +13,7 @@ import logger from "./lib/logger";
 const port = process.env.PORT || 3000;
 import favicon from "serve-favicon";
 import session from "express-session";
-// import cors from "cors";
+import cors from "cors";
 import morgan from "morgan";
 import localeMiddleware from "express-locale";
 import db from "./db";
@@ -66,13 +66,13 @@ app.use(json());
 app.use(xmlparser());
 app.use(cookieParser());
 
-// app.use(cors());
-// app.use(localeMiddleware());
+app.use(cors());
+app.use(localeMiddleware());
 //load view engine
 app.set("views", path.join(__dirname, "./views"));
 app.set("view engine", "pug");
 
-// app.options('*', cors());
+app.options('*', cors());
 //set public folder
 app.use(express.static(path.join(__dirname, "./public")));
 
@@ -88,16 +88,16 @@ app.use(express.static(path.join(__dirname, "./public")));
 // );
 
 //global var
-let allowedOrigins = ["https://unabase1.firebaseapp.com", "http://localhost:8080", "https://unabase.net", "https://www.unabase.net", "http://localhost:8081"];
-app.use(function(req, res, next) {
-  res.locals.activeUser = req.user || null;
-  res.locals.user = req.user || null;
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", ["POST", "GET", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]);
-  res.header("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
+// let allowedOrigins = ["https://unabase1.firebaseapp.com", "http://localhost:8080", "https://unabase.net", "https://www.unabase.net", "http://localhost:8081"];
+// app.use(function(req, res, next) {
+//   res.locals.activeUser = req.user || null;
+//   res.locals.user = req.user || null;
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Methods", ["POST", "GET", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]);
+//   res.header("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
 
-  next();
-});
+//   next();
+// });
 
 
 app.use(passport.initialize());
