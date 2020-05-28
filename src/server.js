@@ -13,7 +13,7 @@ import logger from "./lib/logger";
 const port = process.env.PORT || 3000;
 import favicon from "serve-favicon";
 import session from "express-session";
-import cors from "cors";
+ import cors from "cors";
 import morgan from "morgan";
 import localeMiddleware from "express-locale";
 import db from "./db";
@@ -66,13 +66,16 @@ app.use(json());
 app.use(xmlparser());
 app.use(cookieParser());
 
-app.use(cors());
+ app.use(cors());
+ app.options('*', cors());
+
+ 
 app.use(localeMiddleware());
 //load view engine
 app.set("views", path.join(__dirname, "./views"));
 app.set("view engine", "pug");
 
-app.options('*', cors());
+
 //set public folder
 app.use(express.static(path.join(__dirname, "./public")));
 
