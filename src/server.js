@@ -66,7 +66,7 @@ app.use(json());
 app.use(xmlparser());
 app.use(cookieParser());
 
-app.use(cors());
+// app.use(cors());
 app.use(localeMiddleware());
 //load view engine
 app.set("views", path.join(__dirname, "./views"));
@@ -87,6 +87,19 @@ app.use(express.static(path.join(__dirname, "./public")));
 //   })
 // );
 
+//global var
+let allowedOrigins = ["https://unabase1.firebaseapp.com", "http://localhost:8080", "https://unabase.net", "https://www.unabase.net", "http://localhost:8081"];
+app.use(function(req, res, next) {
+  res.locals.activeUser = req.user || null;
+  res.locals.user = req.user || null;
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", ["POST", "GET", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]);
+  res.header("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
+
+  next();
+});
+
+
 app.use(passport.initialize());
 app.use(passport.session());
 require("./config/passport");
@@ -94,26 +107,7 @@ if (env === "test" || env === "dev") {
   logy("using morgan");
   app.use(morgan("dev"));
 }
-//global var
-let allowedOrigins = ["https://unabase1.firebaseapp.com", "http://localhost:8080", "https://unabase.net", "https://www.unabase.net", "http://localhost:8081"];
-app.use(function(req, res, next) {
-  res.locals.activeUser = req.user || null;
-  res.locals.user = req.user || null;
-  // let origin = req.headers.origin;
 
-  // if (allowedOrigins.indexOf(origin) > -1) {
-  //   res.header('Access-Control-Allow-Origin', origin);
-  // }
-  // res.header('Access-Control-Allow-Origin', mainConfig.web);
-  // res.header('Access-Control-Allow-Credentials', true);
-  // res.header('Access-Control-Allow-Origin', true);
-  res.header("Access-Control-Allow-Origin", "*");
-
-  res.header("Access-Control-Allow-Methods", ["POST", "GET", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]);
-  res.header("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
-
-  next();
-});
 
 import routes from "./routes";
 import axios from "axios";
