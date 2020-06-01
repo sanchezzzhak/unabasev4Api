@@ -30,7 +30,7 @@ export const create = async (req, res, next) => {
         await relation.save();
         let user = await User.findById(req.body.receptor).select("name webpush").lean();
         let link = ``;
-        let title = `${req.user.name.first} ${req.user.name.second || ""} te ha enviado una solicitud de conexión`;
+        let title = `Te han enviado una solicitud de conexión`;
         let notification = new Notification({
             title,
             user: user._id.toString(),
@@ -162,19 +162,26 @@ export const get = async (req, res, next) => {
 };
 
 export const getByUser = async (req, res, next) => {
-    let populate = [
-        {
-            path: "receptor",
-            select: "name imgUrl google.imgUrl emails phones username"
+    let populate = [{
+         path: "petitioner",
+         select: "name imgUrl google.imgUrl username sections",
+         populate: {
+            path: "sections"
+        }
         },
         {
-            path: "petitioner",
-            select: "name imgUrl google.imgUrl emails phones username"
-        }
-    ];
-    let helper = queryHelper({ isActive: true, $or: [{ receptor: req.params.user }, { petitioner: req.params.user }] }, { populate });
+         path: "receptor",
+         select: "name imgUrl google.imgUrl username sections",
+         populate: {
+            path: "sections"
+         }
+        }];
+ 
     try {
-        let relations = await Relation.paginate(helper.query, helper.options).then({});
+        let helper = queryHelper({ isActive: true, $or: [{ receptor: req.params.user } , { petitioner: req.params.user }] }, { populate });
+        let relations = await Relation.paginate(helper.query, helper.options);
+        
+        
         res.send(relations);
     } catch (err) {
         next(err);
