@@ -184,7 +184,7 @@ export const addMember = async (req, res, next) => {
     let userToPushNotification = await User.findById(req.body.user._id).select("name webpush").lean();
 
     let notification = new Notification({
-      notification_title,
+     title:  notification_title,
       user: req.body.user._id.toString(),
       link: '',
       from: {
