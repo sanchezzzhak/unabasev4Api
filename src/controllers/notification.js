@@ -8,11 +8,16 @@ export const get = async (req, res, next) => {
       select: "name"
     },
     {
+      path: "proyect",
+      select: "cover name ",
+    },
+    {
       path: "relation"
     },
     {
       path: "from.user",
-      select: "name imgUrl google.imgUrl emails phones"
+      select: "name imgUrl google.imgUrl emails phones username",
+      
     }
   ];
   let select = "-user";

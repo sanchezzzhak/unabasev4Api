@@ -20,7 +20,9 @@ import { getTokenByRefresh, refreshTokenGen, accessTokenGen } from "../config/li
 
 const USER_DATA_SELECT =
   "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts sections";
-export const google = async (req, res, next) => {
+
+
+  export const google = async (req, res, next) => {
   let url = gauth.googleAuth.endpoint + req.body.token;
 
   axios(url)
@@ -77,7 +79,7 @@ export const google = async (req, res, next) => {
         await user.save();
 
         user = user.toJSON();
-        user.relations = relations;
+        user.relationsCount = relations;
         res.send({
           access_token: accessTokenGen(user, true),
           refresh_token: refreshTokenGen(user),

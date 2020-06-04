@@ -22,6 +22,7 @@ export const create = async (req, res, next) => {
         { id: 1 }
     ).lean();
     if (exists) next(createError(409, "Relations already exists"));
+    console.log(req.user);
     let relation = new Relation({
         petitioner: req.user.id,
         receptor: req.body.receptor
@@ -30,18 +31,7 @@ export const create = async (req, res, next) => {
         await relation.save();
         let user = await User.findById(req.body.receptor).select("name webpush").lean();
         let link = ``;
-        let title = `Te han enviado una solicitud de conexión`;
-        let notification = new Notification({
-            title,
-            user: user._id.toString(),
-            // movement: movement._id.toString(),
-            link,
-            from: {
-                user: req.user._id.toString()
-            },
-            relation: relation._id
-        });
-        await notification.save();
+        let title = `${req.user.name.first} quiere conectar contigo.`;
         sendPush(
             {
                 body: title,
@@ -60,18 +50,9 @@ export const stateChange = async (req, res, next) => {
         let petitioner = await User.findById(req.body.petitioner).select("name webpush").lean();
         User.updateRelationsCount(req.body.petitioner);
         User.updateRelationsCount(req.user._id.toString());
+
+
         let title = `${req.user.name.first} ${req.user.name.second || ""} ha ${req.body.isActive ? "aceptado" : "rechazado"} tu solicitud de conexión`;
-        let notification = new Notification({
-            title,
-            user: petitioner._id.toString(),
-            // movement: movement._id.toString(),
-            link: "",
-            from: {
-                user: req.user.id
-            },
-            relation: relation._id
-        });
-        await notification.save();
         sendPush(
             {
                 body: title,

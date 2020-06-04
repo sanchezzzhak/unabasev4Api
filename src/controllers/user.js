@@ -225,7 +225,7 @@ export const getOne = (req, res, next) => {
 
 /* prettier-ignore-start */
 export const update = (req, res, next) => {
-
+    
     if (req.body.scope ?.type === "business" && (req.body.scope ?.id == null || req.body.scope ?.id == req.user._id)) next(createError(500, req.lg.user.businessNotNull));
     User.findOneAndUpdate({
                 _id: req.params.id
@@ -235,7 +235,7 @@ export const update = (req, res, next) => {
             }
         )
         .select(
-            "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts sections"
+            "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts sections relationsCount"
         )
         .populate("currency")
         .populate("scope.id")
@@ -572,7 +572,7 @@ export const getUsername = async (req, res, next) => {
                     isActive: true
                 }
             }])
-            .select("name username imgUrl google.email google.imgUrl otherAccounts createdAt address sections")
+            .select("name username imgUrl google.email google.imgUrl otherAccounts createdAt address sections phones emails")
 
             .exec();
         if (!user) next(notFoundError("User"));

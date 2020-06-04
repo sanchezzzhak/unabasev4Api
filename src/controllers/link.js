@@ -1,7 +1,10 @@
 import Link from "../models/link";
 import Relation from "../models/relation";
+import Notification from '../models/notification'
+import User from '../models/user'
 import { queryHelper } from "../lib/queryHelper";
 import { createError } from "../lib/error";
+import { sendPush } from "../lib/push";
 
 export const create = async (req, res, next) => {
   // let exists = await Link.findOne({ url: req.body.url }, { id: 1 }).lean();
@@ -174,6 +177,30 @@ export const addMember = async (req, res, next) => {
       link.members.push({ user: req.body.user, positions: req.body.positions });
       await link.save();
     }
+
+    // ENVIAR NOTIFICACION PUSH
+    let title = `${req.body.userSession.name} te ha etiquetado como colaborador`;
+    let notification_title = `${req.body.userSession.name} te ha etiquetado como`;
+    let userToPushNotification = await User.findById(req.body.user._id).select("name webpush").lean();
+
+    let notification = new Notification({
+      notification_title,
+      user: req.body.user._id.toString(),
+      link: '',
+      from: {
+          user: req.body.userSession._id.toString()
+      },
+      proyect: req.body.proyectID
+  });
+  await notification.save();
+  sendPush(
+      {
+          body: title,
+          link: ''
+      },
+      userToPushNotification
+  );
+
     res.send(link);
   } catch (err) {
     next(err);
