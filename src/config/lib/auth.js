@@ -96,8 +96,14 @@ export const isAuth = async (req, res, next) => {
             req.user = authUser;
             next();
         } catch (err) {
-            let message = decoded.name === "TokenExpiredError" ? "The token has expired" : "Not authorized.";
-            next(createError(401, message));
+            let isTokenError = decoded.name === "TokenExpiredError" ? true : false;
+
+           if (isTokenError) {
+            next(createError(401, "The token has expired"));
+           }else{
+            next(createError(304, "Not authorized."));
+           }
+
         }
         // next();
     } else if (req.method === "OPTIONS") {

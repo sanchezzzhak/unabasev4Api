@@ -217,6 +217,8 @@ export const removeMember = async (req, res, next) => {
 };
 
 export const find = async (req, res, next) => {
+  let select = "name imgUrl google.imgUrl emails phones address otherAccounts sections main";
+
   let query = {
     $or: [
       {
@@ -235,7 +237,7 @@ export const find = async (req, res, next) => {
   };
 
   try {
-    let links = await Link.paginate(query).then({});
+    let links = await Link.paginate(query, { populate: [{ path: "user", select }, { path: "members.user", select }, { path: "members.positions" }, { path: "contact" }], sort: "-createdAt" }).then({});
     res.send(links);
   } catch (err) {
     next(err);

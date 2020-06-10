@@ -7,7 +7,8 @@ const sectionSchema = Schema(
   {
     name: { type: String },
     isActive: { type: Boolean, default: true },
-    users: Array({ type: String, ref: "User" })
+    users: Array({ type: String, ref: "User" }),
+    userCount: {type: String, default: 0}
   },
   { timestamps: true }
 );

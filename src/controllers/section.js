@@ -5,8 +5,20 @@ import Relation from "../models/relation";
 export const get = async (req, res, next) => {
   
   try {
-    let sections = await Section.paginate({}, { populate: [{ path: "users", select: "name" }] }).then({});
-    res.send(sections);
+    let sections = await Section.paginate({}, { populate: [{ path: "users", select: "name" }], lean: true }).then(resp => {
+
+      let promises = resp.docs.map(async se => {
+        let tmpSection = se;
+        tmpSection.userCount = await User.countDocuments({sections: tmpSection._id});
+          return tmpSection;
+     });
+
+      Promise.all(promises).then(r => {
+        res.send(resp)
+      });
+
+    });
+
   } catch (err) {
     next(err);
   }
