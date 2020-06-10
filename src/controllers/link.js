@@ -118,7 +118,7 @@ export const getOneByUrl = async (req, res, next) => {
 
 export const getRelated = async (req, res, next) => {
   try {
-     let select = "name imgUrl google.imgUrl emails phones address otherAccounts sections";
+     let select = "name imgUrl google.imgUrl emails phones address otherAccounts sections username";
     // let relations = await Relation.find({ $or: [{ petitioner: req.user.id }, { receptor: req.user.id }], isActive: true }, { petitioner: 1, receptor: 1 }).lean();
     // let users = relations.map(relation => (relation.petitioner === req.user.id ? relation.receptor : relation.petitioner));
    
@@ -183,23 +183,25 @@ export const addMember = async (req, res, next) => {
     let notification_title = `${req.body.userSession.name} te ha etiquetado como`;
     let userToPushNotification = await User.findById(req.body.user._id).select("name webpush").lean();
 
-    let notification = new Notification({
-     title:  notification_title,
-      user: req.body.user._id.toString(),
-      link: '',
-      from: {
-          user: req.body.userSession._id.toString()
-      },
-      proyect: req.body.proyectID
-  });
-  await notification.save();
-  sendPush(
-      {
-          body: title,
-          link: ''
-      },
-      userToPushNotification
-  );
+    if (req.body.user._id != req.body.userSession._id) {
+      let notification = new Notification({
+        title:  notification_title,
+         user: req.body.user._id.toString(),
+         link: '',
+         from: {
+             user: req.body.userSession._id.toString()
+         },
+         proyect: req.body.proyectID
+     });
+     await notification.save();
+     sendPush(
+         {
+             body: title,
+             link: ''
+         },
+         userToPushNotification
+     );
+    }
 
     res.send(link);
   } catch (err) {
