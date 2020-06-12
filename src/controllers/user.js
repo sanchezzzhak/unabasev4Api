@@ -235,7 +235,7 @@ export const update = (req, res, next) => {
             }
         )
         .select(
-            "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts sections relationsCount"
+            "isActive webpush security.hasPassword security.isRandom isActive name username description idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts otherAccounts sections relationsCount"
         )
         .populate("currency")
         .populate("scope.id")
@@ -572,7 +572,7 @@ export const getUsername = async (req, res, next) => {
                     isActive: true
                 }
             }])
-            .select("name username imgUrl google.email google.imgUrl otherAccounts createdAt address sections phones emails")
+            .select("name username description imgUrl google.email google.imgUrl otherAccounts createdAt address sections phones emails")
 
             .exec();
         if (!user) next(notFoundError("User"));
