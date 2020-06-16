@@ -13,7 +13,7 @@ import logger from "./lib/logger";
 const port = process.env.PORT || 3000;
 import favicon from "serve-favicon";
 import session from "express-session";
- import cors from "cors";
+import cors from "cors";
 import morgan from "morgan";
 import localeMiddleware from "express-locale";
 import db from "./db";
@@ -61,20 +61,25 @@ app.use(
   })
 );
 
+// CORS
+app.use(cors());
+app.options('*', cors());
+
 // parse application/json
 app.use(json());
 app.use(xmlparser());
 app.use(cookieParser());
 
- app.use(cors());
-//  app.options('*', cors());
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-  res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
-  next();
-});
+
+
+//  app.use((req, res, next) => {
+//    res.header('Access-Control-Allow-Origin', '*');
+//    res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
+//    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+//    res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
+  
+//    next();
+//  });
 
 
 

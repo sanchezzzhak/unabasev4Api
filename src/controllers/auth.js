@@ -63,13 +63,23 @@ const USER_DATA_SELECT =
 
         // TODO verify link with user after modify the model of client.data to client.user
         // linkMovement(user.emails.google, user);
-        await user.save();
+      let userRes = await user.save();
 
         req.user = user;
         req.user.id = req.user._id.toString() || null;
+
+
+         // USER (TO CREATE TOKEN)
+         userRes.toJSON();
+         let userToCreateToken = {
+          _id: userRes._id,
+          username: userRes.username
+        };
+
+
         res.send({
-          access_token: accessTokenGen(user, true),
-          refresh_token: refreshTokenGen(user),
+          access_token: accessTokenGen(userToCreateToken, true),
+          refresh_token: refreshTokenGen(userToCreateToken),
           user
         });
       } else {
@@ -80,9 +90,16 @@ const USER_DATA_SELECT =
 
         user = user.toJSON();
         user.relationsCount = relations;
-        res.send({
-          access_token: accessTokenGen(user, true),
-          refresh_token: refreshTokenGen(user),
+
+        // USER (TO CREATE TOKEN)
+        let userToCreateToken = {
+          _id: user._id,
+          username: user.username
+        };
+
+         res.send({
+          access_token: accessTokenGen(userToCreateToken, true),
+          refresh_token: refreshTokenGen(userToCreateToken),
           user
         });
       }
@@ -117,9 +134,18 @@ export const password = (req, res, next) => {
       req.user = user;
       req.user.id = req.user._id.toString() || null;
       res.statusMessage = req.lg.user.successLogin;
+
+        // USER (TO CREATE TOKEN)
+       let u = user.toJSON();
+        let userToCreateToken = {
+          _id: u._id,
+          username: u.username
+        };
+
+
       res.json({
-        access_token: accessTokenGen(user, true),
-        refresh_token: refreshTokenGen(user),
+        access_token: accessTokenGen(userToCreateToken, true),
+        refresh_token: refreshTokenGen(userToCreateToken),
         user
       });
     });
@@ -169,9 +195,16 @@ export const login = async (req, res, next) => {
         user = user.toJSON();
         user.relations = relations;
 
+         // USER (TO CREATE TOKEN)
+        
+         let userToCreateToken = {
+           _id: user._id,
+           username: user.username
+         };
+
         res.json({
-          access_token: accessTokenGen(user, true),
-          refresh_token: refreshTokenGen(user),
+          access_token: accessTokenGen(userToCreateToken, true),
+          refresh_token: refreshTokenGen(userToCreateToken),
           user
         });
       });
@@ -202,9 +235,19 @@ export const verify = (req, res, next) => {
       ]);
       req.user = user;
       req.user.id = req.user._id.toString() || null;
+
+       // USER (TO CREATE TOKEN)
+      let u =  user.toJSON();
+       let userToCreateToken = {
+        _id: u._id,
+        username: u.username
+      };
+
+
+
       res.json({
-        access_token: accessTokenGen(user, true),
-        refresh_token: refreshTokenGen(user),
+        access_token: accessTokenGen(userToCreateToken, true),
+        refresh_token: refreshTokenGen(userToCreateToken),
         user
       });
     });
@@ -273,9 +316,19 @@ export const register = async (req, res, next) => {
 
     req.user = user;
     req.user.id = req.user._id.toString() || null;
+
+
+    // USER (TO CREATE TOKEN)
+    let u =  user.toJSON();
+    let userToCreateToken = {
+     _id: u._id,
+     username: u.username
+   };
+
+
     res.json({
-      access_token: accessTokenGen(user, true),
-      refresh_token: refreshTokenGen(user),
+      access_token: accessTokenGen(userToCreateToken, true),
+      refresh_token: refreshTokenGen(userToCreateToken),
       user: user
     });
   } catch (err) {

@@ -475,6 +475,7 @@ export const relationsFind = (req, res, next) => {
     logy(query);
     User.paginate(query, {}, (err, items) => {
         if (err) {
+            cosnole.log('ERROR EN USER')
             res.status(500).end();
         } else {
             res.send(items);
