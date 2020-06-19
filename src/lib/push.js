@@ -4,7 +4,7 @@ export const sendPush = async (payload, user) => {
   payload = JSON.stringify(payload);
   try {
     console.log(user);
-    console.log(user.name + " have been notify");
+    console.log(user.name.first + " have been notify");
   } catch (err) {
     console.log(err);
   }

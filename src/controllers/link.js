@@ -237,6 +237,8 @@ export const shareWithUser = async (req, res, next) => {
      });
    let notif =  await notification.save();
 
+   console.log(userToPushNotification);
+
      sendPush({body: title, link: ''}, userToPushNotification);
 
      res.send(notif);
