@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { isAuth } from "../config/lib/auth";
 import { validateParams } from "../middleware/validate";
-import { find, create, addMember, deleteOne, get, getOne, updateOne, removeMember, getByMember, getByUser, setMain, getRelated, getOneByUrl } from "../controllers/link";
+import { find, create, addMember, deleteOne, get, getOne, updateOne, removeMember, getByMember, getByUser, setMain, getRelated, getOneByUrl, shareWithUser } from "../controllers/link";
 
 const router = Router();
 
@@ -146,6 +146,13 @@ router.put(
   ),
   addMember
 );
+
+router.put(
+  "/share/:id", shareWithUser
+);
+
+
+
 router.put(
   "/member/remove/:id",
   validateParams(

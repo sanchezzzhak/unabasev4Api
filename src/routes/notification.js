@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { get, setRead } from "../controllers/notification";
+import { get, setRead, getHeaderValues } from "../controllers/notification";
 import { validateParams } from "../middleware/validate";
 import { isAuth } from "../config/lib/auth";
 
@@ -26,5 +26,7 @@ router.put(
   ),
   setRead
 );
+
+router.get("/header/:user", getHeaderValues);
 
 export default router;

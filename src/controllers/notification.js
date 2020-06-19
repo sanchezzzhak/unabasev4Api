@@ -1,4 +1,5 @@
 import Notification from "../models/notification";
+import Relation from '../models/relation'
 import { queryHelper } from "../lib/queryHelper";
 
 export const get = async (req, res, next) => {
@@ -29,6 +30,23 @@ export const get = async (req, res, next) => {
     next(err);
   }
 };
+
+
+ export const getHeaderValues = async (req, res, next) => {
+  let query = { receptor: req.user.id, isActive: { $exists: false } };
+  try {
+    let notifications = await Notification.countDocuments({user: req.params.user, isRead: false});
+    let relations = await Relation.countDocuments(query);
+
+    res.send({
+      notifications_n: notifications,
+      conexionRequests_n: relations
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 
 export const setRead = async (req, res, next) => {
   try {

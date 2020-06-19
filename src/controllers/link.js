@@ -218,6 +218,34 @@ export const removeMember = async (req, res, next) => {
   }
 };
 
+
+export const shareWithUser = async (req, res, next) => {
+  try {
+    // ENVIAR NOTIFICACION PUSH
+    let title = `${req.body.userSession.name} te invito a ver un proyecto.`;
+    let notification_title = `${req.body.userSession.name} te invita a ver`;
+    let userToPushNotification = await User.findById(req.body.user).select("name webpush").lean();
+
+      let notification = new Notification({
+        title:  notification_title,
+         user: req.body.user.toString(),
+         link: '',
+         from: {
+             user: req.body.userSession._id.toString()
+         },
+         proyect: req.params.id
+     });
+   let notif =  await notification.save();
+
+     sendPush({body: title, link: ''}, userToPushNotification);
+
+     res.send(notif);
+
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const find = async (req, res, next) => {
   let select = "name imgUrl google.imgUrl emails phones address otherAccounts sections main";
 
