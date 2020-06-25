@@ -5,6 +5,11 @@ import User from '../models/user'
 import { queryHelper } from "../lib/queryHelper";
 import { createError } from "../lib/error";
 import { sendPush } from "../lib/push";
+import {
+  upload
+} from "../lib/filesUpload";
+
+
 
 export const create = async (req, res, next) => {
   // let exists = await Link.findOne({ url: req.body.url }, { id: 1 }).lean();
@@ -273,5 +278,39 @@ export const find = async (req, res, next) => {
     res.send(links);
   } catch (err) {
     next(err);
+  }
+};
+
+
+export const uploadProyectFile = async (req, res, next) => {
+  console.log(req.file)
+  try {
+      let lastIndex = req.file.originalname.lastIndexOf(".");
+      let name = req.file.originalname.slice(0, lastIndex);
+      let ext = req.file.originalname.slice(lastIndex + 1);
+      let fileType = req.file.mimetype.split('/')[0];
+      
+      let resp = await upload({
+          filename: `users/${req.user._id}/files/${name}.${ext}`,
+          buffer: req.file.buffer
+      });
+      
+
+        let link = new Link({
+          user: req.user._id.toString(),
+          description: '',
+          url: resp.Location,
+          name: name,
+          type: fileType,
+          cover: resp.Location,
+          members: []
+        })
+
+        await link.save();
+
+      res.send(link);
+
+  } catch (err) {
+      next(err);
   }
 };

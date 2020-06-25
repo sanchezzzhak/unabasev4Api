@@ -1,7 +1,22 @@
 import { Router } from "express";
 import { isAuth } from "../config/lib/auth";
 import { validateParams } from "../middleware/validate";
-import { find, create, addMember, deleteOne, get, getOne, updateOne, removeMember, getByMember, getByUser, setMain, getRelated, getOneByUrl, shareWithUser } from "../controllers/link";
+import { find, create, addMember, deleteOne, get, getOne, updateOne, removeMember, getByMember, getByUser, setMain, getRelated, getOneByUrl, shareWithUser, uploadProyectFile} from "../controllers/link";
+// FILES UPLOAD
+import filesConfig from "../config/files";
+import multer from "multer";
+const limits = { fileSize: filesConfig.profile.proyects };
+const fileFilter = (req, file, cb) => {
+    let formats = ["image/jpg", "image/jpeg", "image/png", "image/svg", "video/mp4", "video/avi", "video/mov", "video/quicktime", "video/webm"];
+    if (!formats.includes(file.mimetype)) {
+        cb(createError(400, "Illegal file format."), false);
+    } else {
+        cb(null, true);
+    }
+};
+const upload = multer({ limits, fileFilter });
+
+
 
 const router = Router();
 
@@ -46,6 +61,8 @@ router.get(
   ),
   getOne
 );
+
+router.post("/upload/file", upload.single("proyect"), uploadProyectFile);
 
 
 

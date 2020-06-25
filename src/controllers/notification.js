@@ -10,7 +10,7 @@ export const get = async (req, res, next) => {
     },
     {
       path: "proyect",
-      select: "cover name ",
+      select: "cover name type",
     },
     {
       path: "relation"
