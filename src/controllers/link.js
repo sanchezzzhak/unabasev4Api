@@ -285,24 +285,43 @@ export const addMember = async (req, res, next) => {
       await link.save();
     }
 
-    // ENVIAR NOTIFICACION PUSH
-    let title = `${req.body.userSession.name} te ha etiquetado como colaborador`;
-    let notification_title = `${req.body.userSession.name} te ha etiquetado como`;
-    let userToPushNotification = await User.findById(req.body.user._id).select("name webpush").lean();
+    
+     if (req.body.user._id != req.user._id) {
+       // ENVIAR NOTIFICACION PUSH ( CUANDO ETIQUETAN A UN USER)
+      let userToPushNotification = await User.findById(req.body.user._id).select("name webpush").lean();
 
-    if (req.body.user._id != req.body.userSession._id) {
       let notification = new Notification({
-        title: notification_title,
+        title: `${req.user.name} te ha etiquetado como`,
         user: req.body.user._id.toString(),
         link: '',
         from: {
-          user: req.body.userSession._id.toString()
+          user: req.user._id.toString()
         },
-        proyect: req.body.proyectID
+        proyect: req.body.proyect._id
       });
       await notification.save();
       sendPush({
-          body: title,
+          body: `${req.user.name} te ha etiquetado como colaborador`,
+          link: ''
+        },
+        userToPushNotification
+      );
+    }else{
+      // ENVIAR NOTIFICACION PUSH ( AL DUEÑO DE PROYECTO, CUANDO AGREGO MI PARTICIPACIÓN )
+      let userToPushNotification = await User.findById(req.body.proyect.user._id).select("name webpush").lean();
+
+      let notification = new Notification({
+        title: `${req.user.name.first} se agrego como participante en tu proyecto`,
+        user: req.body.proyect.user._id.toString(),
+        link: '',
+        from: {
+          user: req.user._id.toString()
+        },
+        proyect: req.body.proyect._id
+      });
+      await notification.save();
+      sendPush({
+          body: `${req.user.name.first} se agrego como participante en tu proyecto`,
           link: ''
         },
         userToPushNotification
@@ -338,8 +357,8 @@ export const removeMember = async (req, res, next) => {
 export const shareWithUser = async (req, res, next) => {
   try {
     // ENVIAR NOTIFICACION PUSH
-    let title = `${req.body.userSession.name} te invito a ver un proyecto.`;
-    let notification_title = `${req.body.userSession.name} te invita a ver`;
+    let title = `${req.user.name} te invito a ver un proyecto.`;
+    let notification_title = `${req.user.name} te invita a ver`;
     let userToPushNotification = await User.findById(req.body.user).select("name webpush").lean();
 
     let notification = new Notification({
@@ -347,7 +366,7 @@ export const shareWithUser = async (req, res, next) => {
       user: req.body.user.toString(),
       link: '',
       from: {
-        user: req.body.userSession._id.toString()
+        user: req.user._id.toString()
       },
       proyect: req.params.id
     });
@@ -421,18 +440,6 @@ export const uploadProyectFile = async (req, res, next) => {
       buffer: req.file.buffer
     });
 
-
-    // let link = new Link({
-    //   user: req.user._id.toString(),
-    //   description: '',
-    //   url: resp.Location,
-    //   name: name,
-    //   type: fileType,
-    //   cover: resp.Location,
-    //   members: []
-    // })
-
-    // await link.save();
 
     res.send({
       name: name,

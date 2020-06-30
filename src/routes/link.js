@@ -64,9 +64,6 @@ router.get(
 
 router.post("/upload/file", upload.single("proyect"), uploadProyectFile);
 
-
-
-
 router.get(
   "/member/:member",
   validateParams(

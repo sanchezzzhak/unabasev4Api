@@ -639,7 +639,7 @@ export const findByNoRelation = async (req, res, next) => {
         // filter the ids of the users in the before mentioned relations
         let connectedUsers = connected.map(relation => (relation.receptor === req.user._id.toString() ? relation.petitioner : relation.receptor));
         // count the users that not have any relation with the logged user
-        let count = await User.count({
+        let count = await User.countDocuments({
             _id: {
                 $nin: connectedUsers
             }
